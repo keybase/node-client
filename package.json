@@ -1,0 +1,18 @@
+{
+  "name": "keybase",
+  "version": "0.0.0",
+  "description": "CLI interface to keybase.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/keybase/node-client"
+  },
+  "author": "Maxwell Krohn <themax@gmail.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/keybase/node-client/issues"
+  }
+}
