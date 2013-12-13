@@ -28,7 +28,7 @@ exports.Command = class Command extends Base
     await gpg { args : [ "--version" ], stdout : bis }, defer rc
     gpg_v = bis.data().toString().split("\n")[0...2]
     lines = [ 
-      (pjs.bin() + " (keybase.io CLI) version " + pjs.version())
+      (pjs.bin() + " (keybase.io CLI) v" + pjs.version())
       ("- node.js " + process.version)
     ].concat("- #{l}" for l in gpg_v)
     console.log lines.join("\n")
