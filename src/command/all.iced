@@ -18,7 +18,6 @@ class Main
 
   init : (cb) ->
     ok = true
-    await @pkjson.read defer ok
     if ok
       @ap = new ArgumentParser 
         addHelp : true

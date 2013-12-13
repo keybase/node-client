@@ -21,7 +21,9 @@ exports.Command = class Command extends Base
   #----------
   
   run : (cb) ->
-    console.log "hello!"
+    pjs = new PackageJson()
+    lines = [ pjs.bin() + " (keybase.io CLI) version " + pjs.version() ]
+    console.log lines.join("\n")
     cb true
 
 ##=======================================================================

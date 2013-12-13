@@ -5,9 +5,6 @@ all: build
 ICED=node_modules/.bin/iced
 BUILD_STAMP=build-stamp
 TEST_STAMP=test-stamp
-UGLIFYJS=node_modules/.bin/uglifyjs
-WD=`pwd`
-BROWSERIFY=node_modules/.bin/browserify
 
 default: build
 all: build
@@ -36,6 +33,9 @@ $(BUILD_STAMP): \
 
 build: $(BUILD_STAMP) 
 
+setup: 
+	npm install -d
+
 test:
 
-.PHONY: test
+.PHONY: test setup
