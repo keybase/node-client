@@ -14,5 +14,9 @@
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/keybase/node-client/issues"
+  },
+  "dependencies" : {
+    "sqlite3" : "*",
+    "keybase-proofs" : "keybase/proofs"
   }
 }
