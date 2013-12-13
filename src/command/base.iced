@@ -119,11 +119,6 @@ exports.Base = class Base
 
   #-------------------
 
-  dynamo  : () -> @aws.dynamo
-  glacier : () -> @aws.glacier
-
-  #-------------------
-
   password : () -> pick @argv.password, @config.password()
   email    : () -> pick @argv.email, @config.email()
   salt     : () -> pick @argv.salt, @config.salt()
