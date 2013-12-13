@@ -2,10 +2,6 @@
   "name": "keybase",
   "version": "0.0.0",
   "description": "CLI interface to keybase.io",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/keybase/node-client"
@@ -16,7 +12,7 @@
     "url": "https://github.com/keybase/node-client/issues"
   },
   "bin" : {
-    "triplesec" : "./js/bin/triplesec.js"
+    "triplesec" : "./js/bin/main.js"
   },
   "scripts" : {
     "test" : "make test",
