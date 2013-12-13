@@ -15,8 +15,35 @@
   "bugs": {
     "url": "https://github.com/keybase/node-client/issues"
   },
+  "bin" : {
+    "triplesec" : "./js/bin/triplesec.js"
+  },
+  "scripts" : {
+    "test" : "make test",
+    "build" : "make build"
+  },
   "dependencies" : {
-    "sqlite3" : "*",
-    "keybase-proofs" : "keybase/proofs"
+    "progress"           : "*",
+    "sqlite3"            : "*",
+    "keybase-proofs"     : "keybase/proofs",
+    "argparse"           : "*",
+    "read"               : "*",
+    "bignum"             : "*",
+    "colors"             : "*",
+    "read"               : "*",
+    "purepack"           : "*",
+    "framed-msgpack-rpc" : "*",
+    "mkdirp"             : "*",
+    "daemon"             : "*",
+    "winston"            : "*",
+    "iced-error"         : "*",
+    "iced-utils"         : "*",
+    "iced-data-structures" : "*",
+    "triplesec"          : ">=3.0.0"
+   },
+   "devDependencies" : {
+    "iced-coffee-script" : "*",
+    "iced-test"          : "*",
+    "optimist"           : "*"
   }
 }
