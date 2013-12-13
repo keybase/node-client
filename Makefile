@@ -24,11 +24,13 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
+	lib/gpg.js \
 	lib/log.js \
 	lib/package.js \
 	lib/pw.js \
 	lib/queue.js \
-	lib/util.js 
+	lib/stream.js \
+	lib/util.js
 	date > $@
 
 build: $(BUILD_STAMP) 

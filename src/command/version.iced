@@ -3,6 +3,8 @@ log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
 {PackageJson} = require '../package'
+{gpg} = require '../gpg'
+{BufferOutStream} = require '../stream'
 
 ##=======================================================================
 
@@ -19,10 +21,16 @@ exports.Command = class Command extends Base
     return opts.aliases.concat [ name ]
 
   #----------
-  
+
   run : (cb) ->
     pjs = new PackageJson()
-    lines = [ pjs.bin() + " (keybase.io CLI) version " + pjs.version() ]
+    bis = new BufferOutStream()
+    await gpg { args : [ "--version" ], stdout : bis }, defer rc
+    gpg_v = bis.data().toString().split("\n")[0...2]
+    lines = [ 
+      (pjs.bin() + " (keybase.io CLI) version " + pjs.version())
+      ("- node.js " + process.version)
+    ].concat("- #{l}" for l in gpg_v)
     console.log lines.join("\n")
     cb true
 
