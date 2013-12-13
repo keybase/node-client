@@ -1,16 +1,14 @@
 
-{AwsWrapper} = require '../aws'
 {Config} = require '../config'
 log = require '../log'
 {PasswordManager} = require '../pw'
-base58 = require '../base58'
+{base58} = require '../basex'
 crypto = require 'crypto'
-mycrypto = require '../crypto'
 myfs = require '../fs'
 fs = require 'fs'
 {rmkey} = require '../util'
 {add_option_dict} = require './argparse'
-{Infile, Outfile, Encryptor} = require '../file'
+{Infile, Outfile} = require '../file'
 {EscOk} = require 'iced-error'
 {E} = require '../err'
 {constants} = require '../constants'
@@ -30,7 +28,6 @@ exports.Base = class Base
 
   constructor : () ->
     @config = new Config()
-    @aws    = new AwsWrapper()
     @pwmgr  = new PasswordManager()
 
   #-------------------
@@ -40,18 +37,12 @@ exports.Base = class Base
   #-------------------
 
   @OPTS :
-    e :
-      alias : 'email'
-      help : 'email address, used for salting passwords & other things' 
-    s :
-      alias : 'salt'
-      help : 'salt used as salt and nothing else; overrides emails'
     p : 
       alias : 'password'
       help : 'password used for encryption / decryption'
     c : 
       alias : 'config'
-      help : 'a configuration file (rather than ~/.mkb.conf)'
+      help : 'a configuration file (rather than ~/.keybase.conf)'
     i : 
       alias : "interactive"
       action : "storeTrue"
@@ -120,82 +111,6 @@ exports.Base = class Base
   #-------------------
 
   password : () -> pick @argv.password, @config.password()
-  email    : () -> pick @argv.email, @config.email()
-  salt     : () -> pick @argv.salt, @config.salt()
-  salt_or_email : () -> pick @salt(), @email()
-
-
-#=========================================================================
-
-exports.CipherBase = class CipherBase extends Base
-   
-  #-----------------
-
-  OPTS :
-    o :
-      alias : "output"
-      help : "output file to write to"
-    r :
-      alias : "remove" 
-      action : 'storeTrue'
-      help : "remove the original file after encryption"
-    x :
-      alias : "extension"
-      help : "encrypted file extension"
-
-  #-----------------
-
-  need_aws : -> false
-  crypto_mode : -> constants.crypto_mode.NONE
-
-  #-----------------
-
-  file_extension : () -> @argv.x or @config.file_extension()
-
-  #-----------------
-
-  strip_extension : (fn) -> myfs.strip_extension fn, @file_extension()
-
-  #-----------------
-
-  # Maybe eventually decryption can do something here...
-  patch_file_metadata : (cb) -> cb()
-
-  #-----------------
-
-  cleanup : (ok, cb) ->
-    await @outfile.finish ok, defer() if @outfile?
-    await @infile.finish ok, defer() if @infile?
-    cb()
-
-  #-----------------
-
-  add_subcommand_parser : (scp) ->
-    # Ask the child class for the subcommand particulars....
-    scd = @subcommand()
-    name = rmkey scd, 'name'
-    opts = rmkey scd, 'options'
-
-    sub = scp.addParser name, scd
-    add_option_dict sub, @OPTS
-    add_option_dict sub, opts if opts?
-
-    # There's an optional input filename, since stdin can work too
-    sub.addArgument ["file"], { nargs : 1 } 
-
-    return scd.aliases.concat [ name ]
-
-  #-----------------
-
-  run : (cb) ->
-    await @init2 { infile : true, outfile : true, enc : true}, defer ok
-    if ok 
-      await @eng.run defer err
-      if err?
-        log.error err
-        ok = false
-    await @cleanup ok, defer()
-    cb ok
 
 #=========================================================================
 

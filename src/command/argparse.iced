@@ -4,7 +4,6 @@ Base = require('argparse').ArgumentParser
 
 ##========================================================================
 
-
 exports.add_option_dict = add_option_dict =  (ap, d) ->
   for k,v of d
     add_option_kv ap,k,v

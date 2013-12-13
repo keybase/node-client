@@ -13,7 +13,7 @@ exports.Command = class Command extends Base
   OPTS : 
     o :
       alias : 'output'
-      help : 'the output config file to write (defaults to ~/.mkb.conf)'
+      help : 'the output config file to write (defaults to ~/.keybase.conf)'
     A :
       alias : 'access-key-id'
       help : 'the accessKeyId for an admin AWS user'

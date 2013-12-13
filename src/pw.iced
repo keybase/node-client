@@ -2,16 +2,12 @@
 read = require 'read'
 log = require './log'
 crypto = require 'crypto'
-{Keys} = require './blockcrypt'
 
 #=========================================================================
 
 exports.PasswordManager = class PasswordManager
 
   constructor : () ->
-    # This is a sensible default.  Let's not bore the users with lots of 
-    # paramters they don't want to tweak.
-    @pbkdf_iters = 1024
 
   #-------------------
 
@@ -61,30 +57,6 @@ exports.PasswordManager = class PasswordManager
         go = false
     cb res
 
-  #-------------------
-
-  derive_key_material : (sz, is_new, cb) ->
-    ret = null
-    if not (salt = @opts.salt)?
-      log.error "No salt given; can't derive keys"
-    else
-      await @get_password is_new, defer pw
-      if not pw
-        log.error "No password given; can't derive keys"
-
-    if pw? and salt?
-      await crypto.pbkdf2 pw, salt, @pbkdf_iters, sz, defer err, ret
-      if err
-        log.error "PBKDF2 failed: #{err}"
-
-    cb ret
-
-  #-------------------
-
-  derive_keys : (is_new, cb) ->
-    await @derive_key_material Keys.raw_length(), is_new, defer km
-    cb if km? then new Keys km else null
-    
   #-------------------
 
   get_password : (is_new, cb) ->

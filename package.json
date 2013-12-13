@@ -12,13 +12,14 @@
     "url": "https://github.com/keybase/node-client/issues"
   },
   "bin" : {
-    "triplesec" : "./js/bin/main.js"
+    "keybase" : "./js/bin/main.js"
   },
   "scripts" : {
     "test" : "make test",
     "build" : "make build"
   },
   "dependencies" : {
+    "bn"                 : "keybase/bn",
     "progress"           : "*",
     "sqlite3"            : "*",
     "keybase-proofs"     : "keybase/proofs",

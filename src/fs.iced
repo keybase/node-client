@@ -2,7 +2,7 @@
 fs = require 'fs'
 log = require './log'
 C = require 'constants'
-base58 = require './base58'
+{base58} = require './basex'
 crypto = require 'crypto'
 
 ##======================================================================

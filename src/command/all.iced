@@ -23,7 +23,7 @@ class Main
       @ap = new ArgumentParser 
         addHelp : true
         version : @pkjson.version()
-        description : 'Backup files to AWS glacier'
+        description : 'keybase.io command line client'
         prog : @pkjson.bin()
 
       ok = @add_subcommands()
@@ -37,13 +37,7 @@ class Main
     add_option_dict @ap, Base.OPTS
 
     list = [ 
-      "enc"
-      "dec"
-      "up"
-      "down"
-      "init"
-      "server"
-      "daemon"
+      "version"
     ]
 
     subparsers = @ap.addSubparsers {
@@ -83,7 +77,8 @@ class Main
 
 ##=======================================================================
 
-exports.run = () -> (new Main).run()
+exports.run = run = () -> (new Main).run()
 
 ##=======================================================================
 
+run()

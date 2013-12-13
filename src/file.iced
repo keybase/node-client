@@ -1,18 +1,13 @@
 
 fs = require 'fs'
-blockcrypt  = require './blockcrypt'
 log = require './log'
 {constants} = require './constants'
-base58 = require './base58'
+{base58} = require './basex'
 crypto = require 'crypto'
 C = require 'constants'
 {make_esc} = require 'iced-error'
 purepack = require 'purepack'
 {E} = require './err'
-
-#==================================================================
-
-{bufeq,secure_bufeq} = blockcrypt
 
 #==================================================================
 
