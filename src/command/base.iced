@@ -64,6 +64,7 @@ exports.Base = class Base
   #-------------------
 
   use_config : () -> true
+  config_opts : () -> {}
 
   #-------------------
 

@@ -11,7 +11,7 @@ exports.Config = class Config
 
   #-------------------
 
-  constructor : (@filename) ->
+  constructor : (@filename, @opts) ->
     @json = null
     @loaded = false
     @cache = {}
@@ -22,16 +22,17 @@ exports.Config = class Config
   open : (cb) ->
     err = null
     await fs.exists @filename, defer @found
-    if not @found
-      log.warn "No config file found; tried '#{@filename}'"
-      log.warn "Run 'keybase init' to make a new config file"
-    else
+    if @found
       await @load defer err
+    else if not @opts.in_config
+      log.warn "No config file found; tried '#{@filename}'"
+      log.warn "Run 'keybase config' to make a new config file"
     cb err
 
   #-------------------
 
   is_empty : () -> not(@json?)
+  is_dirty : () -> @changed
 
   #-------------------
 
@@ -50,6 +51,14 @@ exports.Config = class Config
         if err?
           log.error "Error writing to #{@filename}: #{err}"
     cb err
+
+  #-------------------
+
+  get : (key) ->
+    parts = key.split "."
+    v = @json
+    (v = v[p] for p in parts when v?)
+    v 
 
   #-------------------
 

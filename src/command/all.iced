@@ -42,7 +42,7 @@ class Main
     list = [ 
       "version"
       "join"
-      "init"
+      "config"
     ]
 
     subparsers = @ap.addSubparsers {
@@ -81,7 +81,7 @@ class Main
   load_config : (cb) ->
     err = null
     if @cmd.use_config()
-      @config = new Config env().get_config_filename()
+      @config = new Config env().get_config_filename(), @cmd.config_opts()
       await @config.open defer err
     cb err
 

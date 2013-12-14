@@ -16,7 +16,7 @@ $(BUILD_STAMP): \
 	lib/command/argparse.js \
 	lib/command/all.js \
 	lib/command/base.js \
-	lib/command/init.js \
+	lib/command/config.js \
 	lib/command/join.js \
 	lib/command/version.js \
 	lib/basex.js \

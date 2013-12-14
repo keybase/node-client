@@ -40,7 +40,7 @@ class Client
   #-----------------
 
   post : (endpoint, args, cb) -> @req { method : 'POST', endpoint, args }, cb
-  get : (endpoint, args, cb) -> @req { method : 'GET', endpoint, args }, cb
+  get  : (endpoint, args, cb) -> @req { method : 'GET' , endpoint, args }, cb
 
 #=================================================
 
