@@ -1,3 +1,9 @@
+
+{home} = require './path'
+{join} = require 'path'
+{constants} = require './constants'
+FN = constants.filenames
+
 ##=======================================================================
 
 class RunMode
@@ -25,11 +31,16 @@ class RunMode
 class Env
 
   # Load in all viable command line switching opts
-  constructor : ({@argv, @config}) ->
+  constructor : () ->
     @env = process.env
+    @argv = null
+    @config = null
+
+  set_argv   : (a) -> @argv = a
+  set_config : (c) -> @config = c
 
   get_opt : ({env, arg, config, dflt}) ->
-    co = @config.obj
+    co = @config?.obj
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
 
   get_port   : ( ) ->
@@ -38,6 +49,12 @@ class Env
       arg    : (a) -> a.port
       config : (c) -> c.server?.port
       dflt   : ( ) -> 443
+
+  get_config_filename : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_CONFIG
+      arg    : (a) -> a.c
+      dflt   : ( ) -> join home(), FN.config_dir, FN.config_file
 
   get_host   : ( ) ->
     @get_opt
@@ -90,6 +107,6 @@ class Env
 ##=======================================================================
 
 _env = null
-exports.make = (a) -> _env = new Env 
-exports.get  = () -> _env
+exports.init_env = (a) -> _env = new Env 
+exports.env      = ()  -> _env
 

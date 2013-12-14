@@ -5,6 +5,8 @@ log = require '../log'
 {PackageJson} = require '../package'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
+{env,init_env} = require '../env'
+{Config} = require '../config'
 
 ##=======================================================================
 
@@ -18,7 +20,7 @@ class Main
 
   #---------------------------------
 
-  arg_parse_init : (cb) ->
+  arg_parse_init : () ->
     err = null
     @ap = new ArgumentParser 
       addHelp : true
@@ -28,7 +30,7 @@ class Main
 
     if not @add_subcommands()
       err = new E.InitError "cannot initialize subcommands" 
-    cb err
+    return err
 
   #---------------------------------
 
@@ -61,37 +63,54 @@ class Main
   #---------------------------------
 
   parse_args : (cb) ->
+    @cmd = null
+    err = @arg_parse_init()
+    if not err?
+      @argv = @ap.parseArgs process.argv[2...]
+      @cmd = @commands[@argv.subcommand_name]
+      if not @cmd?
+        log.error "Subcommand not found: #{argv.subcommand_name}"
+        err = new E.ArgsError "#{argv.subcommand_name} not found"
+      else
+        @cmd.set_argv @argv
+    cb err
+
+  #---------------------------------
+
+  load_config : (cb) ->
     err = null
-    @argv = @ap.parseArgs process.argv[2...]
-    cmd = @commands[@argv.subcommand_name]
-    if not cmd?
-      log.error "Subcommand not found: #{argv.subcommand_name}"
-      err = new E.BadArgsError "#{argv.subcommand_name} not found"
-    else
-      cmd.set_argv @argv
-    cb err, cmd
+    if @cmd.use_config()
+      @config = new Config env().get_config_filename()
+      await @config.open defer err
+    cb err
 
   #---------------------------------
 
-  setup_env : () ->
-
-  #---------------------------------
-
-  run : () ->
-    await @_run defer err
+  main : () ->
+    await @run defer err
     process.exit if err? then -2 else 0
 
   #---------------------------------
 
-  _run : (cb) ->
-    esc = make_esc cb, "_run"
-    await @arg_parse_init esc defer()
-    await @parse_args esc defer cmd
-    await cmd.run defer err
+  run : (cb) ->
+    esc = make_esc cb, "run"
+    await @setup   esc defer()
+    await @cmd.run esc defer()
+    cb null
+
+  #----------------------------------
+
+  setup : (cb) ->
+    esc = make_esc cb, "setup"
+    init_env()
+    await @parse_args  esc defer()
+    env().set_argv @argv
+    await @load_config esc defer()
+    env().set_config @config
     cb null
 
 ##=======================================================================
 
-exports.run = run = () -> (new Main).run()
+exports.run = run = () -> (new Main).main()
 
 ##=======================================================================

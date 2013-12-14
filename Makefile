@@ -29,6 +29,7 @@ $(BUILD_STAMP): \
 	lib/gpg.js \
 	lib/log.js \
 	lib/package.js \
+	lib/path.js \
 	lib/pw.js \
 	lib/queue.js \
 	lib/stream.js \

@@ -1,5 +1,4 @@
 
-{Config} = require '../config'
 log = require '../log'
 {PasswordManager} = require '../pw'
 {base58} = require '../basex'
@@ -27,8 +26,6 @@ exports.Base = class Base
   #-------------------
 
   constructor : () ->
-    @config = new Config()
-    @pwmgr  = new PasswordManager()
 
   #-------------------
 
@@ -42,7 +39,7 @@ exports.Base = class Base
       help : 'password used for encryption / decryption'
     c : 
       alias : 'config'
-      help : 'a configuration file (rather than ~/.keybase/conf)'
+      help : 'a configuration file (rather than ~/.keybase/config.json)'
     i : 
       alias : "interactive"
       action : "storeTrue"
@@ -59,26 +56,7 @@ exports.Base = class Base
 
   #-------------------
 
-  need_aws : () -> true
-
-  #-------------------
-
-  init : (cb) ->
-
-    if @config.loaded
-      # The 'init' subcommand will load in an init object that it 
-      # invents out of thin air, so no need to read from the FS
-      ok = true
-    else
-      await @config.find @argv.config, defer fc
-      if fc  
-        await @config.load defer ok
-      else if @need_aws()
-        log.error "cannot find config file #{@config.filename}; needed for aws"
-        ok = false
-
-    ok = @_init_pwmgr()                  if ok
-    cb ok
+  use_config : () -> true
 
   #-------------------
 

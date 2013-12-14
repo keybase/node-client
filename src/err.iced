@@ -20,5 +20,6 @@ exports.E = ie.make_errors
   BAD_PW_OR_MAC : "Bad password or file was corrupted"
   INIT : "Initialization error"
   DAEMON : "Error in connecting to or launching daemon"
-  BAD_ARGS : "Error in argument parsing"
+  ARGS : "Error in argument parsing"
   UNIMPLEMENTED : "Feature not implemented"
+  CONFIG : "Configuration file error"

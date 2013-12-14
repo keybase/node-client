@@ -11,24 +11,22 @@ exports.Config = class Config
 
   #-------------------
 
-  constructor : () ->
+  constructor : (@filename) ->
     @json = null
     @loaded = false
     @cache = {}
 
   #-------------------
 
-  init : (fn) ->
-    @filename = if fn? then fn
-    else if (f = process.env.MKB_CONFIG)? then f
-    else path.join process.env.HOME, ".mkb.conf"
-
-  #-------------------
-
-  find : (file, cb) ->
-    @init file
+  open : (cb) ->
+    err = null
     await fs.exists @filename, defer @found
-    cb @found
+    if not @found
+      log.warn "No config file found; tried '#{@filename}'"
+      log.warn "Run 'keybase setup' to make a new config file"
+    else
+      await @load defer err
+    cb err
 
   #-------------------
 
@@ -55,29 +53,27 @@ exports.Config = class Config
   #-------------------
 
   load : (cb) ->
-    ok = true
+    err = null
     
     await fs.readFile @filename, defer err, file
     if err?
       log.error "Cannot read file #{@filename}: #{err}"
-      ok = false
-
-    if ok
+    else
       try
         @json = JSON.parse file
       catch e
         log.error "Invalid json in #{@filename}: #{e}"
-        ok = false
+        err = e
 
-    if ok 
-      for key in [ 'aws', 'vault' ]
+    unless err?
+      for key in [ ]
         unless @json?[key]?
-          log.error "Missing JSON component '#{key}' in #{@filename}" unless @json?[key]?
-          ok = false
+          log.error "Missing JSON component '#{key}' in #{@filename}" 
+          err = new E.ConfigError "missing component '#{key}'"
 
-    log.warn "Failed to load config" unless ok
+    log.warn "Failed to load config" if err?
 
-    cb ok
+    cb err
 
   #-------------------
 
@@ -89,7 +85,7 @@ exports.Config = class Config
 
   _get_file : (which) -> 
     unless (f = @cache[which])?
-      f = @config?.json?.files?[which] or path.join(@tmpdir(), "mkb.#{which}") 
+      f = @config?.json?.files?[which] or path.join(@tmpdir(), "keybase.#{which}") 
       @cache[which] = f
     f
 
@@ -102,7 +98,7 @@ exports.Config = class Config
   #-------------------
 
   pidfile : (cb) ->
-    @_pidfile = @config?.json?.files?.pid or (path.join @tmpdir(), "mkb.pid") unless @_pidfile?
+    @_pidfile = @config?.json?.files?.pid or (path.join @tmpdir(), "keybase.pid") unless @_pidfile?
     @_pidfile
 
   #-------------------
@@ -117,7 +113,7 @@ exports.Config = class Config
   #-------------------
 
   file_extension : () ->
-    @json.file_extension or "mke"
+    @json.file_extension or "kbs"
 
   #-------------------
 
