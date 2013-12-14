@@ -3,6 +3,7 @@
 {join} = require 'path'
 {constants} = require './constants'
 FN = constants.filenames
+SRV = constants.server
 
 ##=======================================================================
 
@@ -48,7 +49,7 @@ class Env
       env    : (e) -> e.KEYBASE_PORT
       arg    : (a) -> a.port
       config : (c) -> c.server?.port
-      dflt   : ( ) -> 443
+      dflt   : ( ) -> SRV.port
 
   get_config_filename : () ->
     @get_opt
@@ -61,7 +62,7 @@ class Env
       env    : (e) -> e.KEYBASE_HOST
       arg    : (a) -> a.host
       config : (c) -> c.server?.host
-      dflt   : ( ) -> "keybase.io"
+      dflt   : ( ) -> SRV.host
 
   get_debug  : ( ) ->
     @get_opt
@@ -82,7 +83,7 @@ class Env
       env    : (e) -> e.KEYBASE_URI_PREFIX
       arg    : (a) -> a["api-uri-prefix"]
       config : (c) -> c.server?.api_uri_prefix
-      dflt   : ( ) -> "/_/api/1.0"
+      dflt   : ( ) -> SRV.api_uri_prefix
 
   get_run_mode : () ->
     unless @_run_mode

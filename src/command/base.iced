@@ -11,6 +11,9 @@ fs = require 'fs'
 {EscOk} = require 'iced-error'
 {E} = require '../err'
 {constants} = require '../constants'
+{join} = require 'path'
+FN = constants.filenames
+SRV = constants.server
 
 #=========================================================================
 
@@ -39,7 +42,7 @@ exports.Base = class Base
       help : 'password used for encryption / decryption'
     c : 
       alias : 'config'
-      help : 'a configuration file (rather than ~/.keybase/config.json)'
+      help : "a configuration file (#{join '~', FN.config_dir, FN.config_file})"
     i : 
       alias : "interactive"
       action : "storeTrue"
@@ -52,7 +55,7 @@ exports.Base = class Base
     "host" :
       help : 'which host to connect to'
     "api-uri-prefix" :
-      help : "the API "
+      help : "the API prefix to use (#{SRV.api_uri_prefix})"
 
   #-------------------
 

@@ -42,6 +42,7 @@ class Main
     list = [ 
       "version"
       "join"
+      "init"
     ]
 
     subparsers = @ap.addSubparsers {

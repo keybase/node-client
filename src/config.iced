@@ -15,6 +15,7 @@ exports.Config = class Config
     @json = null
     @loaded = false
     @cache = {}
+    @changed = false
 
   #-------------------
 
@@ -23,38 +24,56 @@ exports.Config = class Config
     await fs.exists @filename, defer @found
     if not @found
       log.warn "No config file found; tried '#{@filename}'"
-      log.warn "Run 'keybase setup' to make a new config file"
+      log.warn "Run 'keybase init' to make a new config file"
     else
       await @load defer err
     cb err
 
   #-------------------
 
+  is_empty : () -> not(@json?)
+
+  #-------------------
+
   write : (cb) ->
-    dat = JSON.stringify @json, null, "    "
-    await fs.writeFile @filename, dat, { mode : 0o600 }, defer err
-    ok = true
-    if err?
-      log.error "Error writing to #{@filename}: #{err}"
-      ok = false
-    cb ok
+    err = null
+    if @changed
+      dat = JSON.stringify @json, null, "    "
+      d = path.dirname @filename
+      await mkdirp path.dirname(@filename), 0o700, defer err, n
+      if err?
+        log.error "Error creating directory '#{d}': #{err.message}"
+      else 
+        if n > 0
+          log.warn "Created directory #{d}"
+        await fs.writeFile @filename, dat, { mode : 0o600 }, defer err
+        if err?
+          log.error "Error writing to #{@filename}: #{err}"
+    cb err
 
   #-------------------
 
   set : (key, val) ->
     parts = key.split "."
-    @json = {} unless @json?
+    if not @json?
+      @json = {}
+      @changed = true
     d = @json
     for p in parts[0...(parts.length-1)]
-      d[p] = {} unless d[p]?
-      d = d[p]
-    d[parts[parts.length-1]] = val
+      unless d[p]?
+        d[p] = {}
+        d = d[p]
+        @changed = true
+    last = parts[-1...][0]
+    e = d[last]
+    if (e isnt val)
+      d[last] = val
+      @changed = true
 
   #-------------------
 
   load : (cb) ->
     err = null
-    
     await fs.readFile @filename, defer err, file
     if err?
       log.error "Cannot read file #{@filename}: #{err}"
@@ -70,8 +89,6 @@ exports.Config = class Config
         unless @json?[key]?
           log.error "Missing JSON component '#{key}' in #{@filename}" 
           err = new E.ConfigError "missing component '#{key}'"
-
-    log.warn "Failed to load config" if err?
 
     cb err
 
