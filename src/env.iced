@@ -78,9 +78,9 @@ class Env
       config : (c) -> c.server?.no_tls
       dflt   : ( ) -> SRV.no_tls
 
-  get_uri_prefix : () ->
+  get_apu_uri_prefix : () ->
     @get_opt
-      env    : (e) -> e.KEYBASE_URI_PREFIX
+      env    : (e) -> e.KEYBASE_API_URI_PREFIX
       arg    : (a) -> a["api-uri-prefix"]
       config : (c) -> c.server?.api_uri_prefix
       dflt   : ( ) -> SRV.api_uri_prefix
