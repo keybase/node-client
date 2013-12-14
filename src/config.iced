@@ -121,13 +121,12 @@ exports.Config = class Config
 
   #-------------------
 
-  aws   : () -> @json.aws
-  arns  : () -> @json.arns
-  vault : () -> @json.vault
+  obj : () -> @json
+
+  #-------------------
+
   email : () -> @json.email
   salt  : () -> @json.salt
   password : () -> @json.password
-  sns   : () -> @json.arns.sns
-  sqs   : () -> @json.arns.sqs
 
 #=========================================================================

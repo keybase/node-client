@@ -11,9 +11,10 @@ exports.add_option_dict = add_option_dict =  (ap, d) ->
 #-------------
 
 exports.add_option_kv = add_option_kv = (ap, k, d)->
-  names = [ "-#{k}" ]
-  names.push "--#{a}" if (a = rmkey d, 'alias')?
-  names = names.concat ("--#{a}" for a in as) if (as = rmkey d, 'aliases')?
+  names = [ k ]
+  names.push a if (a = rmkey d, 'alias')
+  names = names.concat as if (as = rmkey d, 'aliases')
+  names = ("-#{if n.length > 1 then '-' else ''}#{n}" for n in names)
   ap.addArgument names, d
 
 ##========================================================================

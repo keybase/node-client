@@ -13,14 +13,16 @@ lib/%.js: src/%.iced
 	$(ICED) -I browserify -c -o `dirname $@` $<
 
 $(BUILD_STAMP): \
+	lib/command/argparse.js \
 	lib/command/all.js \
 	lib/command/base.js \
-	lib/command/argparse.js \
+	lib/command/join.js \
 	lib/command/version.js \
 	lib/basex.js \
 	lib/bn.js \
 	lib/config.js \
 	lib/constants.js \
+	lib/env.js \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \

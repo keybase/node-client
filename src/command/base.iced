@@ -42,11 +42,18 @@ exports.Base = class Base
       help : 'password used for encryption / decryption'
     c : 
       alias : 'config'
-      help : 'a configuration file (rather than ~/.keybase.conf)'
+      help : 'a configuration file (rather than ~/.keybase/conf)'
     i : 
       alias : "interactive"
       action : "storeTrue"
       help : "interactive mode"
+    port :
+      help : 'which port to connect to'
+    "disable-tls" :
+      action : "storeTrue"
+      help : "turn off HTTPS/TLS (on by default)"
+    "host" :
+      help : 'which host to connect to'
 
   #-------------------
 
@@ -68,7 +75,6 @@ exports.Base = class Base
         log.error "cannot find config file #{@config.filename}; needed for aws"
         ok = false
 
-    ok = @aws.init @config.aws()         if ok and @need_aws()
     ok = @_init_pwmgr()                  if ok
     cb ok
 
