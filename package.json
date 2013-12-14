@@ -36,6 +36,7 @@
     "iced-error"         : "*",
     "iced-utils"         : "*",
     "iced-data-structures" : "*",
+    "request"            : "*",
     "triplesec"          : ">=3.0.0"
    },
    "devDependencies" : {
