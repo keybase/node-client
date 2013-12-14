@@ -18,10 +18,11 @@ exports.js2unix = (t) -> Math.floor(t/1000)
 
 #=========================================================================
 
+is_dict = (d) -> (typeof d is 'object') and not (Array.isArray d)
 exports.purge = purge = (d) ->
   out = {}
   for k,v of d when v?
-    out[k] = if typeof v is 'object' then purge v else v
+    out[k] = if is_dict v then purge v else v
   return out
 
 #=========================================================================
