@@ -17,3 +17,11 @@ exports.daemon = (args) ->
 exports.js2unix = (t) -> Math.floor(t/1000)
 
 #=========================================================================
+
+exports.purge = purge = (d) ->
+  out = {}
+  for k,v of d when v?
+    out[k] = if typeof v is 'object' then purge v else v
+  return out
+
+#=========================================================================

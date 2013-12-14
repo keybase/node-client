@@ -4,6 +4,7 @@ fs = require 'fs'
 log = require './log'
 util = require 'util'
 mkdirp = require 'mkdirp'
+{purge} = require './util'
 
 #=========================================================================
 
@@ -39,6 +40,7 @@ exports.Config = class Config
   write : (cb) ->
     err = null
     if @changed
+      @json = purge @json
       dat = JSON.stringify @json, null, "    "
       d = path.dirname @filename
       await mkdirp path.dirname(@filename), 0o700, defer err, n
@@ -71,8 +73,8 @@ exports.Config = class Config
     for p in parts[0...(parts.length-1)]
       unless d[p]?
         d[p] = {}
-        d = d[p]
         @changed = true
+      d = d[p]
     last = parts[-1...][0]
     e = d[last]
     if (e isnt val)
