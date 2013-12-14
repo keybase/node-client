@@ -32,7 +32,7 @@ exports.Command = class Command extends Base
       ("- node.js " + process.version)
     ].concat("- #{l}" for l in gpg_v)
     console.log lines.join("\n")
-    cb true
+    cb null
 
 ##=======================================================================
 

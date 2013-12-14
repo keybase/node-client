@@ -3,6 +3,8 @@ log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
 {PackageJson} = require '../package'
+{E} = require '../err'
+{make_esc} = require 'iced-error'
 
 ##=======================================================================
 
@@ -16,17 +18,17 @@ class Main
 
   #---------------------------------
 
-  init : (cb) ->
-    ok = true
-    if ok
-      @ap = new ArgumentParser 
-        addHelp : true
-        version : @pkjson.version()
-        description : 'keybase.io command line client'
-        prog : @pkjson.bin()
+  arg_parse_init : (cb) ->
+    err = null
+    @ap = new ArgumentParser 
+      addHelp : true
+      version : @pkjson.version()
+      description : 'keybase.io command line client'
+      prog : @pkjson.bin()
 
-      ok = @add_subcommands()
-    cb ok
+    if not @add_subcommands()
+      err = new E.InitError "cannot initialize subcommands" 
+    cb err
 
   #---------------------------------
 
@@ -58,22 +60,35 @@ class Main
 
   #---------------------------------
 
-  parse_args : () ->
-    argv = @ap.parseArgs process.argv[2...]
-    cmd = @commands[argv.subcommand_name]
+  parse_args : (cb) ->
+    err = null
+    @argv = @ap.parseArgs process.argv[2...]
+    cmd = @commands[@argv.subcommand_name]
     if not cmd?
       log.error "Subcommand not found: #{argv.subcommand_name}"
+      err = new E.BadArgsError "#{argv.subcommand_name} not found"
     else
-      cmd.set_argv argv
-    cmd
+      cmd.set_argv @argv
+    cb err, cmd
+
+  #---------------------------------
+
+  setup_env : () ->
 
   #---------------------------------
 
   run : () ->
-    await @init defer ok
-    cmd = @parse_args() if ok
-    await cmd.run defer ok if cmd?
-    process.exit if ok then 0 else -2
+    await @_run defer err
+    process.exit if err? then -2 else 0
+
+  #---------------------------------
+
+  _run : (cb) ->
+    esc = make_esc cb, "_run"
+    await @arg_parse_init esc defer()
+    await @parse_args esc defer cmd
+    await cmd.run defer err
+    cb null
 
 ##=======================================================================
 

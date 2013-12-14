@@ -35,14 +35,14 @@ class Env
   get_port   : ( ) ->
     @get_opt
       env    : (e) -> e.KEYBASE_PORT
-      arg    : (a) -> a.p
+      arg    : (a) -> a.port
       config : (c) -> c.server?.port
       dflt   : ( ) -> 443
 
   get_host   : ( ) ->
     @get_opt
       env    : (e) -> e.KEYBASE_HOST
-      arg    : (a) -> a.h
+      arg    : (a) -> a.host
       config : (c) -> c.server?.host
       dflt   : ( ) -> "keybase.io"
 
@@ -56,9 +56,16 @@ class Env
   get_no_tls : ( ) ->
     @get_opt
       env    : (e) -> e.KEYBASE_NO_TLS
-      arg    : (a) -> a.T
+      arg    : (a) -> a["no-tls"]
       config : (c) -> c.server?.no_tls
       dflt   : ( ) -> false
+
+  get_uri_prefix : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_URI_PREFIX
+      arg    : (a) -> a["api-uri-prefix"]
+      config : (c) -> c.server?.api_uri_prefix
+      dflt   : ( ) -> "/_/api/1.0"
 
   get_run_mode : () ->
     unless @_run_mode
@@ -83,6 +90,6 @@ class Env
 ##=======================================================================
 
 _env = null
-exports.make = (f) -> _env = new Env f
+exports.make = (a) -> _env = new Env 
 exports.get  = () -> _env
 

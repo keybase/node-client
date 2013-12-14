@@ -5,6 +5,7 @@ log = require '../log'
 {PackageJson} = require '../package'
 {gpg} = require '../gpg'
 {BufferOutStream} = require '../stream'
+{E} = require '../err'
 
 ##=======================================================================
 
@@ -23,7 +24,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     log.error "unimplemented"
-    cb false
+    cb new E.UnimplementedError, "Feature not implemented"
 
 ##=======================================================================
 

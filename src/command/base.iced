@@ -49,11 +49,13 @@ exports.Base = class Base
       help : "interactive mode"
     port :
       help : 'which port to connect to'
-    "disable-tls" :
+    "no-tls" :
       action : "storeTrue"
       help : "turn off HTTPS/TLS (on by default)"
     "host" :
       help : 'which host to connect to'
+    "api-uri-prefix" :
+      help : "the API "
 
   #-------------------
 
