@@ -47,6 +47,10 @@ exports.Base = class Base
       alias : "interactive"
       action : "storeTrue"
       help : "interactive mode"
+    d:
+      alias: "debug"
+      action : "storeTrue"
+      help : "debug mode"
     port :
       help : 'which port to connect to'
     "no-tls" :

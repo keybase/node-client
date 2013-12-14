@@ -54,7 +54,7 @@ class Env
   get_config_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_CONFIG
-      arg    : (a) -> a.c
+      arg    : (a) -> a.config
       dflt   : ( ) -> join home(), FN.config_dir, FN.config_file
 
   get_host   : ( ) ->
@@ -67,7 +67,7 @@ class Env
   get_debug  : ( ) ->
     @get_opt
       env    : (e) -> e.KEYBASE_DEBUG
-      arg    : (a) -> a.d
+      arg    : (a) -> a.debug
       config : (c) -> c.run?.d
       dflt   : ( ) -> false
 
@@ -76,7 +76,7 @@ class Env
       env    : (e) -> e.KEYBASE_NO_TLS
       arg    : (a) -> a["no-tls"]
       config : (c) -> c.server?.no_tls
-      dflt   : ( ) -> false
+      dflt   : ( ) -> SRV.no_tls
 
   get_uri_prefix : () ->
     @get_opt
