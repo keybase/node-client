@@ -6,6 +6,9 @@ log = require '../log'
 {gpg} = require '../gpg'
 {BufferOutStream} = require '../stream'
 {E} = require '../err'
+{Prompter} = require '../prompter'
+{checkers} = require '../checkers'
+{make_esc} = require 'iced-error'
 
 ##=======================================================================
 
@@ -22,9 +25,33 @@ exports.Command = class Command extends Base
 
   #----------
 
+  prompt : (cb) ->
+    seq =
+      username : 
+        prompt : "Your desired username"
+        checker : checkers.username
+      password : 
+        prompt : "Your passphrase"
+        password : true
+        checker: checkers.password
+        confirm : 
+          prompt : "confirm passphrase"
+      email :
+        prompt : "Your email"
+        checker : checkers.email
+
+    p = new Prompter seq
+    await p.run defer err
+    @data = p.data() unless err?
+    cb err
+
+  #----------
+
   run : (cb) ->
-    log.error "unimplemented"
-    cb new E.UnimplementedError, "Feature not implemented"
+    esc = make_esc cb, "Join::run"
+    await @prompt esc defer()
+    console.log @data
+    cb null
 
 ##=======================================================================
 

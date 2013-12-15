@@ -5,7 +5,7 @@ log = require './log'
 
 #========================================================================
 
-class Prompter 
+exports.Prompter = class Prompter 
 
   constructor : (@_fields) -> @_data = {}
   data        : ()         -> @_data
@@ -61,23 +61,3 @@ class Prompter
 
 #========================================================================
 
-d = 
-  username : 
-    prompt : "Your desired username"
-    checker : checkers.username
-  password : 
-    prompt : "Your passphrase"
-    password : true
-    checker: checkers.password
-    confirm :
-      prompt : "confirm passphrase"
-  email :
-    prompt : "Your email"
-    checker : checkers.email
-
-p = new Prompter d
-await p.run defer err
-console.log p.data()
-p.clear "email"
-await p.run defer err
-console.log p.data()
