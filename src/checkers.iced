@@ -8,5 +8,8 @@ exports.checkers = checkers =
     f : (x) -> x.length >= 12
   email : 
     hint : "must be a valid email address"
-    f : (x) -> (x.length > 3) and (a = x.indexOf('@')) > 0 and x.indexOf('.') > a
+    f : (x) -> (x.length > 3) and x.match /^\S+@\S+\.\S+$/ 
+  invite_code :
+    hint : "invite codes at 12 digits long"
+    f : (x) -> x.length is 12
 

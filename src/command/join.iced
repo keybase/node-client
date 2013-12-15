@@ -39,6 +39,9 @@ exports.Command = class Command extends Base
       email :
         prompt : "Your email"
         checker : checkers.email
+      invite:
+        prompt : "Invitation code"
+        checker : checkers.invite_code
 
     p = new Prompter seq
     await p.run defer err
