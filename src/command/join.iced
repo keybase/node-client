@@ -6,7 +6,7 @@ log = require '../log'
 {gpg} = require '../gpg'
 {BufferOutStream} = require '../stream'
 {E} = require '../err'
-{Prompter} = require '../prompter'
+{prompt_yn,Prompter} = require '../prompter'
 {checkers} = require '../checkers'
 {make_esc} = require 'iced-error'
 triplesec = require 'triplesec'
@@ -16,6 +16,7 @@ SC = constants.security
 ProgressBar = require 'progress'
 req = require '../req'
 {env} = require '../env'
+read = require 'read'
 
 ##=======================================================================
 
@@ -145,9 +146,23 @@ exports.Command = class Command extends Base
 
   #----------
 
+  check_registered : (cb) ->
+    err = null
+    if (env().config.get "user.id")?
+      opts =
+        prompt : "Already registered; do you want to reregister?"
+        defval : false
+      await prompt_yn opts, defer err, rereg
+      if not err? and not rereg
+        err = new E.CancelError "registration canceled"
+    cb err
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Join::run"
     retry = true
+    await @check_registered esc defer()
     while retry
       await @prompt  esc defer()
       await @gen_pwh esc defer()

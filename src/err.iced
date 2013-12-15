@@ -25,3 +25,4 @@ exports.E = ie.make_errors
   CONFIG : "Configuration file error"
   HTTP : "HTTP status code error"
   KEYBASE : "Server-side failure"
+  CANCEL : "Operation canceled"

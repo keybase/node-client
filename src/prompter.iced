@@ -61,3 +61,27 @@ exports.Prompter = class Prompter
 
 #========================================================================
 
+strip = (s) ->
+  x = /^\s*(.*?)\s*$/
+  if (m = s.match x)? then s = m[1]
+  return s
+
+exports.prompt_yn = ({prompt,defval}, cb) ->
+  ch = "[#{if defval then 'Y' else 'y'}/#{if not(defval) then 'N' else 'n' }]"
+  prompt += " #{ch} "
+  obj = { prompt }
+  ret = null
+  err = null
+  while not ret? and not err?
+    await read obj, defer err, res
+    if not err?
+      res = strip res
+      if res.length is 0
+        ret = defval
+      else if "yes".indexOf(res.toLowerCase()) >= 0 
+        ret = true
+      else if "no".indexOf(res.toLowerCase()) >= 0
+        ret = false
+  cb err, ret
+
+#========================================================================
