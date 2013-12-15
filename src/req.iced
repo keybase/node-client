@@ -44,8 +44,6 @@ class Client
     if method is 'POST'
       opts.body = args
 
-    console.log opts
-
     await request opts, defer err, res, body
     if err? then #noop
     else if not (res.statusCode in http_status) 

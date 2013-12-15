@@ -61,7 +61,7 @@ exports.Command = class Command extends Base
         checker : checkers.invite_code
         defval : "123412341234123412341234"
 
-    if not @promper
+    if not @prompter
       if (u = env().get_username())?   then seq.username.defval   = u
       if (p = env().get_passphrase())? then seq.passphrase.defval = p
       if (e = env().get_email())?      then seq.email.defval      = e
@@ -97,8 +97,8 @@ exports.Command = class Command extends Base
       extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
       await @enc.resalt { extra_keymaterial, progress_hook }, defer err, km
       unless err?
-        @salt = @enc.salt.to_buffer()
-        @pwh = km.extra[0...SC.pwh.derived_key_bytes]
+        @salt = @enc.salt.to_hex()
+        @pwh = km.extra[0...SC.pwh.derived_key_bytes].toString('hex')
 
     cb err
 
@@ -106,8 +106,8 @@ exports.Command = class Command extends Base
 
   post : (cb) ->
     args =  
-      salt : @salt.toString('hex')
-      pwh : @pwh.toString('hex') 
+      salt : @salt
+      pwh : @pwh
       username : @data.username
       email : @data.email
       invitation_id : @data.invite
@@ -131,6 +131,17 @@ exports.Command = class Command extends Base
     else if not retry then log.error "Unexpected error: #{err}"
 
     cb err, retry
+
+  #----------
+
+  write_out : (cb) ->
+    c = env().config
+    c.set "user.email", @data.email
+    c.set "user.salt",  @salt
+    c.set "user.name",  @data.username
+    c.set "user.id"  ,  @uid
+    await c.write defer err
+    cb err
 
   #----------
 
