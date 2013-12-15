@@ -74,7 +74,7 @@ exports.Command = class Command extends Base
     extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
     await @enc.resalt { extra_keymaterial, progress_hook }, defer err, km
     unless err?
-      @salt = @enc.salt
+      @salt = @enc.salt.to_buffer()
       @pwh = km.extra[0...SC.pwh.derived_key_bytes]
       console.log @salt
       console.log @pwh
