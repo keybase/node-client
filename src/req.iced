@@ -27,7 +27,7 @@ class Client
   #-----------------
 
   req : ({method, endpoint, args, http_status, kb_status}, cb) ->
-    opts = { method, json : true }
+    opts = { method, json : true, jar : true }
     opts.headers = @headers if @headers?
 
     kb_status or= [ "OK" ]

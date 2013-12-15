@@ -66,6 +66,8 @@ strip = (s) ->
   if (m = s.match x)? then s = m[1]
   return s
 
+#--------
+
 exports.prompt_yn = ({prompt,defval}, cb) ->
   ch = "[#{if defval then 'Y' else 'y'}/#{if not(defval) then 'N' else 'n' }]"
   prompt += " #{ch} "
@@ -83,5 +85,17 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
       else if "no".indexOf(res.toLowerCase()) >= 0
         ret = false
   cb err, ret
+
+#========================================================================
+
+exports.prompt_pw = (cb) ->
+  seq = 
+    passhrase :
+      prompt : "Your login passphrase"
+      passphrase : true
+      checker : checkers.passphrase
+  p = new Prompter seq
+  await p.run defer err
+  cb err, p.passphrase
 
 #========================================================================

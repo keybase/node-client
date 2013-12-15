@@ -13,7 +13,6 @@ triplesec = require 'triplesec'
 {rng} = require 'crypto'
 {constants} = require '../constants'
 SC = constants.security
-ProgressBar = require 'progress'
 req = require '../req'
 {env} = require '../env'
 read = require 'read'
@@ -75,32 +74,10 @@ exports.Command = class Command extends Base
   #----------
 
   gen_pwh : (cb) ->
-
-    if not(@pw_last) or (@pw_last isnt @data.passphrase)
-
-      @enc = new triplesec.Encryptor { 
-        key : new Buffer(@data.passphrase, 'utf8')
-        verion : SC.triplesec.version
-      }
-      @pw_last = @data.passphrase
-
-      bar = null
-      prev = 0
-      progress_hook = (obj) ->
-        if obj.what isnt "scrypt" then #noop
-        else 
-          bar or= new ProgressBar "Scrypt [:bar] :percent", { 
-            width : 35, total : obj.total 
-          }
-          bar.tick(obj.i - prev)
-          prev = obj.i
-
-      extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
-      await @enc.resalt { extra_keymaterial, progress_hook }, defer err, km
-      unless err?
-        @salt = @enc.salt.to_hex()
-        @pwh = km.extra[0...SC.pwh.derived_key_bytes].toString('hex')
-
+    passphrase = @data.passphrase
+    if not(@pp_last) or (@pp_last isnt passphrase)
+      await @_gen_pwh {passphrase}, defer err
+      @pp_last = passphrase if not err?
     cb err
 
   #----------
@@ -168,6 +145,7 @@ exports.Command = class Command extends Base
       await @gen_pwh esc defer()
       await @post    esc defer retry
     await @write_out esc defer()
+    log.info "Success! You are now signed up."
     cb null
 
 ##=======================================================================
