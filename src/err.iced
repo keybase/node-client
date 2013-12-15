@@ -23,3 +23,5 @@ exports.E = ie.make_errors
   ARGS : "Error in argument parsing"
   UNIMPLEMENTED : "Feature not implemented"
   CONFIG : "Configuration file error"
+  HTTP : "HTTP status code error"
+  KEYBASE : "Server-side failure"

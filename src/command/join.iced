@@ -47,6 +47,7 @@ exports.Command = class Command extends Base
       invite:
         prompt : "Invitation code"
         checker : checkers.invite_code
+        default : "123412341234123412341234"
 
     p = new Prompter seq
     await p.run defer err
@@ -76,17 +77,30 @@ exports.Command = class Command extends Base
     unless err?
       @salt = @enc.salt.to_buffer()
       @pwh = km.extra[0...SC.pwh.derived_key_bytes]
-      console.log @salt
-      console.log @pwh
+    cb err
+
+  #----------
+
+  post : (cb) ->
+    args = { 
+      @salt, 
+      @pwh, 
+      username : @data.username, 
+      email : @data.email,
+      invitation_id : @data.invitation_id 
+    }
+    await req.post { endpoint : "signup", args }, defer err, body
+    unless err?
+      @uid = body.uid
     cb err
 
   #----------
 
   run : (cb) ->
     esc = make_esc cb, "Join::run"
-    await @prompt esc defer()
+    await @prompt  esc defer()
     await @gen_pwh esc defer()
-    console.log @data
+    await @post    esc defer()
     cb null
 
 ##=======================================================================

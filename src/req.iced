@@ -4,6 +4,12 @@ urlmod = require 'url'
 
 #=================================================
 
+m = (dict, method) ->
+  dict.method = method
+  dict
+
+#=================================================
+
 class Client 
 
   constructor : (@headers) ->
@@ -19,9 +25,12 @@ class Client
 
   #-----------------
 
-  req : ({method, endpoint, args}, cb) ->
+  req : ({method, endpoint, args, http_status, kb_status}, cb) ->
     opts = { method, json : true }
     opts.headers = @headers if @headers?
+
+    kb_status or= [ "OK" ]
+    http_status or= [ 200 ]
 
     uri_fields = {
       protocol : "http#{if env().get_no_tls() then '' else 's'}"
@@ -34,13 +43,20 @@ class Client
     if method is 'POST'
       opts.body = args
 
-    await request opts, defer err, response, body
-    cb err, response, body
+    await request opts, defer err, res, body
+    if err? then #noop
+    else if not (res.statusCode in http_status) 
+      err = new E.HttpError "Got reply #{res.statusCode}"
+    else if not (body?.status?.name in kb_status)
+      err = new E.KebaseError "Got status #{JSON.stringify body.status}"
+
+    # Note the swap --- we care more about the body in most cases.
+    cb err, body, res
 
   #-----------------
 
-  post : (endpoint, args, cb) -> @req { method : 'POST', endpoint, args }, cb
-  get  : (endpoint, args, cb) -> @req { method : 'GET' , endpoint, args }, cb
+  post : (args, cb) -> @req m(args, "POST"), cb
+  get  : (args, cb) -> @req m(args, "GET") , cb
 
 #=================================================
 
