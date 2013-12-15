@@ -36,6 +36,7 @@ $(BUILD_STAMP): \
 	lib/pw.js \
 	lib/queue.js \
 	lib/req.js \
+	lib/session.js \
 	lib/stream.js \
 	lib/util.js
 	date > $@

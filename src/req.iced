@@ -30,6 +30,7 @@ class Client
   _find_cookies : (res) ->
     if (v = res.headers?['set-cookie'])?
       for cookie_line in v
+        console.log cookie_line
         parts = cookie_line.split "; "
         if parts.length
           [name,val] = parts[0].split "="
@@ -37,7 +38,7 @@ class Client
 
   #-----------------
 
-  req : ({method, endpoint, args, http_status, kb_status}, cb) ->
+  req : ({method, endpoint, args, http_status, kb_status, cookie}, cb) ->
     opts = { method, json : true, jar : true }
     opts.headers = @headers if @headers?
 

@@ -125,12 +125,13 @@ exports.Base = class Base
       @pwh = km.extra[0...SC.pwh.derived_key_bytes].toString('hex')
     cb err, @pwh, @salt
 
+
   #-------------------
 
   _login : (cb) ->
     ok = false
     err = null
-    await @_sesscheck defer err, ok
+    await @_session_check defer err, ok
     until ok
       await @_login_iter defer err, ok
     cb err, ok
