@@ -21,6 +21,7 @@ $(BUILD_STAMP): \
 	lib/command/version.js \
 	lib/basex.js \
 	lib/bn.js \
+	lib/checkers.js \
 	lib/config.js \
 	lib/constants.js \
 	lib/env.js \
@@ -31,6 +32,7 @@ $(BUILD_STAMP): \
 	lib/log.js \
 	lib/package.js \
 	lib/path.js \
+	lib/prompter.js \
 	lib/pw.js \
 	lib/queue.js \
 	lib/stream.js \

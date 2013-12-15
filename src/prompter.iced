@@ -1,5 +1,7 @@
 
 read = require 'read'
+{checkers} = require './checkers'
+log = require './log'
 
 #========================================================================
 
@@ -20,14 +22,14 @@ class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,password,checker,hint}, cb) ->
+  read_field : (k,{prompt,password,checker,confirm}, cb) ->
     err = null
     ok = false
     first = true
 
     until ok
       p = if first then (prompt + ": ")
-      else (prompt + " (" + hint + "): ")
+      else (prompt + " (" + checker.hint + "): ")
       first = false
 
       obj = { prompt : p } 
@@ -39,31 +41,38 @@ class Prompter
         obj.edit = true
       await read obj, defer err, res, isDefault
       break if err?
-      if not checker or checker res
+
+      if checker?.f? and not checker.f res then ok = false
+      else if not confirm? or isDefault then ok = true
+      else
+        delete obj.default
+        obj.edit = false
+        obj.prompt = confirm.prompt + ": "
+        await read obj, defer err, res2
+        if res2 isnt res
+          ok = false
+          log.warn "Passphrases didn't match! Try again."
+        else
+          ok = true
+      if ok
         @_data[k] = res if not isDefault
-        ok = true
+
     cb err
 
 #========================================================================
 
-exports.checkers = checkers = 
-  username : (x) -> x.length >= 4 and x.length <= 12
-  password : (x) -> x.length >= 12
-  email    : (x) -> (x.length > 3) and (a = x.indexOf('@')) > 0 and x.indexOf('.') > a
-
 d = 
   username : 
     prompt : "Your desired username"
-    hint : "between 4 and 12 letters long"
     checker : checkers.username
   password : 
     prompt : "Your passphrase"
     password : true
     checker: checkers.password
-    hint : "must be at least 12 letters long"
+    confirm :
+      prompt : "confirm passphrase"
   email :
     prompt : "Your email"
-    hint : "must be a valid email address"
     checker : checkers.email
 
 p = new Prompter d
