@@ -14,6 +14,7 @@ m = (dict, method) ->
 class Client 
 
   constructor : (@headers) ->
+    @_cookies = {}
 
   #--------------
 
@@ -23,6 +24,16 @@ class Client
     @headers or= {}
     (@headers[k] = v for k,v of d)
     true
+
+  #-----------------
+
+  _find_cookies : (res) ->
+    if (v = res.headers?['set-cookie'])?
+      for cookie_line in v
+        parts = cookie_line.split "; "
+        if parts.length
+          [name,val] = parts[0].split "="
+          @_cookies[name] = decodeURIComponent val
 
   #-----------------
 
@@ -50,6 +61,8 @@ class Client
       err = new E.HttpError "Got reply #{res.statusCode}"
     else if not (body?.status?.name in kb_status)
       err = new E.KeybaseError "Got status #{JSON.stringify body.status}"
+    else
+      @_find_cookies res
 
     # Note the swap --- we care more about the body in most cases.
     cb err, body, res
@@ -58,17 +71,19 @@ class Client
 
   post : (args, cb) -> @req m(args, "POST"), cb
   get  : (args, cb) -> @req m(args, "GET") , cb
+  cookies : () -> @_cookies
 
 #=================================================
 
 _cli = new Client()
 
 module.exports =
-  client : _cli
-  Client : Client
-  get    : (args...) -> _cli.get args...
-  post   : (args...) -> _cli.post args...
-  req    : (args...) -> _cli.req args...
+  client  : _cli
+  Client  : Client
+  get     : (args...) -> _cli.get args...
+  post    : (args...) -> _cli.post args...
+  req     : (args...) -> _cli.req args...
+  cookies : () -> _cli.cookies()
 
 #=================================================
 

@@ -87,6 +87,15 @@ class Main
 
   #---------------------------------
 
+  load_session : (cb) ->
+    err = null
+    if @cmd.use_session()
+      @session = new Config env().get_session_filename(), { quiet : true }
+      await @session.open defer err
+    cb err
+
+  #---------------------------------
+
   main : () ->
     await @run defer err
     process.exit if err? then -2 else 0
@@ -108,6 +117,8 @@ class Main
     env().set_argv @argv
     await @load_config esc defer()
     env().set_config @config
+    await @load_session esc defer()
+    env().set_session @session
     cb null
 
 ##=======================================================================

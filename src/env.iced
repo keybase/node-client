@@ -36,9 +36,11 @@ class Env
     @env = process.env
     @argv = null
     @config = null
+    @session = null
 
-  set_argv   : (a) -> @argv = a
-  set_config : (c) -> @config = c
+  set_argv    : (a) -> @argv = a
+  set_config  : (c) -> @config = c
+  set_session : (s) -> @session = s
 
   get_opt : ({env, arg, config, dflt}) ->
     co = @config?.obj()
@@ -56,6 +58,12 @@ class Env
       env    : (e) -> e.KEYBASE_CONFIG
       arg    : (a) -> a.config
       dflt   : ( ) -> join home(), FN.config_dir, FN.config_file
+
+  get_session_filename : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_SESSION
+      arg    : (a) -> a.config
+      dflt   : ( ) -> join home(), FN.config_dir, FN.session_file
 
   get_host   : ( ) ->
     @get_opt

@@ -17,6 +17,8 @@ FN = constants.filenames
 SRV = constants.server
 SC = constants.security
 triplesec = require 'triplesec'
+req = require '../req'
+{env} = require '../env'
 
 #=========================================================================
 
@@ -67,6 +69,7 @@ exports.Base = class Base
   #-------------------
 
   use_config : () -> true
+  use_session : () -> false
   config_opts : () -> {}
 
   #-------------------
@@ -125,7 +128,20 @@ exports.Base = class Base
   #-------------------
 
   _login : (cb) ->
+    ok = false
+    err = null
+    await @_sesscheck defer err, ok
+    until ok
+      await @_login_iter defer err, ok
+    cb err, ok
 
+  #-------------------
+
+  _write_session : (cb) ->
+    s = env().session
+    s.set "session", req.cookies().session
+    await s.write defer err
+    cb err
 
   #-------------------
 

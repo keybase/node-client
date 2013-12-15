@@ -10,6 +10,7 @@ exports.constants = constants =
   filenames : 
     config_dir : ".keybase"
     config_file : "config.json"
+    session_file : "session.json"
   security:
     pwh : derived_key_bytes : 32
     openpgp : derived_key_bytes : 12

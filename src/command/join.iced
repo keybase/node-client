@@ -33,6 +33,10 @@ exports.Command = class Command extends Base
 
   #----------
 
+  use_session : () -> true
+
+  #----------
+
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "signup" ]
@@ -113,6 +117,14 @@ exports.Command = class Command extends Base
   #----------
 
   write_out : (cb) ->
+    esc = make_esc cb, "Join::write_out"
+    await @write_config   esc defer()
+    await @_write_session esc defer()
+    cb null
+
+  #----------
+
+  write_config : (cb) ->
     c = env().config
     c.set "user.email", @data.email
     c.set "user.salt",  @salt

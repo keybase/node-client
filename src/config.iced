@@ -25,7 +25,7 @@ exports.Config = class Config
     await fs.exists @filename, defer @found
     if @found
       await @load defer err
-    else if not @opts.in_config
+    else if not @opts.quiet
       log.warn "No config file found; tried '#{@filename}'"
       log.warn "Run 'keybase config' to make a new config file"
     cb err
@@ -102,46 +102,6 @@ exports.Config = class Config
           err = new E.ConfigError "missing component '#{key}'"
 
     cb err
-
-  #-------------------
-
-  tmpdir : () ->
-    @_tmpdir = @config?.json?.files?.dir or (path.join path.sep, "tmp", "mkb") unless @_tmpdir?
-    @_tmpdir
-
-  #-------------------
-
-  _get_file : (which) -> 
-    unless (f = @cache[which])?
-      f = @config?.json?.files?[which] or path.join(@tmpdir(), "keybase.#{which}") 
-      @cache[which] = f
-    f
-
-  #-------------------
-
-  sockfile : () -> @_get_file "sock"
-  pidfile  : () -> @_get_file "pid"
-  logfile  : () -> @_get_file "log"
-
-  #-------------------
-
-  pidfile : (cb) ->
-    @_pidfile = @config?.json?.files?.pid or (path.join @tmpdir(), "keybase.pid") unless @_pidfile?
-    @_pidfile
-
-  #-------------------
-
-  make_tmpdir : (cb) ->
-    n = @tmpdir()
-    await mkdirp n, defer err
-    if err?
-      log.error "Error making temp dir #{n}: #{err}"
-    cb (not err?)
-
-  #-------------------
-
-  file_extension : () ->
-    @json.file_extension or "kbs"
 
   #-------------------
 

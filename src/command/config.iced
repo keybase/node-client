@@ -40,7 +40,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  config_opts : () -> { in_config : true }
+  config_opts : () -> { quiet : true }
 
   #----------
 
