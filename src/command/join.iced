@@ -14,10 +14,22 @@ triplesec = require 'triplesec'
 {constants} = require '../constants'
 SC = constants.security
 ProgressBar = require 'progress'
+req = require '../req'
+{env} = require '../env'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  OPTS :
+    e : 
+      aliases : [ 'email' ]
+      help : 'the email address to signup'
+    u :
+      aliase : [ 'username' ]
+      help : 'the username to signup as'
 
   #----------
 
@@ -47,60 +59,89 @@ exports.Command = class Command extends Base
       invite:
         prompt : "Invitation code"
         checker : checkers.invite_code
-        default : "123412341234123412341234"
+        defval : "123412341234123412341234"
 
-    p = new Prompter seq
-    await p.run defer err
-    @data = p.data() unless err?
+    if not @promper
+      if (u = env().get_username())?   then seq.username.defval   = u
+      if (p = env().get_passphrase())? then seq.passphrase.defval = p
+      if (e = env().get_email())?      then seq.email.defval      = e
+      @prompter = new Prompter seq
+
+    await @prompter.run defer err
+    @data = @prompter.data() unless err?
     cb err
 
   #----------
 
   gen_pwh : (cb) ->
-    console.log @data
-    @enc = new triplesec.Encryptor { 
-      key : new Buffer(@data.passphrase, 'utf8')
-      verion : SC.triplesec.version
-    }
 
-    bar = null
-    prev = 0
-    progress_hook = (obj) ->
-      if obj.what isnt "scrypt" then #noop
-      else 
-        bar or= new ProgressBar "Scrypt [:bar] :percent", { width : 35, total : obj.total }
-        bar.tick(obj.i - prev)
-        prev = obj.i
+    if not(@pw_last) or (@pw_last isnt @data.passphrase)
 
-    extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
-    await @enc.resalt { extra_keymaterial, progress_hook }, defer err, km
-    unless err?
-      @salt = @enc.salt.to_buffer()
-      @pwh = km.extra[0...SC.pwh.derived_key_bytes]
+      @enc = new triplesec.Encryptor { 
+        key : new Buffer(@data.passphrase, 'utf8')
+        verion : SC.triplesec.version
+      }
+      @pw_last = @data.passphrase
+
+      bar = null
+      prev = 0
+      progress_hook = (obj) ->
+        if obj.what isnt "scrypt" then #noop
+        else 
+          bar or= new ProgressBar "Scrypt [:bar] :percent", { 
+            width : 35, total : obj.total 
+          }
+          bar.tick(obj.i - prev)
+          prev = obj.i
+
+      extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
+      await @enc.resalt { extra_keymaterial, progress_hook }, defer err, km
+      unless err?
+        @salt = @enc.salt.to_buffer()
+        @pwh = km.extra[0...SC.pwh.derived_key_bytes]
+
     cb err
 
   #----------
 
   post : (cb) ->
-    args = { 
-      @salt, 
-      @pwh, 
-      username : @data.username, 
-      email : @data.email,
-      invitation_id : @data.invitation_id 
-    }
+    args =  
+      salt : @salt.toString('hex')
+      pwh : @pwh.toString('hex') 
+      username : @data.username
+      email : @data.email
+      invitation_id : @data.invite
+
     await req.post { endpoint : "signup", args }, defer err, body
-    unless err?
-      @uid = body.uid
-    cb err
+    retry = false
+    if err? and (err instanceof E.KeybaseError)
+      switch body.status.name
+        when 'BAD_SIGNUP_EMAIL_TAKEN'
+          log.error "Email address '#{@data.email}' already registered"
+          retry = true
+          @prompter.clear 'email'
+          err = null
+        when 'BAD_SIGNUP_USERNAME_TAKEN'
+          log.error "Username '#{@data.username}' already registered"
+          retry = true
+          @prompter.clear 'username'
+          err = null
+
+    if not err?       then @uid = body.uid
+    else if not retry then log.error "Unexpected error: #{err}"
+
+    cb err, retry
 
   #----------
 
   run : (cb) ->
     esc = make_esc cb, "Join::run"
-    await @prompt  esc defer()
-    await @gen_pwh esc defer()
-    await @post    esc defer()
+    retry = true
+    while retry
+      await @prompt  esc defer()
+      await @gen_pwh esc defer()
+      await @post    esc defer retry
+    await @write_out esc defer()
     cb null
 
 ##=======================================================================

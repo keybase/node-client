@@ -10,6 +10,14 @@ log = require '../log'
 
 ##=======================================================================
 
+convert = (s) ->
+  if s is 'true' then true
+  else if s is 'false' then false
+  else if isNaN(i = parseInt(s)) then s
+  else i
+
+##=======================================================================
+
 exports.Command = class Command extends Base
 
   #----------
@@ -47,7 +55,7 @@ exports.Command = class Command extends Base
       err = new E.ArgsError msg
     else if @argv.kvs.length > 0
       k = @argv.kvs[0]
-      v = if @argv.kvs.length is 2 then @argv.kvs[1] else null
+      v = convert(if @argv.kvs.length is 2 then @argv.kvs[1] else null)
       c.set k, v
     else if c.is_empty()
       pjs = new PackageJson()

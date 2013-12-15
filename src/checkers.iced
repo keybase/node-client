@@ -10,6 +10,6 @@ exports.checkers = checkers =
     hint : "must be a valid email address"
     f : (x) -> (x.length > 3) and x.match /^\S+@\S+\.\S+$/ 
   invite_code :
-    hint : "invite codes at 12 digits long"
-    f : (x) -> x.length is 12
+    hint : "invite codes are 24 digits long"
+    f : (x) -> x.length is 24
 

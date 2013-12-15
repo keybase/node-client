@@ -41,7 +41,7 @@ class Env
   set_config : (c) -> @config = c
 
   get_opt : ({env, arg, config, dflt}) ->
-    co = @config?.obj
+    co = @config?.obj()
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
 
   get_port   : ( ) ->
@@ -78,7 +78,7 @@ class Env
       config : (c) -> c.server?.no_tls
       dflt   : ( ) -> SRV.no_tls
 
-  get_apu_uri_prefix : () ->
+  get_api_uri_prefix : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_API_URI_PREFIX
       arg    : (a) -> a["api-uri-prefix"]
@@ -100,6 +100,27 @@ class Env
       env    : (e) -> e.KEYBASE_LOG_LEVEL
       arg    : (a) -> a.l
       config : (c) -> c.run?.log_level
+      dflt   : -> null
+
+  get_passphrase : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_PASSPHRASE
+      arg    : (a) -> a.passphrase
+      config : (c) -> c.user?.passphrase
+      dflt   : -> null
+
+  get_username : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_USERNAME
+      arg    : (a) -> a.username
+      config : (c) -> c.user?.name
+      dflt   : -> null
+
+  get_email : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_EMAIL
+      arg    : (a) -> a.email
+      config : (c) -> c.user?.email
       dflt   : -> null
 
   get_args : () -> @argv._

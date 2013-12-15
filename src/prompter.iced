@@ -22,7 +22,7 @@ exports.Prompter = class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,passphrase,checker,confirm,default}, cb) ->
+  read_field : (k,{prompt,passphrase,checker,confirm,defval}, cb) ->
     err = null
     ok = false
     first = true
@@ -36,7 +36,7 @@ exports.Prompter = class Prompter
       if passphrase
         obj.silent = true
         obj.replace = "*"
-      if (d = @_data[k])? or (d = default)?
+      if (d = @_data[k])? or (d = defval)?
         obj.default = d
         obj.edit = true
       await read obj, defer err, res, isDefault
@@ -55,7 +55,7 @@ exports.Prompter = class Prompter
         else
           ok = true
       if ok
-        @_data[k] = res if not isDefault
+        @_data[k] = res if not(isDefault) or not(@_data[k]?)
 
     cb err
 

@@ -38,8 +38,8 @@ exports.Base = class Base
 
   @OPTS :
     p : 
-      alias : 'password'
-      help : 'password used for encryption / decryption'
+      alias : 'passhrase'
+      help : 'passphrase used to log into keybase'
     c : 
       alias : 'config'
       help : "a configuration file (#{join '~', FN.config_dir, FN.config_file})"

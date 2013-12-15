@@ -147,10 +147,4 @@ exports.Config = class Config
 
   obj : () -> @json
 
-  #-------------------
-
-  email : () -> @json.email
-  salt  : () -> @json.salt
-  password : () -> @json.password
-
 #=========================================================================
