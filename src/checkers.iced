@@ -3,7 +3,7 @@ exports.checkers = checkers =
   username :
     hint : "between 4 and 12 letters long"
     f : (x) -> x.length >= 4 and x.length <= 12
-  password : 
+  passphrase: 
     hint : "must be at least 12 letters long"
     f : (x) -> x.length >= 12
   email : 

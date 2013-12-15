@@ -22,7 +22,7 @@ exports.Prompter = class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,password,checker,confirm}, cb) ->
+  read_field : (k,{prompt,passphrase,checker,confirm}, cb) ->
     err = null
     ok = false
     first = true
@@ -33,7 +33,7 @@ exports.Prompter = class Prompter
       first = false
 
       obj = { prompt : p } 
-      if password
+      if passphrase
         obj.silent = true
         obj.replace = "*"
       if (d = @_data[k])?
