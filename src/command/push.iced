@@ -8,6 +8,7 @@ log = require '../log'
 session = require '../session'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require '../prompter'
+log = require '../log'
 
 ##=======================================================================
 
@@ -77,30 +78,30 @@ exports.Command = class Command extends Base
   select_key_menu : (keys) ->
     width = log_10(keys.length + 1)
     longest = @longest_line(keys) + width + 3
-    console.log repeat '~', longest
+    sep = () ->
+      console.log "\n" + (repeat '~', longest) + "\n"
+    sep()
     for k,i in keys
       lines = k.lines
       j = i + 1
       console.log "(#{pad(j,width)}) " + lines[0]
       for line in lines[1...]
         console.log spc(width+3) + line
-      console.log repeat '~', longest
+      sep()
 
   #----------
 
   select_key : (keys, cb) ->
     if @search
-      console.log "Multiple keys were found that matched '#{@search}':\n"
+      console.log "Multiple keys were found that matched '#{@search}':"
     else
-      console.log "Multiple keys found, please pick one:\n"
+      console.log "Multiple keys found, please pick one:"
 
     @select_key_menu keys
-    console.log ""
     await prompt_for_int 1, keys.length, defer err, sel
-    console.log sel
     out = if err? then null else keys[sel-1]
     if out?
-      console.log "Picked key: #{out.fingerprint}"
+      log.info "Picked key: #{out.fingerprint}"
     cb err, out
 
   #----------
