@@ -12,7 +12,7 @@ log = require '../log'
 
 ##=======================================================================
 
-find_fingerprint = (raw) ->
+find_short_id = (raw) ->
   x = /^pub\s+[0-9]{4}R\/([0-9A-F]{8}) /
   if (m = raw.match x) then m[1] else null
 
@@ -60,8 +60,8 @@ exports.Command = class Command extends Base
     await gpg { args }, defer err, out
     unless err?
       raw = out.toString().split("\n\n")
-      keys = for r in raw when (f = find_fingerprint r)
-        { lines : r.split("\n"), fingerprint : f }
+      keys = for r in raw when (f = find_short_id r)
+        { lines : r.split("\n"), short_id : f }
     cb err, keys
 
   #----------
@@ -101,8 +101,22 @@ exports.Command = class Command extends Base
     await prompt_for_int 1, keys.length, defer err, sel
     out = if err? then null else keys[sel-1]
     if out?
-      log.info "Picked key: #{out.fingerprint}"
+      log.info "Picked key: #{out.short_id}"
     cb err, out
+
+  #----------
+
+  load_key : (short_id, cb) ->
+    esc = make_esc cb, "load_key"
+    obj = { short_id }
+    await gpg { args : [ "--export", "-a", short_id ] }, esc defer obj.full
+    await gpg { args : [ "--fingerprint", short_id ] }, esc defer raw
+    if (m = raw.toString().match /Key fingerprint = ([A-F0-9 ]+)/)?
+      obj.fingerprint = m[1].replace(new RegExp(" ", "g"), '').toLowerCase()
+      obj.pgp_key_id = obj.fingerprint[-16...]
+    else
+      err = new E.GpgError "Got unexpected GPG output when looking for a fingerprint"
+    cb err, obj
 
   #----------
 
@@ -113,8 +127,13 @@ exports.Command = class Command extends Base
       await @select_key keys, esc defer key
     else
       key = keys[0]
+
+    await @load_key key.short_id, esc defer key
+    console.log key
+
+
     await session.login esc defer()
-    console.log session.logged_in()
+
     cb null
 
 ##=======================================================================
