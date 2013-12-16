@@ -109,7 +109,9 @@ exports.Command = class Command extends Base
           @prompter.clear 'username'
           err = null
 
-    if not err?       then @uid = body.uid
+    if not err?       
+      @uid = body.uid
+      @session = body.session
     else if not retry then log.error "Unexpected error: #{err}"
 
     cb err, retry

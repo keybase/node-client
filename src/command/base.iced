@@ -140,8 +140,11 @@ exports.Base = class Base
 
   _write_session : (cb) ->
     s = env().session
-    s.set "session", req.cookies().session
-    await s.write defer err
+    if (s = (@session or req.cookies().session))?
+      s.set "session", s
+      await s.write defer err
+    else
+      err = new E.InternalError "no session ID but expected one"
     cb err
 
   #-------------------
