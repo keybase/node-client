@@ -19,6 +19,7 @@ $(BUILD_STAMP): \
 	lib/command/config.js \
 	lib/command/join.js \
 	lib/command/version.js \
+	lib/command/push.js \
 	lib/basex.js \
 	lib/bn.js \
 	lib/checkers.js \

@@ -7,6 +7,7 @@ log = require '../log'
 {make_esc} = require 'iced-error'
 {env,init_env} = require '../env'
 {Config} = require '../config'
+req = require '../req'
 
 ##=======================================================================
 
@@ -43,6 +44,7 @@ class Main
       "version"
       "join"
       "config"
+      "push"
     ]
 
     subparsers = @ap.addSubparsers {
@@ -92,6 +94,8 @@ class Main
     if @cmd.use_session()
       @session = new Config env().get_session_filename(), { quiet : true }
       await @session.open defer err
+      if not err? and @session.found and (s = @session.obj()?.session)?
+        req.set_session s
     cb err
 
   #---------------------------------

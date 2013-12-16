@@ -15,6 +15,7 @@ class Client
 
   constructor : (@headers) ->
     @_cookies = {}
+    @_session = s
 
   #--------------
 
@@ -24,6 +25,14 @@ class Client
     @headers or= {}
     (@headers[k] = v for k,v of d)
     true
+
+  #-----------------
+
+  set_session : (s) ->
+    @add_headers { "X-Keybase-Session" : s }
+    @_session = s
+
+  get_session : () -> @_session
 
   #-----------------
 
@@ -37,7 +46,7 @@ class Client
 
   #-----------------
 
-  req : ({method, endpoint, args, http_status, kb_status, cookie}, cb) ->
+  req : ({method, endpoint, args, http_status, kb_status}, cb) ->
     opts = { method, json : true, jar : true }
     opts.headers = @headers if @headers?
 
@@ -55,6 +64,7 @@ class Client
     if method is 'POST'
       opts.body = args
 
+    console.log opts
     await request opts, defer err, res, body
     if err? then #noop
     else if not (res.statusCode in http_status) 
@@ -78,12 +88,14 @@ class Client
 _cli = new Client()
 
 module.exports =
-  client  : _cli
-  Client  : Client
-  get     : (args...) -> _cli.get args...
-  post    : (args...) -> _cli.post args...
-  req     : (args...) -> _cli.req args...
-  cookies : () -> _cli.cookies()
+  client      : _cli
+  Client      : Client
+  get         : (args...) -> _cli.get args...
+  post        : (args...) -> _cli.post args...
+  req         : (args...) -> _cli.req args...
+  cookies     : (args...) -> _cli.cookies args...
+  set_session : (args...) -> _cli.set_session args...
+  get_session : (args...) -> _cli.get_session args...
 
 #=================================================
 

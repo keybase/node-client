@@ -6,7 +6,7 @@ req = require './req'
 
 #======================================================================
 
-class Session 
+exports.Session = class Session 
 
   #-----
 
@@ -25,8 +25,12 @@ class Session
   #-----
 
   check : (cb) ->
-    esc = make_esc cb, "Session::check"
-    await @get_id esc defer id
+    await req.get { endpoint : "sesscheck" }, defer err, body
+    console.log err
     cb null
+
+#======================================================================
+
+exports.check = (cb) -> (new Session).check cb
 
 #======================================================================
