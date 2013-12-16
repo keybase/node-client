@@ -16,6 +16,7 @@ SC = constants.security
 req = require '../req'
 {env} = require '../env'
 read = require 'read'
+session = require '../session'
 
 ##=======================================================================
 
@@ -111,7 +112,7 @@ exports.Command = class Command extends Base
 
     if not err?       
       @uid = body.uid
-      @session = body.session
+      session.set_id body.session
     else if not retry then log.error "Unexpected error: #{err}"
 
     cb err, retry
@@ -121,7 +122,7 @@ exports.Command = class Command extends Base
   write_out : (cb) ->
     esc = make_esc cb, "Join::write_out"
     await @write_config   esc defer()
-    await @_write_session esc defer()
+    await session.write   esc defer()
     cb null
 
   #----------

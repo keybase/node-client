@@ -15,15 +15,19 @@ exports.Session = class Session
     @_file = null
     @_loaded = false
     @_id = null
+    @_logged_in = false
 
   #-----
 
   load : (cb) ->
     unless @_file
       @_file = new Config env().get_session_filename(), { quiet : true }
-    await @_file.opn defer err
-    if not err? and @_file.found and (s = @_file.obj()?.session)?
-      req.set_session s
+    await @_file.open defer err
+    if not err? and @_file.found 
+      @_loaded = true
+      if (s = @_file.obj()?.session)?
+        req.set_session s
+        @_id = s
     cb err
 
   #-----
@@ -48,7 +52,6 @@ exports.Session = class Session
   #-----
 
   check : (cb) ->
-    @_logged_in = false
     if req.get_session()
       await req.get { endpoint : "sesscheck" }, defer err, body
       if not err? then @_logged_in = true
@@ -56,14 +59,15 @@ exports.Session = class Session
         err = null
     cb err, @_logged_in
 
+  #-----
+
+  logged_in : () -> @_logged_in
+
 #======================================================================
 
-_session = new Session
+exports.session = _session = new Session
 
-module.exports = 
-  Session        : Session
-  session        : _session
-  load           : (args...) -> _session.check args...
-  check          : (args...) -> _session.check args...
+for k of Session.prototype
+  ((fname) -> exports[fname] = (args...) -> _session[fname] args...)(k)
 
 #======================================================================
