@@ -15,7 +15,7 @@ class Client
 
   constructor : (@headers) ->
     @_cookies = {}
-    @_session = s
+    @_session = null
 
   #--------------
 

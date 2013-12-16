@@ -25,9 +25,14 @@ exports.Session = class Session
   #-----
 
   check : (cb) ->
-    await req.get { endpoint : "sesscheck" }, defer err, body
-    console.log err
-    cb null
+    logged_in = false
+    if req.get_session()
+      await req.get { endpoint : "sesscheck" }, defer err, body
+
+      if not err? then logged_in = true
+      else if err and (err instanceof E.KeybaseError) and (body?.status?.name is "BAD_SESSION")
+        err = null
+    cb err, logged_in
 
 #======================================================================
 
