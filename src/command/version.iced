@@ -24,7 +24,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     pjs = new PackageJson()
-    await gpg { args : [ "--versionadf" ] }, defer err, dat
+    await gpg { args : [ "--version" ] }, defer err, dat
     unless err?
       gpg_v = dat.toString().split("\n")[0...2]
       lines = [ 
