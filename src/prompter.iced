@@ -116,3 +116,15 @@ exports.prompt_email_or_username = (cb) ->
   cb err, out
 
 #========================================================================
+
+exports.prompt_for_int = (low, hi, cb) ->
+  seq =
+    key :
+      prompt : "Pick a key"
+      checker : checkers.intcheck(low, hi)
+  p = new Prompter seq
+  await p.run defer err
+  out = if err? then null else parseInt(p.data().key)
+  cb err, out
+
+#========================================================================

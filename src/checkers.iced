@@ -14,6 +14,9 @@ exports.checkers = checkers =
     f : (x) -> x.length is 24
   email_or_username :
     hint : "valid usernames are 4-12 letters long"
+  intcheck : (lo, hi) ->
+    hint : "#{lo}-#{hi}"
+    f : (x) -> not(isNaN(i = parseInt(x))) and i >= lo and i <= hi
 
 checkers.email_or_username.f = (x) -> (checkers.email.f(x) or checkers.username.f(x))
 
