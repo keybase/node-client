@@ -9,6 +9,7 @@ session = require '../session'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require '../prompter'
 log = require '../log'
+{KeyManager} = require '../keymanager'
 
 ##=======================================================================
 
@@ -106,20 +107,6 @@ exports.Command = class Command extends Base
 
   #----------
 
-  load_key : (short_id, cb) ->
-    esc = make_esc cb, "load_key"
-    obj = { short_id }
-    await gpg { args : [ "--export", "-a", short_id ] }, esc defer obj.full
-    await gpg { args : [ "--fingerprint", short_id ] }, esc defer raw
-    if (m = raw.toString().match /Key fingerprint = ([A-F0-9 ]+)/)?
-      obj.fingerprint = m[1].replace(new RegExp(" ", "g"), '').toLowerCase()
-      obj.pgp_key_id = obj.fingerprint[-16...]
-    else
-      err = new E.GpgError "Got unexpected GPG output when looking for a fingerprint"
-    cb err, obj
-
-  #----------
-
   run : (cb) ->
     esc = make_esc cb, "run"
     await @query_keys esc defer keys
@@ -128,8 +115,8 @@ exports.Command = class Command extends Base
     else
       key = keys[0]
 
-    await @load_key key.short_id, esc defer key
-    console.log key
+    await KeyManager.load key.short_id, esc defer km
+    console.log km
 
 
     await session.login esc defer()

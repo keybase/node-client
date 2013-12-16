@@ -30,6 +30,7 @@ $(BUILD_STAMP): \
 	lib/file.js \
 	lib/fs.js \
 	lib/gpg.js \
+	lib/keymanager.js \
 	lib/log.js \
 	lib/package.js \
 	lib/path.js \
