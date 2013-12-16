@@ -35,6 +35,7 @@ $(BUILD_STAMP): \
 	lib/log.js \
 	lib/package.js \
 	lib/path.js \
+	lib/proofer.js \
 	lib/prompter.js \
 	lib/pw.js \
 	lib/queue.js \
