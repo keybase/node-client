@@ -26,3 +26,4 @@ exports.E = ie.make_errors
   HTTP : "HTTP status code error"
   KEYBASE : "Server-side failure"
   CANCEL : "Operation canceled"
+  GPG : "Command line error"

@@ -2,6 +2,7 @@
 {spawn} = require 'child_process'
 stream = require './stream'
 log = require './log'
+{E} = require './err'
 
 ##=======================================================================
 
@@ -43,7 +44,16 @@ class Engine
 ##=======================================================================
 
 exports.gpg = gpg = ({args, stdin, stdout, stderr}, cb) ->
+  if stdin and Buffer.isBuffer stdin
+    stdin = new stream.BufferInStream stdin
+  if not stdout?
+    def_out = true
+    stdout = new stream.BufferOutStream()
+  else
+    def_out = false
   await (new Engine { args, stdin, stdout, stderr }).run().wait defer rc
-  cb rc
+  err = if rc is 0 then null else new E.GpgError "exit code #{rc}"
+  out = if def_out? then stdout.data() else null
+  cb err, out
 
 ##=======================================================================

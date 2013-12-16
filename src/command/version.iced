@@ -24,15 +24,15 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     pjs = new PackageJson()
-    bis = new BufferOutStream()
-    await gpg { args : [ "--version" ], stdout : bis }, defer rc
-    gpg_v = bis.data().toString().split("\n")[0...2]
-    lines = [ 
-      (pjs.bin() + " (keybase.io CLI) v" + pjs.version())
-      ("- node.js " + process.version)
-    ].concat("- #{l}" for l in gpg_v)
-    console.log lines.join("\n")
-    cb null
+    await gpg { args : [ "--versionadf" ] }, defer err, dat
+    unless err?
+      gpg_v = dat.toString().split("\n")[0...2]
+      lines = [ 
+        (pjs.bin() + " (keybase.io CLI) v" + pjs.version())
+        ("- node.js " + process.version)
+      ].concat("- #{l}" for l in gpg_v)
+      console.log lines.join("\n")
+    cb err
 
 ##=======================================================================
 

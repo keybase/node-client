@@ -23,7 +23,12 @@ exports.Command = class Command extends Base
       help : "push a PGP key from the client to the server"
     name = "push"
     sub = scp.addParser name, opts
+    sub.addArgument [ "term"], { nargs : 1 }
     return opts.aliases.concat [ name ]
+
+  #----------
+
+  query_keys : (cb) ->
 
   #----------
 
