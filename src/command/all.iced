@@ -8,6 +8,7 @@ log = require '../log'
 {env,init_env} = require '../env'
 {Config} = require '../config'
 req = require '../req'
+session = require '../session'
 
 ##=======================================================================
 
@@ -92,10 +93,7 @@ class Main
   load_session : (cb) ->
     err = null
     if @cmd.use_session()
-      @session = new Config env().get_session_filename(), { quiet : true }
-      await @session.open defer err
-      if not err? and @session.found and (s = @session.obj()?.session)?
-        req.set_session s
+      await session.load defer err
     cb err
 
   #---------------------------------
