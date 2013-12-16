@@ -31,6 +31,7 @@ $(BUILD_STAMP): \
 	lib/fs.js \
 	lib/gpg.js \
 	lib/keymanager.js \
+	lib/keyselector.js \
 	lib/log.js \
 	lib/package.js \
 	lib/path.js \
