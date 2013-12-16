@@ -97,8 +97,8 @@ exports.Session = class Session
     extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
     await @enc.resalt { salt, extra_keymaterial, progress_hook }, defer err, km
     unless err?
-      @_salt = @enc.salt.to_hex()
-      @_pwh = km.extra[0...SC.pwh.derived_key_bytes].toString('hex')
+      @_salt = @enc.salt.to_buffer()
+      @_pwh = km.extra[0...SC.pwh.derived_key_bytes]
     cb err, @_pwh, @_salt
 
   #-----
@@ -140,14 +140,10 @@ exports.Session = class Session
     if not @logged_in()
       esc = make_esc cb, "login"
       await @get_email_or_username esc defer email_or_username
-      console.log "A #{email_or_username}"
       await @get_passphrase esc defer passphrase
-      console.log "B #{passphrase}"
       await @get_salt {email_or_username }, esc defer salt
-      console.log "C #{salt}"
       await @gen_pwh { passphrase, salt }, esc defer pwh
-      console.log "D #{pwh}"
-      await @post_login {email_or_username, pwh}, esc defer()
+      await @post_login {email_or_username, pwh : pwh.toString('hex') }, esc defer()
       await @write esc defer()
     cb err
 

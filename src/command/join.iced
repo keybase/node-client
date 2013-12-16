@@ -81,7 +81,7 @@ exports.Command = class Command extends Base
   gen_pwh : (cb) ->
     passphrase = @data.passphrase
     if not(@pp_last) or (@pp_last isnt passphrase)
-      await session.gen_pwh { passphrase }, defer err
+      await session.gen_pwh { passphrase }, defer err, @pwh, @salt
       @pp_last = passphrase if not err?
     cb err
 
@@ -89,8 +89,8 @@ exports.Command = class Command extends Base
 
   post : (cb) ->
     args =  
-      salt : @salt
-      pwh : @pwh
+      salt : @salt.toString('hex')
+      pwh : @pwh.toString('hex')
       username : @data.username
       email : @data.email
       invitation_id : @data.invite
