@@ -12,4 +12,10 @@ exports.checkers = checkers =
   invite_code :
     hint : "invite codes are 24 digits long"
     f : (x) -> x.length is 24
+  email_or_username :
+    hint : "valid usernames are 4-12 letters long"
+
+checkers.email_or_username.f = (x) -> (checkers.email.f(x) or checkers.username.f(x))
+
+
 

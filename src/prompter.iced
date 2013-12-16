@@ -88,14 +88,31 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
 
 #========================================================================
 
-exports.prompt_pw = (cb) ->
+exports.prompt_passphrase = (cb) ->
   seq = 
-    passhrase :
+    passphrase :
       prompt : "Your login passphrase"
       passphrase : true
       checker : checkers.passphrase
   p = new Prompter seq
   await p.run defer err
-  cb err, p.passphrase
+  cb err, p.data().passphrase
+
+#========================================================================
+
+exports.prompt_email_or_username = (cb) ->
+  seq = 
+    email_or_username :
+      prompt : "Your username or email"
+      checker : checkers.email_or_username
+  p = new Prompter seq
+  await p.run defer err
+  if err? then out = null
+  else
+    v = p.data().email_or_username
+    out =
+      email : (if checkers.email.f(v) then v else null)
+      username : (if checkers.username.f(v) then v else null)
+  cb err, out
 
 #========================================================================

@@ -28,7 +28,7 @@ exports.Command = class Command extends Base
   #----------
 
   run : (cb) ->
-    await session.check defer err
+    await session.login defer err
     console.log err
     console.log session.logged_in()
     cb null

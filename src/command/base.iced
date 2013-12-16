@@ -12,7 +12,6 @@ fs = require 'fs'
 {E} = require '../err'
 {constants} = require '../constants'
 {join} = require 'path'
-ProgressBar = require 'progress'
 FN = constants.filenames
 SRV = constants.server
 SC = constants.security
@@ -97,34 +96,6 @@ exports.Base = class Base
     @eng = @make_eng { @keys, @infile, @outfile }
     
     cb true
-
-  #-------------------
-
-  _gen_pwh : ({passphrase, salt}, cb) ->
-
-    @enc = new triplesec.Encryptor { 
-      key : new Buffer(passphrase, 'utf8')
-      verion : SC.triplesec.version
-    }
-
-    bar = null
-    prev = 0
-    progress_hook = (obj) ->
-      if obj.what isnt "scrypt" then #noop
-      else 
-        bar or= new ProgressBar "- run scrypt [:bar] :percent", { 
-          width : 35, total : obj.total 
-        }
-        bar.tick(obj.i - prev)
-        prev = obj.i
-
-    extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
-    await @enc.resalt { salt, extra_keymaterial, progress_hook }, defer err, km
-    unless err?
-      @salt = @enc.salt.to_hex()
-      @pwh = km.extra[0...SC.pwh.derived_key_bytes].toString('hex')
-    cb err, @pwh, @salt
-
 
   #-------------------
 

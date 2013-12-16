@@ -81,7 +81,7 @@ exports.Command = class Command extends Base
   gen_pwh : (cb) ->
     passphrase = @data.passphrase
     if not(@pp_last) or (@pp_last isnt passphrase)
-      await @_gen_pwh {passphrase}, defer err
+      await session.gen_pwh { passphrase }, defer err
       @pp_last = passphrase if not err?
     cb err
 
