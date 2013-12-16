@@ -55,9 +55,7 @@ exports.Command = class Command extends Base
   query_keys : (cb) ->
     @keys = null
     args = [ "-k" ] 
-    if (v = @argv.search?).length > 0
-      args.push (@search = v[0])
-    else @search = null
+    args.push @search if @search = @argv.search
     await gpg { args }, defer err, out
     unless err?
       raw = out.toString().split("\n\n")
@@ -79,6 +77,7 @@ exports.Command = class Command extends Base
   select_key_menu : (keys) ->
     width = log_10(keys.length + 1)
     longest = @longest_line(keys) + width + 3
+    console.log repeat '~', longest
     for k,i in keys
       lines = k.lines
       j = i + 1
@@ -93,7 +92,7 @@ exports.Command = class Command extends Base
     if @search
       console.log "Multiple keys were found that matched '#{@search}':\n"
     else
-      console.log "Multiple keys found:"
+      console.log "Multiple keys found, please pick one:\n"
 
     @select_key_menu keys
     console.log ""
