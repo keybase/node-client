@@ -130,7 +130,7 @@ exports.Command = class Command extends Base
   write_config : (cb) ->
     c = env().config
     c.set "user.email", @data.email
-    c.set "user.salt",  @salt
+    c.set "user.salt",  @salt.toString('hex')
     c.set "user.name",  @data.username
     c.set "user.id"  ,  @uid
     await c.write defer err

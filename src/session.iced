@@ -69,10 +69,11 @@ exports.Session = class Session
   #-----
 
   write : (cb) ->
-    err = null
-    await @load        defer err unless @_loaded
-    await @_file.write defer err unless err?
-    cb err
+    esc = make_esc cb, "write"
+    await @load              esc defer() unless @_loaded
+    await @_file.write       esc defer()
+    await env().config.write esc defer()
+    cb null
 
   #-----
 
@@ -110,7 +111,9 @@ exports.Session = class Session
   check : (cb) ->
     if req.get_session()
       await req.get { endpoint : "sesscheck" }, defer err, body
-      if not err? then @_logged_in = true
+      if not err? 
+        @_logged_in = true
+        env().config.set "user.id", body.uid
       else if err and (err instanceof E.KeybaseError) and (body?.status?.name is "BAD_SESSION")
         err = null
     cb err, @_logged_in
@@ -120,7 +123,9 @@ exports.Session = class Session
   get_salt : (args, cb) ->
     salt = null
     await req.get { endpoint : "getsalt", args }, defer err, body
-    salt = (new Buffer body.salt, 'hex') unless err?
+    unless err?
+      salt = (new Buffer body.salt, 'hex')
+      env().config.set "user.salt", body.salt
     cb err, salt
 
   #-----

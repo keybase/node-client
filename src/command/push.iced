@@ -10,6 +10,8 @@ session = require '../session'
 {prompt_for_int} = require '../prompter'
 log = require '../log'
 {key_select} = require '../keyselector'
+{SignatureEngine} = require '../hilev'
+{KeybasePushProofGen} = require '../sigs'
 
 ##=======================================================================
 
@@ -32,10 +34,19 @@ exports.Command = class Command extends Base
 
   #----------
 
+  sign : (cb) ->
+    eng = new KeybasePushProofGen { @km }
+    await eng.run defer err, @sig
+    console.log @sig
+    cb err
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "run"
-    await key_select @argv.search, esc defer km
+    await key_select @argv.search, esc defer @km
     await session.login esc defer()
+    await @sign esc defer()
     cb null
 
 ##=======================================================================

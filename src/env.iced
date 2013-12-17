@@ -124,6 +124,13 @@ class Env
       config : (c) -> c.user?.name
       dflt   : -> null
 
+  get_uid : () ->
+    @get_opt 
+      env    : (e) -> e.KEYBASE_UID
+      arg    : (a) -> a.uid
+      config : (c) -> c.user?.id
+      dflt   : -> null
+
   get_email : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_EMAIL
