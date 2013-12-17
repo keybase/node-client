@@ -25,6 +25,7 @@
     "keybase-proofs"     : "keybase/proofs",
     "argparse"           : "*",
     "read"               : "keybase/read",
+    "pgp-utils"          : "*",
     "bignum"             : "*",
     "colors"             : "*",
     "purepack"           : "*",
