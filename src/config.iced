@@ -52,6 +52,8 @@ exports.Config = class Config
         await fs.writeFile @filename, dat, { mode : 0o600 }, defer err
         if err?
           log.error "Error writing to #{@filename}: #{err}"
+      unless err?
+        log.info "Updated file: #{@filename}"
     cb err
 
   #-------------------

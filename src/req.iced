@@ -11,11 +11,12 @@ m = (dict, method) ->
 
 #=================================================
 
-class Client 
+exports.Client = class Client 
 
   constructor : (@headers) ->
     @_cookies = {}
     @_session = null
+    @_csrf = null
 
   #--------------
 
@@ -32,7 +33,16 @@ class Client
     @add_headers { "X-Keybase-Session" : s }
     @_session = s
 
+  #-----------------
+
+  set_csrf : (c) ->
+    @add_headers { "X-CSRF-Token" : c }
+    @_csrf = c
+
+  #-----------------
+
   get_session : () -> @_session
+  get_csrf : () -> @_csrf
 
   #-----------------
 
@@ -84,17 +94,10 @@ class Client
 
 #=================================================
 
-_cli = new Client()
+exports.client = _cli = new Client()
 
-module.exports =
-  client      : _cli
-  Client      : Client
-  get         : (args...) -> _cli.get args...
-  post        : (args...) -> _cli.post args...
-  req         : (args...) -> _cli.req args...
-  cookies     : (args...) -> _cli.cookies args...
-  set_session : (args...) -> _cli.set_session args...
-  get_session : (args...) -> _cli.get_session args...
+for k of Client.prototype
+  ((fname) -> exports[fname] = (args...) -> _cli[fname] args...)(k)
 
 #=================================================
 

@@ -54,9 +54,13 @@ exports.Session = class Session
     await @_file.open defer err
     if not err? and @_file.found 
       @_loaded = true
-      if (s = @_file.obj()?.session)?
-        req.set_session s
-        @_id = s
+      if (o = @_file.obj())?
+        if (s = o.session)?
+          req.set_session s
+          @_id = s
+        if (c = o.csrf)?
+          req.set_csrf c
+          @_csrf = c
     cb err
 
   #-----
@@ -65,6 +69,13 @@ exports.Session = class Session
     @_id = s
     req.set_session s
     @_file.set "session", s
+
+  #-----
+
+  set_csrf : (c) ->
+    @_csrf = c
+    req.set_csrf c
+    @_file.set "csrf", c
 
   #-----
 
@@ -109,11 +120,12 @@ exports.Session = class Session
   #-----
 
   check : (cb) ->
-    if req.get_session()
+    if req.get_session() 
       await req.get { endpoint : "sesscheck" }, defer err, body
       if not err? 
         @_logged_in = true
-        env().config.set "user.id", body.uid
+        env().config.set "user.id", body.logged_in_uid
+        @set_csrf t if (t = body.csrf_token)?
       else if err and (err instanceof E.KeybaseError) and (body?.status?.name is "BAD_SESSION")
         err = null
     cb err, @_logged_in
@@ -134,6 +146,7 @@ exports.Session = class Session
     await req.post { endpoint : "login", args }, defer err, body
     unless err?
       @set_id body.session
+      @set_csrf body.csrf_token
       @uid = body.uid
       @_logged_in = true
     cb err
@@ -141,16 +154,16 @@ exports.Session = class Session
   #-----
 
   login : (cb) ->
-    await @check defer err
+    esc = make_esc cb, "login"
+    await @check esc defer()
     if not @logged_in()
-      esc = make_esc cb, "login"
       await @get_email_or_username esc defer email_or_username
       await @get_passphrase esc defer passphrase
       await @get_salt {email_or_username }, esc defer salt
       await @gen_pwh { passphrase, salt }, esc defer pwh
       await @post_login {email_or_username, pwh : pwh.toString('hex') }, esc defer()
-      await @write esc defer()
-    cb err
+    await @write esc defer()
+    cb null
 
   #-----
 

@@ -94,6 +94,7 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
   # stub this out since it's not needed; we'll be doing a post elsewhere
   _store_signature : (cb) -> cb null
   
-  _make_binding_eng : (arg) -> new proofs.KeybaseBinding arg
+  _make_binding_eng : (arg) -> 
+    new proofs.KeybaseBinding arg
 
 #===========================================

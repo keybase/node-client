@@ -113,6 +113,7 @@ exports.Command = class Command extends Base
     if not err?       
       @uid = body.uid
       session.set_id body.session
+      session.set_csrf body.csrf_token
     else if not retry then log.error "Unexpected error: #{err}"
 
     cb err, retry

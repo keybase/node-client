@@ -12,6 +12,7 @@ log = require '../log'
 {key_select} = require '../keyselector'
 {SignatureEngine} = require '../hilev'
 {KeybasePushProofGen} = require '../sigs'
+req = require '../req'
 
 ##=======================================================================
 
@@ -37,7 +38,18 @@ exports.Command = class Command extends Base
   sign : (cb) ->
     eng = new KeybasePushProofGen { @km }
     await eng.run defer err, @sig
-    console.log @sig
+    cb err
+
+  #----------
+
+  push : (cb) ->
+    args = 
+      is_primary : 1
+      sig : @sig.pgp
+      sig_id_base : @sig.id
+      sig_id_short : @sig.short_id
+      public_key : @km.key.toString('utf8')
+    await req.post { endpoint : "key/add", args }, defer err
     cb err
 
   #----------
@@ -47,6 +59,8 @@ exports.Command = class Command extends Base
     await key_select @argv.search, esc defer @km
     await session.login esc defer()
     await @sign esc defer()
+    await @push esc defer()
+    log.info "success!"
     cb null
 
 ##=======================================================================
