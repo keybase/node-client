@@ -54,6 +54,7 @@ exports.Config = class Config
           log.error "Error writing to #{@filename}: #{err}"
       unless err?
         log.info "Updated file: #{@filename}"
+        @changed = false
     cb err
 
   #-------------------
