@@ -1,10 +1,10 @@
 
-path = require 'path'
 fs = require 'fs'
 log = require './log'
 util = require 'util'
-mkdirp = require 'mkdirp'
 {purge} = require './util'
+{mkdirp} = require './fs'
+{constants} = require './constants'
 
 #=========================================================================
 
@@ -43,13 +43,11 @@ exports.Config = class Config
       @json = purge @json
       dat = JSON.stringify @json, null, "    "
       d = path.dirname @filename
-      await mkdirp path.dirname(@filename), 0o700, defer err, n
+      await mkdirp @filename, defer err, d
       if err?
         log.error "Error creating directory '#{d}': #{err.message}"
       else 
-        if n > 0
-          log.warn "Created directory #{d}"
-        await fs.writeFile @filename, dat, { mode : 0o600 }, defer err
+        await fs.writeFile @filename, dat, { mode : constants.permissions.file }, defer err
         if err?
           log.error "Error writing to #{@filename}: #{err}"
       unless err?

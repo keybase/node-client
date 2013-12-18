@@ -4,6 +4,9 @@ log = require './log'
 C = require 'constants'
 {base58} = require './basex'
 crypto = require 'crypto'
+path = require 'path'
+mkdirp = require 'mkdirp'
+{constants} = require './constants'
 
 ##======================================================================
 
@@ -107,6 +110,19 @@ exports.Tmp = class Tmp
     cb ok
 
   stream : () -> @tmp?.stream
+
+##======================================================================
+
+exports.mkdirp = (fn, cb) ->
+  d = path.dirname fn
+  n = 0
+  err = null
+  await fs.exists d, defer found
+  unless found
+    await mkdirp d, constants.permissions.dir, defer err, n
+    if not err? and n > 0
+      log.info "Made directory '#{d}'"
+  cb err, d, n
 
 ##======================================================================
 

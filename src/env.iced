@@ -55,15 +55,23 @@ class Env
 
   get_config_filename : () ->
     @get_opt
-      env    : (e) -> e.KEYBASE_CONFIG
+      env    : (e) -> e.KEYBASE_CONFIG_FILE
       arg    : (a) -> a.config
       dflt   : ( ) -> join home(), FN.config_dir, FN.config_file
 
   get_session_filename : () ->
     @get_opt
-      env    : (e) -> e.KEYBASE_SESSION
-      arg    : (a) -> a.config
+      env    : (e) -> e.KEYBASE_SESSION_FILE
+      arg    : (a) -> a["session-file"]
+      config : (c) -> c?.files?.session
       dflt   : ( ) -> join home(), FN.config_dir, FN.session_file
+
+  get_db_filename : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_DB_FILE
+      arg    : (a) -> a["db-file"]
+      config : (c) -> c?.files?.db
+      dflt   : ( ) -> join home(), FN.config_dir, FN.db_file
 
   get_host   : ( ) ->
     @get_opt

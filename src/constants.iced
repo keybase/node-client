@@ -11,10 +11,14 @@ exports.constants = constants =
     config_dir : ".keybase"
     config_file : "config.json"
     session_file : "session.json"
+    db_file : "keybase.sqlite3"
   security:
     pwh : derived_key_bytes : 32
     openpgp : derived_key_bytes : 12
     triplesec : version : 3
+  permissions :
+    dir : 0o700
+    file : 0o600
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

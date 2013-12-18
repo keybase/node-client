@@ -27,6 +27,7 @@ $(BUILD_STAMP): \
 	lib/checkers.js \
 	lib/config.js \
 	lib/constants.js \
+	lib/db.js \
 	lib/env.js \
 	lib/err.js \
 	lib/file.js \

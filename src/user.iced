@@ -11,7 +11,7 @@ exports.User = class User
 
   #--------------
 
-  @load : ({username}, cb) ->
+  @load_from_server : ({username}, cb) ->
     args = 
       endpoint : "user/lookup"
       args : {username }

@@ -8,6 +8,7 @@ log = require '../log'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
 {User} = require '../user'
+db = require '../db'
 
 ##=======================================================================
 
@@ -28,7 +29,8 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb,   "Verify::run"
-    await User.load {username : @argv.username}, esc defer @user
+    await User.load_from_server {username : @argv.username}, esc defer @user
+    await db.open esc defer()
     console.log @user
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
