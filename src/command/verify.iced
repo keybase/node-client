@@ -7,7 +7,7 @@ log = require '../log'
 {BufferOutStream} = require '../stream'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
-req = require '../req'
+{User} = require '../user'
 
 ##=======================================================================
 
@@ -26,21 +26,10 @@ exports.Command = class Command extends Base
 
   #----------
 
-  fetch_user : (cb) ->
-    args = 
-      endpoint : "user/lookup"
-      args : 
-        username : @argv.username
-
-    await req.get args, defer err, body
-    console.log body
-    cb err
-
-  #----------
-
   run : (cb) ->
     esc = make_esc cb,   "Verify::run"
-    await @fetch_user    esc defer()
+    await User.load {username : @argv.username}, esc defer @user
+    console.log @user
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
     #await @verify_proofs esc defer()

@@ -45,6 +45,7 @@ $(BUILD_STAMP): \
 	lib/req.js \
 	lib/session.js \
 	lib/stream.js \
+	lib/user.js \
 	lib/util.js
 	date > $@
 
