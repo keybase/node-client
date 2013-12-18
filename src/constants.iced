@@ -19,6 +19,8 @@ exports.constants = constants =
   permissions :
     dir : 0o700
     file : 0o600
+  lookups :
+    username : 1
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

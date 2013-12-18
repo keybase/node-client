@@ -29,9 +29,8 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb,   "Verify::run"
-    await User.load_from_server {username : @argv.username}, esc defer @user
     await db.open esc defer()
-    console.log @user
+    await User.load { username : @argv.username[0] }, esc defer obj
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
     #await @verify_proofs esc defer()

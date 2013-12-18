@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `kvstore` (
 );
 
 CREATE TABLE IF NOT EXISTS `lookup` (
-  `name_type` CHAR(2) NOT NULL,
+  `name_type` INTEGER(4) NOT NULL,
   `name` VARCHAR(200) NOT NULL,
   `key_type` CHAR(2) NOT NULL,
   `key`  VARCHAR(100) NOT NULL,
