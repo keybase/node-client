@@ -6,12 +6,14 @@ fs = require 'fs'
 path = require 'path'
 {make_esc} = require 'iced-error'
 {mkdirp} = require './fs'
+{Lock} = require('iced-utils').lock
 
 ##=======================================================================
 
 class DB
 
   constructor : ({@filename}) ->
+    @lock = new Lock
 
   get_filename : () ->
     @filename or= env().get_db_filename()
@@ -40,7 +42,7 @@ class DB
     await @_init_db esc defer()
     console.log "done with init db"
     key = "aaabbcceefffeee04"
-    await @put { key , value : { a: [1,2,3,3333], c : false }}, esc defer()
+    await @put { key , value : { a: [1,2,3,3333], c : false}, name : { type : "0f", name : "doggee" } }, esc defer()
     await @get { key }, esc defer val
     console.log "SSS"
     console.log val
@@ -61,7 +63,7 @@ class DB
     await @db.run q, args, esc defer()
 
     if name?
-      q = "RELACE INTO lookup(name,name_type,key_type,key) VALUES(?,?,?,?)"
+      q = "REPLACE INTO lookup(name_type,name,key_type,key) VALUES(?,?,?,?)"
       args = [ name.type, name.name, type, key ]
       await @db.run q, args, esc defer()
       await @db.run "COMMIT", esc defer()
