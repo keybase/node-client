@@ -48,12 +48,26 @@ class DB
 
   #-----
 
-  put : ({type, key, value}, cb) ->
+  put : ({type, key, value, name}, cb) ->
     type or= key[-2...]
+    esc = make_esc cb, "DB::put"
+
+    if name?
+      await @lock.acquire defer()
+      await @db.run "BEGIN", esc defer()
+
     q = "REPLACE INTO kvstore(type,key,value) VALUES(?,?,?)"
     args = [ type, key, JSON.stringify(value) ]
-    await @db.run q, args, defer err
-    cb err
+    await @db.run q, args, esc defer()
+
+    if name?
+      q = "RELACE INTO lookup(name,name_type,key_type,key) VALUES(?,?,?,?)"
+      args = [ name.type, name.name, type, key ]
+      await @db.run q, args, esc defer()
+      await @db.run "COMMIT", esc defer()
+      @lock.release()
+
+    cb null
 
   #-----
 
@@ -69,6 +83,24 @@ class DB
       catch e
         err = e
     cb err, value
+
+  #-----
+
+  lookup : ({type, name}, cb) ->
+    q = """SELECT k.type AS type, k.key AS k, k.value AS value
+           FROM lookup AS l
+           INNER JOIN kvstore AS k ON (l.key_type = k.type AND l.key = k.key)
+           WHERE l.name_type = ?
+           AND l.name = ?"""
+    args = [ type, name ]
+    await db.get q, args, defer err, row
+    value = null
+    if row?
+      try
+        row.value = JSON.parse row.value
+      catch e
+        err = e
+    cb err, row
 
   #-----
 
