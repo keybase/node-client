@@ -19,6 +19,7 @@ $(BUILD_STAMP): \
 	lib/command/config.js \
 	lib/command/join.js \
 	lib/command/version.js \
+	lib/command/prove.js \
 	lib/command/push.js \
 	lib/basex.js \
 	lib/bn.js \
@@ -45,6 +46,9 @@ $(BUILD_STAMP): \
 	lib/stream.js \
 	lib/util.js
 	date > $@
+
+clean:
+	find lib -type f -name *.js -exec rm {} \;
 
 build: $(BUILD_STAMP) 
 

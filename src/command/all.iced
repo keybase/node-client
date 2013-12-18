@@ -46,6 +46,7 @@ class Main
       "join"
       "config"
       "push"
+      "prove"
     ]
 
     subparsers = @ap.addSubparsers {
