@@ -51,8 +51,6 @@ class DB
     commands = data.toString('utf8').split(/\s*;\s*/)
     for c in commands when c.match /\S+/
       await @db.run (c + ";"), esc defer()
-      console.log "OK for #{c}"
-    console.log "ok, ready to rock out of here..."
     cb null
 
 ##=======================================================================
