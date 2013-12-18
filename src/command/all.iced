@@ -47,6 +47,7 @@ class Main
       "config"
       "push"
       "prove"
+      "verify"
     ]
 
     subparsers = @ap.addSubparsers {
