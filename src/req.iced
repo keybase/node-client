@@ -79,7 +79,7 @@ exports.Client = class Client
     else if not (res.statusCode in http_status) 
       err = new E.HttpError "Got reply #{res.statusCode}"
     else if not (body?.status?.name in kb_status)
-      err = new E.KeybaseError "Got status #{JSON.stringify body.status}"
+      err = new E.KeybaseError "#{body.status.desc} (error ##{body.status.code})"
     else
       @_find_cookies res
 
