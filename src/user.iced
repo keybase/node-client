@@ -7,7 +7,7 @@ exports.User = class User
 
   #--------------
 
-  constructor : ({@basics, @public_keys, @id}) ->
+  constructor : ({@basics, @public_keys, @id, @sigs}) ->
 
   #--------------
 
