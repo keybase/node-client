@@ -42,9 +42,13 @@ class DB
     await @_init_db esc defer()
     console.log "done with init db"
     key = "aaabbcceefffeee04"
-    await @put { key , value : { a: [1,2,3,3333], c : false}, name : { type : "0f", name : "doggee" } }, esc defer()
+    name = { type : "a3", name : "jazz cat" }
+    await @put { key , value : { a: [1,2,3,3333], c : false}, name }, esc defer()
     await @get { key }, esc defer val
     console.log "SSS"
+    console.log val
+    await @lookup name, esc defer val
+    console.log "TTT"
     console.log val
     cb null
 
@@ -95,7 +99,7 @@ class DB
            WHERE l.name_type = ?
            AND l.name = ?"""
     args = [ type, name ]
-    await db.get q, args, defer err, row
+    await @db.get q, args, defer err, row
     value = null
     if row?
       try
