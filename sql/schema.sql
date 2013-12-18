@@ -1,28 +1,17 @@
 
-CREATE TABLE IF NOT EXISTS `users` (
-	`uid` CHAR(32) NOT NULL PRIMARY KEY,
-	`username` VARCHAR(128) NOT NULL,
-	`ctime` DATETIME NOT NULL,
-	`mtime` DATETIME NOT NULL
+CREATE TABLE IF NOT EXISTS `kvstore` (
+  `type` CHAR(2) NOT NULL,
+  `key` VARCHAR(100) NOT NULL,
+  `value` BLOB,
+  CONSTRAINT `kvstore_primary_key` PRIMARY KEY (`type`, `key`)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS users_username_index_1 ON users (`username`);
-
-CREATE TABLE IF NOT EXISTS `key_bundles` (
-  `ukbid` char(32) NOT NULL DEFAULT '' PRIMARY KEY,
-  `kid` char(70) NOT NULL DEFAULT '',
-  `key_type` int(11) NOT NULL DEFAULT '0',
-  `key_fingerprint` char(128) NOT NULL DEFAULT '',
-  `uid` char(32) NOT NULL,
-  `bundle` text NOT NULL,
-  `comment` text,
-  `is_primary` tinyint(1) NOT NULL DEFAULT '0',
-  `status` int(11) NOT NULL DEFAULT '0',
-  `self_signed` tinyint(1) NOT NULL DEFAULT '0',
-  `mtime` datetime NOT NULL,
-  `ctime` datetime NOT NULL,
-  FOREIGN KEY (`uid`) REFERENCES `users` (`uid`) 
+CREATE TABLE IF NOT EXISTS `lookup` (
+  `type` CHAR(2) NOT NULL,
+  `name` VARCHAR(200) NOT NULL,
+  `key`  VARCHAR(100) NOT NULL,
+  CONSTRAINT `lookup_primary_key` PRIMARY KEY (`type`, `key`),
+  CONSTRAINT `lookup_foreign_key_1` FOREIGN KEY (`key`) REFERENCES `kvstore` (`key`)
 );
 
-CREATE INDEX IF NOT EXISTS key_bundles_index_1 ON key_bundles (`kid`, `key_type`);
-CREATE INDEX IF NOT EXISTS key_bundles_index_2 ON key_bundles (`uid`);
+CREATE INDEX IF NOT EXISTS `lookup_index_1` ON `lookup`(`key`);
