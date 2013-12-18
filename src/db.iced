@@ -40,16 +40,6 @@ class DB
     @db = db
 
     await @_init_db esc defer()
-    console.log "done with init db"
-    key = "aaabbcceefffeee04"
-    name = { type : "a3", name : "jazz cat" }
-    await @put { key , value : { a: [1,2,3,3333], c : false}, name }, esc defer()
-    await @get { key }, esc defer val
-    console.log "SSS"
-    console.log val
-    await @lookup name, esc defer val
-    console.log "TTT"
-    console.log val
     cb null
 
   #-----
