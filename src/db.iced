@@ -39,8 +39,36 @@ class DB
 
     await @_init_db esc defer()
     console.log "done with init db"
-
+    key = "aaabbcceefffeee04"
+    await @put { key , value : { a: [1,2,3,3333], c : false }}, esc defer()
+    await @get { key }, esc defer val
+    console.log "SSS"
+    console.log val
     cb null
+
+  #-----
+
+  put : ({type, key, value}, cb) ->
+    type or= key[-2...]
+    q = "REPLACE INTO kvstore(type,key,value) VALUES(?,?,?)"
+    args = [ type, key, JSON.stringify(value) ]
+    await @db.run q, args, defer err
+    cb err
+
+  #-----
+
+  get : ({type, key}, cb) ->
+    type or= key[-2...]
+    q = "SELECT value FROM kvstore WHERE type=? AND key=?"
+    args = [ type, key ]
+    await @db.get q, args, defer err, row
+    value = null
+    if row?
+      try
+        value = JSON.parse row.value
+      catch e
+        err = e
+    cb err, value
 
   #-----
 
