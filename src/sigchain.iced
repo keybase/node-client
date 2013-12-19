@@ -5,6 +5,8 @@ log = require './log'
 {constants} = require './constants'
 {SHA256} = require './keyutils'
 {E} = require './err'
+{asyncify} = require('pgp-utils').util
+{make_esc} = require 'iced-error'
 
 ##=======================================================================
 
@@ -35,6 +37,7 @@ exports.Link = class Link
   #--------------------
 
   store : (cb) ->
+    @obj.prev = null if @obj.prev?.length is 0
     await db.put { type : Link.ID_TYPE, key : @id, value : @obj }, defer err
     cb err
 
@@ -87,29 +90,25 @@ exports.SigChain = class SigChain
     for link in links 
       if (prev? and (prev isnt link.prev())) or (not prev? and first and link.prev())
         return new E.CorruptionError "Bad chain link in #{link.seqno()}: #{prev} != #{link.prev()}"
-      prev = link.prev()
+      prev = link.id
     return null
 
   #-----------
 
   _update : (cb) ->
+    esc = make_esc cb, "_update"
     args = { @uid, low : (@last_seqno() + 1) }
-    await req.get { endpoint : "sig/get", args }, defer err, body
+    await req.get { endpoint : "sig/get", args }, esc defer body
     new_links = [] 
-    unless err?
-      for obj in body.sigs when not err?
-        link = new Link { obj }
-        err = link.verify()
-        new_links.push link
-    unless err?
-      new_links.reverse()
-      err = @check_chain (@_links.length is 0), new_links
-    unless err?
-      err = @check_chain false, (@_links[-1...].concat new_links[0..0])
-    unless err?
-      @_links = @_links.concat new_links
-      @_new_links = new_links
-    cb err
+    for obj in body.sigs
+      link = new Link { obj }
+      await asyncify link.verify(), esc defer()
+      new_links.push link
+    await asyncify (@check_chain (@_links.length is 0), new_links), esc defer()
+    await asyncify (@check_chain false, (@_links[-1...].concat new_links[0..0])), esc defer()
+    @_links = @_links.concat new_links
+    @_new_links = new_links
+    cb null
 
   #-----------
 
