@@ -29,21 +29,18 @@ exports.User = class User
 
   #--------------
 
-  check_self : (a, remote, cb) ->
-    err = null
-    if not (b = remote.basics?.id_version)?
-      err = new E.NotLoggedInError "are you logged in? no remote ID version given"
-    else if (a > b)
-      err = new E.VersionRollback "Server version-rollback suspected: Local #{a} > #{b}"
-    cb err
-
-  #--------------
-
   update_with : (remote, cb) ->
     esc = make_esc cb, "update_with"
-    if (v = @basics?.id_version)?
-      await @check_self v, remote, esc defer err
-    cb null 
+    err = null
+
+    a = @basics?.id_version
+    b = remote?.basics?.id_version
+
+    if not b? or a > b
+      err = new E.VersionRollback "Server version-rollback suspected: Local #{a} > #{b}"
+    else
+      # do a deep-comparison
+    cb err
 
   #--------------
 
