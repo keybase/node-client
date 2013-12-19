@@ -27,3 +27,4 @@ exports.E = ie.make_errors
   KEYBASE : "Server-side failure"
   CANCEL : "Operation canceled"
   GPG : "Command line error"
+  NOT_LOGGED_IN : "Not logged in"

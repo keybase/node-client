@@ -42,7 +42,6 @@ exports.Config = class Config
     if @changed
       @json = purge @json
       dat = JSON.stringify @json, null, "    "
-      d = path.dirname @filename
       await mkdirp @filename, defer err, d
       if err?
         log.error "Error creating directory '#{d}': #{err.message}"
