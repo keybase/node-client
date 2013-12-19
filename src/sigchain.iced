@@ -4,6 +4,7 @@ req = require './req'
 log = require './log'
 {constants} = require './constants'
 {SHA256} = require './keyutils'
+{E} = require './err'
 
 ##=======================================================================
 
@@ -125,8 +126,8 @@ exports.SigChain = class SigChain
     err = null
     if not remote_seqno? or remote_seqno > @last_seqno()
       await @_update defer err
-      if remote_seqno? and (remote_seqno isnt @last_seqno())
-        err = new E.CorruptionError "failed to appropriate update chain"
+      if remote_seqno? and ((a = remote_seqno) isnt (b = @last_seqno()))
+        err = new E.CorruptionError "failed to appropriately update chain: #{a} != #{b}"
     cb err
 
   #-----------

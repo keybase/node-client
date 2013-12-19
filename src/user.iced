@@ -80,6 +80,9 @@ exports.User = class User
   update_with : (remote, cb) ->
     err = null
 
+    console.log "Remote -> #{JSON.stringify remote}"
+    console.log "Local -> #{JSON.stringify @}"
+
     a = @basics?.id_version
     b = remote?.basics?.id_version
 
@@ -112,7 +115,7 @@ exports.User = class User
       err = new E.UserNotFoundError "User #{username} wasn't found"
     if not err?
       await local.store force_store, esc defer()
-    cb err
+    cb err, local
 
   #--------------
 

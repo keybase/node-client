@@ -24,7 +24,7 @@ exports.Command = class Command extends Base
       help : "add a proof of identity"
     name = "verify"
     sub = scp.addParser name, opts
-    sub.addArgument [ "username" ], { nargs : 1 }
+    sub.addArgument [ "them" ], { nargs : 1 }
     return opts.aliases.concat [ name ]
 
   #----------
@@ -34,7 +34,7 @@ exports.Command = class Command extends Base
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
     console.log "me: #{util.inspect me, { depth : null }}"
-    await User.load { username : @argv.username[0] }, esc defer them
+    await User.load { username : @argv.them[0] }, esc defer them
     console.log "them: #{util.inspect them, { depth : null }}"
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
