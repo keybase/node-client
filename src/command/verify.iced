@@ -33,9 +33,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb,   "Verify::run"
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
-    console.log "me: #{util.inspect me, { depth : null }}"
     await User.load { username : @argv.them[0] }, esc defer them
-    console.log "them: #{util.inspect them, { depth : null }}"
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
     #await @verify_proofs esc defer()

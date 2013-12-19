@@ -86,6 +86,7 @@ exports.SigChain = class SigChain
 
   check_chain : (first, links) ->
     links or= @_links
+    console.log "check_chain #{links.length}"
     prev = null
     for link in links 
       if (prev? and (prev isnt link.prev())) or (not prev? and first and link.prev())

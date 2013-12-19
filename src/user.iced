@@ -71,6 +71,14 @@ exports.User = class User
 
   #--------------
 
+  load_full_sig_chain : (cb) ->
+    sc = new SigChain @id
+    await sc.update null, defer err
+    @sig_chain = sc unless err?
+    cb err
+
+  #--------------
+
   update_sig_chain : (remote, cb) ->
     await @sig_chain.update remote?.sigs?.last?.seqno, defer err
     cb err
@@ -79,9 +87,6 @@ exports.User = class User
 
   update_with : (remote, cb) ->
     err = null
-
-    console.log "Remote -> #{JSON.stringify remote}"
-    console.log "Local -> #{JSON.stringify @}"
 
     a = @basics?.id_version
     b = remote?.basics?.id_version
@@ -110,6 +115,7 @@ exports.User = class User
       await local.update_with remote, esc defer()
     else if remote?
       local = remote
+      await local.load_full_sig_chain esc defer()
       force_store = true
     else
       err = new E.UserNotFoundError "User #{username} wasn't found"
