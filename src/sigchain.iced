@@ -1,0 +1,138 @@
+
+db = require './db'
+req = require './req'
+log = require './log'
+{constants} = require './constants'
+{SHA256} = require './keyutils'
+
+##=======================================================================
+
+exports.Link = class Link
+
+  @ID_TYPE : constants.ids.sig_chain_link
+
+  #--------------------
+  
+  constructor : ({@id,@obj}) ->
+    @id or= @obj.payload_hash
+
+  #--------------------
+
+  prev : () -> @obj.prev
+  seqno : () -> @obj.seqno
+
+  #--------------------
+
+  verify : () ->
+    err = null
+    if @obj.payload_hash isnt @id 
+      err = new E.CorruptionError "Link ID mismatch: #{@obj.payload_hash} != #{@id}"
+    else if (j = SHA256(@obj.payload_json).toString('hex')) isnt @id
+      err = new E.CorruptionError "Link has wrong id: #{@id} != #{@j}"
+    return err
+
+  #--------------------
+
+  store : (cb) ->
+    await db.put { type : Link.ID_TYPE, key : @id, value : @obj }, defer err
+    cb err
+
+  #--------------------
+
+  @load : (id, cb) ->
+    ret = null
+    await db.get { type : Link.ID_TYPE, key : id }, defer err, obj
+    if err? then # noop
+    else if obj?
+      ret = new Link { id, obj }
+      if (err = ret.verify())? then ret = null
+    cb err, ret
+
+##=======================================================================
+
+exports.SigChain = class SigChain 
+
+  constructor : (@uid, @_links = []) ->
+
+  #-----------
+
+  @load : (uid, curr, cb) ->
+    links = []
+    err = null
+    ret = null
+    while curr and not err?
+      await Link.load curr, defer err, link
+      if err?
+        log.error "Couldn't find link: #{last}"
+      else if link?
+        links.push link
+        curr = link.prev()
+      else 
+        curr = null
+    unless err?
+      ret = new SigChain uid, links.reverse()
+      if (err = ret.check_chain true)? then ret = null
+    cb err, ret
+
+  #-----------
+
+  last_seqno : () -> if (l = @last())? then l.seqno() else null
+
+  #-----------
+
+  check_chain : (first, links) ->
+    links or= @_links
+    prev = null
+    for link in links 
+      if (prev? and (prev isnt link.prev())) or (not prev? and first and link.prev())
+        return new E.CorruptionError "Bad chain link in #{link.seqno()}: #{prev} != #{link.prev()}"
+      prev = link.prev()
+    return null
+
+  #-----------
+
+  _update : (cb) ->
+    args = { @uid, low : (@last_seqno() + 1) }
+    await req.get { endpoint : "sig/get", args }, defer err, body
+    new_links = [] 
+    unless err?
+      for obj in body.sigs when not err?
+        link = new Link { obj }
+        err = link.verify()
+        new_links.push link
+    unless err?
+      new_links.reverse()
+      err = @check_chain (@_links.length is 0), new_links
+    unless err?
+      err = @check_chain false, (@_links[-1...].concat new_links[0..0])
+    unless err?
+      @_links = @_links.concat new_links
+      @_new_links = new_links
+    cb err
+
+  #-----------
+
+  store : (cb) ->
+    err = null
+    if @_new_links?
+      for link in @_new_links when not err?
+        await link.store defer err
+    cb err
+
+  #-----------
+
+  update : (remote_seqno, cb) ->
+    err = null
+    if not remote_seqno? or remote_seqno > @last_seqno()
+      await @_update defer err
+      if remote_seqno? and (remote_seqno isnt @last_seqno())
+        err = new E.CorruptionError "failed to appropriate update chain"
+    cb err
+
+  #-----------
+
+  last : () ->
+    if @_links?.length then @_links[-1...][0] else null
+
+##=======================================================================
+

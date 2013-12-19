@@ -36,6 +36,7 @@ $(BUILD_STAMP): \
 	lib/gpg.js \
 	lib/keymanager.js \
 	lib/keyselector.js \
+	lib/keyutils.js \
 	lib/log.js \
 	lib/package.js \
 	lib/path.js \
@@ -45,6 +46,7 @@ $(BUILD_STAMP): \
 	lib/queue.js \
 	lib/req.js \
 	lib/session.js \
+	lib/sigchain.js \
 	lib/stream.js \
 	lib/user.js \
 	lib/util.js

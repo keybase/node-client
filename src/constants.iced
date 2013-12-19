@@ -21,6 +21,8 @@ exports.constants = constants =
     file : 0o600
   lookups :
     username : 1
+  ids :
+    sig_chain_link : "e0"
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

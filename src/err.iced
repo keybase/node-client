@@ -28,3 +28,5 @@ exports.E = ie.make_errors
   CANCEL : "Operation canceled"
   GPG : "Command line error"
   NOT_LOGGED_IN : "Not logged in"
+  CORRUPTION : "Corruption"
+  VERSION_ROLLBACK : "Verion rollback detected"

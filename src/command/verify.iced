@@ -9,6 +9,8 @@ log = require '../log'
 {make_esc} = require 'iced-error'
 {User} = require '../user'
 db = require '../db'
+util = require 'util'
+{env} = require '../env'
 
 ##=======================================================================
 
@@ -30,7 +32,10 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb,   "Verify::run"
     await db.open esc defer()
-    await User.load { username : @argv.username[0] }, esc defer obj
+    await User.load { username : env().get_username() }, esc defer me
+    console.log "me: #{util.inspect me, { depth : null }}"
+    await User.load { username : @argv.username[0] }, esc defer them
+    console.log "them: #{util.inspect them, { depth : null }}"
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
     #await @verify_proofs esc defer()
