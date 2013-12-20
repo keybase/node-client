@@ -79,7 +79,7 @@ exports.Command = class Command extends Base
 
   revoke_key : (cb) ->
     args = 
-      revoke_primary : 1
+      revoke_primary  : 1
       revocation_type : 0
     await req.post { endpoint : "key/revoke", args }, defer err
     cb err
