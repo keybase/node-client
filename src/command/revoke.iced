@@ -21,7 +21,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  @OPTS:
+  OPTS:
     f :
       alias : "force"
       action : "storeTrue"
@@ -77,10 +77,20 @@ exports.Command = class Command extends Base
 
   #----------
 
+  revoke_key : (cb) ->
+    args = 
+      revoke_primary : 1
+      revocation_type : 0
+    await req.post { endpoint : "key/revoke", args }, defer err
+    cb err
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "run"
     await session.login esc defer()
     await @get_the_go_ahead esc defer()
+    await @revoke_key esc defer()
     log.info "success!"
     cb null
 
