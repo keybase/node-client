@@ -1,11 +1,13 @@
 
 req = require './req'
+{gpg} = require './gpg'
 db = require './db'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
 {E} = require './err'
 deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
+stream = require './stream'
 
 ##=======================================================================
 
@@ -21,6 +23,7 @@ exports.User = class User
     for k in User.FIELDS
       @[k] = args[k]
     @_dirty = false
+    @sig_chain = null
 
   #--------------
 
@@ -146,6 +149,33 @@ exports.User = class User
       if err?
         ret = null
     cb err, ret
+
+  #--------------
+
+  query_key : ({secret}, cb) ->
+    fp = @public_keys?.primary?.key_fingerprint?.toUpperCase()
+    if fp?
+      args = [ "-" + (if secret? then 'K' else 'k'), fp ]
+      await gpg { args, quiet : true }, defer err, out
+      if err?
+        err = new E.NoLocalKeyError "the user doen't have a local key"
+    else
+      err = new E.NoRemoteKeyError "the user doesn't have a remote key"
+    cb err
+
+  #--------------
+
+  verify_signed_key : (cb) ->
+    cb new E.NotImplementedError "not implemented"
+
+
+
+  #--------------
+
+  compress : (cb) ->
+    err = null
+    await @sig_chain.compress defer err if @sig_chain
+    cb err
 
 ##=======================================================================
 

@@ -86,8 +86,8 @@ exports.SigChain = class SigChain
 
   check_chain : (first, links) ->
     links or= @_links
-    console.log "check_chain #{links.length}"
     prev = null
+    i =  0
     for link in links 
       if (prev? and (prev isnt link.prev())) or (not prev? and first and link.prev())
         return new E.CorruptionError "Bad chain link in #{link.seqno()}: #{prev} != #{link.prev()}"
@@ -113,6 +113,12 @@ exports.SigChain = class SigChain
 
   #-----------
 
+  compress : (cb) ->
+    cb new E.NotImplementedError "not implemented yet"
+
+
+  #-----------
+
   store : (cb) ->
     err = null
     if @_new_links?
@@ -135,5 +141,6 @@ exports.SigChain = class SigChain
   last : () ->
     if @_links?.length then @_links[-1...][0] else null
 
+##=======================================================================
 ##=======================================================================
 

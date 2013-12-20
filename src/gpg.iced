@@ -43,16 +43,21 @@ class Engine
 
 ##=======================================================================
 
-exports.gpg = gpg = ({args, stdin, stdout, stderr}, cb) ->
+exports.gpg = gpg = ({args, stdin, stdout, stderr, quiet}, cb) ->
   if stdin and Buffer.isBuffer stdin
     stdin = new stream.BufferInStream stdin
+  if quiet
+    stderr = new stream.NullOutStream()
   if not stdout?
     def_out = true
     stdout = new stream.BufferOutStream()
   else
     def_out = false
+  err = null
   await (new Engine { args, stdin, stdout, stderr }).run().wait defer rc
-  err = if rc is 0 then null else new E.GpgError "exit code #{rc}"
+  if rc isnt 0
+    err = new E.GpgError "exit code #{rc}"
+    err.rc = rc
   out = if def_out? then stdout.data() else null
   cb err, out
 

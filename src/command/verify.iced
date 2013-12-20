@@ -34,6 +34,8 @@ exports.Command = class Command extends Base
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
     await User.load { username : @argv.them[0] }, esc defer them
+    #await them.compress esc defer()
+    await them.query_key {}, esc defer()
     #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
     #await @verify_proofs esc defer()
