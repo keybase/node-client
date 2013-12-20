@@ -20,6 +20,7 @@ $(BUILD_STAMP): \
 	lib/command/join.js \
 	lib/command/prove.js \
 	lib/command/push.js \
+	lib/command/revoke.js \
 	lib/command/verify.js \
 	lib/command/version.js \
 	lib/basex.js \

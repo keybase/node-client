@@ -48,6 +48,7 @@ class Main
       "push"
       "prove"
       "verify"
+      "revoke"
     ]
 
     subparsers = @ap.addSubparsers {
