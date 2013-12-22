@@ -36,7 +36,7 @@ exports.Command = class Command extends Base
     await me.check_public_key esc defer()
     await User.load { username : @argv.them[0] }, esc defer them
 
-    await them.temporary_import_public_key esc defer found
+    await them.import_public_key esc defer found
     console.log found
 
 

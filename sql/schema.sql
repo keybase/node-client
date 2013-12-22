@@ -16,3 +16,14 @@ CREATE TABLE IF NOT EXISTS `lookup` (
 );
 
 CREATE INDEX IF NOT EXISTS `lookup_index_1` ON `lookup`(`key`);
+
+CREATE TABLE IF NOT EXISTS `key_import_log` (
+  `fingerprint` CHAR(40) NOT NULL PRIMARY KEY,
+  `uid` CHAR(32) NOT NULL,
+  `ctime` INTEGER(8) NOT NULL,
+  `mtime` INTEGER(8) NOT NULL,
+  `state` INTEGER(4) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS `key_import_log_index_1` ON `key_import_log` (`uid`);
+CREATE INDEX IF NOT EXISTS `key_import_log_index_2` ON `key_import_log` (`state`, `mtime`);

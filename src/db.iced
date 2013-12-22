@@ -7,6 +7,7 @@ path = require 'path'
 {make_esc} = require 'iced-error'
 {mkdirp} = require './fs'
 {Lock} = require('iced-utils').lock
+{util} = require 'pgp-utils'
 
 ##=======================================================================
 
@@ -41,6 +42,26 @@ class DB
 
     await @_init_db esc defer()
     cb null
+
+  #-----
+
+  log_key_import : ({uid,fingerprint,state}, cb) ->
+    now = util.unix_time()
+    console.log now
+    q = """INSERT OR REPLACE INTO `key_import_log`
+             (fingerprint,uid,mtime,state,ctime)
+           VALUES($fingerprint,$uid,$now,$state,
+              COALESCE (
+                (SELECT ctime FROM key_import_log WHERE fingerprint = $fingerprint), 
+                 $now
+               ))"""
+    args = 
+      $uid : uid
+      $fingerprint : fingerprint
+      $state : state
+      $now : now
+    await @db.run q, args, defer err
+    cb err
 
   #-----
 

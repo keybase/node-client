@@ -23,6 +23,10 @@ exports.constants = constants =
     username : 1
   ids :
     sig_chain_link : "e0"
+  import_state : 
+    NONE : 0
+    TEMPORARY : 1
+    FINAL : 2
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

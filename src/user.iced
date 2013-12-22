@@ -153,9 +153,8 @@ exports.User = class User
   #--------------
 
   query_key : ({secret}, cb) ->
-    fp = @public_keys?.primary?.key_fingerprint?.toUpperCase()
-    if fp?
-      args = [ "-" + (if secret then 'K' else 'k'), fp ]
+    if (@fingerprint = @public_keys?.primary?.key_fingerprint?.toUpperCase())?
+      args = [ "-" + (if secret then 'K' else 'k'), @fingerprint ]
       await gpg { args, quiet : true }, defer err, out
       if err?
         err = new E.NoLocalKeyError "the user #{@username()} doesn't have a local key"
@@ -176,24 +175,22 @@ exports.User = class User
   #--------------
 
   import_public_key : (cb) ->
-    if (data = @public_keys?.primary?.bundle)?
-      args = [ "--import" ]
-      await gpg { args, stdin : data }, defer err, out
-      if err?
-        err = new E.ImportError "#{@username()}: key import error: {err.message}"
-    else
-      err = new E.ImportError "no public key found for #{@username()}"
-    cb err
-
-  #--------------
-
-  temporary_import_public_key : (cb) ->
     found = false
     await @query_key { secret : false }, defer err
     if not err? then found = true
-    else if (err instanceof E.NoLocalKeyError)?
-      await @import_public_key defer err
-    cb err, true
+    else if not (err instanceof E.NoLocalKeyError)? then # noops
+    else if not (data = @public_keys?.primary?.bundle)?
+      err = new E.ImportError "no public key found for #{@username()}"
+    else
+      uid = @id
+      state = constants.import_state.TEMPORARY
+      await db.log_key_import { uid, state, @fingerprint }, defer err
+      unless err?
+        args = [ "--import" ]
+        await gpg { args, stdin : data }, defer err, out
+        if err?
+          err = new E.ImportError "#{@username()}: key import error: {err.message}"
+    cb err, found
 
   #--------------
 
