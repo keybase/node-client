@@ -33,6 +33,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb,   "Verify::run"
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
+    await me.check_public_key esc defer()
     await User.load { username : @argv.them[0] }, esc defer them
     #await them.compress esc defer()
     await them.query_key {}, esc defer()

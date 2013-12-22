@@ -32,3 +32,4 @@ exports.E = ie.make_errors
   VERSION_ROLLBACK : "Verion rollback detected"
   NO_REMOTE_KEY : "No remote key found"
   NO_LOCAL_KEY : "No local key found"
+  IMPORT : "Error importing key"

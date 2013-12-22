@@ -96,10 +96,10 @@ exports.User = class User
 
     if not b? or a > b
       err = new E.VersionRollbackError "Server version-rollback suspected: Local #{a} > #{b}"
-    else if a.id isnt b.id
-      err = new E.CorruptionError "Bad ids on user objects: #{a.id} != #{b.id}"
     else if not a? or a < b
       @update_fields remote
+    else if a isnt b
+      err = new E.CorruptionError "Bad ids on user objects: #{a.id} != #{b.id}"
 
     if not err?
       await @update_sig_chain remote, defer err
@@ -165,10 +165,26 @@ exports.User = class User
 
   #--------------
 
+  check_public_key : (cb) ->
+    await @query_key { secret : false }, defer err
+    cb err
+
+  #--------------
+
+  import_public_key : (cb) ->
+    if (data = @public_keys?.primary?.bundle)?
+      args = [ "--import" ]
+      await gpg { args, stdin : data }, defer err, out
+      if err?
+        err = new E.ImportError "key import error: {err.message}"
+    else
+      err = new E.ImportError "no public key found"
+    cb err
+
+  #--------------
+
   verify_signed_key : (cb) ->
     cb new E.NotImplementedError "not implemented"
-
-
 
   #--------------
 
