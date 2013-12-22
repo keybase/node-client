@@ -194,6 +194,18 @@ exports.User = class User
 
   #--------------
 
+  verify_sig : (cb) ->
+    err = null
+    if @sig_chain?.length
+      last = @sig_chain[-1...][0]
+      args = [ "--verify" ]
+      await gpg { args, stdin : last.sig }, defer err, out
+      if err?
+        err = new E.VerifyError "#{@username()}: failed to verify signature"
+    cb err
+
+  #--------------
+
   verify_signed_key : (cb) ->
     cb new E.NotImplementedError "not implemented"
 
