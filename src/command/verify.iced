@@ -35,9 +35,12 @@ exports.Command = class Command extends Base
     await User.load { username : env().get_username() }, esc defer me
     await me.check_public_key esc defer()
     await User.load { username : @argv.them[0] }, esc defer them
+
+    await them.temporary_import_public_key esc defer found
+    console.log found
+
+
     #await them.compress esc defer()
-    await them.query_key {}, esc defer()
-    #await @fetch_track   esc defer()
     #await @fetch_proofs  esc defer()
     #await @verify_proofs esc defer()
     #await @prompt_ok     esc defer()

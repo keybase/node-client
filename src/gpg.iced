@@ -43,9 +43,17 @@ class Engine
 
 ##=======================================================================
 
+bufferify = (x) ->
+  if not x? then null
+  else if (typeof x is 'string') then new Buffer x, 'utf8'
+  else if (Buffer.isBuffer x) then x
+  else null
+
+##=======================================================================
+
 exports.gpg = gpg = ({args, stdin, stdout, stderr, quiet}, cb) ->
-  if stdin and Buffer.isBuffer stdin
-    stdin = new stream.BufferInStream stdin
+  if (b = bufferify stdin)?
+    stdin = new stream.BufferInStream b
   if quiet
     stderr = new stream.NullOutStream()
   if not stdout?
