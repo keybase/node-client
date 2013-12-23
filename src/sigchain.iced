@@ -34,8 +34,11 @@ exports.Link = class Link
   sig : () -> @obj.sig
   payload_json_str : () -> @obj.payload_json
   fingerprint : () -> @obj.fingerprint.toLowerCase()
-  is_self_sig : () -> @obj.sig_type in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
+  is_self_sig : () -> @sig_type() in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
   self_signer : () -> @payload_json()?.body?.key?.username
+  sig_type : () -> @obj.sig_type
+  proof_type : () -> @obj.proof_type
+  sig_id : () -> @obj.sig_id
  
   #--------------------
 
@@ -216,6 +219,50 @@ exports.SigChain = class SigChain
           break
     if not err? and not found
       err = new E.VerifyError "could not find self signature of username '#{@username}'"
+    cb err
+
+  #-----------
+
+  compress : (cb) ->
+
+    MAKE = (d,k) -> if (out = d[k]) then out else d[k] = out = {}
+
+    out = {}
+    index = {}
+    err = null
+    
+    for link in @_links when link.fingerprint is @fingerprint
+      lt = link.sig_type()
+      sig_id = link.sig_id()
+      pjs = link.payload_json_str()
+      body = link.payload_json()?.body
+      index[link.sig_id()] = lt
+
+      switch lt
+        when ST.SELF_SIG then out[lt] = link
+        when ST.REMOTE_PROOF then (MAKE(out, lt))[link.proof_type()] = link
+
+        when ST.TRACK 
+          if not (id = body?.track?.id) then log.warn "Missing track in signature: #{pjs}"
+          else (MAKE(out,lt))[id] = link
+
+        when ST.REVOKE
+          if not (sig_id = body?.revoke?.sig_id)
+            log.warn "Cannot find revoke sig_id in signature: #{pjs}"
+          else if not (cat = index[sig_id])? or not (sig = out[cat])?
+            log.warn "Cannot revoke signature #{sig_id} since we haven't seen it"
+          else if not sig.sig_id() is sig_id
+            log.warn "Cannot revoke signature #{sig_id} since it's been superseded"
+          else
+            delete out[cat]
+
+        when ST.UNFOLLOW
+          if not (id = body?.tracl?.id?) then log.warn "Mssing untrack in signature: #{pjs}"
+          else if not (out[ST.TRACK]?[id]?) then log.warn "Not tracking #{id} to begin with"
+          else delete out[ST.TRACK][id]
+
+    unless err?
+      @table = out
     cb err
 
   #-----------
