@@ -255,8 +255,11 @@ exports.User = class User
 
   #--------------
 
-  verify_signed_key : (cb) ->
-    cb new E.NotImplementedError "not implemented"
+  verify : (cb) ->
+    esc = make_esc "verify", cb
+    await @verify_sig esc defer()
+    await @verify_userid esc defer()
+    cb null
 
   #--------------
 
