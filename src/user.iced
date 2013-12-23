@@ -7,7 +7,8 @@ db = require './db'
 {E} = require './err'
 deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
-stream = require './stream'
+{BufferOutStream,grep} = require './stream'
+{parse} = require('pgp-utils').userid
 
 ##=======================================================================
 
@@ -202,7 +203,7 @@ exports.User = class User
     err = null
     if (last = @sig_chain.last())?
       args = [ "--decrypt" ]
-      stderr = new stream.BufferOutStream()
+      stderr = new BufferOutStream()
       await gpg { args, stdin : last.sig(), stderr }, defer err, out
       if err?
         err = new E.VerifyError "#{@username()}: failed to verify signature"
@@ -212,12 +213,29 @@ exports.User = class User
         err = new E.VerifyError "#{@username()}: bad key: #{a} != #{b}"
       else if ((a = out.toString('utf8')) isnt (b = last.payload_json()))
         err = new E.VerifyError "#{@username()}: payload was wrong: #{a} != #{b}"
+
+      # now we can say that we have a valid last fingerprint....
+      unless err?
+        @_fingerprint = last.fingerprint()
     cb err
 
   #--------------
 
-  verify_username : (cb) ->
+  read_uids_from_key : (cb) ->
+    args = [ "-k", "-u", @_fingerprint ]
+    await gpg { args, quiet : true } , defer err, out
+    unless err?
+      pattern = /^uid\s+(.*)$/
+      lines = grep { buffer : out, pattern }
+      out = (u for line in lines when (m = line.match pattern)? and (u = parse m[1])?)
+    cb err, out
+
+  #--------------
+
+  verify_userid : (cb) ->
     await @read_uids_from_key defer err, uids
+    console.log uids
+    cb err
 
   #--------------
 

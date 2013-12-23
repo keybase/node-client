@@ -50,3 +50,9 @@ exports.FnOutStream = class FnOutStream extends stream.Writable
   _write : (dat) -> @fn dat
 
 ##=======================================================================
+
+exports.grep = ({pattern, buffer}) ->
+  lines = buffer.toString('utf8').split '\n' 
+  (lines for line in lines when line.match pattern)
+
+##=======================================================================
