@@ -30,10 +30,11 @@ exports.Command = class Command extends Base
   #----------
 
   run : (cb) ->
-    esc = make_esc cb,   "Verify::run"
+    esc = make_esc cb, "Verify::run"
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
     await me.check_public_key esc defer()
+
     await User.load { username : @argv.them[0] }, esc defer them
     await them.import_public_key esc defer found
     await them.verify_sig esc defer()

@@ -33,3 +33,4 @@ exports.E = ie.make_errors
   NO_REMOTE_KEY : "No remote key found"
   NO_LOCAL_KEY : "No local key found"
   IMPORT : "Error importing key"
+  VERIFY : "Signature verification problem"

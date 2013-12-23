@@ -23,6 +23,9 @@ exports.Link = class Link
 
   prev : () -> @obj.prev
   seqno : () -> @obj.seqno
+  sig : () -> @obj.sig
+  payload_json : () -> @obj.payload_json
+  fingerprint : () -> @obj.fingerprint.toLowerCase()
 
   #--------------------
 
