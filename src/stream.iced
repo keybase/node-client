@@ -38,6 +38,7 @@ exports.BufferOutStream = class BufferOutStream extends stream.Writable
     super options
 
   _write : (dat) -> 
+    console.log "xx " + dat.toString()
     @_v.push dat
     true
 

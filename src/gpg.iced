@@ -24,7 +24,10 @@ class Engine
     @proc = spawn @name, @args
     @stdin.pipe @proc.stdin
     @proc.stdout.pipe @stdout
-    @proc.stderr.pipe @stderr
+    @proc.stderr.on('data', (data) => 
+      console.log "YYY " + data.toString()
+      @stderr.write data
+    )
     @pid = @proc.pid
     @proc.on 'exit', (status) => @_got_exit status
     @

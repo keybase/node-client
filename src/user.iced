@@ -203,6 +203,7 @@ exports.User = class User
     if (last = @sig_chain.last())?
       args = [ "--decrypt" ]
       stderr = new stream.BufferOutStream()
+      console.log last.sig()
       await gpg { args, stdin : last.sig(), stderr }, defer err, out
       if err?
         console.log err
