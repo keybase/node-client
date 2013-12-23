@@ -53,6 +53,7 @@ exports.FnOutStream = class FnOutStream extends stream.Writable
 
 exports.grep = ({pattern, buffer}) ->
   lines = buffer.toString('utf8').split '\n' 
-  (lines for line in lines when line.match pattern)
+  out = (line for line in lines when line.match pattern)
+  return out
 
 ##=======================================================================

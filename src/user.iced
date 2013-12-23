@@ -222,7 +222,7 @@ exports.User = class User
   #--------------
 
   read_uids_from_key : (cb) ->
-    args = [ "-k", "-u", @_fingerprint ]
+    args = [ "-k", @_fingerprint ]
     await gpg { args, quiet : true } , defer err, out
     unless err?
       pattern = /^uid\s+(.*)$/
@@ -234,7 +234,6 @@ exports.User = class User
 
   verify_userid : (cb) ->
     await @read_uids_from_key defer err, uids
-    console.log uids
     cb err
 
   #--------------
