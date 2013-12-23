@@ -207,13 +207,17 @@ exports.User = class User
       if err?
         err = new E.VerifyError "#{@username()}: failed to verify signature"
       else if not (m = stderr.data().toString('utf8').match(/Primary key fingerprint: (.*)/))?
-        console.log stderr.data().toString('utf8')
         err = new E.VerifyError "#{@username()}: can't parse PGP output in verify signature"
       else if ((a = strip(m[1]).toLowerCase()) isnt (b = last.fingerprint()))
         err = new E.VerifyError "#{@username()}: bad key: #{a} != #{b}"
       else if ((a = out.toString('utf8')) isnt (b = last.payload_json()))
         err = new E.VerifyError "#{@username()}: payload was wrong: #{a} != #{b}"
     cb err
+
+  #--------------
+
+  verify_username : (cb) ->
+    await @read_uids_from_key defer err, uids
 
   #--------------
 
