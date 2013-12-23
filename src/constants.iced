@@ -27,6 +27,13 @@ exports.constants = constants =
     NONE : 0
     TEMPORARY : 1
     FINAL : 2
+  signature_types :
+    NONE : 0
+    SELF_SIG : 1
+    REMOTE_PROOF : 2
+    TRACK : 3
+    UNTRACK : 4
+    REVOKE : 5
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

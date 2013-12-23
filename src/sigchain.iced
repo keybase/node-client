@@ -7,6 +7,7 @@ log = require './log'
 {E} = require './err'
 {asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
+ST = constants.signature_types
 
 ##=======================================================================
 
@@ -24,16 +25,31 @@ exports.Link = class Link
   prev : () -> @obj.prev
   seqno : () -> @obj.seqno
   sig : () -> @obj.sig
-  payload_json : () -> @obj.payload_json
+  payload_json_str : () -> @obj.payload_json
   fingerprint : () -> @obj.fingerprint.toLowerCase()
+  is_self_sig : () -> @obj.sig_type in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
+  self_signer : () -> @payload_json()?.body?.key?.username
+ 
+  #--------------------
+
+  payload_json : () ->
+    unless @_payload_obj?
+      s = @payload_json_str()
+      ret = {}
+      try
+        ret = JSON.parse s
+      catch e
+        log.error "Error parsing JSON #{s}: #{e.message}"
+      @_payload_obj = ret
+    return @_payload_obj
 
   #--------------------
 
   verify : () ->
     err = null
-    if @obj.payload_hash isnt @id 
-      err = new E.CorruptionError "Link ID mismatch: #{@obj.payload_hash} != #{@id}"
-    else if (j = SHA256(@obj.payload_json).toString('hex')) isnt @id
+    if (a = @obj.payload_hash) isnt (b = @id)
+      err = new E.CorruptionError "Link ID mismatch: #{a} != #{b}"
+    else if (j = SHA256(@payload_json_str()).toString('hex')) isnt @id
       err = new E.CorruptionError "Link has wrong id: #{@id} != #{@j}"
     return err
 
@@ -144,6 +160,19 @@ exports.SigChain = class SigChain
   last : () ->
     if @_links?.length then @_links[-1...][0] else null
 
-##=======================================================================
+  #-----------
+
+  # Limit the chain to only those links signed by the key used in the last link
+  limit : () ->
+    unless @_limited_chain
+      c = []
+      if (fp = @last()?.fingerprint())?
+        for i in [(@_links.length-1)..0]
+          if (l = @_links[i]).fingerprint() is fp then c.push l
+          else break
+      c = c.reverse()
+      @_limited_chain = c
+    return @_limited_chain 
+
 ##=======================================================================
 

@@ -215,7 +215,7 @@ exports.User = class User
         err = new E.VerifyError "#{@username()}: can't parse PGP output in verify signature"
       else if ((a = strip(m[1]).toLowerCase()) isnt (b = last.fingerprint()))
         err = new E.VerifyError "#{@username()}: bad key: #{a} != #{b}"
-      else if ((a = out.toString('utf8')) isnt (b = last.payload_json()))
+      else if ((a = out.toString('utf8')) isnt (b = last.payload_json_str()))
         err = new E.VerifyError "#{@username()}: payload was wrong: #{a} != #{b}"
 
       # now we can say that we have a valid last fingerprint....
@@ -243,6 +243,12 @@ exports.User = class User
       search_for = make_email @username()
       emails = (email for {email} in uids)
       found = emails.indexOf(search_for) >= 0
+    if not err? and not found
+      links = @sig_chain.limit()
+      for link in links when link.is_self_sig()
+        if link.self_signer() is @username()
+          found = true
+          break
     if not err? and not found
       err = new E.VerifyError "could not find self signature of username '#{@username()}'"
     cb err
