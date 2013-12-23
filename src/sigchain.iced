@@ -8,6 +8,13 @@ log = require './log'
 {asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
+{BufferOutStream} = require './stream'
+{gpg,read_uids_from_key} = require './gpg'
+{make_email} = require './util'
+
+##=======================================================================
+
+strip = (x) -> x.replace(/\s+/g, '')
 
 ##=======================================================================
 
@@ -70,6 +77,22 @@ exports.Link = class Link
       ret = new Link { id, obj }
       if (err = ret.verify())? then ret = null
     cb err, ret
+
+  #--------------------
+
+  verify_sig : ({username}, cb) ->
+    args = [ "--decrypt" ]
+    stderr = new BufferOutStream()
+    await gpg { args, stdin : @sig(), stderr }, defer err, out
+    if err?
+      err = new E.VerifyError "#{username}: failed to verify signature"
+    else if not (m = stderr.data().toString('utf8').match(/Primary key fingerprint: (.*)/))?
+      err = new E.VerifyError "#{username}: can't parse PGP output in verify signature"
+    else if ((a = strip(m[1]).toLowerCase()) isnt (b = @fingerprint()))
+      err = new E.VerifyError "#{username}: bad key: #{a} != #{b}"
+    else if ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
+      err = new E.VerifyError "#{username}: payload was wrong: #{a} != #{b}"
+    cb err
 
 ##=======================================================================
 
@@ -135,7 +158,6 @@ exports.SigChain = class SigChain
   compress : (cb) ->
     cb new E.NotImplementedError "not implemented yet"
 
-
   #-----------
 
   store : (cb) ->
@@ -163,16 +185,49 @@ exports.SigChain = class SigChain
   #-----------
 
   # Limit the chain to only those links signed by the key used in the last link
-  limit : () ->
-    unless @_limited_chain
-      c = []
-      if (fp = @last()?.fingerprint())?
-        for i in [(@_links.length-1)..0]
-          if (l = @_links[i]).fingerprint() is fp then c.push l
-          else break
-      c = c.reverse()
-      @_limited_chain = c
-    return @_limited_chain 
+  _limit : () ->
+    c = []
+    for i in [(@_links.length-1)..0]
+      if (l = @_links[i]).fingerprint() is @fingerprint then c.push l
+      else break
+    c = c.reverse()
+    @_links = c
+
+ #--------------
+
+  _verify_sig : (cb) ->
+    err = null
+    await l.verify_sig { @username }, defer err if (l = @last())?
+    cb err
+
+  #-----------
+
+  _verify_userid : (cb) ->
+    await read_uids_from_key { @fingerprint}, defer err, uids
+    found = null
+    unless err?
+      search_for = make_email @username
+      emails = (email for {email} in uids)
+      found = emails.indexOf(search_for) >= 0
+    if not err? and not found
+      for link in @_links when link.is_self_sig()
+        if link.self_signer() is @username
+          found = true
+          break
+    if not err? and not found
+      err = new E.VerifyError "could not find self signature of username '#{@username}'"
+    cb err
+
+  #-----------
+
+  verify_sig : ({username}, cb) ->
+    esc = make_esc cb, "SigChain.verify_sig"
+    @username = username
+    if (@fingerprint = @last()?.fingerprint())?
+      @_limit()
+      await @_verify_sig esc defer()
+      await @_verify_userid esc defer()
+    cb null
 
 ##=======================================================================
 

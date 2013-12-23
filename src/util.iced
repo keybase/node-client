@@ -1,6 +1,7 @@
 
 {fork} = require 'child_process'
 path = require 'path'
+{constants} = require './constants'
 
 #=========================================================================
 
@@ -24,5 +25,9 @@ exports.purge = purge = (d) ->
   for k,v of d when v?
     out[k] = if is_dict v then purge v else v
   return out
+
+#=========================================================================
+
+exports.make_email = make_email = (un) -> un + "@" + constants.canonical_host 
 
 #=========================================================================

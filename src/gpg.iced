@@ -3,6 +3,7 @@
 stream = require './stream'
 log = require './log'
 {E} = require './err'
+{parse} = require('pgp-utils').userid
 
 ##=======================================================================
 
@@ -67,6 +68,17 @@ exports.gpg = gpg = ({args, stdin, stdout, stderr, quiet}, cb) ->
     err = new E.GpgError "exit code #{rc}"
     err.rc = rc
   out = if def_out? then stdout.data() else null
+  cb err, out
+
+##=======================================================================
+
+exports.read_uids_from_key = ({fingerprint}, cb) ->
+  args = [ "-k", fingerprint ]
+  await gpg { args, quiet : true } , defer err, out
+  unless err?
+    pattern = /^uid\s+(.*)$/
+    lines = stream.grep { buffer : out, pattern }
+    out = (u for line in lines when (m = line.match pattern)? and (u = parse m[1])?)
   cb err, out
 
 ##=======================================================================
