@@ -203,18 +203,15 @@ exports.User = class User
     if (last = @sig_chain.last())?
       args = [ "--decrypt" ]
       stderr = new stream.BufferOutStream()
-      console.log last.sig()
       await gpg { args, stdin : last.sig(), stderr }, defer err, out
       if err?
-        console.log err
-        console.log stderr.data().toString()
         err = new E.VerifyError "#{@username()}: failed to verify signature"
       else if not (m = stderr.data().toString('utf8').match(/Primary key fingerprint: (.*)/))?
         console.log stderr.data().toString('utf8')
         err = new E.VerifyError "#{@username()}: can't parse PGP output in verify signature"
       else if ((a = strip(m[1]).toLowerCase()) isnt (b = last.fingerprint()))
         err = new E.VerifyError "#{@username()}: bad key: #{a} != #{b}"
-      else if ((a = out) isnt (b = last.payload_json()))
+      else if ((a = out.toString('utf8')) isnt (b = last.payload_json()))
         err = new E.VerifyError "#{@username()}: payload was wrong: #{a} != #{b}"
     cb err
 

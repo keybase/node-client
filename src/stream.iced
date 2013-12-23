@@ -37,10 +37,9 @@ exports.BufferOutStream = class BufferOutStream extends stream.Writable
     @_v = []
     super options
 
-  _write : (dat) -> 
-    console.log "xx " + dat.toString()
+  _write : (dat, encoding, cb) -> 
     @_v.push dat
-    true
+    cb()
 
   data : () -> Buffer.concat @_v
 
