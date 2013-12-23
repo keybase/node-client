@@ -16,6 +16,10 @@ strip = (x) -> x.replace(/\s+/g, '')
 
 ##=======================================================================
 
+exports.make_email = make_email = (un) -> un + "@" + constants.canonical_host 
+
+##=======================================================================
+
 exports.User = class User 
 
   #--------------
@@ -234,6 +238,13 @@ exports.User = class User
 
   verify_userid : (cb) ->
     await @read_uids_from_key defer err, uids
+    found = null
+    unless err?
+      search_for = make_email @username()
+      emails = (email for {email} in uids)
+      found = emails.indexOf(search_for) >= 0
+    if not err? and not found
+      err = new E.VerifyError "could not find self signature of username '#{@username()}'"
     cb err
 
   #--------------
