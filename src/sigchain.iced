@@ -42,6 +42,9 @@ exports.Link = class Link
   sig_type : () -> @obj.sig_type
   proof_type : () -> @obj.proof_type
   sig_id : () -> @obj.sig_id
+  api_url : () -> @obj.api_url
+  proof_text_check : () -> @obj.proof_text_check
+  remote_id : () -> @obj.remote_id
  
   #--------------------
 
@@ -107,23 +110,40 @@ exports.Link = class Link
     err = scraper = null
     klass = switch type
       when PT.twitter then proofs.TwitterScraper
-      when PT.github thenproofs.GithubScraper
+      when PT.github  then proofs.GithubScraper
       else null
     if not klass
       err = new E.ScrapeError "cannot allocate scraper of type #{type}"
     else
-      @scraper = new klass { libs : { cheerio, request, log } }
-    cb err
+      scraper = new klass { libs : { cheerio, request, log } }
+    cb err, scraper
 
   #-----------
 
   check_remote_proof : ({username, type, warnings}, cb) ->
-    esc = make_esc cb, "SigChain.Link.check_remote_proof'"
-    type_s = proof.constants.proof_type_to_string type
-    await @alloc_scraper type, esc defer()
-    await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
-    await @check esc defer()
-    cb null
+    esc = make_esc cb, "SigChain::Link::check_remote_proof'"
+    if not (type_s = proofs.proof_type_to_string[type])?
+      err = new E.VerifyError "No remove proof type for #{type}"
+    else
+      err = null
+      await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
+      if not (remote_username = @payload_json()?.body?.service?.username)?
+        err = new E.VerifyError "no remote username found in proof"
+      else
+        await @alloc_scraper type, esc defer scraper
+        await scraper.validate {
+          username : remote_username,
+          api_url : @api_url(),
+          signature : @sig(),
+          proof_text_check : @proof_text_check()
+          remote_id : (""+@remote_id())
+        }, esc defer rc
+        if rc isnt proofs.constants.v_codes.OK
+          console.log "remote id -> "
+          console.log @remote_id()
+          console.log @api_url()
+          err = new E.RemoteCheckError "Remote check failed (code: #{rc})"
+    cb err
 
 ##=======================================================================
 
@@ -306,7 +326,7 @@ exports.SigChain = class SigChain
   #-----------
 
   verify_sig : ({username}, cb) ->
-    esc = make_esc cb, "SigChain.verify_sig"
+    esc = make_esc cb, "SigChain::verify_sig"
     @username = username
     if (@fingerprint = @last()?.fingerprint())?
       @_limit()
@@ -315,14 +335,14 @@ exports.SigChain = class SigChain
       await @_verify_userid esc defer()
     cb null
 
-
-
   #-----------
 
   check_remote_proofs : ({username}, cb) ->
+    esc = make_esc cb, "SigChain::check_remote_proofs"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?
       for type,link of tab
+        type = parseInt(type) # we expect it to be an int, not a dict key
         await link.check_remote_proof { username, type, warnings }, esc defer()
     cb null
 

@@ -35,3 +35,4 @@ exports.E = ie.make_errors
   IMPORT : "Error importing key"
   VERIFY : "Signature verification problem"
   SCRAPE : "Scraper error"
+  REMOTE_CHECK : "Remote check failure"
