@@ -213,7 +213,6 @@ exports.SigChain = class SigChain
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
     found = false
 
-
     # Search for an explicit self-signature of this key
     if not found and (v = @table[ST.SELF_SIG])?
       for link in v
