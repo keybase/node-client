@@ -118,7 +118,10 @@ class Main
 
   config_logger : () ->
     p = log.package()
-    p.env().set_level p.DEBUG
+    if @argv.debug
+      p.env().set_level p.DEBUG
+    if @argv.no_color
+      p.env().set_use_color false
 
   #----------------------------------
 

@@ -55,6 +55,10 @@ exports.Base = class Base
       alias: "debug"
       action : "storeTrue"
       help : "debug mode"
+    C:
+      alias : "no-color"
+      action : "storeTrue"
+      help : "disable logging colors"
     port :
       help : 'which port to connect to'
     "no-tls" :
