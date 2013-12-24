@@ -206,31 +206,43 @@ exports.SigChain = class SigChain
   #-----------
 
   _verify_userid : (cb) ->
-    await read_uids_from_key { @fingerprint}, defer err, uids
-    found = null
-    unless err?
-      search_for = make_email @username
-      emails = (email for {email} in uids)
-      found = emails.indexOf(search_for) >= 0
-    if not err? and not found
-      for link in @_links when link.is_self_sig()
-        if link.self_signer() is @username
+    esc = make_esc cb, "_verify_userid"
+
+    # first try to see if the username is baked into the key, and be happy with that
+    await read_uids_from_key { @fingerprint}, esc defer uids
+    found = (email for {email} in uids).indexOf(make_email @username) >= 0
+
+    # Search for an explicit self-signature of this key
+    if not found
+      for link in @table[ST.SELF_SIG]
+        if link.self_signer() is @username 
           found = true
           break
+
+    # Search for a freeloader in an otherwise useful signature
+    if not found
+      for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
+        break if found
+        for k,link of @table[type]
+          if link.self_signer() is @username
+            found = true
+            break
+
     if not err? and not found
       err = new E.VerifyError "could not find self signature of username '#{@username}'"
     cb err
 
   #-----------
 
-  compress : (cb) ->
+  _compress : () ->
 
-    MAKE = (d,k) -> if (out = d[k]) then out else d[k] = out = {}
+    MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
 
     out = {}
     index = {}
-    err = null
-    
+
+    console.log @_links
+
     for link in @_links when link.fingerprint is @fingerprint
       lt = link.sig_type()
       sig_id = link.sig_id()
@@ -239,12 +251,12 @@ exports.SigChain = class SigChain
       index[link.sig_id()] = lt
 
       switch lt
-        when ST.SELF_SIG then out[lt] = link
-        when ST.REMOTE_PROOF then (MAKE(out, lt))[link.proof_type()] = link
+        when ST.SELF_SIG then MAKE(out, lt,[]).push link
+        when ST.REMOTE_PROOF then MAKE(out, lt, {})[link.proof_type()] = link
 
         when ST.TRACK 
           if not (id = body?.track?.id) then log.warn "Missing track in signature: #{pjs}"
-          else (MAKE(out,lt))[id] = link
+          else MAKE(out,lt,{})[id] = link
 
         when ST.REVOKE
           if not (sig_id = body?.revoke?.sig_id)
@@ -261,9 +273,8 @@ exports.SigChain = class SigChain
           else if not (out[ST.TRACK]?[id]?) then log.warn "Not tracking #{id} to begin with"
           else delete out[ST.TRACK][id]
 
-    unless err?
-      @table = out
-    cb err
+    console.log out
+    @table = out
 
   #-----------
 
@@ -272,6 +283,7 @@ exports.SigChain = class SigChain
     @username = username
     if (@fingerprint = @last()?.fingerprint())?
       @_limit()
+      @_compress()
       await @_verify_sig esc defer()
       await @_verify_userid esc defer()
     cb null
