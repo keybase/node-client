@@ -117,6 +117,8 @@ class Main
   #----------------------------------
 
   config_logger : () ->
+    p = log.package()
+    p.env().set_level p.DEBUG
 
   #----------------------------------
 

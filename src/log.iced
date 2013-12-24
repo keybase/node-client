@@ -1,28 +1,75 @@
 
 colors = require 'colors'
-winston = require 'winston'
 rpc = require('framed-msgpack-rpc').log
 
 #=========================================================================
 
-_daemonize = false
-c = (fn, msg) -> if _daemonize then msg else fn msg
 bold_red = (x) -> colors.bold colors.red x
 
 #=========================================================================
 
-exports.log = log = (msg) -> info msg
-exports.warn = warn = (msg) -> winston.warn(c(colors.magenta,msg))
-exports.error = error = (msg) -> winston.error(c(bold_red, msg))
-exports.info = info = (msg) -> winston.info(c(colors.green,msg))
-exports.debug = info = (msg) -> winston.debug msg
+class Env 
+  constructor : ( {@use_color, @level}) ->
+  set_level : (l) -> @level = l
+  set_use_color : (c) -> @use_color = c
 
 #=========================================================================
 
-exports.daemonize = (file) ->
-  _daemonize = true
-  winston.add winston.transports.File, { filename : file , json : false }
-  winston.remove winston.transports.Console
+class Level
+  constructor : ({@level, @color_fn, @prefix}) ->
+
+  log : (env, msg) ->
+    if env.level <= @level
+      lines = msg.split "\n"
+      for line in lines
+        @_log_line env, line
+
+  _log_line : (env, line) ->
+    line = [ (@prefix + ":"), line ].join(' ')
+    line = @color_fn line if @color_fn? and env.use_color
+    @__log_line line
+
+  __log_line : (x) -> console.log x
+
+#=========================================================================
+
+default_levels = 
+  debug : new Level { level : 0, color_fn : colors.blue,    prefix : "debug" }
+  info  : new Level { level : 1, color_fn : colors.green,   prefix : "info"  }
+  warn  : new Level { level : 2, color_fn : colors.magenta, prefix : "warn"  }
+  error : new Level { level : 3, color_fn : bold_red,       prefix : "error" }
+
+#=========================================================================
+
+class Package
+
+  constructor : ({env,config}) ->
+    @_env = env
+    @_config = config
+    for key,val of config
+      ((k,v) =>
+        @[k] = (m) => v.log(@_env, m)
+        @[k.toUpperCase()] = v.level
+      )(key, val)
+
+  env : -> @_env
+
+  export_to : (exports) ->
+    for k,v of @_config
+      exports[k] = @[k]
+    exports.package = () => @
+
+#=========================================================================
+
+_package = null
+
+exports.init = init = ({env,config}) ->
+  (_package = new Package { env, config }).export_to exports
+
+init { 
+  env    : new Env({ use_color : true, level : default_levels.info.level }),
+  config : default_levels
+}
 
 #=========================================================================
 
@@ -41,7 +88,7 @@ class Logger extends rpc.Logger
       E : "error"
       F : "fatal"
     l = map[l] or "warn"
-    exports[l] msg
+    _pacakage[l] msg
 
   make_child : (d) -> return new Logger d
 
