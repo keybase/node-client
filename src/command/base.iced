@@ -79,26 +79,6 @@ exports.Base = class Base
 
   #-------------------
 
-  init2 : ({infile, outfile, enc}, cb) ->
-    esc = new EscOk cb
-    await @init esc.check_ok defer(), E.InitError
-    if infile
-      @infn = @argv.file[0]
-      await Infile.open @infn, esc.check_err defer @infile
-    if outfile
-      await @make_outfile esc.check_err defer @outfile
-    if enc and (@crypto_mode() isnt constants.crypto_mode.NONE)
-      new_key = (@crypto_mode() is constants.crypto_mode.ENC)
-      await @pwmgr.derive_keys new_key, esc.check_non_null defer @keys
-
-    # An engine of some sort should always be defined, something to pump
-    # data from the input to the output.  Might run through filters, etc...
-    @eng = @make_eng { @keys, @infile, @outfile }
-    
-    cb true
-
-  #-------------------
-
   _login : (cb) ->
     ok = false
     err = null

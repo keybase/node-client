@@ -38,9 +38,9 @@ class Env
     @config = null
     @session = null
 
-  set_argv    : (a) -> @argv = a
   set_config  : (c) -> @config = c
   set_session : (s) -> @session = s
+  set_argv    : (a) -> @argv = a
 
   get_opt : ({env, arg, config, dflt}) ->
     co = @config?.obj()

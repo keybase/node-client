@@ -116,11 +116,16 @@ class Main
 
   #----------------------------------
 
+  config_logger : () ->
+
+  #----------------------------------
+
   setup : (cb) ->
     esc = make_esc cb, "setup"
     init_env()
     await @parse_args  esc defer()
     env().set_argv @argv
+    @config_logger()
     await @load_config esc defer()
     env().set_config @config
     await @load_session esc defer()

@@ -8,6 +8,7 @@ path = require 'path'
 {mkdirp} = require './fs'
 {Lock} = require('iced-utils').lock
 {util} = require 'pgp-utils'
+log = require './log'
 
 ##=======================================================================
 
@@ -33,6 +34,7 @@ class DB
     esc = make_esc cb, "DB::open"
     err = null
     fn = @get_filename()
+    log.debug "Opening sqlite3 database file #{fn}"
     await mkdirp fn, esc defer()
 
     db = null
@@ -124,6 +126,7 @@ class DB
   _init_db : (cb) ->
     esc = make_esc cb, "DB::_init_db"
     sql_file = path.join __dirname, "..", "sql", "schema.sql"
+    log.debug "Run sql setup file #{sql_file}"
     await fs.readFile sql_file, esc defer data
     commands = data.toString('utf8').split(/\s*;\s*/)
     for c in commands when c.match /\S+/
