@@ -211,10 +211,12 @@ exports.SigChain = class SigChain
     # first try to see if the username is baked into the key, and be happy with that
     await read_uids_from_key { @fingerprint}, esc defer uids
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
+    found = false
+
 
     # Search for an explicit self-signature of this key
-    if not found
-      for link in @table[ST.SELF_SIG]
+    if not found and (v = @table[ST.SELF_SIG])?
+      for link in v
         if link.self_signer() is @username 
           found = true
           break
@@ -222,11 +224,12 @@ exports.SigChain = class SigChain
     # Search for a freeloader in an otherwise useful signature
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
-        break if found
-        for k,link of @table[type]
-          if link.self_signer() is @username
-            found = true
-            break
+        if (d = @table[type])
+          for k,link of d
+            if link.self_signer() is @username 
+              found = true
+              break
+          break if found
 
     if not err? and not found
       err = new E.VerifyError "could not find self signature of username '#{@username}'"
@@ -241,9 +244,7 @@ exports.SigChain = class SigChain
     out = {}
     index = {}
 
-    console.log @_links
-
-    for link in @_links when link.fingerprint is @fingerprint
+    for link in @_links when link.fingerprint() is @fingerprint
       lt = link.sig_type()
       sig_id = link.sig_id()
       pjs = link.payload_json_str()
@@ -273,7 +274,6 @@ exports.SigChain = class SigChain
           else if not (out[ST.TRACK]?[id]?) then log.warn "Not tracking #{id} to begin with"
           else delete out[ST.TRACK][id]
 
-    console.log out
     @table = out
 
   #-----------
