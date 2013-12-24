@@ -193,6 +193,12 @@ exports.User = class User
 
   #--------------
 
+  check_remote_proofs : (cb) ->
+    await @sig_chain.check_remote_proofs { username : @username}, defer err, warnings
+    cb err, warnings
+
+  #--------------
+
   verify : (cb) ->
     await @sig_chain.verify_sig { username : @username() }, defer err
     cb err

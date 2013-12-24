@@ -34,3 +34,4 @@ exports.E = ie.make_errors
   NO_LOCAL_KEY : "No local key found"
   IMPORT : "Error importing key"
   VERIFY : "Signature verification problem"
+  SCRAPE : "Scraper error"

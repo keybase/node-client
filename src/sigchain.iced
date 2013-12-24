@@ -5,12 +5,15 @@ log = require './log'
 {constants} = require './constants'
 {SHA256} = require './keyutils'
 {E} = require './err'
-{asyncify} = require('pgp-utils').util
+{Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
 {BufferOutStream} = require './stream'
 {gpg,read_uids_from_key} = require './gpg'
 {make_email} = require './util'
+proofs = require 'keybase-proofs'
+cheerio = require 'cheerio'
+request = require 'request'
 
 ##=======================================================================
 
@@ -83,19 +86,44 @@ exports.Link = class Link
 
   #--------------------
 
-  verify_sig : ({username}, cb) ->
+  verify_sig : ({which}, cb) ->
     args = [ "--decrypt" ]
     stderr = new BufferOutStream()
     await gpg { args, stdin : @sig(), stderr }, defer err, out
     if err?
-      err = new E.VerifyError "#{username}: failed to verify signature"
+      err = new E.VerifyError "#{which}: failed to verify signature"
     else if not (m = stderr.data().toString('utf8').match(/Primary key fingerprint: (.*)/))?
-      err = new E.VerifyError "#{username}: can't parse PGP output in verify signature"
+      err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
     else if ((a = strip(m[1]).toLowerCase()) isnt (b = @fingerprint()))
-      err = new E.VerifyError "#{username}: bad key: #{a} != #{b}"
+      err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
     else if ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
-      err = new E.VerifyError "#{username}: payload was wrong: #{a} != #{b}"
+      err = new E.VerifyError "#{which}: payload was wrong: #{a} != #{b}"
     cb err
+
+  #-----------
+
+  alloc_scraper : (type, cb) ->
+    PT = proofs.constants.proof_types
+    err = scraper = null
+    klass = switch type
+      when PT.twitter then proofs.TwitterScraper
+      when PT.github thenproofs.GithubScraper
+      else null
+    if not klass
+      err = new E.ScrapeError "cannot allocate scraper of type #{type}"
+    else
+      @scraper = new klass { libs : { cheerio, request, log } }
+    cb err
+
+  #-----------
+
+  check_remote_proof : ({username, type, warnings}, cb) ->
+    esc = make_esc cb, "SigChain.Link.check_remote_proof'"
+    type_s = proof.constants.proof_type_to_string type
+    await @alloc_scraper type, esc defer()
+    await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
+    await @check esc defer()
+    cb null
 
 ##=======================================================================
 
@@ -200,7 +228,7 @@ exports.SigChain = class SigChain
 
   _verify_sig : (cb) ->
     err = null
-    await l.verify_sig { @username }, defer err if (l = @last())?
+    await l.verify_sig { which : @username }, defer err if (l = @last())?
     cb err
 
   #-----------
@@ -285,6 +313,17 @@ exports.SigChain = class SigChain
       @_compress()
       await @_verify_sig esc defer()
       await @_verify_userid esc defer()
+    cb null
+
+
+
+  #-----------
+
+  check_remote_proofs : ({username}, cb) ->
+    warnings = new Warnings()
+    if (tab = @table[ST.REMOTE_PROOF])?
+      for type,link of tab
+        await link.check_remote_proof { username, type, warnings }, esc defer()
     cb null
 
 ##=======================================================================

@@ -39,6 +39,8 @@ exports.Command = class Command extends Base
     await them.import_public_key esc defer found
     await them.verify esc defer()
 
+    await them.check_remote_proofs esc defer warnings
+
 
     console.log found
 

@@ -27,6 +27,7 @@
     "read"               : "keybase/read",
     "pgp-utils"          : ">=0.0.3",
     "bignum"             : "*",
+    "cheerio"            : "*",
     "colors"             : "*",
     "purepack"           : "*",
     "framed-msgpack-rpc" : "*",
