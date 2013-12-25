@@ -188,7 +188,10 @@ exports.User = class User
   #--------------
 
   check_public_key : (cb) ->
+    un = @username()
+    log.debug "+ #{un}: checking public key"
     await @query_key { secret : false }, defer err
+    log.debug "- #{un}: checked public key"
     cb err
 
   #--------------
@@ -198,27 +201,33 @@ exports.User = class User
   #--------------
 
   import_public_key : (cb) ->
+    un = @username()
+    log.debug "+ #{un}: import public key"
     found = false
     await @query_key { secret : false }, defer err
-    if not err? then found = true
+    if not err? 
+      log.debug "| found locally"
+      found = true
     else if not (err instanceof E.NoLocalKeyError)? then # noops
     else if not (data = @public_keys?.primary?.bundle)?
-      err = new E.ImportError "no public key found for #{@username()}"
+      err = new E.ImportError "no public key found for #{un}"
     else
       uid = @id
       state = constants.import_state.TEMPORARY
+      log.debug "| temporarily importing key to local GPG"
       await db.log_key_import { uid, state, @fingerprint }, defer err
       unless err?
         args = [ "--import" ]
         await gpg { args, stdin : data }, defer err, out
         if err?
-          err = new E.ImportError "#{@username()}: key import error: {err.message}"
+          err = new E.ImportError "#{un}: key import error: {err.message}"
+    log.debug "- #{un}: imported public key"
     cb err, found
 
   #--------------
 
   check_remote_proofs : (cb) ->
-    await @sig_chain.check_remote_proofs { username : @username}, defer err, warnings
+    await @sig_chain.check_remote_proofs { username : @username() }, defer err, warnings
     cb err, warnings
 
   #--------------

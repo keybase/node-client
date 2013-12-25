@@ -126,10 +126,12 @@ exports.Link = class Link
       err = new E.VerifyError "No remove proof type for #{type}"
     else
       err = null
+      log.debug "+ #{username}: checking remote #{type_s} proof"
       await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
       if not (remote_username = @payload_json()?.body?.service?.username)?
         err = new E.VerifyError "no remote username found in proof"
       else
+        log.debug "| remote username is #{remote_username}"
         await @alloc_scraper type, esc defer scraper
         await scraper.validate {
           username : remote_username,
@@ -139,10 +141,10 @@ exports.Link = class Link
           remote_id : (""+@remote_id())
         }, esc defer rc
         if rc isnt proofs.constants.v_codes.OK
-          console.log "remote id -> "
-          console.log @remote_id()
-          console.log @api_url()
           err = new E.RemoteCheckError "Remote check failed (code: #{rc})"
+        else
+          log.debug "| proof checked out"
+      log.debug "- #{username}: checked remote #{type_s} proof"
     cb err
 
 ##=======================================================================
@@ -344,11 +346,13 @@ exports.SigChain = class SigChain
 
   check_remote_proofs : ({username}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
+    log.debug "+ #{username}: checking remote proofs"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?
       for type,link of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
         await link.check_remote_proof { username, type, warnings }, esc defer()
+    log.debug "- #{username}: checked remote proofs"
     cb null
 
 ##=======================================================================
