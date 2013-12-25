@@ -154,6 +154,7 @@ exports.SigChain = class SigChain
   #-----------
 
   @load : (uid, curr, cb) ->
+    log.debug "+ #{uid}: load signature chain"
     links = []
     err = null
     ret = null
@@ -169,6 +170,7 @@ exports.SigChain = class SigChain
     unless err?
       ret = new SigChain uid, links.reverse()
       if (err = ret.check_chain true)? then ret = null
+    log.debug "- #{uid}: loaded signature chain"
     cb err, ret
 
   #-----------
@@ -214,15 +216,18 @@ exports.SigChain = class SigChain
   store : (cb) ->
     err = null
     if @_new_links?
+      log.debug "+ writing dirty signature chain"
       for link in @_new_links when not err?
         await link.store defer err
+      log.debug "- wrote signature chain"
     cb err
 
   #-----------
 
   update : (remote_seqno, cb) ->
     err = null
-    if not remote_seqno? or remote_seqno > @last_seqno()
+    if not (a = remote_seqno)? or a > (b = @last_seqno())
+      log.debug "| sigchain update: #{a} vs. #{b}"
       await @_update defer err
       if remote_seqno? and ((a = remote_seqno) isnt (b = @last_seqno()))
         err = new E.CorruptionError "failed to appropriately update chain: #{a} != #{b}"
