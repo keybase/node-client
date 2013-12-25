@@ -14,6 +14,7 @@ ST = constants.signature_types
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
 request = require 'request'
+colors = require 'colors'
 
 ##=======================================================================
 
@@ -46,6 +47,7 @@ exports.Link = class Link
   proof_type : () -> @obj.proof_type
   sig_id : () -> @obj.sig_id
   api_url : () -> @obj.api_url
+  human_url : () -> @obj.human_url
   proof_text_check : () -> @obj.proof_text_check
   remote_id : () -> @obj.remote_id
  
@@ -143,10 +145,26 @@ exports.Link = class Link
           proof_text_check : @proof_text_check()
           remote_id : (""+@remote_id())
         }, esc defer rc
+
+        ok = false
+
         if rc isnt proofs.constants.v_codes.OK
-          err = new E.RemoteCheckError "Remote check failed (code: #{rc})"
+          warnings.push new E.RemoteCheckError "Remote check failed (code: #{rc})"
         else
+          ok = true
           log.debug "| proof checked out"
+        msg = [
+           (if ok then CHECK else BAD_X) 
+           ('"' + ((if ok then colors.green else colors.red) remote_username) + '"')
+           "on"
+           (type_s + ":")
+           @human_url()
+         ]
+         if not ok
+          msg.push "(failed with code #{rc})"
+
+        log.console.log msg.join(' ')
+
       log.debug "- #{username}: checked remote #{type_s} proof"
 
     cb err
@@ -358,7 +376,7 @@ exports.SigChain = class SigChain
         type = parseInt(type) # we expect it to be an int, not a dict key
         await link.check_remote_proof { username, type, warnings }, esc defer()
     log.debug "- #{username}: checked remote proofs"
-    cb null
+    cb null, warnings
 
 ##=======================================================================
 

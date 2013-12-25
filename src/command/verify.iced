@@ -11,6 +11,8 @@ log = require '../log'
 db = require '../db'
 util = require 'util'
 {env} = require '../env'
+{prompt_yn} = require '../prompter'
+colors = require 'colors'
 
 ##=======================================================================
 
@@ -29,6 +31,17 @@ exports.Command = class Command extends Base
 
   #----------
 
+  prompt_ok : (warnings, cb) ->
+    prompt = if warnings
+      log.console.log colors.red "Some remote proofs failed!"
+      "Still verify this user?"
+    else
+      "Are you satisfied with these proofs?"
+    await prompt_yn { prompt, defval : false }, defer err, ret
+    cb err, ret
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Verify::run"
     await db.open esc defer()
@@ -40,6 +53,7 @@ exports.Command = class Command extends Base
     await them.verify esc defer()
 
     await them.check_remote_proofs esc defer warnings
+    await @prompt_ok warnings.warnings().length, esc defer ok
 
 
     console.log found
