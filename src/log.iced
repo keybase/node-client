@@ -15,8 +15,11 @@ class Env
 
 #=========================================================================
 
+repeat = (c, n) -> (c for [0...n]).join('')
+
 class Level
   constructor : ({@level, @color_fn, @prefix}) ->
+    @_i = 0
 
   log : (env, msg) ->
     if env.level <= @level
@@ -24,7 +27,24 @@ class Level
       for line in lines
         @_log_line env, line
 
+  _handle_nesting : (line) ->
+    if line.match(/^[+|-] /)
+      prefix = switch line[0]
+        when '+' 
+          @_i++
+          (repeat '+', @_i)
+        when '-'
+          p = (repeat '-', @_i)
+          @_i = 0 if --@_i < 0
+          p 
+        when '|'
+          (repeat '|', @_i)
+      line = [ prefix, line[2...] ].join(' ')
+    line
+
   _log_line : (env, line) ->
+    line = @_handle_nesting line
+
     line = [ (@prefix + ":"), line ].join(' ')
     line = @color_fn line if @color_fn? and env.use_color
     @__log_line line

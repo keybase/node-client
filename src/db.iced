@@ -34,7 +34,7 @@ class DB
     esc = make_esc cb, "DB::open"
     err = null
     fn = @get_filename()
-    log.debug "Opening sqlite3 database file #{fn}"
+    log.debug "+ opening sqlite3 database file: #{fn}"
     await mkdirp fn, esc defer()
 
     db = null
@@ -43,6 +43,7 @@ class DB
     @db = db
 
     await @_init_db esc defer()
+    log.debug "- DB opened"
     cb null
 
   #-----
@@ -126,11 +127,12 @@ class DB
   _init_db : (cb) ->
     esc = make_esc cb, "DB::_init_db"
     sql_file = path.join __dirname, "..", "sql", "schema.sql"
-    log.debug "Run sql setup file #{sql_file}"
+    log.debug "+ run sql setup file: #{sql_file}"
     await fs.readFile sql_file, esc defer data
     commands = data.toString('utf8').split(/\s*;\s*/)
     for c in commands when c.match /\S+/
       await @db.run (c + ";"), esc defer()
+    log.debug "- database initialized"
     cb null
 
 ##=======================================================================

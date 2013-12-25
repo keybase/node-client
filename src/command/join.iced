@@ -41,6 +41,7 @@ exports.Command = class Command extends Base
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "signup" ]
+      help : "establish a new account on keybase.io"
     name = "join"
     sub = scp.addParser name, opts
     opts.aliases.concat [ name ]

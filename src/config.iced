@@ -22,12 +22,14 @@ exports.Config = class Config
 
   open : (cb) ->
     err = null
+    log.debug "+ opening config file: #{@filename}"
     await fs.exists @filename, defer @found
     if @found
       await @load defer err
     else if not @opts.quiet
       log.warn "No config file found; tried '#{@filename}'"
       log.warn "Run 'keybase config' to make a new config file"
+    log.debug "- opened config file; found=#{@found}"
     cb err
 
   #-------------------

@@ -21,7 +21,7 @@ exports.Command = class Command extends Base
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "vrfy" ]
-      help : "add a proof of identity"
+      help : "verify a user's authenticity"
     name = "verify"
     sub = scp.addParser name, opts
     sub.addArgument [ "them" ], { nargs : 1 }
