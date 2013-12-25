@@ -220,7 +220,7 @@ exports.User = class User
       await db.log_key_import { uid, state, @fingerprint }, defer err
       unless err?
         args = [ "--import" ]
-        await gpg { args, stdin : data }, defer err, out
+        await gpg { args, stdin : data, quiet : true }, defer err, out
         if err?
           err = new E.ImportError "#{un}: key import error: {err.message}"
     log.debug "- #{un}: imported public key (found=#{found})"
@@ -233,11 +233,11 @@ exports.User = class User
     uid = @id
     esc = make_esc cb, "SigChain::remove_key"
     log.debug "+ #{un}: remove temporarily imported public key"
-    args = [ "--force", "--delete-keys", @fingerprint ]
+    args = [ "--batch", "--delete-keys", @fingerprint ]
     state = constants.import_state.CANCELED
     await gpg { args }, esc defer()
     await db.log_key_import { uid, state, @fingerprint}, esc defer()
-    log.debug "+ #{un}: removed temporarily imported public key"
+    log.debug "- #{un}: removed temporarily imported public key"
     cb null
 
   #--------------
