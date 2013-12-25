@@ -203,16 +203,18 @@ exports.User = class User
   import_public_key : (cb) ->
     un = @username()
     log.debug "+ #{un}: import public key"
+    uid = @id
     found = false
     await @query_key { secret : false }, defer err
     if not err? 
       log.debug "| found locally"
-      found = true
+      await db.get_import_state { uid, @fingerprint }, defer err, state
+      log.debug "| read state from DB as #{state}"
+      found = (state isnt constants.import_state.TEMPORARY)
     else if not (err instanceof E.NoLocalKeyError)? then # noops
     else if not (data = @public_keys?.primary?.bundle)?
       err = new E.ImportError "no public key found for #{un}"
     else
-      uid = @id
       state = constants.import_state.TEMPORARY
       log.debug "| temporarily importing key to local GPG"
       await db.log_key_import { uid, state, @fingerprint }, defer err
@@ -221,8 +223,22 @@ exports.User = class User
         await gpg { args, stdin : data }, defer err, out
         if err?
           err = new E.ImportError "#{un}: key import error: {err.message}"
-    log.debug "- #{un}: imported public key"
+    log.debug "- #{un}: imported public key (found=#{found})"
     cb err, found
+
+  #--------------
+
+  remove_key : (cb) ->
+    un = @username()
+    uid = @id
+    esc = make_esc cb, "SigChain::remove_key"
+    log.debug "+ #{un}: remove temporarily imported public key"
+    args = [ "--force", "--delete-keys", @fingerprint ]
+    state = constants.import_state.CANCELED
+    await gpg { args }, esc defer()
+    await db.log_key_import { uid, state, @fingerprint}, esc defer()
+    log.debug "+ #{un}: removed temporarily imported public key"
+    cb null
 
   #--------------
 

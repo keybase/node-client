@@ -44,6 +44,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Verify::run"
+
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
     await me.check_public_key esc defer()
@@ -53,11 +54,12 @@ exports.Command = class Command extends Base
     await them.verify esc defer()
 
     await them.check_remote_proofs esc defer warnings
-    await @prompt_ok warnings.warnings().length, esc defer ok
+    await @prompt_ok warnings.warnings().length, esc defer accept
 
+    if not accept and not found
+      await them.remove_key esc defer()
 
     console.log found
-
 
     #await them.compress esc defer()
     #await @fetch_proofs  esc defer()

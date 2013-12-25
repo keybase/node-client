@@ -23,8 +23,9 @@ class Level
 
   log : (env, msg) ->
     if env.level <= @level
+      msg = msg.toString('utf8') if Buffer.isBuffer(msg)
       lines = msg.split "\n"
-      for line in lines
+      for line in lines when line.match /\S+/
         @_log_line env, line
 
   _handle_nesting : (line) ->
