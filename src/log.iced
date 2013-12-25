@@ -63,9 +63,10 @@ default_levels =
 
 class Package
 
-  constructor : ({env,config}) ->
+  constructor : ({env,config,console}) ->
     @_env = env
     @_config = config
+    @_console = console
     for key,val of config
       ((k,v) =>
         @[k] = (m) => v.log(@_env, m)
@@ -78,17 +79,19 @@ class Package
     for k,v of @_config
       exports[k] = @[k]
     exports.package = () => @
+    exports.console = @_console
 
 #=========================================================================
 
 _package = null
 
-exports.init = init = ({env,config}) ->
-  (_package = new Package { env, config }).export_to exports
+exports.init = init = ({env,config, console}) ->
+  (_package = new Package { env, config, console }).export_to exports
 
 init { 
   env    : new Env({ use_color : true, level : default_levels.info.level }),
   config : default_levels
+  console : console
 }
 
 #=========================================================================

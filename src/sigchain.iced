@@ -19,6 +19,9 @@ request = require 'request'
 
 strip = (x) -> x.replace(/\s+/g, '')
 
+CHECK = "\u2714"
+BAD_X = "\u2716"
+
 ##=======================================================================
 
 exports.Link = class Link
@@ -145,6 +148,7 @@ exports.Link = class Link
         else
           log.debug "| proof checked out"
       log.debug "- #{username}: checked remote #{type_s} proof"
+
     cb err
 
 ##=======================================================================
@@ -346,6 +350,7 @@ exports.SigChain = class SigChain
 
   check_remote_proofs : ({username}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
+    log.console.log "...checking identity proofs"
     log.debug "+ #{username}: checking remote proofs"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?
