@@ -13,6 +13,7 @@ util = require 'util'
 {env} = require '../env'
 {prompt_yn} = require '../prompter'
 colors = require 'colors'
+{Track} = require '../track'
 
 ##=======================================================================
 
@@ -54,7 +55,7 @@ exports.Command = class Command extends Base
     await them.import_public_key esc defer found
     await them.verify esc defer()
 
-    await me.find_track them, esc defer track
+    await Track.load { tracker : me, trackee : them }, esc defer track
     
     log.console.log "...checking identity proofs"
     await them.check_remote_proofs esc defer warnings
@@ -66,14 +67,6 @@ exports.Command = class Command extends Base
     if not accept and not found
       await them.remove_key esc defer()
 
-    console.log found
-
-    #await them.compress esc defer()
-    #await @fetch_proofs  esc defer()
-    #await @verify_proofs esc defer()
-    #await @prompt_ok     esc defer()
-    #await @post_track    esc defer()
-    #await @write_out     esc defer()
     cb null
 
 ##=======================================================================

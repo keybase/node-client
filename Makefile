@@ -49,6 +49,7 @@ $(BUILD_STAMP): \
 	lib/session.js \
 	lib/sigchain.js \
 	lib/stream.js \
+	lib/track.js \
 	lib/user.js \
 	lib/util.js
 	date > $@

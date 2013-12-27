@@ -253,20 +253,5 @@ exports.User = class User
     await @sig_chain.verify_sig { username : @username() }, defer err
     cb err
 
-  #--------------
-
-  load_local_track : (uid, cb) ->
-    await db.get { type : constants.ids.local_track, key : uid }, defer err, value
-    cb err, value
-
-  #--------------
-
-  find_track : (them, cb) ->
-    err = null
-    tuid = them.id
-    if not (track = @sig_chain?.get_track tuid)?
-      await @load_local_track tuid, defer err, track
-    cb err, track
-
 ##=======================================================================
 
