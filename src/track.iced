@@ -37,9 +37,11 @@ exports.Track = class Track
   # Check the tracking object for internal consistency. These checks should
   # actually never fail, unless there was a bug in the client.
   _check_track_obj : (o) ->
-    err = if (a = o.id) isnt (b = @trackee.id) then new E.UidMismatch "#{a} != #{b}"
-    else ((a = o.basics?.username) isnt (b = @trackee.username()))
-      new E.UsernameMismatch "#{a} != #{b}"
+    err = null
+    if (a = o.id) isnt (b = @trackee.id) 
+      err = new E.UidMismatch "#{a} != #{b}"
+    else if ((a = o.basics?.username) isnt (b = @trackee.username()))
+      err = new E.UsernameMismatch "#{a} != #{b}"
     else
       for rp in o.remote_proofs when not err?
         err = @_check_remote_proof rp
@@ -86,12 +88,9 @@ exports.Track = class Track
     log.debug "+ loading Tracking info w/ remote=#{!!remote}"
     uid = trackee.id
     remote = tracker?.sig_chain?.get_track uid
-    await check_remote_track remote, defer err
-    track = null
-    unless err?
-      track = new Track { uid, trackee, remote  }
-      await track.load_local defer err
-      track = null if err? 
+    track = new Track { uid, trackee, remote  }
+    await track.load_local defer err
+    track = null if err? 
     track?.check()
     log.debug "- loaded tracking info"
     cb err, track
