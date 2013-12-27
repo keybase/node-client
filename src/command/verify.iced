@@ -57,8 +57,11 @@ exports.Command = class Command extends Base
 
     await Track.load { tracker : me, trackee : them }, esc defer track
     
-    log.console.log "...checking identity proofs"
-    await them.check_remote_proofs esc defer warnings
+    if not track.skip_remote_check()
+      log.console.log "...checking identity proofs"
+      await them.check_remote_proofs esc defer warnings
+    else
+      log.info "...skipping remote checks"
     await @prompt_ok warnings.warnings().length, esc defer accept
 
     if not accept

@@ -37,6 +37,8 @@ exports.constants = constants =
     TRACK : 3
     UNTRACK : 4
     REVOKE : 5
+  time :
+    remote_proof_recheck_interval : 60 * 60 * 24 # check remote proofs every day
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 
