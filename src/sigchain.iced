@@ -232,11 +232,6 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  compress : (cb) ->
-    cb new E.NotImplementedError "not implemented yet"
-
-  #-----------
-
   store : (cb) ->
     err = null
     if @_new_links?
@@ -328,7 +323,7 @@ exports.SigChain = class SigChain
       index[link.sig_id()] = lt
 
       switch lt
-        when ST.SELF_SIG then MAKE(out, lt,[]).push link
+        when ST.SELF_SIG     then MAKE(out, lt,[]).push link
         when ST.REMOTE_PROOF then MAKE(out, lt, {})[link.proof_type()] = link
 
         when ST.TRACK 
@@ -346,11 +341,15 @@ exports.SigChain = class SigChain
             delete out[cat]
 
         when ST.UNFOLLOW
-          if not (id = body?.tracl?.id?) then log.warn "Mssing untrack in signature: #{pjs}"
+          if not (id = body?.track?.id?) then log.warn "Mssing untrack in signature: #{pjs}"
           else if not (out[ST.TRACK]?[id]?) then log.warn "Not tracking #{id} to begin with"
           else delete out[ST.TRACK][id]
 
     @table = out
+
+  #-----------
+
+  get_track : (uid) -> @table[ST.TRACK]?[uid]
 
   #-----------
 

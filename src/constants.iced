@@ -21,8 +21,10 @@ exports.constants = constants =
     file : 0o600
   lookups :
     username : 1
+    local_track : 2
   ids :
     sig_chain_link : "e0"
+    local_track : "e1"
   import_state : 
     NONE : 0
     TEMPORARY : 1

@@ -248,16 +248,25 @@ exports.User = class User
 
   #--------------
 
+  # Also serves to compress the public signatures into a usable table.
   verify : (cb) ->
     await @sig_chain.verify_sig { username : @username() }, defer err
     cb err
 
   #--------------
 
-  compress : (cb) ->
+  load_local_track : (uid, cb) ->
+    await db.get { type : constants.ids.local_track, key : uid }, defer err, value
+    cb err, value
+
+  #--------------
+
+  find_track : (them, cb) ->
     err = null
-    await @sig_chain.compress defer err if @sig_chain
-    cb err
+    tuid = them.id
+    if not (track = @sig_chain?.get_track tuid)?
+      await @load_local_track tuid, defer err, track
+    cb err, track
 
 ##=======================================================================
 

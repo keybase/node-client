@@ -53,8 +53,11 @@ exports.Command = class Command extends Base
     await them.import_public_key esc defer found
     await them.verify esc defer()
 
+    await me.find_track them, esc defer track
+    
     await them.check_remote_proofs esc defer warnings
     await @prompt_ok warnings.warnings().length, esc defer accept
+
 
     if not accept and not found
       await them.remove_key esc defer()
