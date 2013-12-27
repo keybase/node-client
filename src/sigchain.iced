@@ -9,7 +9,7 @@ log = require './log'
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
 {BufferOutStream} = require './stream'
-{gpg,read_uids_from_key} = require './gpg'
+{assert_no_collision,gpg,read_uids_from_key} = require './gpg'
 {make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
@@ -41,6 +41,7 @@ exports.Link = class Link
   sig : () -> @obj.sig
   payload_json_str : () -> @obj.payload_json
   fingerprint : () -> @obj.fingerprint.toLowerCase()
+  short_key_id : () -> @fingerprint()[-8...].toUpperCase()
   is_self_sig : () -> @sig_type() in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
   self_signer : () -> @payload_json()?.body?.key?.username
   sig_type : () -> @obj.sig_type
@@ -100,11 +101,19 @@ exports.Link = class Link
     await gpg { args, stdin : @sig(), stderr }, defer err, out
     if err?
       err = new E.VerifyError "#{which}: failed to verify signature"
-    else if not (m = stderr.data().toString('utf8').match(/Primary key fingerprint: (.*)/))?
-      err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
-    else if ((a = strip(m[1]).toLowerCase()) isnt (b = @fingerprint()))
-      err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
-    else if ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
+    else
+      em = stderr.data().toString('utf8')
+      if (m = em.match(/Primary key fingerprint: (.*)/))?
+        if ((a = strip(m[1]).toLowerCase()) isnt (b = @fingerprint()))
+          err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
+      else if (m = em.match(/using [RD]SA key ID ([A-F0-9]{8})/))?
+        if ((a = strip(m[1])) isnt (b = @short_key_id()))
+          err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
+        else 
+          await assert_no_collision b, defer err
+      else
+        err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
+    if not err? and ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
       err = new E.VerifyError "#{which}: payload was wrong: #{a} != #{b}"
     cb err
 
@@ -262,10 +271,13 @@ exports.SigChain = class SigChain
   # Limit the chain to only those links signed by the key used in the last link
   _limit : () ->
     c = []
+    log.debug "| input chain with #{n = @_links.length} link#{if n isnt 1 then 's' else ''}"
     for i in [(@_links.length-1)..0]
       if (l = @_links[i]).fingerprint() is @fingerprint then c.push l
       else break
     c = c.reverse()
+    if c.length isnt @_links.length
+      log.debug "| Limited to #{n = c.length} link#{if n isnt 1 then 's' else ''}"
     @_links = c
 
  #--------------
@@ -310,6 +322,8 @@ exports.SigChain = class SigChain
 
   _compress : () ->
 
+    log.debug "+ compressing signature chain"
+
     MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
 
     out = {}
@@ -345,6 +359,7 @@ exports.SigChain = class SigChain
           else if not (out[ST.TRACK]?[id]?) then log.warn "Not tracking #{id} to begin with"
           else delete out[ST.TRACK][id]
 
+    log.debug "- signature chain compressed"
     @table = out
 
   #-----------
@@ -356,18 +371,21 @@ exports.SigChain = class SigChain
   verify_sig : ({username}, cb) ->
     esc = make_esc cb, "SigChain::verify_sig"
     @username = username
+    log.debug "+ #{username}: verifying sig"
     if (@fingerprint = @last()?.fingerprint())?
       @_limit()
       @_compress()
       await @_verify_sig esc defer()
       await @_verify_userid esc defer()
+    else
+      log.debug "| Skipped since no fingreprint found in key"
+    log.debug "- #{username}: verified sig"
     cb null
 
   #-----------
 
   check_remote_proofs : ({username}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
-    log.console.log "...checking identity proofs"
     log.debug "+ #{username}: checking remote proofs"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?

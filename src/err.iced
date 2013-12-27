@@ -36,3 +36,4 @@ exports.E = ie.make_errors
   VERIFY : "Signature verification problem"
   SCRAPE : "Scraper error"
   REMOTE_CHECK : "Remote check failure"
+  PGP_ID_COLLISION : "PGP ID collision error"

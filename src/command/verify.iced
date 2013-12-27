@@ -48,6 +48,7 @@ exports.Command = class Command extends Base
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
     await me.check_public_key esc defer()
+    await me.verify esc defer()
 
     await User.load { username : @argv.them[0] }, esc defer them
     await them.import_public_key esc defer found
@@ -55,9 +56,12 @@ exports.Command = class Command extends Base
 
     await me.find_track them, esc defer track
     
+    log.console.log "...checking identity proofs"
     await them.check_remote_proofs esc defer warnings
     await @prompt_ok warnings.warnings().length, esc defer accept
 
+    if not accept
+      log.warn "Bailing out; proofs were not accepted"
 
     if not accept and not found
       await them.remove_key esc defer()

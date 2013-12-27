@@ -72,6 +72,15 @@ exports.gpg = gpg = ({args, stdin, stdout, stderr, quiet}, cb) ->
 
 ##=======================================================================
 
+exports.assert_no_collision = (short_id, cb) ->
+  args = [ "-k", short_id ]
+  await gpg { args, quiet : true } , defer err, out
+  if not err? and (stream.grep { pattern : "/#{short_id}", buffer : out }).length > 1
+    err = new E.PgpIdCollisionError "Found two keys for ID=#{short_id}"
+  cb err
+
+##=======================================================================
+
 exports.read_uids_from_key = ({fingerprint}, cb) ->
   args = [ "-k", fingerprint ]
   await gpg { args, quiet : true } , defer err, out
