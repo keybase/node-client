@@ -37,3 +37,6 @@ exports.E = ie.make_errors
   SCRAPE : "Scraper error"
   REMOTE_CHECK : "Remote check failure"
   PGP_ID_COLLISION : "PGP ID collision error"
+  UID_MISMATCH : "userIDs didn't match"
+  USERNAME_MISMATCH : "usernames didn't match"
+  REMOTE_PROOF : "error in sanity checking a remote proof"

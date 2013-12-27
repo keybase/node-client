@@ -15,6 +15,7 @@ proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
 request = require 'request'
 colors = require 'colors'
+deq = require 'deep-equal'
 
 ##=======================================================================
 
@@ -183,6 +184,13 @@ exports.Link = class Link
 exports.SigChain = class SigChain 
 
   constructor : (@uid, @_links = []) ->
+    @_lookup = {}
+    for l in @_links
+      @_lookup[l.id] = l
+
+  #-----------
+
+  lookup : (id) -> @_lookup[id]
 
   #-----------
 
