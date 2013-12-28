@@ -146,49 +146,48 @@ exports.Link = class Link
   #-----------
 
   check_remote_proof : ({username, type, warnings}, cb) ->
+
     esc = make_esc cb, "SigChain::Link::check_remote_proof'"
+
     if not (type_s = proofs.proof_type_to_string[type])?
       err = new E.VerifyError "No remove proof type for #{type}"
+      await athrow err, esc defer()
+
+    log.debug "+ #{username}: checking remote #{type_s} proof"
+    await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
+    if not (remote_username = @payload_json()?.body?.service?.username)?
+      err = new E.VerifyError "no remote username found in proof"
+      await athrow err, esc defer()
+
+    log.debug "| remote username is #{remote_username}"
+    await @alloc_scraper type, esc defer scraper
+    await scraper.validate {
+      username : remote_username,
+      api_url : @api_url(),
+      signature : @sig(),
+      proof_text_check : @proof_text_check()
+      remote_id : (""+@remote_id())
+    }, esc defer rc
+
+    ok = false
+    if rc isnt proofs.constants.v_codes.OK
+      warnings.push new E.RemoteCheckError "Remote check failed (code: #{rc})"
+      @obj.proof_state = rc
     else
-      err = null
-      log.debug "+ #{username}: checking remote #{type_s} proof"
-      await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
-      if not (remote_username = @payload_json()?.body?.service?.username)?
-        err = new E.VerifyError "no remote username found in proof"
-      else
-        log.debug "| remote username is #{remote_username}"
-        await @alloc_scraper type, esc defer scraper
-        await scraper.validate {
-          username : remote_username,
-          api_url : @api_url(),
-          signature : @sig(),
-          proof_text_check : @proof_text_check()
-          remote_id : (""+@remote_id())
-        }, esc defer rc
+      ok = true
+      log.debug "| proof checked out"
+    msg = [
+       (if ok then CHECK else BAD_X) 
+       ('"' + ((if ok then colors.green else colors.red) remote_username) + '"')
+       "on"
+       (type_s + ":")
+       @human_url()
+    ]
+    msg.push "(failed with code #{rc})" if not ok
+    log.console.log msg.join(' ')
+    log.debug "- #{username}: checked remote #{type_s} proof"
 
-        ok = false
-
-        if rc isnt proofs.constants.v_codes.OK
-          warnings.push new E.RemoteCheckError "Remote check failed (code: #{rc})"
-          @obj.proof_state = rc
-        else
-          ok = true
-          log.debug "| proof checked out"
-        msg = [
-           (if ok then CHECK else BAD_X) 
-           ('"' + ((if ok then colors.green else colors.red) remote_username) + '"')
-           "on"
-           (type_s + ":")
-           @human_url()
-         ]
-         if not ok
-          msg.push "(failed with code #{rc})"
-
-        log.console.log msg.join(' ')
-
-      log.debug "- #{username}: checked remote #{type_s} proof"
-
-    cb err
+    cb null
 
   #------------------
 
