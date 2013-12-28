@@ -279,6 +279,7 @@ exports.User = class User
       id : @id
       key : filter pkp, [ "kid", "key_fingerprint" ]
       seq_tail : @sig_chain?.last().to_track_obj()
+      remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
     out
 
 ##=======================================================================

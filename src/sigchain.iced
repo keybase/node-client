@@ -168,6 +168,7 @@ exports.Link = class Link
 
         if rc isnt proofs.constants.v_codes.OK
           warnings.push new E.RemoteCheckError "Remote check failed (code: #{rc})"
+          @obj.proof_state = rc
         else
           ok = true
           log.debug "| proof checked out"
@@ -186,6 +187,22 @@ exports.Link = class Link
       log.debug "- #{username}: checked remote #{type_s} proof"
 
     cb err
+
+  #------------------
+
+  remote_proof_to_track_obj : () -> {
+    ctime : @obj.ctime
+    etime : @obj.etime
+    seqno : @obj.seqno
+    curr : @id
+    sig_type : @obj.sig_type
+    sig_id : @obj.sig_id
+    remote_key_proof :
+      check_data_json : @payload_json()?.body?.service
+      state : @obj.proof_state
+      proof_type : @obj.proof_type
+  }
+
 
 ##=======================================================================
 
@@ -377,6 +394,13 @@ exports.SigChain = class SigChain
 
     log.debug "- signature chain compressed"
     @table = out
+
+  #-----------
+
+  remote_proofs_to_track_obj : () ->
+    if (d = @table[ST.REMOTE_PROOF])?
+      (link.remote_proof_to_track_obj() for key,link of d)
+    else []
 
   #-----------
 

@@ -93,7 +93,7 @@ exports.Command = class Command extends Base
   track : ( { user, do_remote }, cb) ->
     log.debug "+ track user (remote=#{do_remote})"
     obj = user.gen_track_obj()
-    console.log obj
+    log.debug "| object generated: #{JSON.stringify(obj)}"
     log.debug "- tracked user"
     cb null
 
