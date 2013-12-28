@@ -2,6 +2,7 @@ request = require 'request'
 {env} = require './env'
 urlmod = require 'url'
 {E} = require './err'
+log = require './log'
 
 #=================================================
 
@@ -80,6 +81,7 @@ exports.Client = class Client
       err = new E.HttpError "Got reply #{res.statusCode}"
     else if not (body?.status?.name in kb_status)
       err = new E.KeybaseError "#{body.status.desc} (error ##{body.status.code})"
+      log.debug "Full reply: #{JSON.stringify body}"
     else
       @_find_cookies res
 

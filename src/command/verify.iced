@@ -15,6 +15,7 @@ util = require 'util'
 colors = require 'colors'
 {Track} = require '../track'
 proofs = require 'keybase-proofs'
+{session} = require '../session'
 
 ##=======================================================================
 
@@ -25,9 +26,11 @@ exports.Command = class Command extends Base
   OPTS :
     t :
       alias : "track"
+      action : "storeTrue"
       help : "remotely track by default"
     n : 
       alias : "no-track"
+      action : "storeTrue"
       help : "never track"
 
   #----------
@@ -61,9 +64,8 @@ exports.Command = class Command extends Base
     else if (@argv.batch or @argv.no_track) then ret = false
     else
       prompt = "Permnanently track this user, and write proof to server?"
-      await prompt_yn { prompt, defval : true }, defer err, track
-    cb err, track
-
+      await prompt_yn { prompt, defval : true }, defer err, ret
+    cb err, ret
 
   #----------
 
@@ -92,14 +94,15 @@ exports.Command = class Command extends Base
   #----------
 
   track : ( { tracker, trackee, do_remote }, cb) ->
+    esc = make_esc cb, "Verify::track"
+    await session.load_and_login esc defer()
     log.debug "+ track user (remote=#{do_remote})"
     tobj = trackee.gen_track_obj()
     log.debug "| object generated: #{JSON.stringify tobj}"
-    err = null
     if do_remote
-      await tracker.track { trackee, track_obj : tobj }, defer err
+      await tracker.track { trackee, track_obj : tobj }, esc defer()
     log.debug "- tracked user"
-    cb err
+    cb null
 
   #----------
 

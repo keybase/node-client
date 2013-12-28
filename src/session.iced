@@ -48,6 +48,14 @@ exports.Session = class Session
 
   #-----
 
+  load_and_login : (cb) ->
+    err = null
+    await @load defer  err  unless @_file? and @_loaded
+    await @login defer err  unless err?
+    cb err
+
+  #-----
+
   load : (cb) ->
     unless @_file
       @_file = new Config env().get_session_filename(), { quiet : true }

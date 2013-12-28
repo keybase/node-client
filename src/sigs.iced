@@ -6,6 +6,7 @@ req = require './req'
 {constants} = require './constants'
 session = require './session'
 {env} = require './env'
+log = require './log'
 
 #===========================================
 
@@ -61,7 +62,7 @@ class BaseSigGen
       sig_id_base : @sig.id
       sig_id_short : @sig.short_id
       is_remote_proof : true
-    @_v_modify_store_arg arg
+    @_v_modify_store_arg args
     log.debug "+ storing signature:"
     log.debug "| writing to #{endpoint}"
     log.debug "| with args #{JSON.stringify args}"
@@ -115,7 +116,9 @@ exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
     arg.track = @track
     new proofs.Track arg
 
-  _v_modify_store_arg : (arg) -> arg.uid = @uid
+  _v_modify_store_arg : (arg) -> 
+    arg.uid = @uid
+    arg.type = "track"
   _get_api_endpoint : () -> "follow"
 
 #===========================================

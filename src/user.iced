@@ -277,7 +277,6 @@ exports.User = class User
 
   track : ({trackee, track_obj}, cb) ->
     esc = make_esc cb, "User::track"
-    await session.login esc defer()
     await @load_public_key esc defer()
     last_link = @sig_chain?.last()
     g = new TrackerProofGen {
