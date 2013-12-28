@@ -118,13 +118,15 @@ exports.Command = class Command extends Base
     await them.verify esc defer()
     await Track.load { tracker : me, trackee : them }, esc defer track
     
-    if ((check = track.skip_remote_check()) is constants.skip.NONE)
+    check = track.skip_remote_check()
+    if (check is constants.skip.NONE)
       log.console.log "...checking identity proofs"
-      await them.check_remote_proofs esc defer warnings
-      n_warnings = warnings.warnings.length()
-    else
-      log.info "...skipping remote checks"
-      n_warnings = 0
+      skp = false
+    else 
+      log.info "...all remote checks are up-to-date"
+      skp = true
+    await them.check_remote_proofs skp, esc defer warnings
+    n_warnings = warnings.warnings().length
 
     if ((approve = track.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"

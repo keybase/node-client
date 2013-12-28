@@ -145,7 +145,7 @@ exports.Link = class Link
 
   #-----------
 
-  check_remote_proof : ({username, type, warnings}, cb) ->
+  check_remote_proof : ({skip, username, type, warnings}, cb) ->
 
     esc = make_esc cb, "SigChain::Link::check_remote_proof'"
 
@@ -160,14 +160,17 @@ exports.Link = class Link
       await athrow err, esc defer()
 
     log.debug "| remote username is #{remote_username}"
-    await @alloc_scraper type, esc defer scraper
-    await scraper.validate {
-      username : remote_username,
-      api_url : @api_url(),
-      signature : @sig(),
-      proof_text_check : @proof_text_check()
-      remote_id : (""+@remote_id())
-    }, esc defer rc
+    if skip
+      rc = proofs.constants.v_codes.OK
+    else
+      await @alloc_scraper type, esc defer scraper
+      await scraper.validate {
+        username : remote_username,
+        api_url : @api_url(),
+        signature : @sig(),
+        proof_text_check : @proof_text_check()
+        remote_id : (""+@remote_id())
+      }, esc defer rc
 
     ok = false
     if rc isnt proofs.constants.v_codes.OK
@@ -183,6 +186,7 @@ exports.Link = class Link
        (type_s + ":")
        @human_url()
     ]
+    msg.push ("(actual check skipped)") if skip
     msg.push "(failed with code #{rc})" if not ok
     log.console.log msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"
@@ -425,14 +429,14 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_remote_proofs : ({username}, cb) ->
+  check_remote_proofs : ({skip, username}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
-    log.debug "+ #{username}: checking remote proofs"
+    log.debug "+ #{username}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?
       for type,link of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
-        await link.check_remote_proof { username, type, warnings }, esc defer()
+        await link.check_remote_proof { skip, username, type, warnings }, esc defer()
     log.debug "- #{username}: checked remote proofs"
     cb null, warnings
 
