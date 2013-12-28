@@ -112,7 +112,9 @@ exports.Track = class Track
   #--------
 
   skip_remote_check : () ->
-    (@_skip_remote_check 'local') or (@_skip_remote_check 'remote')
+    if (@_skip_remote_check 'remote') then constants.skip.REMOTE
+    else if (@_skip_remote_check 'local') then constants.skip.LOCAL
+    else constants.skip.NONE
 
   #--------
 
@@ -121,7 +123,9 @@ exports.Track = class Track
   #  2. an identity was deleted or added or changed
   # If we have acceptance on either local or remote, we can leave it as is.
   skip_approval : () ->
-    (@_skip_approval 'local') or (@_skip_approval 'remote')
+    if (@_skip_approval 'remote') then constants.skip.REMOTE
+    else if (@_skip_approval 'local') then constants.skip.LOCAL
+    else constants.skip.NONE
 
   #--------
 

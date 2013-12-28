@@ -16,6 +16,7 @@ colors = require 'colors'
 {Track} = require '../track'
 proofs = require 'keybase-proofs'
 {session} = require '../session'
+{constants} = require '../constants'
 
 ##=======================================================================
 
@@ -112,7 +113,7 @@ exports.Command = class Command extends Base
     await them.verify esc defer()
     await Track.load { tracker : me, trackee : them }, esc defer track
     
-    if not track.skip_remote_check()
+    if ((check = track.skip_remote_check()) is constants.skip.NONE)
       log.console.log "...checking identity proofs"
       await them.check_remote_proofs esc defer warnings
       n_warnings = warnings.warnings.length()
@@ -120,8 +121,8 @@ exports.Command = class Command extends Base
       log.info "...skipping remote checks"
       n_warnings = 0
 
-    if track.skip_approval()
-      log.debug "| skpping approval, since remote services & key are unchanged"
+    if ((approve = track.skip_approval()) isnt constants.skip.NONE)
+      log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
     else if @argv.batch
       log.debug "| We needed approval, but we were in batch mode"
@@ -133,6 +134,8 @@ exports.Command = class Command extends Base
     if not accept
       log.warn "Bailing out; proofs were not accepted"
       err = new E.CancelError "operation was canceled"
+    else if (check is constants.skip.REMOTE) and (approve is constants.skip.REMOTE)
+      log.info "Nothing to do; tracking is up-to-date"
     else
       await @prompt_track esc defer do_remote
       await @track { trackee : them, tracker: me, do_remote }, esc defer()
