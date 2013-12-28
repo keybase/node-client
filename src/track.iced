@@ -6,6 +6,7 @@ log = require './log'
 ST = constants.signature_types
 deq = require 'deep-equal'
 {E} = require './err'
+{unix_time} = require('pgp-utils').util
 
 ##=======================================================================
 
@@ -51,19 +52,32 @@ exports.Track = class Track
 
   #--------
 
-  _skip_remote_check : (track_cert) ->
+  _skip_remote_check : (which) ->
+    track_cert = @[which]
+    log.debug "+ _skip_remote_check for #{which}"
     rpri = constants.time.remote_proof_recheck_interval
     _check_all_proofs_ok = (proofs) ->
       for proof in proofs
         return false if proof.remote_key_proof?.state isnt 1
       return true
-    (track_cert? and 
-     (last = @last()?) and 
-     (last_check = last?.ctime)? and
-     (last_change = track_cert.ctime)? and
-     (last_check - last_change > rpri) and
-     (track_cert.seq_tail?.payload_hash is last.id) and
-     (_check_all_proofs_ok track_cert.remote_proofs))
+
+    prob = if not track_cert?                 then "no track cert given"
+    else if not (last = @last())?             then "no last link found"
+    else if (last_check = track_cert.ctime)?  then "no last_check"
+    else if (unix_time() - last_check > rpri) then "timed out!"
+    else if ((a = track_cert.seq_tail?.payload_hash) isnt (b = last.id))
+      "id/hash mismatch: #{a} != #{b}"
+    else if not (_check_all_proofs_ok track_cert.remote_proofs)
+      "all proofs were not OK"
+
+    ret = if prob?
+      log.debug "| problem: #{prob}"
+      false
+    else
+      true
+
+    log.debug "- _skip_remote_check -> #{ret}"
+    ret
 
   #--------
 
@@ -84,7 +98,7 @@ exports.Track = class Track
   #--------
 
   skip_remote_check : () ->
-    (@_skip_remote_check @local) or (@_skip_remote_check @remote)
+    (@_skip_remote_check 'local') or (@_skip_remote_check 'remote')
 
   #--------
 

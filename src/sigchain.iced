@@ -10,7 +10,7 @@ log = require './log'
 ST = constants.signature_types
 {BufferOutStream} = require './stream'
 {assert_no_collision,gpg,read_uids_from_key} = require './gpg'
-{make_email} = require './util'
+{date_to_unix,make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
 request = require 'request'
@@ -53,7 +53,8 @@ exports.Link = class Link
   proof_text_check : () -> @obj.proof_text_check
   remote_id : () -> @obj.remote_id
   body : () -> @payload_json()?.body
- 
+  ctime : () -> date_to_unix @obj.ctime
+
   #--------------------
 
   to_track_obj : () -> {

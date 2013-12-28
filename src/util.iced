@@ -31,3 +31,18 @@ exports.purge = purge = (d) ->
 exports.make_email = make_email = (un) -> un + "@" + constants.canonical_host 
 
 #=========================================================================
+
+exports.date_to_unixtime = date_to_unixtime = (s) -> ~~(s.getTime()/1000)
+
+#=========================================================================
+
+exports.date_to_unix = (o) ->
+  switch typeof(o)
+    when 'string' then date_to_unixtime (new Date o)
+    when 'number' then o
+    when 'object'
+      if (o instanceof Date) then date_to_unixtime o
+      else null
+    else null
+
+#=========================================================================

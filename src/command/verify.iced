@@ -115,8 +115,10 @@ exports.Command = class Command extends Base
     if not track.skip_remote_check()
       log.console.log "...checking identity proofs"
       await them.check_remote_proofs esc defer warnings
+      n_warnings = warnings.warnings.length()
     else
       log.info "...skipping remote checks"
+      n_warnings = 0
 
     if track.skip_approval()
       log.debug "| skpping approval, since remote services & key are unchanged"
@@ -125,7 +127,7 @@ exports.Command = class Command extends Base
       log.debug "| We needed approval, but we were in batch mode"
       accept = false
     else
-      await @prompt_ok warnings.warnings().length, esc defer accept
+      await @prompt_ok n_warnings, esc defer accept
 
     err = null
     if not accept
