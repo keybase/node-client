@@ -68,6 +68,10 @@ exports.Base = class Base
       help : 'which host to connect to'
     "api-uri-prefix" :
       help : "the API prefix to use (#{SRV.api_uri_prefix})"
+    b :
+      alias : "batch"
+      action : "storeTrue"
+      help : "batch mode; disable all prompts"
 
   #-------------------
 

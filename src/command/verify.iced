@@ -21,12 +21,23 @@ exports.Command = class Command extends Base
 
   #----------
 
+  OPTS :
+    t :
+      alias : "track"
+      help : "remotely track by default"
+    n : 
+      alias : "no-track"
+      help : "never track"
+
+  #----------
+
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "vrfy" ]
       help : "verify a user's authenticity"
     name = "verify"
     sub = scp.addParser name, opts
+    add_option_dict sub, @OPTS
     sub.addArgument [ "them" ], { nargs : 1 }
     return opts.aliases.concat [ name ]
 
@@ -43,6 +54,18 @@ exports.Command = class Command extends Base
 
   #----------
 
+  prompt_track : (cb) ->
+    ret = err = null
+    if @argv.track then ret = true
+    else if (@argv.batch or @argv.no_track) then ret = false
+    else
+      prompt = "Permnanently track this user, and write proof to server?"
+      await prompt_yn { prompt, defval : true }, defer err, track
+    cb err, track
+
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Verify::run"
 
@@ -53,8 +76,31 @@ exports.Command = class Command extends Base
 
     await User.load { username : @argv.them[0] }, esc defer them
     await them.import_public_key esc defer found
-    await them.verify esc defer()
 
+    # After this point, we have to recover any errors and throw away 
+    # our key is necessary. So call into a subfunction.
+    await @_run2 {me, them}, defer err, accept
+
+    if accept 
+      await them.commit_key esc defer()
+    else if not found
+      await them.remove_key esc defer()
+
+    cb err
+
+  #----------
+
+  track : ( { user, do_remote }, cb) ->
+    log.debug "+ track user (remote=#{do_remote})"
+    log.debug "- tracked user"
+    cb null
+
+  #----------
+
+  _run2 : ({me, them}, cb) ->
+    esc = make_esc cb, "Verify::_run2"
+
+    await them.verify esc defer()
     await Track.load { tracker : me, trackee : them }, esc defer track
     
     if not track.skip_remote_check()
@@ -62,15 +108,25 @@ exports.Command = class Command extends Base
       await them.check_remote_proofs esc defer warnings
     else
       log.info "...skipping remote checks"
-    await @prompt_ok warnings.warnings().length, esc defer accept
 
+    if track.skip_approval()
+      log.debug "| skpping approval, since remote services & key are unchanged"
+      accept = true
+    else if @argv.batch
+      log.debug "| We needed approval, but we were in batch mode"
+      accept = false
+    else
+      await @prompt_ok warnings.warnings().length, esc defer accept
+
+    err = null
     if not accept
       log.warn "Bailing out; proofs were not accepted"
+      err = new E.CancelError "operation was canceled"
+    else
+      await @prompt_track esc defer do_remote
+      await @track { user : them, do_remote }, esc defer()
 
-    if not accept and not found
-      await them.remove_key esc defer()
-
-    cb null
+    cb err, accept
 
 ##=======================================================================
 

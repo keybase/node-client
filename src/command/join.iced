@@ -29,7 +29,7 @@ exports.Command = class Command extends Base
       aliases : [ 'email' ]
       help : 'the email address to signup'
     u :
-      aliase : [ 'username' ]
+      aliases : [ 'username' ]
       help : 'the username to signup as'
 
   #----------

@@ -228,6 +228,16 @@ exports.User = class User
 
   #--------------
 
+  commit_key : (cb) ->
+    await db.log_key_import { 
+      uid : @id
+      state : constants.import_state.FINAL
+      @fingerprint
+    }, defer err
+    cb err
+
+  #--------------
+
   remove_key : (cb) ->
     un = @username()
     uid = @id

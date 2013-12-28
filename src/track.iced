@@ -28,7 +28,7 @@ exports.Track = class Track
       new E.RemoteProofError "name mismatch: #{a} != #{b}"
     else if not (link = @sig_chain.lookup[rp.curr])?
       new E.RemoteProofError "Failed to find a chain link for #{rp.curr}"
-    else if not deq(link.payload_json()?.service, rkp.check_json_data)
+    else if not deq(link.payload_json()?.body?.service, rkp.check_json_data)
       new E.RemoteProofError "The check data was wrong for the signature"
     else null
 
@@ -51,17 +51,47 @@ exports.Track = class Track
 
   _skip_remote_check : (track_cert) ->
     rpri = constants.time.remote_proof_recheck_interval
+    _check_all_proofs_ok = (proofs) ->
+      for proof in proofs
+        return false if proof.remote_key_proof?.state isnt 1
+      return true
     (track_cert? and 
      (last = @last()?) and 
      (last_check = last?.ctime)? and
      (last_change = track_cert.ctime)? and
      (last_check - last_change > rpri) and
-     (track_cert.seq_tail?.payload_hash is last.id))
+     (track_cert.seq_tail?.payload_hash is last.id) and
+     (_check_all_proofs_ok track_cert.remote_proofs))
+
+  #--------
+
+  _skip_approval : (track_cert) ->
+    dlen = (d) -> Object.keys(d).length
+    if not track_cert? then false
+    else if (track_cert.key?.key_fingerprint isnt @trackee.fingerprint) then false
+    else if (track_cert.remote_proofs.length isnt dlen(@table())) then false
+    else
+      ret = true
+      for rp in track_cert.remote_proofs
+        rkp = rp.remote_key_proof
+        if not deq(rkp.check_json_data, @table()[rkp.proof_type]?.payload_json()?.body?.service)
+          ret = false
+          break
+      ret
 
   #--------
 
   skip_remote_check : () ->
     (@_skip_remote_check @local) or (@_skip_remote_check @remote)
+
+  #--------
+
+  # We need approval before accepting if:
+  #  1. the key changed
+  #  2. an identity was deleted or added or changed
+  # If we have acceptance on either local or remote, we can leave it as is.
+  skip_approval : () ->
+    (@_skip_approval @local) or (@_skip_approval @remote)
 
   #--------
 
