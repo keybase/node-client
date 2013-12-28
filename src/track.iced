@@ -81,19 +81,33 @@ exports.Track = class Track
 
   #--------
 
-  _skip_approval : (track_cert) ->
+  _skip_approval : (which) ->
+    track_cert = @[which]
+    log.debug "+ skip_approval(#{which})"
     dlen = (d) -> Object.keys(d).length
-    if not track_cert? then false
-    else if (track_cert.key?.key_fingerprint isnt @trackee.fingerprint) then false
-    else if (track_cert.remote_proofs.length isnt dlen(@table())) then false
+
+    prob = if not track_cert? then "no cert found"
+    else if ((a = track_cert.key?.key_fingerprint?.toLowerCase()) isnt 
+             (b = @trackee.fingerprint?.toLowerCase()))
+      "trackee changed keys: #{a} != #{b}"
+    else if ((a = track_cert.remote_proofs.length) isnt (b = dlen(@table())))
+      "number of remote IDs changed: #{a} != #{b}"
     else
-      ret = true
+      tmp = null
       for rp in track_cert.remote_proofs
         rkp = rp.remote_key_proof
-        if not deq(rkp.check_json_data, @table()[rkp.proof_type]?.payload_json()?.body?.service)
-          ret = false
+        if not deq((a = rkp.check_data_json), (b = @table()[rkp.proof_type]?.body()?.service))
+          tmp = "Remote ID changed: #{JSON.stringify a} != #{JSON.stringify b}"
           break
-      ret
+      tmp
+
+    ret = true
+    if prob?
+      log.debug "| failure: #{prob}"
+      ret = false
+
+    log.debug "+ skip_approval(#{which}) -> #{ret}"
+    ret
 
   #--------
 
@@ -107,7 +121,7 @@ exports.Track = class Track
   #  2. an identity was deleted or added or changed
   # If we have acceptance on either local or remote, we can leave it as is.
   skip_approval : () ->
-    (@_skip_approval @local) or (@_skip_approval @remote)
+    (@_skip_approval 'local') or (@_skip_approval 'remote')
 
   #--------
 
