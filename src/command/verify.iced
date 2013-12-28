@@ -72,6 +72,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Verify::run"
+    log.debug "+ run"
 
     await db.open esc defer()
     await User.load { username : env().get_username() }, esc defer me
@@ -86,10 +87,13 @@ exports.Command = class Command extends Base
     await @_run2 {me, them}, defer err, accept
 
     if accept 
+      log.debug "| commit_key"
       await them.commit_key esc defer()
     else if not found
+      log.debug "| remove_key"
       await them.remove_key esc defer()
 
+    log.debug "- run"
     cb err
 
   #----------
@@ -109,6 +113,7 @@ exports.Command = class Command extends Base
 
   _run2 : ({me, them}, cb) ->
     esc = make_esc cb, "Verify::_run2"
+    log.debug "+ _run2"
 
     await them.verify esc defer()
     await Track.load { tracker : me, trackee : them }, esc defer track
@@ -140,6 +145,7 @@ exports.Command = class Command extends Base
       await @prompt_track esc defer do_remote
       await @track { trackee : them, tracker: me, do_remote }, esc defer()
 
+    log.debug "- _run2"
     cb err, accept
 
 ##=======================================================================
