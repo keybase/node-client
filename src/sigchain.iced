@@ -55,6 +55,14 @@ exports.Link = class Link
  
   #--------------------
 
+  to_track_obj : () -> {
+    seqno : @seqno()
+    sig_id : @sig_id()
+    payload_hash : @id
+  }
+
+  #--------------------
+
   payload_json : () ->
     unless @_payload_obj?
       s = @payload_json_str()

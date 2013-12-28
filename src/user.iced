@@ -263,5 +263,23 @@ exports.User = class User
     await @sig_chain.verify_sig { username : @username() }, defer err
     cb err
 
+  #--------------
+
+  gen_track_obj : () ->
+
+    filter = (d, v) ->
+      out = {}
+      for k in v when d?
+        out[k] = d[k]
+      return out
+
+    pkp = @public_keys.primary
+    out =
+      basics : filter @basics, [ "id_version", "last_id_change", "username" ]
+      id : @id
+      key : filter pkp, [ "kid", "key_fingerprint" ]
+      seq_tail : @sig_chain?.last().to_track_obj()
+    out
+
 ##=======================================================================
 
