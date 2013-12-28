@@ -52,6 +52,7 @@ exports.Link = class Link
   human_url : () -> @obj.human_url
   proof_text_check : () -> @obj.proof_text_check
   remote_id : () -> @obj.remote_id
+  body : () -> @payload_json()?.body
  
   #--------------------
 
@@ -404,7 +405,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  get_track : (uid) -> @table[ST.TRACK]?[uid]
+  get_track_obj : (uid) -> @table[ST.TRACK]?[uid]?.body()?.track
 
   #-----------
 

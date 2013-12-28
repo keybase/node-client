@@ -5,6 +5,7 @@ log = require './log'
 {proof_type_to_string} = require 'keybase-proofs'
 ST = constants.signature_types
 deq = require 'deep-equal'
+{E} = require './err'
 
 ##=======================================================================
 
@@ -24,11 +25,12 @@ exports.Track = class Track
   _check_remote_proof : (rp) ->
     if not (rkp = rp.remote_key_proof)? 
       new E.RemoteProofError "no 'remote_key_proof field'"
-    else if ((a = rkp.check_data_json?.name) isnt (b = (proof_type_to_string rkp.proof_type)))
+    else if ((a = rkp.check_data_json?.name) isnt (b = (proof_type_to_string[rkp.proof_type])))
       new E.RemoteProofError "name mismatch: #{a} != #{b}"
-    else if not (link = @sig_chain.lookup[rp.curr])?
+    else if not (link = @sig_chain.lookup rp.curr)?
       new E.RemoteProofError "Failed to find a chain link for #{rp.curr}"
-    else if not deq(link.payload_json()?.body?.service, rkp.check_json_data)
+    else if not deq((a = link.body()?.service), (b = rkp.check_data_json))
+      log.info "JSON obj mismatch: #{JSON.stringify a} != #{JSON.stringify b}"
       new E.RemoteProofError "The check data was wrong for the signature"
     else null
 
@@ -39,9 +41,9 @@ exports.Track = class Track
   _check_track_obj : (o) ->
     err = null
     if (a = o.id) isnt (b = @trackee.id) 
-      err = new E.UidMismatch "#{a} != #{b}"
+      err = new E.UidMismatchError "#{a} != #{b}"
     else if ((a = o.basics?.username) isnt (b = @trackee.username()))
-      err = new E.UsernameMismatch "#{a} != #{b}"
+      err = new E.UsernameMismatchError "#{a} != #{b}"
     else
       for rp in o.remote_proofs when not err?
         err = @_check_remote_proof rp
@@ -105,19 +107,25 @@ exports.Track = class Track
   #--------
 
   check : () ->
-    if @local and (e = @_check_track_obj @local)?
-      log.warn "Local tracking object was invalid: #{e.message}"
-      @local = null
-    if @remote? and (e = @_check_track_obj @remote)?
-      log.warn "Remote tracking object was invalid: #{e.message}"
-      @remote = null
+    if @local 
+      if (e = @_check_track_obj @local)?
+        log.warn "Local tracking object was invalid: #{e.message}"
+        @local = null
+      else
+        log.debug "| local track checked out"
+    if @remote? 
+      if (e = @_check_track_obj @remote)?
+        log.warn "Remote tracking object was invalid: #{e.message}"
+        @remote = null
+      else
+        log.debug "| remote track checked out"
 
   #--------
 
   @load : ({tracker, trackee}, cb) ->
-    log.debug "+ loading Tracking info w/ remote=#{!!remote}"
     uid = trackee.id
-    remote = tracker?.sig_chain?.get_track uid
+    remote = tracker?.sig_chain?.get_track_obj uid
+    log.debug "+ loading Tracking info w/ remote=#{!!remote}"
     track = new Track { uid, trackee, remote  }
     await track.load_local defer err
     track = null if err? 
