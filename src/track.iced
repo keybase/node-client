@@ -106,7 +106,7 @@ exports.Track = class Track
       log.debug "| failure: #{prob}"
       ret = false
 
-    log.debug "+ skip_approval(#{which}) -> #{ret}"
+    log.debug "- skip_approval(#{which}) -> #{ret}"
     ret
 
   #--------
