@@ -8,6 +8,9 @@ db = require './db'
 deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
 log = require './log'
+{TrackerProofGen} = require './sigs'
+{KeyManager} = require './keymanager'
+{session} = require './session'
 
 ##=======================================================================
 
@@ -196,6 +199,13 @@ exports.User = class User
 
   #--------------
 
+  load_public_key : (cb) ->
+    err = null
+    await KeyManager.load @fingerprint, defer err, @km unless @km?
+    cb err
+
+  #--------------
+
   username : () -> @basics.username
 
   #--------------
@@ -262,6 +272,23 @@ exports.User = class User
   verify : (cb) ->
     await @sig_chain.verify_sig { username : @username() }, defer err
     cb err
+
+  #--------------
+
+  track : ({trackee, track_obj}, cb) ->
+    esc = make_esc cb, "User::track"
+    await session.login esc defer()
+    await @load_public_key esc defer()
+    last_link = @sig_chain?.last()
+    g = new TrackerProofGen {
+      km : @km,
+      seqno : (if last_link? then (last_link.seqno() + 1) else 1)
+      prev : (if last_link? then last_link.id else null)
+      uid : trackee.id
+      track : track_obj
+    }
+    await g.run esc defer()
+    cb null
 
   #--------------
 

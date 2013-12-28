@@ -14,6 +14,7 @@ util = require 'util'
 {prompt_yn} = require '../prompter'
 colors = require 'colors'
 {Track} = require '../track'
+proofs = require 'keybase-proofs'
 
 ##=======================================================================
 
@@ -90,12 +91,15 @@ exports.Command = class Command extends Base
 
   #----------
 
-  track : ( { user, do_remote }, cb) ->
+  track : ( { tracker, trackee, do_remote }, cb) ->
     log.debug "+ track user (remote=#{do_remote})"
-    obj = user.gen_track_obj()
-    log.debug "| object generated: #{JSON.stringify(obj)}"
+    tobj = trackee.gen_track_obj()
+    log.debug "| object generated: #{JSON.stringify tobj}"
+    err = null
+    if do_remote
+      await tracker.track { trackee, track_obj : tobj }, defer err
     log.debug "- tracked user"
-    cb null
+    cb err
 
   #----------
 
@@ -126,7 +130,7 @@ exports.Command = class Command extends Base
       err = new E.CancelError "operation was canceled"
     else
       await @prompt_track esc defer do_remote
-      await @track { user : them, do_remote }, esc defer()
+      await @track { trackee : them, tracker: me, do_remote }, esc defer()
 
     cb err, accept
 

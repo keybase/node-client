@@ -62,10 +62,15 @@ class BaseSigGen
       sig_id_short : @sig.short_id
       is_remote_proof : true
     @_v_modify_store_arg arg
-    await req.post { endpoint : @_get_api_endpoint(), args }, defer err, body
+    log.debug "+ storing signature:"
+    log.debug "| writing to #{endpoint}"
+    log.debug "| with args #{JSON.stringify args}"
+    endpoint = @_get_api_endpoint()
+    await req.post { endpoint, args }, defer err, body
     unless err?
       @proof_text = body.proof_text
       @proof_id = body.proof_id
+    log.debug "- stored signature (err = #{err?.message})"
     cb err
 
   #---------
@@ -96,5 +101,21 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
   
   _make_binding_eng : (arg) -> 
     new proofs.KeybaseBinding arg
+
+#===========================================
+
+exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
+
+  constructor : ({km,@prev,@seqno,@uid,@track}) ->
+    super { km }
+
+  _get_announce_number : (cb) -> cb null
+
+  _make_binding_eng : (arg) -> 
+    arg.track = @track
+    new proofs.Track arg
+
+  _v_modify_store_arg : (arg) -> arg.uid = @uid
+  _get_api_endpoint : () -> "follow"
 
 #===========================================
