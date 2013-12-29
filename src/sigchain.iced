@@ -16,6 +16,7 @@ cheerio = require 'cheerio'
 request = require 'request'
 colors = require 'colors'
 deq = require 'deep-equal'
+util = require 'util'
 
 ##=======================================================================
 
@@ -379,7 +380,7 @@ exports.SigChain = class SigChain
         when ST.REMOTE_PROOF then MAKE(out, lt, {})[link.proof_type()] = link
 
         when ST.TRACK 
-          if not (id = body?.track?.id) then log.warn "Missing track in signature: #{pjs}"
+          if not (id = body?.track?.id)? then log.warn "Missing track in signature"
           else MAKE(out,lt,{})[id] = link
 
         when ST.REVOKE
@@ -392,10 +393,13 @@ exports.SigChain = class SigChain
           else
             delete out[cat]
 
-        when ST.UNFOLLOW
-          if not (id = body?.track?.id?) then log.warn "Mssing untrack in signature: #{pjs}"
-          else if not (out[ST.TRACK]?[id]?) then log.warn "Not tracking #{id} to begin with"
+        when ST.UNTRACK
+          if not (id = body?.untrack?.id)? then log.warn "Mssing untrack in signature: #{pjs}"
+          else if not (out[ST.TRACK]?[id]?) then log.warn "Unexpected untrack of #{id} in signature chain"
           else delete out[ST.TRACK][id]
+
+        else
+          log.warn "unknown public sig type: #{lt}"
 
     log.debug "- signature chain compressed"
     @table = out
