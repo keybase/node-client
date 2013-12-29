@@ -98,21 +98,6 @@ exports.Command = class Command extends Base
 
   #----------
 
-  track : ( { tracker, trackee, trackw, do_remote }, cb) ->
-    esc = make_esc cb, "Verify::track"
-    await session.load_and_login esc defer()
-    log.debug "+ track user (remote=#{do_remote})"
-    tobj = trackee.gen_track_obj()
-    log.debug "| object generated: #{JSON.stringify tobj}"
-    if do_remote
-      await tracker.track { trackee, track_obj : tobj }, esc defer()
-    else
-      await trackw.store_local tobj, esc defer()
-    log.debug "- tracked user"
-    cb null
-
-  #----------
-
   _run2 : ({me, them}, cb) ->
     esc = make_esc cb, "Verify::_run2"
     log.debug "+ _run2"
@@ -147,7 +132,8 @@ exports.Command = class Command extends Base
       log.info "Nothing to do; tracking is up-to-date"
     else
       await @prompt_track esc defer do_remote
-      await @track { trackee : them, tracker: me, trackw, do_remote }, esc defer()
+      await session.load_and_login esc defer() if do_remote
+      await trackw.store_track { do_remote }, esc defer()
 
     log.debug "- _run2"
     cb err, accept

@@ -210,7 +210,7 @@ exports.User = class User
   load_public_key : (cb) ->
     err = null
     await KeyManager.load @fingerprint, defer err, @km unless @km?
-    cb err
+    cb err, @km
 
   #--------------
 
@@ -283,19 +283,18 @@ exports.User = class User
 
   #--------------
 
-  track : ({trackee, track_obj}, cb) ->
-    esc = make_esc cb, "User::track"
+  gen_track_proof_gen : ({uid, track_obj}, cb) ->
+    esc = make_esc cb, "User::gen_track_proof_gen"
     await @load_public_key esc defer()
     last_link = @sig_chain?.last()
     g = new TrackerProofGen {
       km : @km,
       seqno : (if last_link? then (last_link.seqno() + 1) else 1)
       prev : (if last_link? then last_link.id else null)
-      uid : trackee.id
+      uid : uid
       track : track_obj
     }
-    await g.run esc defer()
-    cb null
+    cb null, g
 
   #--------------
 
@@ -311,6 +310,17 @@ exports.User = class User
     out
 
   #--------------
-  
+
+  gen_untrack_obj : () ->
+
+    pkp = @public_keys.primary
+    out =
+      basics : filter @basics, [ "id_version", "last_id_change", "username" ]
+      id : @id
+      key : filter pkp, [ "kid", "key_fingerprint" ]
+      seq_tail : @sig_chain?.last().to_track_obj()
+      remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
+    out
+
 ##=======================================================================
 

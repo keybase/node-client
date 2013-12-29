@@ -7,12 +7,13 @@ ST = constants.signature_types
 deq = require 'deep-equal'
 {E} = require './err'
 {unix_time} = require('pgp-utils').util
+{make_esc} = require 'iced-error'
 
 ##=======================================================================
 
 exports.TrackWrapper = class TrackWrapper
 
-  constructor : ({@trackee, @local, @remote}) ->
+  constructor : ({@trackee, @tracker, @local, @remote}) ->
     @uid = @trackee.id
     @sig_chain = @trackee.sig_chain
 
@@ -138,9 +139,10 @@ exports.TrackWrapper = class TrackWrapper
 
   #--------
 
-  store_local : (obj, cb) ->
+  store_local : (cb) ->
     log.debug "+ storing local track object"
-    await db.put { type : constants.ids.local_track, key : @uid, value : obj }, defer err
+    type = constants.ids.local_track
+    await db.put { type, key : @uid, value : @track_obj }, defer err
     log.debug "- stored local track object"
     cb err
 
@@ -166,12 +168,33 @@ exports.TrackWrapper = class TrackWrapper
     uid = trackee.id
     remote = tracker?.sig_chain?.get_track_obj uid
     log.debug "+ loading Tracking info w/ remote=#{!!remote}"
-    track = new TrackWrapper { uid, trackee, remote  }
+    track = new TrackWrapper { uid, trackee, tracker, remote  }
     await track.load_local defer err
     track = null if err? 
     track?.check()
     log.debug "- loaded tracking info"
     cb err, track
+
+  #--------
+
+  store_remote : (cb) ->
+    await @tracker.gen_track_proof_gen { @uid, @track_obj }, defer err, g
+    await g.run defer err unless err?
+    cb err
+
+  #--------
+
+  store_track : ({do_remote}, cb) ->
+    esc = make_esc cb, "TrackWrapper::store_track"
+    log.debug "+ track user (remote=#{do_remote})"
+    @track_obj = @trackee.gen_track_obj()
+    log.debug "| object generated: #{JSON.stringify @track_obj}"
+    if do_remote
+      await @store_remote esc defer()
+    else
+      await @store_local esc defer()
+    log.debug "- tracked user"
+    cb null
 
 ##=======================================================================
 
