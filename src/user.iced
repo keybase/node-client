@@ -11,6 +11,7 @@ log = require './log'
 {TrackerProofGen} = require './sigs'
 {KeyManager} = require './keymanager'
 {session} = require './session'
+{env} = require './env'
 
 ##=======================================================================
 
@@ -198,6 +199,17 @@ exports.User = class User
 
   #--------------
 
+  @load_me : (cb) ->
+    esc = make_esc cb, "User::load_me"
+    log.debug "+ User::load_me"
+    await User.load { username : env().get_username() }, esc defer me
+    await me.check_public_key esc defer()
+    await me.verify esc defer()
+    log.debug "- User::load_me"
+    cb null, me
+
+  #--------------
+
   check_public_key : (cb) ->
     un = @username()
     log.debug "+ #{un}: checking public key"
@@ -318,8 +330,6 @@ exports.User = class User
       basics : filter @basics, [ "id_version", "last_id_change", "username" ]
       id : @id
       key : filter pkp, [ "kid", "key_fingerprint" ]
-      seq_tail : @sig_chain?.last().to_track_obj()
-      remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
     out
 
 ##=======================================================================
