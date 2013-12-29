@@ -177,6 +177,10 @@ exports.TrackWrapper = class TrackWrapper
 
   #--------
 
+  is_tracking : () -> !!@remote
+
+  #--------
+
   store_remote : (cb) ->
     await @tracker.gen_track_proof_gen { @uid, @track_obj }, defer err, g
     await g.run defer err unless err?

@@ -40,3 +40,4 @@ exports.E = ie.make_errors
   UID_MISMATCH : "userIDs didn't match"
   USERNAME_MISMATCH : "usernames didn't match"
   REMOTE_PROOF : "error in sanity checking a remote proof"
+  UNTRACK : "error in untracking"

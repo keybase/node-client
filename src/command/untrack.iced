@@ -34,6 +34,7 @@ exports.Command = class Command extends Base
     await db.open esc defer()
     await User.load_me esc defer me
     await User.load { username : @argv.them[0] }, esc defer them
+    await me.assert_tracking them, esc defer()
     untrack_obj = them.gen_untrack_obj()
     await me.gen_track_proof_gen { uid : them.id, untrack_obj }, esc defer g
     await session.load_and_login esc defer()

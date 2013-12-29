@@ -12,6 +12,7 @@ log = require './log'
 {KeyManager} = require './keymanager'
 {session} = require './session'
 {env} = require './env'
+{TrackWrapper} = require './track'
 
 ##=======================================================================
 
@@ -316,6 +317,14 @@ exports.User = class User
     arg.untrack = untrack_obj if untrack_obj?
     g = new klass arg
     cb null, g
+
+  #--------------
+
+  assert_tracking : (them, cb) ->
+    await TrackWrapper.load { tracker : @, trackee : them }, defer err, trackw
+    if not err? and not trackw.is_tracking()
+      err = new E.UntrackError "You're not tracking '#{them.username()}'!"
+    cb err
 
   #--------------
 
