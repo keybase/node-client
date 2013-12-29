@@ -13,7 +13,7 @@ util = require 'util'
 {env} = require '../env'
 {prompt_yn} = require '../prompter'
 colors = require 'colors'
-{Track} = require '../track'
+{TrackWrapper} = require '../track'
 proofs = require 'keybase-proofs'
 {session} = require '../session'
 {constants} = require '../constants'
@@ -98,7 +98,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  track : ( { tracker, trackee, do_remote }, cb) ->
+  track : ( { tracker, trackee, trackw, do_remote }, cb) ->
     esc = make_esc cb, "Verify::track"
     await session.load_and_login esc defer()
     log.debug "+ track user (remote=#{do_remote})"
@@ -106,6 +106,8 @@ exports.Command = class Command extends Base
     log.debug "| object generated: #{JSON.stringify tobj}"
     if do_remote
       await tracker.track { trackee, track_obj : tobj }, esc defer()
+    else
+      await trackw.store_local tobj, esc defer()
     log.debug "- tracked user"
     cb null
 
@@ -116,9 +118,9 @@ exports.Command = class Command extends Base
     log.debug "+ _run2"
 
     await them.verify esc defer()
-    await Track.load { tracker : me, trackee : them }, esc defer track
+    await TrackWrapper.load { tracker : me, trackee : them }, esc defer trackw
     
-    check = track.skip_remote_check()
+    check = trackw.skip_remote_check()
     if (check is constants.skip.NONE)
       log.console.log "...checking identity proofs"
       skp = false
@@ -128,7 +130,7 @@ exports.Command = class Command extends Base
     await them.check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
-    if ((approve = track.skip_approval()) isnt constants.skip.NONE)
+    if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
     else if @argv.batch
@@ -145,7 +147,7 @@ exports.Command = class Command extends Base
       log.info "Nothing to do; tracking is up-to-date"
     else
       await @prompt_track esc defer do_remote
-      await @track { trackee : them, tracker: me, do_remote }, esc defer()
+      await @track { trackee : them, tracker: me, trackw, do_remote }, esc defer()
 
     log.debug "- _run2"
     cb err, accept

@@ -10,7 +10,7 @@ deq = require 'deep-equal'
 
 ##=======================================================================
 
-exports.Track = class Track
+exports.TrackWrapper = class TrackWrapper
 
   constructor : ({@trackee, @local, @remote}) ->
     @uid = @trackee.id
@@ -138,6 +138,14 @@ exports.Track = class Track
 
   #--------
 
+  store_local : (obj, cb) ->
+    log.debug "+ storing local track object"
+    await db.put { type : constants.ids.local_track, key : @uid, value : obj }, defer err
+    log.debug "- stored local track object"
+    cb err
+
+  #--------
+
   check : () ->
     if @local 
       if (e = @_check_track_obj @local)?
@@ -158,7 +166,7 @@ exports.Track = class Track
     uid = trackee.id
     remote = tracker?.sig_chain?.get_track_obj uid
     log.debug "+ loading Tracking info w/ remote=#{!!remote}"
-    track = new Track { uid, trackee, remote  }
+    track = new TrackWrapper { uid, trackee, remote  }
     await track.load_local defer err
     track = null if err? 
     track?.check()
