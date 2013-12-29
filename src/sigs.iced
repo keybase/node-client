@@ -122,3 +122,19 @@ exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
   _get_api_endpoint : () -> "follow"
 
 #===========================================
+
+exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
+
+  constructor : ({km,@uid,@untrack}) ->
+    super { km }
+
+  _make_binding_eng : (arg) -> 
+    arg.untrack = @untrack
+    new proofs.Unrack arg
+
+  _v_modify_store_arg : (arg) -> 
+    arg.uid = @uid
+    arg.type = "untrack"
+  _get_api_endpoint : () -> "follow"
+
+#===========================================

@@ -14,6 +14,14 @@ log = require './log'
 
 ##=======================================================================
 
+filter = (d, v) ->
+  out = {}
+  for k in v when d?
+    out[k] = d[k]
+  return out
+
+##=======================================================================
+
 exports.User = class User 
 
   #--------------
@@ -293,12 +301,6 @@ exports.User = class User
 
   gen_track_obj : () ->
 
-    filter = (d, v) ->
-      out = {}
-      for k in v when d?
-        out[k] = d[k]
-      return out
-
     pkp = @public_keys.primary
     out =
       basics : filter @basics, [ "id_version", "last_id_change", "username" ]
@@ -308,5 +310,7 @@ exports.User = class User
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
     out
 
+  #--------------
+  
 ##=======================================================================
 

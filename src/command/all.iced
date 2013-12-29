@@ -49,6 +49,7 @@ class Main
       "prove"
       "verify"
       "revoke"
+      "untrack"
     ]
 
     subparsers = @ap.addSubparsers {
