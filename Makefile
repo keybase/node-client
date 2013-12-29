@@ -37,6 +37,7 @@ $(BUILD_STAMP): \
 	lib/hilev.js \
 	lib/gpg.js \
 	lib/keymanager.js \
+	lib/keyring.js \
 	lib/keyselector.js \
 	lib/keyutils.js \
 	lib/log.js \

@@ -77,6 +77,7 @@ exports.Base = class Base
 
   use_config : () -> true
   use_session : () -> false
+  use_db : () -> true
   config_opts : () -> {}
 
   #-------------------

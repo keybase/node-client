@@ -31,7 +31,6 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Untrack::run"
     log.debug "+ run"
-    await db.open esc defer()
     await User.load_me esc defer me
     await User.load { username : @argv.them[0] }, esc defer them
     await me.assert_tracking them, esc defer()

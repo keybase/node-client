@@ -9,6 +9,8 @@ log = require '../log'
 {Config} = require '../config'
 req = require '../req'
 session = require '../session'
+{clean_key_imports} = require '../keyring'
+db = require '../db'
 
 ##=======================================================================
 
@@ -126,6 +128,22 @@ class Main
 
   #----------------------------------
 
+  load_db : (cb) ->
+    err = null
+    if @cmd.use_db()
+      await db.open defer err
+    cb err
+
+  #----------------------------------
+
+  cleanup_previous_crash : (cb) ->
+    err = null
+    if @cmd.use_db()
+      await clean_key_imports defer err
+    cb err
+
+  #----------------------------------
+
   setup : (cb) ->
     esc = make_esc cb, "setup"
     init_env()
@@ -134,6 +152,8 @@ class Main
     @config_logger()
     await @load_config esc defer()
     env().set_config @config
+    await @load_db esc defer()
+    await @cleanup_previous_crash esc defer()
     await @load_session esc defer()
     env().set_session @session
     cb null

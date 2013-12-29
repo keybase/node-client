@@ -76,6 +76,22 @@ class DB
 
   #-----
 
+  select_key_imports_by_state : (state, cb) ->
+    q = "SELECT fingerprint FROM key_import_log WHERE state=$state"
+    await @db.all q, { $state : state }, defer err, rows
+    ret = if err? then null else (o.fingerprint for o in rows)
+    cb err, ret
+
+  #-----
+
+  batch_update_key_import : ({fingerprints, state}, cb) ->
+    q = "UPDATE key_import_log SET state=? WHERE fingerprint IN (?)"
+    args = [ state, fingerprints.join(",") ]
+    await @db.run q, args, defer err
+    cb err
+
+  #-----
+
   put : ({type, key, value, name}, cb) ->
     type or= key[-2...]
     esc = make_esc cb, "DB::put"
