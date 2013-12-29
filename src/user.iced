@@ -8,7 +8,7 @@ db = require './db'
 deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
 log = require './log'
-{TrackerProofGen} = require './sigs'
+{UntrackerProofGen,TrackerProofGen} = require './sigs'
 {KeyManager} = require './keymanager'
 {session} = require './session'
 {env} = require './env'
@@ -187,9 +187,15 @@ exports.User = class User
 
   #--------------
 
+  get_fingerprint : () ->
+    @fingerprint = @public_keys?.primary?.key_fingerprint unless @fingerprint?
+    return @fingerprint
+
+  #--------------
+
   query_key : ({secret}, cb) ->
-    if (@fingerprint = @public_keys?.primary?.key_fingerprint?.toUpperCase())?
-      args = [ "-" + (if secret then 'K' else 'k'), @fingerprint ]
+    if (fp = @get_fingerprint()?.toUpperCase())?
+      args = [ "-" + (if secret then 'K' else 'k'), fp ]
       await gpg { args, quiet : true }, defer err, out
       if err?
         err = new E.NoLocalKeyError "the user #{@username()} doesn't have a local key"
@@ -271,12 +277,13 @@ exports.User = class User
   remove_key : (cb) ->
     un = @username()
     uid = @id
+    fingerprint = @get_fingerprint().toUpperCase()
     esc = make_esc cb, "SigChain::remove_key"
     log.debug "+ #{un}: remove temporarily imported public key"
-    args = [ "--batch", "--delete-keys", @fingerprint ]
+    args = [ "--batch", "--delete-keys", fingerprint ]
     state = constants.import_state.CANCELED
     await gpg { args }, esc defer()
-    await db.log_key_import { uid, state, @fingerprint}, esc defer()
+    await db.log_key_import { uid, state, fingerprint}, esc defer()
     log.debug "- #{un}: removed temporarily imported public key"
     cb null
 
@@ -295,17 +302,19 @@ exports.User = class User
 
   #--------------
 
-  gen_track_proof_gen : ({uid, track_obj}, cb) ->
+  gen_track_proof_gen : ({uid, track_obj, untrack_obj}, cb) ->
     esc = make_esc cb, "User::gen_track_proof_gen"
     await @load_public_key esc defer()
     last_link = @sig_chain?.last()
-    g = new TrackerProofGen {
-      km : @km,
+    klass = if untrack_obj? then UntrackerProofGen else TrackerProofGen
+    arg = 
+      km : @km
       seqno : (if last_link? then (last_link.seqno() + 1) else 1)
       prev : (if last_link? then last_link.id else null)
       uid : uid
-      track : track_obj
-    }
+    arg.track = track_obj if track_obj?
+    arg.untrack = untrack_obj if untrack_obj?
+    g = new klass arg
     cb null, g
 
   #--------------

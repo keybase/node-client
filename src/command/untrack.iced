@@ -6,6 +6,10 @@ log = require '../log'
 {gpg} = require '../gpg'
 {BufferOutStream} = require '../stream'
 {E} = require '../err'
+{make_esc} = require 'iced-error'
+db = require '../db'
+{User} = require '../user'
+{session} = require '../session'
 
 ##=======================================================================
 
@@ -29,9 +33,14 @@ exports.Command = class Command extends Base
     log.debug "+ run"
     await db.open esc defer()
     await User.load_me esc defer me
-
+    await User.load { username : @argv.them[0] }, esc defer them
+    untrack_obj = them.gen_untrack_obj()
+    await me.gen_track_proof_gen { uid : them.id, untrack_obj }, esc defer g
+    await session.load_and_login esc defer()
+    await g.run esc defer()
+    await them.remove_key esc defer()
     log.debug "- run"
-    cb err
+    cb null
 
 ##=======================================================================
 

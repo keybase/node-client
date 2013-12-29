@@ -125,12 +125,14 @@ exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
 exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
-  constructor : ({km,@uid,@untrack}) ->
+  constructor : ({km,@uid,@untrack,@seqno,@prev}) ->
     super { km }
+
+  _get_announce_number : (cb) -> cb null
 
   _make_binding_eng : (arg) -> 
     arg.untrack = @untrack
-    new proofs.Unrack arg
+    new proofs.Untrack arg
 
   _v_modify_store_arg : (arg) -> 
     arg.uid = @uid
