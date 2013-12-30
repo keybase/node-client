@@ -22,6 +22,7 @@ $(BUILD_STAMP): \
 	lib/command/logout.js \
 	lib/command/prove.js \
 	lib/command/push.js \
+	lib/command/reset.js \
 	lib/command/revoke.js \
 	lib/command/track.js \
 	lib/command/untrack.js \

@@ -44,16 +44,17 @@ class Main
     add_option_dict @ap, Base.OPTS
 
     list = [ 
-      "version"
-      "join"
       "config"
-      "push"
-      "prove"
-      "track"
-      "revoke"
-      "untrack"
+      "join"
       "login"
       "logout"
+      "push"
+      "prove"
+      "reset"
+      "revoke"
+      "track"
+      "untrack"
+      "version"
     ]
 
     subparsers = @ap.addSubparsers {
