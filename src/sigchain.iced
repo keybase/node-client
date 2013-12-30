@@ -35,6 +35,7 @@ exports.Link = class Link
   
   constructor : ({@id,@obj}) ->
     @id or= @obj.payload_hash
+    @_revoked = false
 
   #--------------------
 
@@ -55,6 +56,8 @@ exports.Link = class Link
   remote_id : () -> @obj.remote_id
   body : () -> @payload_json()?.body
   ctime : () -> date_to_unix @obj.ctime
+  revoke : (r) -> @_revoked = r
+  is_revoked : () -> @_revoked
 
   #--------------------
 
@@ -347,7 +350,7 @@ exports.SigChain = class SigChain
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
         if (d = @table[type])
-          for k,link of d
+          for k,link of d 
             if link.self_signer() is @username 
               found = true
               break
@@ -373,7 +376,7 @@ exports.SigChain = class SigChain
       sig_id = link.sig_id()
       pjs = link.payload_json_str()
       body = link.payload_json()?.body
-      index[link.sig_id()] = lt
+      index[link.sig_id()] = link
 
       switch lt
         when ST.SELF_SIG     then MAKE(out, lt,[]).push link
@@ -386,20 +389,30 @@ exports.SigChain = class SigChain
         when ST.REVOKE
           if not (sig_id = body?.revoke?.sig_id)
             log.warn "Cannot find revoke sig_id in signature: #{pjs}"
-          else if not (cat = index[sig_id])? or not (sig = out[cat])?
+          else if not (link = index[sig_id])?
             log.warn "Cannot revoke signature #{sig_id} since we haven't seen it"
-          else if not sig.sig_id() is sig_id
-            log.warn "Cannot revoke signature #{sig_id} since it's been superseded"
+          else if link.is_revoked()
+            log.info "Signature is already revoked: #{sig_id}"
           else
-            delete out[cat]
+            link.revoke()
 
         when ST.UNTRACK
           if not (id = body?.untrack?.id)? then log.warn "Mssing untrack in signature: #{pjs}"
-          else if not (out[ST.TRACK]?[id]?) then log.warn "Unexpected untrack of #{id} in signature chain"
-          else delete out[ST.TRACK][id]
+          else if not (link = out[ST.TRACK]?[id])? then log.warn "Unexpected untrack of #{id} in signature chain"
+          else if link.is_revoked() then log.info "Tracking was already revoked for #{id}"
+          else link.revoke()
 
         else
           log.warn "unknown public sig type: #{lt}"
+
+    prune = (d) ->
+      for k,v of d
+        if not (v instanceof Link) then prune v
+        else if v.is_revoked() then delete d[k]
+
+    # remove all revoked signatures in one final pass
+    prune out
+
 
     log.debug "- signature chain compressed"
     @table = out
@@ -408,7 +421,7 @@ exports.SigChain = class SigChain
 
   remote_proofs_to_track_obj : () ->
     if (d = @table[ST.REMOTE_PROOF])?
-      (link.remote_proof_to_track_obj() for key,link of d)
+      (link.remote_proof_to_track_obj() for key,link of d when not link.is_revoked())
     else []
 
   #-----------
