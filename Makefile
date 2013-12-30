@@ -18,6 +18,8 @@ $(BUILD_STAMP): \
 	lib/command/base.js \
 	lib/command/config.js \
 	lib/command/join.js \
+    lib/command/login.js \
+    lib/command/logout.js \
 	lib/command/prove.js \
 	lib/command/push.js \
 	lib/command/revoke.js \

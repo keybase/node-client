@@ -52,6 +52,8 @@ class Main
       "track"
       "revoke"
       "untrack"
+      "login"
+      "logout"
     ]
 
     subparsers = @ap.addSubparsers {
