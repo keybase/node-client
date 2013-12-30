@@ -56,7 +56,7 @@ exports.Link = class Link
   remote_id : () -> @obj.remote_id
   body : () -> @payload_json()?.body
   ctime : () -> date_to_unix @obj.ctime
-  revoke : (r) -> @_revoked = r
+  revoke : () -> @_revoked = true
   is_revoked : () -> @_revoked
 
   #--------------------
@@ -399,7 +399,7 @@ exports.SigChain = class SigChain
         when ST.UNTRACK
           if not (id = body?.untrack?.id)? then log.warn "Mssing untrack in signature: #{pjs}"
           else if not (link = out[ST.TRACK]?[id])? then log.warn "Unexpected untrack of #{id} in signature chain"
-          else if link.is_revoked() then log.info "Tracking was already revoked for #{id}"
+          else if link.is_revoked() then log.warn "Tracking was already revoked for #{id} (ignoring untrack)"
           else link.revoke()
 
         else
