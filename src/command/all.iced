@@ -45,6 +45,7 @@ class Main
 
     list = [ 
       "config"
+      "help"
       "join"
       "login"
       "logout"
@@ -66,7 +67,7 @@ class Main
 
     for m in list
       mod = require "./#{m}"
-      obj = new mod.Command()
+      obj = new mod.Command @
       names = obj.add_subcommand_parser subparsers
       for n in names
         @commands[n] = obj

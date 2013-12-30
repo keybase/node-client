@@ -32,7 +32,7 @@ exports.Base = class Base
 
   #-------------------
 
-  constructor : () ->
+  constructor : (@parent) ->
 
   #-------------------
 
