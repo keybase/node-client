@@ -110,6 +110,12 @@ exports.Command = class Command extends Base
           retry = true
           @prompter.clear 'username'
           err = null
+        when 'INPUT_ERROR'
+          if err.fields.username
+            log.error "Username '#{@data.username}' was rejected by the server"
+            retry = true
+            @prompter.clear 'username'
+            err = null
 
     if not err?       
       @uid = body.uid
