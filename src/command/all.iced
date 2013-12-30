@@ -53,6 +53,7 @@ class Main
       "prove"
       "reset"
       "revoke"
+      "switch"
       "track"
       "untrack"
       "version"

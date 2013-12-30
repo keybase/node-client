@@ -4,7 +4,7 @@ req = require './req'
 {E} = require './err'
 {make_esc} = require 'iced-error'
 {Config} = require './config'
-{prompt_passphrase,prompt_email_and_username} = require './prompter'
+{prompt_passphrase,prompt_email_or_username} = require './prompter'
 {constants} = require './constants'
 SC = constants.security
 triplesec = require 'triplesec'
@@ -34,7 +34,7 @@ exports.Session = class Session
       unless err?
          c = env().config
          c.set "user.email", email if email?
-         c.set "user.name", name if name?
+         c.set "user.name", username if username?
     cb err, (username or email)
 
   #-----

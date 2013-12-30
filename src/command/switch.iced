@@ -29,10 +29,11 @@ exports.Command = class Command extends Base
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases  : [ 'nuke' ]
-      help : "reset the local setup, deleting all local cached state"
-    name = "reset"
+      aliases  : [ ]
+      help : "switch to a different user, and nuke the current state"
+    name = "switch"
     sub = scp.addParser name, opts
+    sub.addArgument [ "username" ], { nargs : 1 }
     add_option_dict sub, @OPTS
     return opts.aliases.concat [ name ]
 
@@ -53,7 +54,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "run"
     await @prompt_yn esc defer()
-    await reset {}, esc defer()
+    await reset { new_username : @argv.username[0] }, esc defer()
     log.info "success!"
     cb null
 

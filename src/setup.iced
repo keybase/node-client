@@ -16,12 +16,13 @@
 # If you want to build in seat belts, you need to do so before
 # you call us.
 #
-exports.reset = (cb) ->
+exports.reset = ({new_username}, cb) ->
   esc = make_esc cb, "setup.reset"
   await session.logout esc defer()
   await db.unlink esc defer()
   c = env().config
   c.set 'user', null
+  c.set 'user.name', new_username if new_username?
   await c.write esc defer()
   cb null
 
