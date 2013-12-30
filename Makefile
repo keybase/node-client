@@ -50,6 +50,7 @@ $(BUILD_STAMP): \
 	lib/queue.js \
 	lib/req.js \
 	lib/session.js \
+	lib/setup.js \
 	lib/sigchain.js \
 	lib/stream.js \
 	lib/track.js \
