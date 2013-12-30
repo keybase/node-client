@@ -36,7 +36,6 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
-	lib/hilev.js \
 	lib/gpg.js \
 	lib/keymanager.js \
 	lib/keyring.js \

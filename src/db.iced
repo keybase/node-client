@@ -31,6 +31,14 @@ class DB
 
   #----
 
+  unlink : (cb) ->
+    fn = @get_filename()
+    log.info "Purging local cache: #{fn}"
+    await fs.unlink fn, defer err
+    cb err
+
+  #----
+
   _open : (cb) ->
     esc = make_esc cb, "DB::open"
     err = null

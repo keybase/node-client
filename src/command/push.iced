@@ -10,7 +10,6 @@ session = require '../session'
 {prompt_for_int} = require '../prompter'
 log = require '../log'
 {key_select} = require '../keyselector'
-{SignatureEngine} = require '../hilev'
 {KeybasePushProofGen} = require '../sigs'
 req = require '../req'
 
