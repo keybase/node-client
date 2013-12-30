@@ -6,12 +6,18 @@ log = require '../log'
 {gpg} = require '../gpg'
 {BufferOutStream} = require '../stream'
 {E} = require '../err'
+{session} = require '../session'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
 
   #----------
+
+  use_session : () -> true
+
+  #----------
+
 
   add_subcommand_parser : (scp) ->
     opts = 
@@ -23,7 +29,8 @@ exports.Command = class Command extends Base
   #----------
 
   run : (cb) ->
-    cb new E.UnimplementedError, "not implemented"
+    await session.logout defer err
+    cb err
 
 ##=======================================================================
 

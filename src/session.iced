@@ -140,6 +140,16 @@ exports.Session = class Session
 
   #-----
 
+  logout : (cb) ->
+    esc = make_esc cb, "logout"
+    await @check esc defer()
+    if @logged_in()
+      await @post_logout esc defer()
+    await @_file.unlink esc defer() if @_loaded
+    cb null
+
+  #-----
+
   get_salt : (args, cb) ->
     salt = null
     await req.get { endpoint : "getsalt", args }, defer err, body
@@ -147,6 +157,12 @@ exports.Session = class Session
       salt = (new Buffer body.salt, 'hex')
       env().config.set "user.salt", body.salt
     cb err, salt
+
+  #-----
+
+  post_logout : (cb) ->
+    await req.post { endpoint : "logout" }, defer err
+    cb err
 
   #-----
 

@@ -39,6 +39,13 @@ exports.Config = class Config
 
   #-------------------
 
+  unlink : (cb) ->
+    await fs.unlink @filename, defer err
+    log.info "Removing file: #{@filename}"
+    cb err
+
+  #-------------------
+
   write : (cb) ->
     err = null
     if @changed
