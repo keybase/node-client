@@ -49,7 +49,7 @@ class Main
       "config"
       "push"
       "prove"
-      "verify"
+      "track"
       "revoke"
       "untrack"
     ]

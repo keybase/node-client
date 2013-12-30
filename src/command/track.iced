@@ -26,21 +26,21 @@ exports.Command = class Command extends Base
 
   OPTS :
     t :
-      alias : "track"
+      alias : "remote"
       action : "storeTrue"
       help : "remotely track by default"
     n : 
-      alias : "no-track"
+      alias : "local"
       action : "storeTrue"
-      help : "never track"
+      help : "don't prompt for remote tracking"
 
   #----------
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases : [ "vrfy" ]
-      help : "verify a user's authenticity"
-    name = "verify"
+      aliases : [ "trck" ]
+      help : "verify a user's authenticity and optionally track him"
+    name = "track"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
     sub.addArgument [ "them" ], { nargs : 1 }
@@ -61,8 +61,8 @@ exports.Command = class Command extends Base
 
   prompt_track : (cb) ->
     ret = err = null
-    if @argv.track then ret = true
-    else if (@argv.batch or @argv.no_track) then ret = false
+    if @argv.remote then ret = true
+    else if (@argv.batch or @argv.local) then ret = false
     else
       prompt = "Permnanently track this user, and write proof to server?"
       await prompt_yn { prompt, defval : true }, defer err, ret
