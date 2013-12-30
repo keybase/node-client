@@ -19,7 +19,7 @@ exports.clean_key_imports = (cb) ->
     await gpg { args }, defer err
     state = constants.import_state.CANCELED
     await db.batch_update_key_import { fingerprints : keys, state }, esc defer()
-    log.debug "- clean key imports"
+  log.debug "- clean key imports"
   cb null
 
 ##=======================================================================

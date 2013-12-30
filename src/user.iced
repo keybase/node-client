@@ -112,7 +112,11 @@ exports.User = class User
   update_sig_chain : (remote, cb) ->
     seqno = remote?.sigs?.last?.seqno
     log.debug "+ update sig chain; seqno=#{seqno}"
-    await @sig_chain.update seqno, defer err
+    await @sig_chain.update seqno, defer err, did_update
+    if did_update
+      @sigs.last = @sig_chain.last().export_to_user()
+      log.debug "| update sig_chain last link to #{JSON.stringify @sigs}"
+      @_dirty = true
     log.debug "- updated sig chain"
     cb err
 

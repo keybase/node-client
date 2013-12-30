@@ -39,6 +39,14 @@ exports.Link = class Link
 
   #--------------------
 
+  export_to_user : () -> {
+    seqno : @seqno()
+    payload_hash : @id
+    sig_id : @sig_id() 
+  }
+
+  #--------------------
+
   prev : () -> @obj.prev
   seqno : () -> @obj.seqno
   sig : () -> @obj.sig
@@ -94,6 +102,7 @@ exports.Link = class Link
 
   store : (cb) ->
     @obj.prev = null if @obj.prev?.length is 0
+    log.debug "| putting link: #{@id}"
     await db.put { type : Link.ID_TYPE, key : @id, value : @obj }, defer err
     cb err
 
@@ -285,7 +294,7 @@ exports.SigChain = class SigChain
 
   store : (cb) ->
     err = null
-    if @_new_links?
+    if @_new_links?.length
       log.debug "+ writing dirty signature chain"
       for link in @_new_links when not err?
         await link.store defer err
@@ -296,12 +305,14 @@ exports.SigChain = class SigChain
 
   update : (remote_seqno, cb) ->
     err = null
+    did_update = false
     if not (a = remote_seqno)? or a > (b = @last_seqno())
       log.debug "| sigchain update: #{a} vs. #{b}"
       await @_update defer err
       if remote_seqno? and ((a = remote_seqno) isnt (b = @last_seqno()))
         err = new E.CorruptionError "failed to appropriately update chain: #{a} != #{b}"
-    cb err
+      did_update = true
+    cb err, did_update
 
   #-----------
 
