@@ -40,6 +40,10 @@ exports.User = class User
 
   #--------------
 
+  set_is_self : (b) -> @_is_self = b
+
+  #--------------
+
   to_obj : () -> 
     out = {}
     for k in User.FIELDS
@@ -202,9 +206,15 @@ exports.User = class User
       args = [ "-" + (if secret then 'K' else 'k'), fp ]
       await gpg { args, quiet : true }, defer err, out
       if err?
-        err = new E.NoLocalKeyError "the user #{@username()} doesn't have a local key"
+        err = new E.NoLocalKeyError (
+          if @_is_self then "You don't have a local key!"
+          else "the user #{@username()} doesn't have a local key"
+        )
     else
-      err = new E.NoRemoteKeyError "the user #{@username()} doesn't have a remote key"
+      err = new E.NoRemoteKeyError (
+        if @_is_self then "You don't have a registered remote key! Try `keybase push`"
+        else "the user #{@username()} doesn't have a remote key"
+      )
     cb err
 
   #--------------
@@ -213,6 +223,7 @@ exports.User = class User
     esc = make_esc cb, "User::load_me"
     log.debug "+ User::load_me"
     await User.load { username : env().get_username() }, esc defer me
+    me.set_is_self true
     await me.check_public_key esc defer()
     await me.verify esc defer()
     log.debug "- User::load_me"
