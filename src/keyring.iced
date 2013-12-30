@@ -13,11 +13,13 @@ exports.clean_key_imports = (cb) ->
   state = constants.import_state.TEMPORARY
   await db.select_key_imports_by_state state, esc defer keys
   log.debug "| queried for temp keys, got: #{JSON.stringify keys}"
-  args = [ "--batch", "--delete-keys" ].concat keys
-  await gpg { args }, defer err
-  state = constants.import_state.CANCELED
-  await db.batch_update_key_import { fingerprints : keys, state }, esc defer()
-  log.debug "- clean key imports"
+  if keys.length
+    args = [ "--batch", "--delete-keys" ].concat(k.toUpperCase() for k in keys)
+    log.debug "| calling GPG client with #{JSON.stringify args}"  
+    await gpg { args }, defer err
+    state = constants.import_state.CANCELED
+    await db.batch_update_key_import { fingerprints : keys, state }, esc defer()
+    log.debug "- clean key imports"
   cb null
 
 ##=======================================================================

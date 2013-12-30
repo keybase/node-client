@@ -63,10 +63,10 @@ class BaseSigGen
       sig_id_short : @sig.short_id
       is_remote_proof : true
     @_v_modify_store_arg args
+    endpoint = @_get_api_endpoint()
     log.debug "+ storing signature:"
     log.debug "| writing to #{endpoint}"
     log.debug "| with args #{JSON.stringify args}"
-    endpoint = @_get_api_endpoint()
     await req.post { endpoint, args }, defer err, body
     unless err?
       @proof_text = body.proof_text

@@ -188,14 +188,17 @@ exports.User = class User
 
   #--------------
 
-  get_fingerprint : () ->
-    @fingerprint = @public_keys?.primary?.key_fingerprint unless @fingerprint?
-    return @fingerprint
+  fingerprint : (upper_case = false) ->
+    unless @_fingerprint?
+      @_fingerprint =
+        lc : @public_keys?.primary?.key_fingerprint?.toLowerCase()
+      @_fingerprint.uc = @_fingerprint.lc?.toUpperCase()
+    return @_fingerprint[if upper_case then 'uc' else 'lc']
 
   #--------------
 
   query_key : ({secret}, cb) ->
-    if (fp = @get_fingerprint()?.toUpperCase())?
+    if (fp = @fingerprint(true))?
       args = [ "-" + (if secret then 'K' else 'k'), fp ]
       await gpg { args, quiet : true }, defer err, out
       if err?
@@ -228,7 +231,7 @@ exports.User = class User
 
   load_public_key : (cb) ->
     err = null
-    await KeyManager.load @fingerprint, defer err, @km unless @km?
+    await KeyManager.load @fingerprint(), defer err, @km unless @km?
     cb err, @km
 
   #--------------
@@ -242,10 +245,11 @@ exports.User = class User
     log.debug "+ #{un}: import public key"
     uid = @id
     found = false
+    fingerprint = @fingerprint() # lower case!
     await @query_key { secret : false }, defer err
     if not err? 
       log.debug "| found locally"
-      await db.get_import_state { uid, @fingerprint }, defer err, state
+      await db.get_import_state { uid, fingerprint }, defer err, state
       log.debug "| read state from DB as #{state}"
       found = (state isnt constants.import_state.TEMPORARY)
     else if not (err instanceof E.NoLocalKeyError)? then # noops
@@ -254,7 +258,7 @@ exports.User = class User
     else
       state = constants.import_state.TEMPORARY
       log.debug "| temporarily importing key to local GPG"
-      await db.log_key_import { uid, state, @fingerprint }, defer err
+      await db.log_key_import { uid, state, fingerprint }, defer err
       unless err?
         args = [ "--import" ]
         await gpg { args, stdin : data, quiet : true }, defer err, out
@@ -269,7 +273,7 @@ exports.User = class User
     await db.log_key_import { 
       uid : @id
       state : constants.import_state.FINAL
-      @fingerprint
+      fingerprint : @fingerprint()
     }, defer err
     cb err
 
@@ -278,13 +282,13 @@ exports.User = class User
   remove_key : (cb) ->
     un = @username()
     uid = @id
-    fingerprint = @get_fingerprint().toUpperCase()
+    fingerprint = @fingerprint() # lowecase case!
     esc = make_esc cb, "SigChain::remove_key"
     log.debug "+ #{un}: remove temporarily imported public key"
-    args = [ "--batch", "--delete-keys", fingerprint ]
+    args = [ "--batch", "--delete-keys", @fingerprint(true) ]
     state = constants.import_state.CANCELED
     await gpg { args }, esc defer()
-    await db.log_key_import { uid, state, fingerprint}, esc defer()
+    await db.log_key_import { uid, state, fingerprint }, esc defer()
     log.debug "- #{un}: removed temporarily imported public key"
     cb null
 

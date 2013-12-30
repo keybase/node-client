@@ -88,8 +88,7 @@ exports.TrackWrapper = class TrackWrapper
     dlen = (d) -> Object.keys(d).length
 
     prob = if not track_cert? then "no cert found"
-    else if ((a = track_cert.key?.key_fingerprint?.toLowerCase()) isnt 
-             (b = @trackee.fingerprint?.toLowerCase()))
+    else if ((a = track_cert.key?.key_fingerprint) isnt (b = @trackee.fingerprint()))
       "trackee changed keys: #{a} != #{b}"
     else if ((a = track_cert.remote_proofs.length) isnt (b = dlen(@table())))
       "number of remote IDs changed: #{a} != #{b}"
