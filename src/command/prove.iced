@@ -19,6 +19,8 @@ exports.Command = class Command extends Base
       help : "add a proof of identity"
     name = "prove"
     sub = scp.addParser name, opts
+    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
+    sub.addArgument [ "username"], { nargs : "?", help : "username at that service" }
     return opts.aliases.concat [ name ]
 
   #----------
