@@ -11,6 +11,7 @@ req = require '../req'
 session = require '../session'
 {clean_key_imports} = require '../keyring'
 db = require '../db'
+gpg = require 'gpg-wrapper'
 
 ##=======================================================================
 
@@ -130,6 +131,7 @@ class Main
       p.env().set_level p.DEBUG
     if @argv.no_color
       p.env().set_use_color false
+    gpg.set_log log.warn
 
   #----------------------------------
 
