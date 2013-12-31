@@ -141,6 +141,22 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
 #===========================================
 
+exports.TwitterProofGen = class TwitterProofGen extends BaseSigGen
+
+  constructor : (args) ->
+    @remote_username = args.remote_username
+    super args
+
+  _make_binding_eng : (args) ->
+    args.user.remote = @remote_username
+    new proofs.TwitterBinding args
+
+  _v_modify_store_arg : (arg) ->
+    arg.remote_username = @remote_username
+    arg.type = "web_service_binding.twitter"
+
+#===========================================
+
 exports.SignatureEngine = class SignatureEngine 
 
   #------------

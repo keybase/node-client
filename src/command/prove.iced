@@ -6,10 +6,16 @@ log = require '../log'
 {gpg} = require '../gpg'
 {BufferOutStream} = require '../stream'
 {E} = require '../err'
+{make_esc} = require 'iced-error'
+{prompt_remote_username} = require '../prompter'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  use_session : () -> true
 
   #----------
 
@@ -25,7 +31,19 @@ exports.Command = class Command extends Base
 
   #----------
 
+  prompt_remote_username : (cb) ->
+    svc = @argv.service[0]
+    err = null
+    unless (ret = @argv.username)?
+      await prompt_remote_username svc, defer err, ret
+    cb err, ret
+
+
+  #----------
+
   run : (cb) ->
+    esc = make_esc cb, "Command::run"
+    await @prompt_remote_username esc defer r_username
     cb new E.UnimplementedError "feature not implemented"
 
 ##=======================================================================
