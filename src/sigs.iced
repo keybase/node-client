@@ -5,7 +5,7 @@ req = require './req'
 session = require './session'
 {env} = require './env'
 log = require './log'
-{gpg} = require './gpg'
+{gpg} = require 'gpg-wrapper'
 {decode} = require('pgp-utils').armor
 
 #===========================================

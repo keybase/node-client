@@ -1,6 +1,6 @@
 
 {db} = require './db'
-{gpg} = require './gpg'
+{gpg} = require 'gpg-wrapper'
 log = require './log'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'

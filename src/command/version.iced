@@ -3,8 +3,7 @@ log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
 {PackageJson} = require '../package'
-{gpg} = require '../gpg'
-{BufferOutStream} = require '../stream'
+{gpg} = require 'gpg-wrapper'
 
 ##=======================================================================
 

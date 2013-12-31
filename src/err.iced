@@ -4,7 +4,7 @@ ie = require 'iced-error'
 
 #================================================
 
-exports.E = ie.make_errors
+exports.E = E = ie.make_errors
   GENERIC : "Generic error"
   INVAL : "Invalid value"
   NOT_FOUND : "Not found"
@@ -41,3 +41,7 @@ exports.E = ie.make_errors
   USERNAME_MISMATCH : "usernames didn't match"
   REMOTE_PROOF : "error in sanity checking a remote proof"
   UNTRACK : "error in untracking"
+
+#================================================
+
+exports.GE = require('gpg-wrapper').E

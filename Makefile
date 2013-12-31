@@ -39,7 +39,6 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
-	lib/gpg.js \
 	lib/keymanager.js \
 	lib/keyring.js \
 	lib/keyselector.js \
@@ -55,7 +54,6 @@ $(BUILD_STAMP): \
 	lib/session.js \
 	lib/setup.js \
 	lib/sigchain.js \
-	lib/stream.js \
 	lib/track.js \
 	lib/user.js \
 	lib/util.js

@@ -1,7 +1,7 @@
 
-{gpg} = require './gpg'
+{gpg} = require 'gpg-wrapper'
 {make_esc} = require 'iced-error'
-{E} = require './err'
+{GE,E} = require './err'
 
 #======================================================================
 
@@ -22,7 +22,7 @@ exports.KeyManager = class KeyManager
       obj.key_id = obj.fingerprint[-16...]
       out = new KeyManager obj
     else
-      err = new E.GpgError "Got unexpected GPG output when looking for a fingerprint" 
+      err = new GE.GpgError "Got unexpected GPG output when looking for a fingerprint" 
     cb err, out
 
   #--------------
