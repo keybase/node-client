@@ -322,6 +322,15 @@ exports.User = class User
 
   #--------------
 
+  gen_remote_proof_gen : ({klass, remote_username}, cb) ->
+    esc = make_esc cb, "User::gen_remote_proof_gen"
+    await @load_public_key esc defer()
+    arg =  { @km, remote_username }
+    g = new klass arg
+    cb null, g
+
+  #--------------
+
   gen_track_proof_gen : ({uid, track_obj, untrack_obj}, cb) ->
     esc = make_esc cb, "User::gen_track_proof_gen"
     await @load_public_key esc defer()

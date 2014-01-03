@@ -41,6 +41,7 @@ exports.E = E = ie.make_errors
   USERNAME_MISMATCH : "usernames didn't match"
   REMOTE_PROOF : "error in sanity checking a remote proof"
   UNTRACK : "error in untracking"
+  UNKNOWN_SERVICE : "unknown service"
 
 #================================================
 

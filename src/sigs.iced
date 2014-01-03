@@ -69,8 +69,8 @@ class BaseSigGen
     log.debug "| with args #{JSON.stringify args}"
     await req.post { endpoint, args }, defer err, body
     unless err?
-      @proof_text = body.proof_text
-      @proof_id = body.proof_id
+      { @proof_text, @proof_id, @sig_id } = body
+      log.debug "| reply with value: #{JSON.stringify body}"
     log.debug "- stored signature (err = #{err?.message})"
     cb err
 
@@ -141,19 +141,29 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
 #===========================================
 
-exports.TwitterProofGen = class TwitterProofGen extends BaseSigGen
-
+class RemoteServiceProofGen extends BaseSigGen
   constructor : (args) ->
     @remote_username = args.remote_username
     super args
 
   _make_binding_eng : (args) ->
     args.user.remote = @remote_username
-    new proofs.TwitterBinding args
+    klass = @_binding_klass()
+    new klass args
 
   _v_modify_store_arg : (arg) ->
     arg.remote_username = @remote_username
-    arg.type = "web_service_binding.twitter"
+    arg.type = "web_service_binding." + @_remote_service_name()
+
+#===========================================
+
+exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
+  _binding_klass : () -> proofs.TwitterBinding
+  _remote_service_name : () -> "twitter"
+
+exports.GithubProofGen = class TwitterProofGen extends RemoteServiceProofGen
+  _binding_klass : () -> proofs.GithubBinding
+  _remote_service_name : () -> "github"
 
 #===========================================
 
