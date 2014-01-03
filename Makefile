@@ -54,7 +54,8 @@ $(BUILD_STAMP): \
 	lib/session.js \
 	lib/setup.js \
 	lib/sigchain.js \
-	lib/track.js \
+	lib/trackwrapper.js \
+	lib/tracksubsub.js \
 	lib/user.js \
 	lib/util.js
 	date > $@

@@ -2,7 +2,7 @@
 log = require '../log'
 {add_option_dict} = require './argparse'
 {E} = require '../err'
-{TrackSubSubCommand} = require '../track'
+{TrackSubSubCommand} = require '../tracksubsub'
 
 ##=======================================================================
 

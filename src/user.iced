@@ -12,7 +12,7 @@ log = require './log'
 {KeyManager} = require './keymanager'
 {session} = require './session'
 {env} = require './env'
-{TrackWrapper} = require './track'
+{TrackWrapper} = require './trackwrapper'
 
 ##=======================================================================
 
