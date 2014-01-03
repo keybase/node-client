@@ -62,7 +62,7 @@ exports.User = class User
     if force_store or @_dirty
       log.debug "+ #{un}: storing user to local DB"
       await db.put { key : @id, value : @to_obj(), name : @name() }, defer err
-      log.debug "+ #{un}: storing user to local DB"
+      log.debug "- #{un}: stored user to local DB"
     if @sig_chain? and not err?
       log.debug "+ #{un}: storing signature chain"
       await @sig_chain.store defer err
@@ -104,7 +104,7 @@ exports.User = class User
     sc = new SigChain @id
     await sc.update null, defer err
     @sig_chain = sc unless err?
-    log.debug "| loaded full sig chain"
+    log.debug "- loaded full sig chain"
     cb err
 
   #--------------

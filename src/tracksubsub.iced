@@ -54,7 +54,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "Verify::run"
     log.debug "+ run"
 
-    console.log User
     await User.load_me esc defer me
 
     await User.load { username : @args.them }, esc defer them
@@ -93,17 +92,23 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await them.check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
+    store = true
     if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
     else if @opts.batch
       log.debug "| We needed approval, but we were in batch mode"
       accept = false
+    else if @opts.id
+      log.debug "| We are just ID'ing this user, no reason to prompt"
+      store = false
     else
       await @prompt_ok n_warnings, esc defer accept
 
     err = null
-    if not accept
+    if not store 
+      log.debug "| Skipping store operation"
+    else if not accept
       log.warn "Bailing out; proofs were not accepted"
       err = new E.CancelError "operation was canceled"
     else if (check is constants.skip.REMOTE) and (approve is constants.skip.REMOTE)

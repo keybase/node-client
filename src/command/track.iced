@@ -19,6 +19,10 @@ exports.Command = class Command extends Base
       alias : "local"
       action : "storeTrue"
       help : "don't prompt for remote tracking"
+    i :
+      alias : "id"
+      action : "storeTrue"
+      help : "ID the user, don't save any state"
 
   #----------
 
