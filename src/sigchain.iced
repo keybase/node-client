@@ -107,6 +107,24 @@ exports.Link = class Link
 
   #--------------------
 
+  refresh : (cb) ->
+    log.debug "+ refresh link"
+    if (@sig_type() is ST.REMOTE_PROOF) and not @api_url()?
+      log.debug "| Proof_id = #{@obj.proof_id}"
+      arg = 
+        endpoint : "sig/remote_proof"
+        args :
+          proof_id : @obj.proof_id
+      await req.get arg, defer err, body
+      if not err? and body.api_url
+        log.debug "| Refreshed with api_url -> #{body.api_url}"
+        @obj.api_url = body.api_url
+        await @store defer err
+    log.debug "- refresh_link"
+    cb err
+
+  #--------------------
+
   @load : (id, cb) ->
     ret = null
     await db.get { type : Link.ID_TYPE, key : id }, defer err, obj
@@ -170,6 +188,11 @@ exports.Link = class Link
     if not (remote_username = @payload_json()?.body?.service?.username)?
       err = new E.VerifyError "no remote username found in proof"
       await athrow err, esc defer()
+
+    if not skip and not @api_url()
+      await @refresh defer e2
+      if e2?
+        log.warn "Error fetching URL for proof: #{e2.message}"
 
     log.debug "| remote username is #{remote_username}"
     if skip
