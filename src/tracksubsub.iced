@@ -60,7 +60,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await them.import_public_key esc defer found
 
     # After this point, we have to recover any errors and throw away 
-    # our key is necessary. So call into a subfunction.
+    # our key if necessary. So call into a subfunction.
     await @_run2 {me, them}, defer err, accept
 
     if accept 
@@ -69,6 +69,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if not found
       log.debug "| remove_key"
       await them.remove_key esc defer()
+    else 
+      log.debug "| leave key as is; neither accepted nor newly imported"
 
     log.debug "- run"
     cb err
@@ -92,22 +94,21 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await them.check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
-    store = true
-    if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
+    if @opts.id
+      log.debug "| We are just ID'ing this user, no reason to prompt"
+      accept = false
+    else if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
     else if @opts.batch
       log.debug "| We needed approval, but we were in batch mode"
       accept = false
-    else if @opts.id
-      log.debug "| We are just ID'ing this user, no reason to prompt"
-      store = false
     else
       await @prompt_ok n_warnings, esc defer accept
 
     err = null
-    if not store 
-      log.debug "| Skipping store operation"
+    if @opts.id
+      log.debug "| Skipping store operation, since we're in ID mode"
     else if not accept
       log.warn "Bailing out; proofs were not accepted"
       err = new E.CancelError "operation was canceled"
