@@ -5,9 +5,10 @@ log = require '../log'
 {PackageJson} = require '../package'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
-{prompt_remote_username} = require '../prompter'
+{prompt_yn,prompt_remote_username} = require '../prompter'
 {TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
+{req} = require '../req'
 
 ##=======================================================================
 
@@ -57,18 +58,50 @@ exports.Command = class Command extends Base
 
   #----------
 
+  poll_server : (cb) ->
+    arg = 
+      endpoint : "sig/posted"
+      args :
+        proof_id : @gen.proof_id
+    await req arg, defer err, body
+    res = if err? then false else body.proof_ok
+    cb err, res
+
+  #----------
+
+  handle_post : (cb) ->
+    log.console.log "Please #{@gen.imperative_verb()} the following:"
+    log.console.log ""
+    lines = @gen.proof_text.split("\n")
+    for line in lines
+      log.console.log " #{line}"
+    log.console.log ""
+    prompt = true
+    esc = make_esc cb, "Command::prompt"
+    found = false
+    first = true
+
+    while prompt
+      await prompt_yn { prompt : "Check #{@gen.display_name()} #{if first then '' else 'again '}now?", defval : true }, esc defer prompt
+      first = false
+      if prompt
+        await @poll_server esc defer found
+        prompt = not found
+        if not found
+          log.warn "Didn't find the posted proof."
+    err = if found then null else E.ProofNotAvailableError "Proof wasn't available; we'll keeping trying"
+    cb err
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Command::run"
-    console.log "A"
     await @prompt_remote_username esc defer()
-    console.log "B"
     await User.load_me esc defer @me
-    console.log "C"
     await @allocate_proof_gen esc defer()
-    console.log "D"
     await @gen.run esc defer()
-    console.log "E"
-    console.log @gen
+    await @handle_post esc defer()
+    log.info "Success!"
     cb null
 
 ##=======================================================================

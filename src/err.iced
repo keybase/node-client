@@ -42,6 +42,7 @@ exports.E = E = ie.make_errors
   REMOTE_PROOF : "error in sanity checking a remote proof"
   UNTRACK : "error in untracking"
   UNKNOWN_SERVICE : "unknown service"
+  PROOF_NOT_AVAILABLE : "proof isn't available"
 
 #================================================
 

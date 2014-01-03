@@ -58,6 +58,7 @@ exports.Client = class Client
   #-----------------
 
   req : ({method, endpoint, args, http_status, kb_status}, cb) ->
+    method or= 'GET'
     opts = { method, json : true, jar : true }
     opts.headers = @headers if @headers?
 
@@ -75,6 +76,7 @@ exports.Client = class Client
     if method is 'POST'
       opts.body = args
 
+    log.debug "+ request to #{endpoint}"
     await request opts, defer err, res, body
     if err? then #noop
     else if not (res.statusCode in http_status) 
@@ -88,6 +90,7 @@ exports.Client = class Client
       @_find_cookies res
 
     # Note the swap --- we care more about the body in most cases.
+    log.debug "- request to #{endpoint} -> #{err}"
     cb err, body, res
 
   #-----------------

@@ -160,10 +160,13 @@ class RemoteServiceProofGen extends BaseSigGen
 exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
   _binding_klass : () -> proofs.TwitterBinding
   _remote_service_name : () -> "twitter"
+  imperative_verb : () -> "tweet"
+  display_name : () -> "Twitter"
 
 exports.GithubProofGen = class TwitterProofGen extends RemoteServiceProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
+  display_name : () -> "GitHub"
 
 #===========================================
 
