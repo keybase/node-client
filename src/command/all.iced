@@ -48,6 +48,7 @@ class Main
       "config"
       "help"
       "join"
+      "id"
       "login"
       "logout"
       "push"

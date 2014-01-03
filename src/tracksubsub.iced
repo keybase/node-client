@@ -50,8 +50,44 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  _key_cleanup : ({accept, found, them}, cb) ->
+    if accept 
+      log.debug "| commit_key"
+      await them.commit_key esc defer()
+    else if not found
+      log.debug "| remove_key"
+      await them.remove_key esc defer()
+    else 
+      log.debug "| leave key as is; neither accepted nor newly imported"
+    cb null
+
+  #----------
+
+  id : (cb) ->
+    esc = make_esc cb, "TrackSubSub:id"
+    log.debug "+ id"
+    accept = false
+    await User.load { username : @args.them }, esc defer them
+    await them.import_public_key esc defer found
+    await @_id2 { them }, esc defer()
+    await @_key_cleanup { them, accept, found }, esc defer()
+    log.debug "- id"
+    cb null
+
+  #----------
+
+  _id2 : ({them}, cb ) ->
+    esc = make_esc cb, "TrackSubSub:_id2"
+    log.debug "+ _id2"
+    await them.verify esc defer()
+    await them.check_remote_proofs false, esc defer warnings # err isn't a failure here
+    log.debug "- _id2"
+    cb null
+
+  #----------
+
   run : (cb) ->
-    esc = make_esc cb, "Verify::run"
+    esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
     await User.load_me esc defer me
@@ -63,22 +99,17 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     # our key if necessary. So call into a subfunction.
     await @_run2 {me, them}, defer err, accept
 
-    if accept 
-      log.debug "| commit_key"
-      await them.commit_key esc defer()
-    else if not found
-      log.debug "| remove_key"
-      await them.remove_key esc defer()
-    else 
-      log.debug "| leave key as is; neither accepted nor newly imported"
+    # Clean up the key if necessary
+    await @_key_cleanup { them, accept, found }, esc defer()
 
     log.debug "- run"
+
     cb err
 
   #----------
 
   _run2 : ({me, them}, cb) ->
-    esc = make_esc cb, "Verify::_run2"
+    esc = make_esc cb, "TrackSubSub::_run2"
     log.debug "+ _run2"
 
     await them.verify esc defer()
@@ -94,10 +125,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await them.check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
-    if @opts.id
-      log.debug "| We are just ID'ing this user, no reason to prompt"
-      accept = false
-    else if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
+    if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
     else if @opts.batch
@@ -107,9 +135,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await @prompt_ok n_warnings, esc defer accept
 
     err = null
-    if @opts.id
-      log.debug "| Skipping store operation, since we're in ID mode"
-    else if not accept
+    if not accept
       log.warn "Bailing out; proofs were not accepted"
       err = new E.CancelError "operation was canceled"
     else if (check is constants.skip.REMOTE) and (approve is constants.skip.REMOTE)

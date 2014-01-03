@@ -18,6 +18,7 @@ $(BUILD_STAMP): \
 	lib/command/base.js \
 	lib/command/config.js \
 	lib/command/help.js \
+	lib/command/id.js \
 	lib/command/join.js \
 	lib/command/login.js \
 	lib/command/logout.js \

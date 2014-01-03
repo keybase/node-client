@@ -174,6 +174,8 @@ exports.Link = class Link
     log.debug "| remote username is #{remote_username}"
     if skip
       rc = proofs.constants.v_codes.OK
+    else if not @api_url()
+      rc = proofs.constants.v_codes.NOT_FOUND
     else
       await @alloc_scraper type, esc defer scraper
       await scraper.validate {
