@@ -16,6 +16,7 @@ colors = require 'colors'
 db = require './db'
 util = require 'util'
 {env} = require './env'
+{TrackWrapper} = require './trackwrapper'
 
 ##=======================================================================
 

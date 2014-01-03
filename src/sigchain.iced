@@ -450,7 +450,7 @@ exports.SigChain = class SigChain
       await @_verify_sig esc defer()
       await @_verify_userid esc defer()
     else
-      log.debug "| Skipped since no fingreprint found in key"
+      log.debug "| Skipped since no fingerprint found in key"
     log.debug "- #{username}: verified sig"
     cb null
 
