@@ -228,19 +228,29 @@ exports.User = class User
     esc = make_esc cb, "User::load_me"
     log.debug "+ User::load_me"
     await User.load { username : env().get_username() }, esc defer me
-    me.set_is_self true
-    await me.check_public_key esc defer()
-    await me.verify esc defer()
+    await me._load_me_2 esc defer()
     log.debug "- User::load_me"
     cb null, me
 
   #--------------
 
-  check_public_key : (cb) ->
+  _load_me_2 : (cb) ->
+    esc = make_esc cb, "User::_load_me_2"
+    @set_is_self true
+    @pubkey = new GpgKey @, false
     un = @username()
     log.debug "+ #{un}: checking public key"
-    await @query_key { secret : false }, defer err
+    await @pubkey.query_key esc defer()
     log.debug "- #{un}: checked public key"
+    log.debug "+ #{un}: verifying user and signatures"
+    await @verify esc defer()
+    log.debug "- #{un}: verified users and signatures"
+    cb null
+
+  #--------------
+
+  check_public_key : (cb) ->
+    await @query_key { secret : false }, defer err
     cb err
 
   #--------------
@@ -259,32 +269,7 @@ exports.User = class User
   import_public_key : (cb) ->
     @pubkey = new GpgKey @, false
     await @pubkey.import_key defer err
-    cb err
-
-  #--------------
-
-  commit_key : (cb) ->
-    await db.log_key_import { 
-      uid : @id
-      state : constants.import_state.FINAL
-      fingerprint : @fingerprint()
-    }, defer err
-    cb err
-
-  #--------------
-
-  remove_key : (cb) ->
-    un = @username()
-    uid = @id
-    fingerprint = @fingerprint() # lowecase case!
-    esc = make_esc cb, "SigChain::remove_key"
-    log.debug "+ #{un}: remove temporarily imported public key"
-    args = [ "--batch", "--delete-keys", @fingerprint(true) ]
-    state = constants.import_state.CANCELED
-    await gpg { args }, esc defer()
-    await db.log_key_import { uid, state, fingerprint }, esc defer()
-    log.debug "- #{un}: removed temporarily imported public key"
-    cb null
+    cb err, @pubkey
 
   #--------------
 

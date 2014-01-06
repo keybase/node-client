@@ -138,10 +138,10 @@ exports.Link = class Link
 
   #--------------------
 
-  verify_sig : ({which, @pubkey}, cb) ->
+  verify_sig : ({which, pubkey}, cb) ->
     args = [ "--decrypt" ]
     stderr = new BufferOutStream()
-    await gpg { args, stdin : @sig(), stderr }, defer err, out
+    await pubkey.gpg { args, stdin : @sig(), stderr }, defer err, out
     if err?
       err = new E.VerifyError "#{which}: failed to verify signature"
     else

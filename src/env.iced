@@ -78,21 +78,21 @@ class Env
       env    : (e) -> e.KEYBASE_TMP_GPG_SEC_KEYRING
       arg    : (a) -> a["tmp-gpg-sec-keyring"]
       config : (c) -> c?.files?.tmp_gpg?.sec_keyring
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_pgp.sec_keyring
+      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_gpg.sec_keyring
 
   get_tmp_gpg_pub_keyring : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_TMP_GPG_SEC_KEYRING
       arg    : (a) -> a["tmp-gpg-pub-keyring"]
       config : (c) -> c?.files?.tmp_gpg?.pub_keyring
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_pgp.pub_keyring
+      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_gpg.pub_keyring
 
   get_tmp_gpg_trustdb : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_TMP_GPG_TRUSTDB
       arg    : (a) -> a["tmp-gpg-trustdb"]
       config : (c) -> c?.files?.tmp_gpg?.trustdb
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_pgp.trustdb
+      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_gpg.trustdb
 
   get_host   : ( ) ->
     @get_opt

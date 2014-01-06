@@ -7,7 +7,7 @@ IS = require('./constants').constants.import_state
 
 #============================================================
 
-class GpgKey 
+exports.GpgKey = class GpgKey 
 
   #----------
 
@@ -29,7 +29,7 @@ class GpgKey
 
   query_key : (cb) ->
     if (fp = @_fingerprint)?
-      args = [ "-" + (if secret then 'K' else 'k'), fp ]
+      args = [ "-" + (if @_secret then 'K' else 'k'), fp ]
       await gpg { args, quiet : true }, defer err, out
       if err?
         err = new E.NoLocalKeyError (
@@ -65,7 +65,7 @@ class GpgKey
       await @_db_log defer err
       unless err?
         args = [ "--import" ]
-        await gpg { args, stdin : data, quiet : true, tmp : @is_tmp() }, defer err, out
+        await @gpg { args, stdin : data, quiet : true }, defer err, out
         if err?
           err = new E.ImportError "#{un}: key import error: {err.message}"
     log.debug "- #{un}: imported public key (state=#{@_import_state})"
@@ -79,30 +79,32 @@ class GpgKey
 
   _remove : (cb) ->
     log.debug "+ deleting public key #{@_username}/#{@_fingerprint}"
-    await gpg { args : [ "--batch", "--delete-keys", @_fingerprint ], tmp : @is_tmp() }, defer err
+    await @gpg { args : [ "--batch", "--delete-keys", @_fingerprint ] }, defer err
     log.debug "- deleted public key #{@_username}/#{@_fingerprint}"
     cb err
 
   #--------------
 
-  _sign_key : (with, cb) ->
+  _sign_key : (signer, cb) ->
     log.debug "| GPG-siging #{key.username()}'s key with your key"
-    args = [ "-u", with.fingerprint(), "--sign-key", @fingerprint(), "--batch", "--yes" ]
-    await gpg { args }, defer err
+    args = [ "-u", signer.fingerprint(), "--sign-key", @fingerprint(), "--batch", "--yes" ]
+    await @gpg { args }, defer err
     cb err
 
   #--------------
 
   rollback : (cb) ->
     esc = make_esc cb, "GpgKey::commit"
-    un = @_username
-    log.debug "+ #{un}: rollback key #{@_fingerprint}"
-    stdin = @_public_key_data
-    await @_remove esc defer()
-    @_import_state = IS.CANCELED
-    await @_db_log esc defer()
-    await gpg { args : [ "--import" ], stdin : data, quiet : true, tmp : @is_tmp() }, esc defer()
-    log.debug "- #{un}: rollback key #{@_fingerprint}"
+    if @_import_state is IS.TEMPORARY
+      un = @_username
+      log.debug "+ #{un}: rollback key #{@_fingerprint}"
+      stdin = @_public_key_data
+      await @_remove esc defer()
+      @_import_state = IS.CANCELED
+      await @_db_log esc defer()
+      log.debug "- #{un}: rollback key #{@_fingerprint}"
+    else
+      log.debug "| no need to rollback key since it was previously imported"
     cb null
 
   #--------------
@@ -114,6 +116,12 @@ class GpgKey
 
   #--------------
 
+  gpg : (opts, cb) ->
+    opts.tmp = @is_tmp()
+    gpg opts, cb
+
+  #--------------
+
   commit : (signer, cb) ->
     esc = make_esc cb, "GpgKey::commit"
     un = @_username
@@ -121,7 +129,7 @@ class GpgKey
     stdin = @_public_key_data
     await @_remove esc defer()
     @_import_state = IS.FINAL
-    await gpg { args : [ "--import" ], stdin : data, quiet : true, tmp : @is_tmp() }, esc defer()
+    await @gpg { args : [ "--import" ], stdin : data, quiet : true }, esc defer()
     await @_sign_key signer, esc defer()
     await @_db_log esc defer()
     log.debug "+ #{un}: remove temporarily imported public key"

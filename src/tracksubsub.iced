@@ -50,16 +50,13 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _key_cleanup : ({accept, found, them}, cb) ->
+  _key_cleanup : ({accept, pubkey}, cb) ->
     err = null
     if accept 
       log.debug "| commit_key"
-      await them.commit_key defer err
-    else if not found
-      log.debug "| remove_key"
-      await them.remove_key defer err
-    else 
-      log.debug "| leave key as is; neither accepted nor newly imported"
+      await pubkey.commit defer err
+    else
+      await pubkey.rollback defer err
     cb err
 
   #----------
@@ -69,9 +66,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     log.debug "+ id"
     accept = false
     await User.load { username : @args.them }, esc defer them
-    await them.import_public_key esc defer found
+    await them.import_public_key esc defer pubkey
     await @_id2 { them }, esc defer()
-    await @_key_cleanup { them, accept, found }, esc defer()
+    await @_key_cleanup { pubkey }, esc defer()
     log.debug "- id"
     cb null
 
@@ -93,14 +90,14 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me esc defer @me
     await User.load { username : @args.them }, esc defer @them
-    await @them.import_public_key esc defer()
+    await @them.import_public_key esc defer pubkey
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.
     await @_run2 defer err, accept
 
     # Clean up the key if necessary
-    await @_key_cleanup { @them, accept }, esc defer()
+    await @_key_cleanup { pubkey, accept }, esc defer()
 
     log.debug "- run"
 
