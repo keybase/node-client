@@ -1,6 +1,7 @@
-
+-
 req = require './req'
 {gpg} = require 'gpg-wrapper'
+{tmpgpg} = require './tmpgpg'
 db = require './db'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
@@ -272,7 +273,7 @@ exports.User = class User
       err = new E.ImportError "no public key found for #{un}"
     else
       state = constants.import_state.TEMPORARY
-      log.debug "| temporarily importing key to local GPG"
+      log.debug "| temporarily importing key to scratch GPG keychain"
       await db.log_key_import { uid, state, fingerprint }, defer err
       unless err?
         args = [ "--import" ]
