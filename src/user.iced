@@ -1,6 +1,4 @@
 req = require './req'
-{gpg} = require 'gpg-wrapper'
-{tmpgpg} = require './tmpgpg'
 db = require './db'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
@@ -203,24 +201,6 @@ exports.User = class User
         lc : @public_keys?.primary?.key_fingerprint?.toLowerCase()
       @_fingerprint.uc = @_fingerprint.lc?.toUpperCase()
     return @_fingerprint[if upper_case then 'uc' else 'lc']
-
-  #--------------
-
-  query_key : ({secret}, cb) ->
-    if (fp = @fingerprint(true))?
-      args = [ "-" + (if secret then 'K' else 'k'), fp ]
-      await gpg { args, quiet : true }, defer err, out
-      if err?
-        err = new E.NoLocalKeyError (
-          if @_is_self then "You don't have a local key!"
-          else "the user #{@username()} doesn't have a local key"
-        )
-    else
-      err = new E.NoRemoteKeyError (
-        if @_is_self then "You don't have a registered remote key! Try `keybase push`"
-        else "the user #{@username()} doesn't have a remote key"
-      )
-    cb err
 
   #--------------
 

@@ -8,7 +8,8 @@ log = require './log'
 {Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
-{BufferOutStream,assert_no_collision,gpg,read_uids_from_key} = require 'gpg-wrapper'
+{BufferOutStream} = require 'gpg-wrapper'
+{assert_no_collision} = require './gpg'
 {date_to_unix,make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
@@ -154,7 +155,7 @@ exports.Link = class Link
         if ((a = strip(m[1])) isnt (b = @short_key_id()))
           err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
         else 
-          await assert_no_collision b, defer err
+          await pubkey.assert_no_collision b, defer err
       else
         err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
     if not err? and ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
@@ -382,7 +383,7 @@ exports.SigChain = class SigChain
     log.debug "+ _verify_userid for #{@username}"
 
     # first try to see if the username is baked into the key, and be happy with that
-    await read_uids_from_key { @fingerprint}, esc defer uids
+    await @pubkey.read_uids_from_key esc defer uids
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
     found = false
 

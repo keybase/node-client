@@ -1,5 +1,5 @@
 
-{gpg} = require './tmpgpg'
+{gpg,read_uids_from_key} = require './gpg'
 {E} = require './err'
 {db} = require './db'
 {make_esc} = require 'iced-error'
@@ -15,7 +15,7 @@ exports.GpgKey = class GpgKey
   constructor : (@user, { secret }) ->
     @_fingerprint = @user.fingerprint(true) # want the fingerprint in CAPS
     @_username = @user.username()
-    @_is_self = @user.is_self
+    @_is_self = @user._is_self
     @_secret = secret
     @_uid = @user.id
     @_public_key_data = @user.public_keys?.primary?.bundle
@@ -31,13 +31,14 @@ exports.GpgKey = class GpgKey
   query_key : (cb) ->
     if (fp = @_fingerprint)?
       args = [ "-" + (if @_secret then 'K' else 'k'), fp ]
-      @_import_state = IS.FINAL
-      await gpg { args, quiet : true }, defer err, out
+      await gpg { args, quiet : false }, defer err, out
       if err?
         err = new E.NoLocalKeyError (
           if @_is_self then "You don't have a local key!"
           else "the user #{@_username} doesn't have a local key"
         )
+      else
+        @_import_state = IS.FINAL
     else
       err = new E.NoRemoteKeyError (
         if @_is_self then "You don't have a registered remote key! Try `keybase push`"
@@ -115,6 +116,15 @@ exports.GpgKey = class GpgKey
     log.debug "| DB log update #{@_fingerprint} -> #{@_import_state}"
     await db.log_key_import {uid : @_uid, state : @_import_state, fingerprint : @_fingerprint }, defer err
     cb err
+
+  #--------------
+
+  read_uids_from_key : (cb) ->
+    opts = 
+      tmp : @is_tmp()
+      fingerprint : @_fingerprint
+    await read_uids_from_key opts, defer err, uids
+    cb err, uids
 
   #--------------
 
