@@ -139,7 +139,7 @@ exports.Link = class Link
   #--------------------
 
   verify_sig : ({which, pubkey}, cb) ->
-    log.debug "+ verify_sig #{which}"
+    log.debug "+ Link::verify_sig #{which}"
     args = [ "--decrypt" ]
     stderr = new BufferOutStream()
     await pubkey.gpg { args, stdin : @sig(), stderr }, defer err, out
@@ -159,7 +159,7 @@ exports.Link = class Link
         err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
     if not err? and ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
       err = new E.VerifyError "#{which}: payload was wrong: #{a} != #{b}"
-    log.debug "- verify_sig #{which} -> #{err}"
+    log.debug "- Link::verify_sig #{which} -> #{err}"
     cb err
 
   #-----------
@@ -379,6 +379,8 @@ exports.SigChain = class SigChain
   _verify_userid : (cb) ->
     esc = make_esc cb, "_verify_userid"
 
+    log.debug "+ _verify_userid for #{@username}"
+
     # first try to see if the username is baked into the key, and be happy with that
     await read_uids_from_key { @fingerprint}, esc defer uids
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
@@ -403,6 +405,8 @@ exports.SigChain = class SigChain
 
     if not err? and not found
       err = new E.VerifyError "could not find self signature of username '#{@username}'"
+
+    log.debug "- _verify_userid for #{@username} -> #{err}"
     cb err
 
   #-----------

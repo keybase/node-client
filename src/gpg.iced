@@ -1,13 +1,11 @@
 
-
-{gpg} = require 'gpg-wrapper'
+gw = require 'gpg-wrapper'
 {env} = require './env'
 log = require './log'
 
 #============================================================
 
-exports.gpg = (opts, cb) ->
-
+args_mutate = (opts) ->
   if opts.tmp
     log.debug "| Accessing the temporary keychain"
     opts.args = [

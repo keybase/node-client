@@ -41,6 +41,7 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
+        lib/gpg.js \
 	lib/gpgkey.js \
 	lib/keymanager.js \
 	lib/keyring.js \
@@ -57,7 +58,6 @@ $(BUILD_STAMP): \
 	lib/session.js \
 	lib/setup.js \
 	lib/sigchain.js \
-	lib/tmpgpg.js \
 	lib/trackwrapper.js \
 	lib/tracksubsub.js \
 	lib/user.js \
