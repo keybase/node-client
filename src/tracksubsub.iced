@@ -51,15 +51,16 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   _key_cleanup : ({accept, found, them}, cb) ->
+    err = null
     if accept 
       log.debug "| commit_key"
-      await them.commit_key esc defer()
+      await them.commit_key defer err
     else if not found
       log.debug "| remove_key"
-      await them.remove_key esc defer()
+      await them.remove_key defer err
     else 
       log.debug "| leave key as is; neither accepted nor newly imported"
-    cb null
+    cb err
 
   #----------
 
@@ -92,7 +93,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me esc defer @me
     await User.load { username : @args.them }, esc defer @them
-    await them.import_public_key esc defer found
+    await @them.import_public_key esc defer found
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.

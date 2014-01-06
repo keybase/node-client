@@ -30,7 +30,7 @@ exports.Command = class Command extends Base
       help : "provide the message on the command line"
     b :
       alias : 'binary'
-      help : "output in binary (rather than ASCII/armored"
+      help : "output in binary (rather than ASCII/armored)"
 
   #----------
 
@@ -57,6 +57,7 @@ exports.Command = class Command extends Base
       args.push [ @argv.file[0] ]
     args.push [ "-a" ] unless @argv.binary
     await gpg gargs, defer err, out
+    log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
     cb err 
 
   #----------
@@ -68,7 +69,7 @@ exports.Command = class Command extends Base
     @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv }
     await @tssc.run esc defer()
     await @do_encrypt esc defer()
-    cb err
+    cb null
 
 ##=======================================================================
 

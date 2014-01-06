@@ -254,7 +254,12 @@ exports.SigChain = class SigChain
 
   constructor : (@uid, @_links = []) ->
     @_lookup = {}
-    for l in @_links
+    @_index_links @_links
+
+  #-----------
+
+  _index_links : (list) -> 
+    for l in list
       @_lookup[l.id] = l
 
   #-----------
@@ -314,6 +319,7 @@ exports.SigChain = class SigChain
     await asyncify (@check_chain false, (@_links[-1...].concat new_links[0..0])), esc defer()
     @_links = @_links.concat new_links
     @_new_links = new_links
+    @_index_links new_links
     cb null
 
   #-----------
