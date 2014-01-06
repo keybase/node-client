@@ -257,6 +257,7 @@ exports.User = class User
   #--------------
 
   import_public_key : (cb) ->
+    @gpgkey = 
     un = @username()
     log.debug "+ #{un}: import public key"
     uid = @id

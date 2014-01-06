@@ -41,11 +41,11 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
+	lib/gpgkey.js \
 	lib/keymanager.js \
 	lib/keyring.js \
 	lib/keyselector.js \
 	lib/keyutils.js \
-	lib/keygpg.js \
 	lib/log.js \
 	lib/package.js \
 	lib/path.js \
