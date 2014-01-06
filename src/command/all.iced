@@ -46,6 +46,7 @@ class Main
 
     list = [ 
       "config"
+      "encrypt"
       "help"
       "join"
       "id"

@@ -90,17 +90,16 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
-    await User.load_me esc defer me
-
-    await User.load { username : @args.them }, esc defer them
+    await User.load_me esc defer @me
+    await User.load { username : @args.them }, esc defer @them
     await them.import_public_key esc defer found
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.
-    await @_run2 {me, them}, defer err, accept
+    await @_run2 {@me, @them}, defer err, accept
 
     # Clean up the key if necessary
-    await @_key_cleanup { them, accept, found }, esc defer()
+    await @_key_cleanup { @them, accept, found }, esc defer()
 
     log.debug "- run"
 
