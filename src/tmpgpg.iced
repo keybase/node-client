@@ -18,6 +18,7 @@ exports.gpg = (opts, cb) ->
         "--no-random-seed-file"
       ].concat opts.args
 
+  log.debug "| Run PGP with opts: #{JSON.stringify opts}"
   gpg opts, cb
 
 #============================================================

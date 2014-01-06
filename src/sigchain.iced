@@ -139,6 +139,7 @@ exports.Link = class Link
   #--------------------
 
   verify_sig : ({which, pubkey}, cb) ->
+    log.debug "+ verify_sig #{which}"
     args = [ "--decrypt" ]
     stderr = new BufferOutStream()
     await pubkey.gpg { args, stdin : @sig(), stderr }, defer err, out
@@ -158,6 +159,7 @@ exports.Link = class Link
         err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
     if not err? and ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
       err = new E.VerifyError "#{which}: payload was wrong: #{a} != #{b}"
+    log.debug "- verify_sig #{which} -> #{err}"
     cb err
 
   #-----------

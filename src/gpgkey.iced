@@ -4,6 +4,7 @@
 {db} = require './db'
 {make_esc} = require 'iced-error'
 IS = require('./constants').constants.import_state
+log = require './log'
 
 #============================================================
 
@@ -30,6 +31,7 @@ exports.GpgKey = class GpgKey
   query_key : (cb) ->
     if (fp = @_fingerprint)?
       args = [ "-" + (if @_secret then 'K' else 'k'), fp ]
+      @_import_state = IS.FINAL
       await gpg { args, quiet : true }, defer err, out
       if err?
         err = new E.NoLocalKeyError (
