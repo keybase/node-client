@@ -93,14 +93,14 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me esc defer @me
     await User.load { username : @args.them }, esc defer @them
-    await @them.import_public_key esc defer found
+    await @them.import_public_key esc defer()
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.
-    await @_run2 {@me, @them}, defer err, accept
+    await @_run2 defer err, accept
 
     # Clean up the key if necessary
-    await @_key_cleanup { @them, accept, found }, esc defer()
+    await @_key_cleanup { @them, accept }, esc defer()
 
     log.debug "- run"
 
@@ -108,12 +108,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _run2 : ({me, them}, cb) ->
+  _run2 : (cb) ->
     esc = make_esc cb, "TrackSubSub::_run2"
     log.debug "+ _run2"
 
-    await them.verify esc defer()
-    await TrackWrapper.load { tracker : me, trackee : them }, esc defer trackw
+    await @them.verify esc defer()
+    await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer trackw
     
     check = trackw.skip_remote_check()
     if (check is constants.skip.NONE)
@@ -122,7 +122,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else 
       log.info "...all remote checks are up-to-date"
       skp = true
-    await them.check_remote_proofs skp, esc defer warnings
+    await @them.check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
     if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)

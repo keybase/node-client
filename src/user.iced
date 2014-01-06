@@ -1,4 +1,3 @@
--
 req = require './req'
 {gpg} = require 'gpg-wrapper'
 {tmpgpg} = require './tmpgpg'
@@ -14,6 +13,7 @@ log = require './log'
 {session} = require './session'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
+{GpgKey} = require './gpgkey'
 
 ##=======================================================================
 
@@ -257,32 +257,9 @@ exports.User = class User
   #--------------
 
   import_public_key : (cb) ->
-    @gpgkey = 
-    un = @username()
-    log.debug "+ #{un}: import public key"
-    uid = @id
-    found = false
-    fingerprint = @fingerprint() # lower case!
-    await @query_key { secret : false }, defer err
-    if not err? 
-      log.debug "| found locally"
-      await db.get_import_state { uid, fingerprint }, defer err, state
-      log.debug "| read state from DB as #{state}"
-      found = (state isnt constants.import_state.TEMPORARY)
-    else if not (err instanceof E.NoLocalKeyError)? then # noops
-    else if not (data = @public_keys?.primary?.bundle)?
-      err = new E.ImportError "no public key found for #{un}"
-    else
-      state = constants.import_state.TEMPORARY
-      log.debug "| temporarily importing key to scratch GPG keychain"
-      await db.log_key_import { uid, state, fingerprint }, defer err
-      unless err?
-        args = [ "--import" ]
-        await gpg { args, stdin : data, quiet : true }, defer err, out
-        if err?
-          err = new E.ImportError "#{un}: key import error: {err.message}"
-    log.debug "- #{un}: imported public key (found=#{found})"
-    cb err, found
+    @pubkey = new GpgKey @, false
+    await @pubkey.import_key defer err
+    cb err
 
   #--------------
 
@@ -319,7 +296,7 @@ exports.User = class User
 
   # Also serves to compress the public signatures into a usable table.
   verify : (cb) ->
-    await @sig_chain.verify_sig { username : @username() }, defer err
+    await @sig_chain.verify_sig { username : @username(), @pubkey }, defer err
     cb err
 
   #--------------

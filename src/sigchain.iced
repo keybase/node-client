@@ -138,7 +138,7 @@ exports.Link = class Link
 
   #--------------------
 
-  verify_sig : ({which}, cb) ->
+  verify_sig : ({which, @pubkey}, cb) ->
     args = [ "--decrypt" ]
     stderr = new BufferOutStream()
     await gpg { args, stdin : @sig(), stderr }, defer err, out
@@ -369,7 +369,7 @@ exports.SigChain = class SigChain
 
   _verify_sig : (cb) ->
     err = null
-    await l.verify_sig { which : @username }, defer err if (l = @last())?
+    await l.verify_sig { which : @username, @pubkey }, defer err if (l = @last())?
     cb err
 
   #-----------
@@ -473,9 +473,10 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  verify_sig : ({username}, cb) ->
+  verify_sig : ({username, pubkey}, cb) ->
     esc = make_esc cb, "SigChain::verify_sig"
     @username = username
+    @pubkey = pubkey
     log.debug "+ #{username}: verifying sig"
     if (@fingerprint = @last()?.fingerprint())?
       @_limit()
