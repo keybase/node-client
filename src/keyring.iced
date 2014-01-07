@@ -1,6 +1,6 @@
 
 {db} = require './db'
-{gpg} = require 'gpg-wrapper'
+{gpg} = require './gpg'
 log = require './log'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
@@ -16,7 +16,7 @@ exports.clean_key_imports = (cb) ->
   if keys.length
     args = [ "--batch", "--delete-keys" ].concat(k.toUpperCase() for k in keys)
     log.debug "| calling GPG client with #{JSON.stringify args}"  
-    await gpg { args }, defer err
+    await gpg { args, tmp : true }, defer err
     state = constants.import_state.CANCELED
     await db.batch_update_key_import { fingerprints : keys, state }, esc defer()
   log.debug "- clean key imports"

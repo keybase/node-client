@@ -1,5 +1,5 @@
 
-{gpg,read_uids_from_key} = require './gpg'
+{gpg,assert_no_collision,read_uids_from_key} = require './gpg'
 {E} = require './err'
 {db} = require './db'
 {make_esc} = require 'iced-error'
@@ -31,7 +31,7 @@ exports.GpgKey = class GpgKey
   query_key : (cb) ->
     if (fp = @_fingerprint)?
       args = [ "-" + (if @_secret then 'K' else 'k'), fp ]
-      await gpg { args, quiet : false }, defer err, out
+      await gpg { args, quiet : true }, defer err, out
       if err?
         err = new E.NoLocalKeyError (
           if @_is_self then "You don't have a local key!"
@@ -70,7 +70,7 @@ exports.GpgKey = class GpgKey
         args = [ "--import" ]
         await @gpg { args, stdin : data, quiet : true }, defer err, out
         if err?
-          err = new E.ImportError "#{un}: key import error: {err.message}"
+          err = new E.ImportError "#{un}: key import error: #{err.message}"
     log.debug "- #{un}: imported public key (state=#{@_import_state})"
     cb err
 
@@ -146,6 +146,12 @@ exports.GpgKey = class GpgKey
     await @_db_log esc defer()
     log.debug "+ #{un}: remove temporarily imported public key"
     cb null
+
+  #--------------
+
+  assert_no_collision : (short_id, cb) -> 
+    assert_no_collision { short_id, tmp : @is_tmp() }, cb
+
 
 #============================================================
 
