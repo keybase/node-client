@@ -50,13 +50,13 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _key_cleanup : ({accept, pubkey}, cb) ->
+  _key_cleanup : ({accept, their_pubkey}, cb) ->
     err = null
     if accept 
       log.debug "| commit_key"
-      await pubkey.commit defer err
+      await their_pubkey.commit @me.pubkey, defer err
     else
-      await pubkey.rollback defer err
+      await their_pubkey.rollback defer err
     cb err
 
   #----------
@@ -68,7 +68,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await User.load { username : @args.them }, esc defer them
     await them.import_public_key esc defer pubkey
     await @_id2 { them }, esc defer()
-    await @_key_cleanup { pubkey }, esc defer()
+    await @_key_cleanup { theiry_pubkey : pubkey }, esc defer()
     log.debug "- id"
     cb null
 
@@ -97,7 +97,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @_run2 defer err, accept
 
     # Clean up the key if necessary
-    await @_key_cleanup { pubkey, accept }, esc defer()
+    await @_key_cleanup { their_pubkey : pubkey, accept }, esc defer()
 
     log.debug "- run"
 

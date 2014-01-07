@@ -180,7 +180,9 @@ exports.Link = class Link
 
   #-----------
 
-  check_remote_proof : ({skip, username, type, warnings}, cb) ->
+  check_remote_proof : ({skip, pubkey, type, warnings}, cb) ->
+
+    username = pubkey.username()
 
     esc = make_esc cb, "SigChain::Link::check_remote_proof'"
 
@@ -189,7 +191,7 @@ exports.Link = class Link
       await athrow err, esc defer()
 
     log.debug "+ #{username}: checking remote #{type_s} proof"
-    await @verify_sig { which : "#{username}@#{type_s}" }, esc defer()
+    await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
     if not (remote_username = @payload_json()?.body?.service?.username)?
       err = new E.VerifyError "no remote username found in proof"
       await athrow err, esc defer()
@@ -497,15 +499,15 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_remote_proofs : ({skip, username}, cb) ->
+  check_remote_proofs : ({skip, pubkey }, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
-    log.debug "+ #{username}: checking remote proofs (skip=#{skip})"
+    log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?
       for type,link of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
-        await link.check_remote_proof { skip, username, type, warnings }, esc defer()
-    log.debug "- #{username}: checked remote proofs"
+        await link.check_remote_proof { skip, pubkey, type, warnings }, esc defer()
+    log.debug "- #{pubkey.username()}: checked remote proofs"
     cb null, warnings
 
 ##=======================================================================

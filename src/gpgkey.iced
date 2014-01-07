@@ -89,8 +89,8 @@ exports.GpgKey = class GpgKey
   #--------------
 
   _sign_key : (signer, cb) ->
-    log.debug "| GPG-siging #{key.username()}'s key with your key"
-    args = [ "-u", signer.fingerprint(), "--sign-key", @fingerprint(), "--batch", "--yes" ]
+    log.debug "| GPG-signing #{@username()}'s key with your key"
+    args = [ "-u", signer.fingerprint(), "--sign-key", "--batch", "--yes", @fingerprint() ]
     await @gpg { args }, defer err
     cb err
 
@@ -141,7 +141,7 @@ exports.GpgKey = class GpgKey
     stdin = @_public_key_data
     await @_remove esc defer()
     @_import_state = IS.FINAL
-    await @gpg { args : [ "--import" ], stdin : data, quiet : true }, esc defer()
+    await @gpg { args : [ "--import" ], stdin, quiet : true }, esc defer()
     await @_sign_key signer, esc defer()
     await @_db_log esc defer()
     log.debug "+ #{un}: remove temporarily imported public key"
