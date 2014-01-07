@@ -1,10 +1,18 @@
 
-{gpg,assert_no_collision,read_uids_from_key} = require './gpg'
+gpgmod = require './gpg'
+{gpg,assert_no_collision,read_uids_from_key} = gpgmod
+{parse} = require 'gpg-wrapper'
 {E} = require './err'
 {db} = require './db'
 {make_esc} = require 'iced-error'
 IS = require('./constants').constants.import_state
 log = require './log'
+{athrow} = require('pgp-utils').util
+deq = require 'deep-equal'
+
+#============================================================
+
+strip = (m) -> m.split(/\s+/).join('')
 
 #============================================================
 
@@ -24,9 +32,9 @@ exports.GpgKey = class GpgKey
 
   fingerprint : () -> @_fingerprint
   username : () -> @_username
+  key_id_64 : () -> @fingerprint()[-16...]
 
   #----------
-
 
   query_key : (cb) ->
     if (fp = @_fingerprint)?
@@ -92,6 +100,79 @@ exports.GpgKey = class GpgKey
     log.debug "| GPG-signing #{@username()}'s key with your key"
     args = [ "-u", signer.fingerprint(), "--sign-key", "--batch", "--yes", @fingerprint() ]
     await @gpg { args }, defer err
+    cb err
+
+  #--------------
+
+  _verify_key_id_64 : (ki64, cb) ->
+    log.debug "+ Check key_id_64 #{ki64} against key #{@fingerprint()}"
+    if ki64 is @key_id_64() then err = null
+    else
+      await @gpg { args : [ "--fingerprint", ki64 ] }, defer err, out
+      if err? then # noop
+      else if not (m = out.toString('utf8').match(/Key fingerprint = ([A-F0-9 ]+)/) )?
+        err = new E.VerifyError "Querying for a fingerprint failed"
+      else if not (a = strip(m[1])) is (b = @fingerprint())
+        err = new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
+    log.debug "- Check key_id_64 -> #{err}"
+    cb err
+
+  #--------------
+
+  gpg_obj : () -> gpgmod.obj(@is_tmp())
+
+  #--------------
+
+  _verify_signed_with_this_key : ( {which, sig, payload}, cb) ->
+    esc = make_esc cb, "GpgKey::_verify_signed_with_this_key"
+    log.debug "+ GpgKey::_verify_signed_with_this_key #{which}"
+    await parse { gpg : @gpg_obj(), message : sig }, esc defer mout
+
+    pkts = mout.packets()
+    console.log pkts
+    types = 
+      w : [ 'compressed', 'onepass_sig', 'literal data', 'signature' ]
+      r : (t.type for t in pkts)
+
+    b = null
+
+    msg = if not (deq(types.w, types.r))
+      "got wrong packets in signature: #{JSON.stringify types.r}"
+    else if not (m = pkts[1].options.match /^keyid ([A-F0-9]{16}$)/) or not (ki64 = m[1])?
+      "didn't find a key ID in 'onepass_sig' packet"
+    else if not (m = pkts[2].subfields()?[1].match /raw data: (\d+) bytes/) or
+       not (b = m[1])? or isNaN(bl = parseInt(b, 10))? or (bl isnt payload.length)
+      "signature didn't cover the whole payload!"
+    else if not (m = pkts[3].options.match /keyid ([A-F0-9]){16}$/ ) or not (b = m[1])? or
+       (b isnt ki64)
+      "'signature' packet had wrong key: #{b}; wanted #{ki64}"
+    else null
+
+    if msg? then await athrow (new E.VerifyError msg), esc defer()
+    await @_verify_key_id_64 ki64, esc defer()
+
+    log.debug "- GpgKey::_verify_signed_with_this_key #{which}"
+    cb null
+
+  #--------------
+
+  verify_sig : ({which, sig, payload}, cb) ->
+    log.debug "+ GpgKey::verify_sig #{which}"
+    err = null
+
+    await @gpg { args : [ "--decrypt"], stdin : sig, quiet : true }, defer err, out
+
+    # Check that the signature verified, and that the intended data came out the other end
+    msg = if err? then "signature verification failed"
+    else if ((a = out.toString('utf8')) isnt (b = payload)) then "wrong payload: #{a} != #{b}"
+    else null
+    if msg? then err = new E.VerifyError "#{which}: #{msg}"
+
+    # Next we need to check that the signature was signed with this key
+    unless err?
+      await @_verify_signed_with_this_key { which, sig, payload}, defer err
+
+    log.debug "- GpgKey::verify_sig #{which} -> #{err}"
     cb err
 
   #--------------
