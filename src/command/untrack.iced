@@ -8,6 +8,7 @@ log = require '../log'
 db = require '../db'
 {User} = require '../user'
 {session} = require '../session'
+{TrackWrapper} = require '../trackwrapper'
 
 ##=======================================================================
 
@@ -37,6 +38,7 @@ exports.Command = class Command extends Base
     await session.load_and_login esc defer()
     await g.run esc defer()
     await them.remove_key esc defer()
+    await TrackWrapper.remove_local_track {uid : them.id}, esc defer()
     log.debug "- run"
     cb null
 

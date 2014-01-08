@@ -107,7 +107,7 @@ exports.GpgKey = class GpgKey
   _sign_key : (signer, cb) ->
     log.debug "| GPG-signing #{@username()}'s key with your key"
     args = [ "-u", signer.fingerprint(), "--sign-key", "--batch", "--yes", @fingerprint() ]
-    await @gpg { args }, defer err
+    await @gpg { args, quiet : 'true' }, defer err
     cb err
 
   #--------------

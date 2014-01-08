@@ -124,7 +124,8 @@ class DB
   #-----
 
   remove : ({type, key}, cb) ->
-    await @lock.acquire()
+    esc = make_esc cb, "Db::remove"
+    await @lock.acquire defer()
     await @db.run "BEGIN", esc defer()
     q = "DELETE FROM kvstore WHERE type=? AND key=?"
     await @db.run q, [ type, key ], defer err
