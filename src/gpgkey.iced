@@ -210,14 +210,17 @@ exports.GpgKey = class GpgKey
   commit : (signer, cb) ->
     esc = make_esc cb, "GpgKey::commit"
     un = @_username
-    log.debug "+ #{un}: remove temporarily imported public key"
-    stdin = @_public_key_data
-    await @_remove esc defer()
-    @_import_state = IS.FINAL
-    await @gpg { args : [ "--import" ], stdin, quiet : true }, esc defer()
-    await @_sign_key signer, esc defer()
-    await @_db_log esc defer()
-    log.debug "- #{un}: remove temporarily imported public key"
+    if @_import_state is IS.TEMPORARY
+      log.debug "+ #{un}: remove temporarily imported public key"
+      stdin = @_public_key_data
+      await @_remove esc defer()
+      @_import_state = IS.FINAL
+      await @gpg { args : [ "--import" ], stdin, quiet : true }, esc defer()
+      await @_sign_key signer, esc defer()
+      await @_db_log esc defer()
+      log.debug "- #{un}: remove temporarily imported public key"
+    else
+      log.debug "| #{un}: Key was previously commited; noop"
     cb null
 
   #--------------
