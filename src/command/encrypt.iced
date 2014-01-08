@@ -3,7 +3,8 @@ log = require '../log'
 {add_option_dict} = require './argparse'
 {E} = require '../err'
 {TrackSubSubCommand} = require '../tracksubsub'
-{gpg,BufferInStream} = require('gpg-wrapper')
+{BufferInStream} = require('gpg-wrapper')
+{gpg} = require '../gpg'
 {make_esc} = require 'iced-error'
 
 ##=======================================================================
@@ -30,6 +31,7 @@ exports.Command = class Command extends Base
       help : "provide the message on the command line"
     b :
       alias : 'binary'
+      action: "storeTrue"
       help : "output in binary (rather than ASCII/armored)"
 
   #----------
