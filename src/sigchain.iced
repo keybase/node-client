@@ -67,6 +67,13 @@ exports.Link = class Link
 
   #--------------------
 
+  to_table_obj : () -> 
+    ret = @body().track
+    ret.ctime = @ctime()
+    return ret
+
+  #--------------------
+
   to_track_obj : () -> {
     seqno : @seqno()
     sig_id : @sig_id()
@@ -455,7 +462,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  get_track_obj : (uid) -> @table[ST.TRACK]?[uid]?.body()?.track
+  get_track_obj : (uid) -> @table[ST.TRACK]?[uid]?.to_table_obj()
 
   #-----------
 

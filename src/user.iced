@@ -12,6 +12,7 @@ log = require './log'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
 {GpgKey} = require './gpgkey'
+{unix_time} = require('pgp-utils').util
 
 ##=======================================================================
 
@@ -309,6 +310,7 @@ exports.User = class User
       key : filter pkp, [ "kid", "key_fingerprint" ]
       seq_tail : @sig_chain?.last().to_track_obj()
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
+      ctime : unix_time()
     out
 
   #--------------

@@ -69,10 +69,10 @@ exports.TrackWrapper = class TrackWrapper
         return false if proof.remote_key_proof?.state isnt 1
       return true
 
-    prob = if not track_cert?                 then "no track cert given"
-    else if not (last = @last())?             then "no last link found"
-    else if (last_check = track_cert.ctime)?  then "no last_check"
-    else if (unix_time() - last_check > rpri) then "timed out!"
+    prob = if not track_cert?                     then "no track cert given"
+    else if not (last = @last())?                 then "no last link found"
+    else if not (last_check = track_cert.ctime)?  then "no last_check"
+    else if (unix_time() - last_check > rpri)     then "timed out!"
     else if ((a = track_cert.seq_tail?.payload_hash) isnt (b = last.id))
       "id/hash mismatch: #{a} != #{b}"
     else if not (_check_all_proofs_ok track_cert.remote_proofs)
@@ -80,8 +80,11 @@ exports.TrackWrapper = class TrackWrapper
 
     ret = if prob?
       log.debug "| problem: #{prob}"
+      log.debug "| track cert: #{JSON.stringify track_cert}" if track_cert?
+      log.debug "| last link: #{JSON.stringify last}" if last?
       false
     else
+      log.debug "| Timing was ok: #{unix_time()} - #{last_check} > #{rpri}" 
       true
 
     log.debug "- _skip_remote_check -> #{ret}"
