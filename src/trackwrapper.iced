@@ -197,7 +197,7 @@ exports.TrackWrapper = class TrackWrapper
 
   #--------
 
-  is_tracking : () -> !!@remote
+  is_tracking : () -> { remote : !!@remote, local : !!@local }
 
   #--------
 

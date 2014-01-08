@@ -294,14 +294,6 @@ exports.User = class User
 
   #--------------
 
-  assert_tracking : (them, cb) ->
-    await TrackWrapper.load { tracker : @, trackee : them }, defer err, trackw
-    if not err? and not trackw.is_tracking()
-      err = new E.UntrackError "You're not tracking '#{them.username()}'!"
-    cb err
-
-  #--------------
-
   gen_track_obj : () ->
 
     pkp = @public_keys.primary
