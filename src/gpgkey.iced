@@ -17,13 +17,14 @@ exports.GpgKey = class GpgKey
 
   #----------
 
-  constructor : (@user, { secret }) ->
+  constructor : (@user, { secret, import_state }) ->
     @_fingerprint = @user.fingerprint(true) # want the fingerprint in CAPS
     @_username = @user.username()
     @_is_self = @user._is_self
     @_secret = secret
     @_uid = @user.id
     @_public_key_data = @user.public_keys?.primary?.bundle
+    @_import_state = import_state
 
   #----------
 

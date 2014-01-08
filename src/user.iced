@@ -13,6 +13,7 @@ log = require './log'
 {TrackWrapper} = require './trackwrapper'
 {GpgKey} = require './gpgkey'
 {unix_time} = require('pgp-utils').util
+IS = constants.import_state
 
 ##=======================================================================
 
@@ -315,7 +316,7 @@ exports.User = class User
 
   #--------------
 
-  remove_key : (cb) -> (new GpgKey @, false).remove cb
+  remove_key : (cb) -> (new GpgKey @, { secret : false, import_state : IS.FINAL} ).remove cb
 
   #--------------
 
