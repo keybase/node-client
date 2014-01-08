@@ -5,6 +5,11 @@
 {make_esc} = require 'iced-error'
 IS = require('./constants').constants.import_state
 log = require './log'
+{BufferOutStream} = require 'gpg-wrapper'
+
+#============================================================
+
+strip = (m) -> m.split(/\s+/).join('')
 
 #============================================================
 
@@ -24,6 +29,8 @@ exports.GpgKey = class GpgKey
 
   fingerprint : () -> @_fingerprint
   username : () -> @_username
+  key_id_64 : () -> @fingerprint()[-16...]
+  key_id_32 : () -> @fingerprint()[-8...]
 
   #----------
 
@@ -96,6 +103,72 @@ exports.GpgKey = class GpgKey
 
   #--------------
 
+  gpg_obj : () -> gpgmod.obj(@is_tmp())
+
+  #--------------
+
+  _verify_key_id_32 : ( {ki32, which, sig}, cb) ->
+    log.debug "+ GpgKey::_verify_key_id_32: #{which}: #{ki32} vs #{@fingerprint()}"
+    err = null
+    if ki32 isnt @key_id_32() 
+      await @gpg { args : [ "--fingerprint", ki32 ] }, defer err, out
+      if err? then # noop
+      else if not (m = out.toString('utf8').match(/Key fingerprint = ([A-F0-9 ]+)/) )?
+        err = new E.VerifyError "Querying for a fingerprint failed"
+      else if not (a = strip(m[1])) is (b = @fingerprint())
+        err = new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
+      else
+        log.debug "| Successful map of #{ki32} -> #{@fingerprint()}"
+
+    unless err?
+      await @assert_no_collision ki32, defer err
+
+    log.debug "- GpgKey::_verify_key_id_32: #{which}: #{ki32} vs #{@fingerprint()} -> #{err}"
+    cb err
+
+  #--------------
+
+  _find_key_in_stderr : (which, buf) ->
+    err = ki32 = fingerprint = null
+    d = buf.toString('utf8')
+    if (m = d.match(/Primary key fingerprint: (.*)/))? then fingerprint = m[1]
+    else if (m = d.match(/using [RD]SA key ID ([A-F0-9]{8})/))? then ki32 = m[1]
+    else err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
+    return { err, ki32, fingerprint } 
+
+  #--------------
+
+  verify_sig : ({which, sig, payload}, cb) ->
+    log.debug "+ GpgKey::verify_sig #{which}"
+    esc = make_esc cb, "GpgKEy::verify_sig"
+    err = null
+
+    stderr = new BufferOutStream()
+    await @gpg { args : [ "--decrypt"], stdin : sig, stderr }, defer err, out
+
+    # Check that the signature verified, and that the intended data came out the other end
+    msg = if err? then "signature verification failed"
+    else if ((a = out.toString('utf8')) isnt (b = payload)) then "wrong payload: #{a} != #{b}"
+    else null
+
+    # If there's an exception, we can now throw out of this function
+    if msg? then await athrow (new E.VerifyError "#{which}: #{msg}") esc defer()
+
+    # Now we need to check that there's a short Key id 32, or a full fingerprint
+    # in the stderr output of the verify command
+    {err, ki32, fingerprint} = @_find_key_in_stderr which, stderr.data()
+
+    if err then #noop
+    else if ki32? 
+      await @_verify_key_id_32 { which, ki32, sig }, esc defer()
+    else if (a = strip(fingerprint)) isnt (b = @fingerprint())
+      err = new E.VerifyError "#{which}: mismatched fingerprint: #{a} != #{b}"
+
+    log.debug "- GpgKey::verify_sig #{which} -> #{err}"
+    cb err
+
+  #--------------
+
   rollback : (cb) ->
     esc = make_esc cb, "GpgKey::commit"
     if @_import_state is IS.TEMPORARY
@@ -144,7 +217,7 @@ exports.GpgKey = class GpgKey
     await @gpg { args : [ "--import" ], stdin, quiet : true }, esc defer()
     await @_sign_key signer, esc defer()
     await @_db_log esc defer()
-    log.debug "+ #{un}: remove temporarily imported public key"
+    log.debug "- #{un}: remove temporarily imported public key"
     cb null
 
   #--------------

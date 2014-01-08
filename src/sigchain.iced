@@ -8,8 +8,6 @@ log = require './log'
 {Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
-{BufferOutStream} = require 'gpg-wrapper'
-{assert_no_collision} = require './gpg'
 {date_to_unix,make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
@@ -140,28 +138,7 @@ exports.Link = class Link
   #--------------------
 
   verify_sig : ({which, pubkey}, cb) ->
-    log.debug "+ Link::verify_sig #{which}"
-    args = [ "--decrypt" ]
-    stderr = new BufferOutStream()
-    await pubkey.gpg { args, stdin : @sig(), stderr }, defer err, out
-    if err?
-      err = new E.VerifyError "#{which}: failed to verify signature"
-    else
-      em = stderr.data().toString('utf8')
-      if (m = em.match(/Primary key fingerprint: (.*)/))?
-        if ((a = strip(m[1]).toLowerCase()) isnt (b = @fingerprint()))
-          err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
-      else if (m = em.match(/using [RD]SA key ID ([A-F0-9]{8})/))?
-        if ((a = strip(m[1])) isnt (b = @short_key_id()))
-          err = new E.VerifyError "#{which}: bad key: #{a} != #{b}"
-        else 
-          await pubkey.assert_no_collision b, defer err
-      else
-        err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
-    if not err? and ((a = out.toString('utf8')) isnt (b = @payload_json_str()))
-      err = new E.VerifyError "#{which}: payload was wrong: #{a} != #{b}"
-    log.debug "- Link::verify_sig #{which} -> #{err}"
-    cb err
+    pubkey.verify_sig { which, sig : @sig(), payload: @payload_json_str() }, cb
 
   #-----------
 
