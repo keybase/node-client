@@ -315,6 +315,10 @@ exports.User = class User
 
   #--------------
 
+  remove_key : (cb) -> (new GpgKey @, false).remove cb
+
+  #--------------
+
   gen_untrack_obj : () ->
 
     pkp = @public_keys.primary

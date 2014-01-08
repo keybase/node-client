@@ -1,5 +1,5 @@
 
-{gpg} = require 'gpg-wrapper'
+{gpg} = require './gpg'
 {make_esc} = require 'iced-error'
 {GE,E} = require './err'
 

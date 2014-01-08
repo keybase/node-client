@@ -95,6 +95,14 @@ exports.GpgKey = class GpgKey
 
   #--------------
 
+  remove : (cb) ->
+    await @_remove defer err
+    @_import_state = IS.REMOVED
+    await @_db_log defer err unless err?
+    cb err
+
+  #--------------
+
   _sign_key : (signer, cb) ->
     log.debug "| GPG-signing #{@username()}'s key with your key"
     args = [ "-u", signer.fingerprint(), "--sign-key", "--batch", "--yes", @fingerprint() ]

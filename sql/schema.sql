@@ -11,11 +11,11 @@ CREATE TABLE IF NOT EXISTS `lookup` (
   `name` VARCHAR(200) NOT NULL,
   `key_type` CHAR(2) NOT NULL,
   `key`  VARCHAR(100) NOT NULL,
-  CONSTRAINT `lookup_primary_key` PRIMARY KEY (`name_type`, `key`),
+  CONSTRAINT `lookup_primary_key` PRIMARY KEY (`name_type`, `name`),
   CONSTRAINT `lookup_foreign_key_1` FOREIGN KEY (`key_type`,`key`) REFERENCES `kvstore` (`type`, `key`)
 );
 
-CREATE INDEX IF NOT EXISTS `lookup_index_1` ON `lookup`(`key`);
+CREATE INDEX IF NOT EXISTS `lookup_index_1` ON `lookup`(`key_type`, `key`);
 
 CREATE TABLE IF NOT EXISTS `key_import_log` (
   `fingerprint` CHAR(40) NOT NULL PRIMARY KEY,

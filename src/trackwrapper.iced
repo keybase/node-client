@@ -157,6 +157,17 @@ exports.TrackWrapper = class TrackWrapper
 
   #--------
 
+  @remove_local : ({uid}, cb) ->
+    log.debug "+ removing local track object for #{uid}"
+    await db.remove { 
+      type : constants.id.local_track
+      key : uid
+    }, defer err
+    log.debug "+ removed local track object -> #{err}"
+    cb err
+
+  #--------
+
   check : () ->
     if @local 
       if (e = @_check_track_obj @local)?

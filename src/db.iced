@@ -123,6 +123,19 @@ class DB
 
   #-----
 
+  remove : ({type, key}, cb) ->
+    await @lock.acquire()
+    await @db.run "BEGIN", esc defer()
+    q = "DELETE FROM kvstore WHERE type=? AND key=?"
+    await @db.run q, [ type, key ], defer err
+    q = "DELETE FROM lookup WHERE key_type=? AND key=?"
+    await @db.run q, [ type, key ], defer e2
+    await @db.run "COMMIT", esc defer()
+    @lock.release()
+    cb err
+
+  #-----
+
   get : ({type, key}, cb) ->
     type or= key[-2...]
     q = "SELECT value FROM kvstore WHERE type=? AND key=?"

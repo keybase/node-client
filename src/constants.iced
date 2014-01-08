@@ -34,6 +34,7 @@ exports.constants = constants =
     TEMPORARY : 1
     FINAL : 2
     CANCELED : 3
+    REMOVED : 4
   signature_types :
     NONE : 0
     SELF_SIG : 1
