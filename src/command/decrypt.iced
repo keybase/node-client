@@ -46,7 +46,7 @@ exports.Command = class Command extends Base
   #----------
 
   do_decrypt : (cb) ->
-    args = [ "--decrypt" , "--keyserver" , env().get_key_server() ]
+    args = [ "--decrypt" , "--keyid-format", "long", "--keyserver" , env().get_key_server() ]
     args.push( "--keyserver-options", "debug=1")  if env().get_debug()
     gargs = { args }
     if @argv.message
