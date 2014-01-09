@@ -17,6 +17,7 @@ $(BUILD_STAMP): \
 	lib/command/all.js \
 	lib/command/base.js \
 	lib/command/config.js \
+	lib/command/decrypt.js \
 	lib/command/encrypt.js \
 	lib/command/help.js \
 	lib/command/id.js \
@@ -41,7 +42,7 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
-        lib/gpg.js \
+    lib/gpg.js \
 	lib/gpgkey.js \
 	lib/keymanager.js \
 	lib/keyring.js \

@@ -22,38 +22,27 @@ exports.Command = class Command extends Base
       alias : "track-local"
       action : "storeTrue"
       help : "don't prompt for remote tracking"
-    s:
-      alias : "sign"
-      action : "storeTrue"
-      help : "sign in addition to encrypting"
     m:
       alias : "message"
       help : "provide the message on the command line"
-    b :
-      alias : 'binary'
-      action: "storeTrue"
-      help : "output in binary (rather than ASCII/armored)"
 
   #----------
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases : [ "enc" ]
-      help : "verify a user's authenticity and optionally track him"
-    name = "encrypt"
+      aliases : [ "dec" ]
+      help : "decrypt a file"
+    name = "decrypt"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
-    sub.addArgument [ "them" ], { nargs : 1 }
     sub.addArgument [ "file" ], { nargs : '?' }
     return opts.aliases.concat [ name ]
 
   #----------
 
   do_encrypt : (cb) ->
-    args = [ "--encrypt", "-r", (@tssc.them.fingerprint true) ]
-    args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
+    args = [ "--decrypt" ]
     gargs = { args }
-    args.push "-a"  unless @argv.binary
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
@@ -69,9 +58,7 @@ exports.Command = class Command extends Base
     opts = 
       remote : @argv.track_remote
       local : @argv.track_local
-    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts }
-    await @tssc.run esc defer()
-    await @do_encrypt esc defer()
+    await @do_decrypt esc defer()
     cb null
 
 ##=======================================================================
