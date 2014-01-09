@@ -73,6 +73,13 @@ class Env
       config : (c) -> c?.files?.db
       dflt   : ( ) -> join home(), FN.config_dir, FN.db_file
 
+  get_tmp_keyring_dir : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR
+      arg    : (a) -> a["tmp-keyring-dir"]
+      config : (c) -> c?.files?.tmp_keyring_dir
+      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_keyring_dir
+
   get_tmp_gpg_sec_keyring : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_TMP_GPG_SEC_KEYRING

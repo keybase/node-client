@@ -3,7 +3,8 @@ log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
 {PackageJson} = require '../package'
-{gpg} = require 'gpg-wrapper'
+{gpg} = require '../gpg'
+{TempKeyRing} = require '../keyring'
 
 ##=======================================================================
 
@@ -31,6 +32,7 @@ exports.Command = class Command extends Base
         ("- node.js " + process.version)
       ].concat("- #{l}" for l in gpg_v)
       console.log lines.join("\n")
+
     cb err
 
 ##=======================================================================

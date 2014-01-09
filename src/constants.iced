@@ -12,6 +12,7 @@ exports.constants = constants =
     config_file : "config.json"
     session_file : "session.json"
     db_file : "keybase.sqlite3"
+    tmp_keyring_dir : "tmp_keyrings"
     tmp_gpg :
       sec_keyring : "tmp_gpg.sec.keyring"
       pub_keyring : "tmp_gpg.pub.keyring"
