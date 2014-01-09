@@ -186,7 +186,7 @@ exports.SignatureEngine = class SignatureEngine
     out = {}
     arg = 
       stdin : new Buffer(msg, 'utf8')
-      args : [ "-u", @km.get_pgp_key_id(), "--sign", "-a" ] 
+      args : [ "-u", @km.get_pgp_key_id(), "--sign", "-a", "--keyid-format", "long" ] 
     await gpg arg, defer err, pgp
     unless err?
       out.pgp = pgp = pgp.toString('utf8')

@@ -38,7 +38,7 @@ exports.GpgKey = class GpgKey
 
   query_key : (cb) ->
     if (fp = @_fingerprint)?
-      args = [ "-" + (if @_secret then 'K' else 'k'), fp ]
+      args = [ "-" + (if @_secret then 'K' else 'k'), "--with-colons", fp ]
       await gpg { args, quiet : true }, defer err, out
       if err?
         err = new E.NoLocalKeyError (
@@ -116,34 +116,34 @@ exports.GpgKey = class GpgKey
 
   #--------------
 
-  _verify_key_id_32 : ( {ki32, which, sig}, cb) ->
-    log.debug "+ GpgKey::_verify_key_id_32: #{which}: #{ki32} vs #{@fingerprint()}"
+  _verify_key_id_64 : ( {ki64, which, sig}, cb) ->
+    log.debug "+ GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()}"
     err = null
-    if ki32 isnt @key_id_32() 
-      await @gpg { args : [ "--fingerprint", ki32 ] }, defer err, out
+    if ki64 isnt @key_id_64() 
+      await @gpg { args : [ "--fingerprint", "--keyid-format", "long", ki64 ] }, defer err, out
       if err? then # noop
       else if not (m = out.toString('utf8').match(/Key fingerprint = ([A-F0-9 ]+)/) )?
         err = new E.VerifyError "Querying for a fingerprint failed"
       else if not (a = strip(m[1])) is (b = @fingerprint())
         err = new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
       else
-        log.debug "| Successful map of #{ki32} -> #{@fingerprint()}"
+        log.debug "| Successful map of #{ki64} -> #{@fingerprint()}"
 
     unless err?
-      await @assert_no_collision ki32, defer err
+      await @assert_no_collision ki64, defer err
 
-    log.debug "- GpgKey::_verify_key_id_32: #{which}: #{ki32} vs #{@fingerprint()} -> #{err}"
+    log.debug "- GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()} -> #{err}"
     cb err
 
   #--------------
 
   _find_key_in_stderr : (which, buf) ->
-    err = ki32 = fingerprint = null
+    err = ki64 = fingerprint = null
     d = buf.toString('utf8')
     if (m = d.match(/Primary key fingerprint: (.*)/))? then fingerprint = m[1]
-    else if (m = d.match(/using [RD]SA key ID ([A-F0-9]{8})/))? then ki32 = m[1]
+    else if (m = d.match(/using [RD]SA key ([A-F0-9]{16})/))? then ki64 = m[1]
     else err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
-    return { err, ki32, fingerprint } 
+    return { err, ki64, fingerprint } 
 
   #--------------
 
@@ -153,7 +153,7 @@ exports.GpgKey = class GpgKey
     err = null
 
     stderr = new BufferOutStream()
-    await @gpg { args : [ "--decrypt"], stdin : sig, stderr }, defer err, out
+    await @gpg { args : [ "--decrypt", "--keyid-format", "long"], stdin : sig, stderr }, defer err, out
 
     # Check that the signature verified, and that the intended data came out the other end
     msg = if err? then "signature verification failed"
@@ -165,11 +165,11 @@ exports.GpgKey = class GpgKey
 
     # Now we need to check that there's a short Key id 32, or a full fingerprint
     # in the stderr output of the verify command
-    {err, ki32, fingerprint} = @_find_key_in_stderr which, stderr.data()
+    {err, ki64, fingerprint} = @_find_key_in_stderr which, stderr.data()
 
     if err then #noop
-    else if ki32? 
-      await @_verify_key_id_32 { which, ki32, sig }, esc defer()
+    else if ki64? 
+      await @_verify_key_id_64 { which, ki64, sig }, esc defer()
     else if (a = strip(fingerprint)) isnt (b = @fingerprint())
       err = new E.VerifyError "#{which}: mismatched fingerprint: #{a} != #{b}"
 
