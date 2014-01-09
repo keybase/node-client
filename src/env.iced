@@ -167,6 +167,14 @@ class Env
       config : (c) -> c.user?.email
       dflt   : -> null
 
+  get_key_server : () ->
+    self = @
+    @get_opt
+      env    : (e) -> e.KEYBASE_KEY_SERVER
+      arg    : (a) -> a.key_server
+      config : (c) -> c.key_server
+      dflt   : -> "hkp://#{self.get_host()}:#{self.get_port()}"
+
   get_args : () -> @argv._
   get_argv : () -> @argv
 

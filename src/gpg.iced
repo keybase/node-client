@@ -2,6 +2,7 @@
 {GPG} = require 'gpg-wrapper'
 {env} = require './env'
 log = require './log'
+util = require 'util'
 
 #============================================================
 
@@ -34,7 +35,7 @@ exports.read_uids_from_key = (args, cb)             -> obj(args.tmp).read_uids_f
 #------------------------------------
 
 exports.gpg = (inargs, cb) -> 
-  log.debug "| Call to gpg: #{JSON.stringify inargs}"
+  log.debug "| Call to gpg: #{util.inspect(inargs)}"
   inargs.quiet = false if inargs.quiet and env().get_debug()
   obj(inargs.tmp).run(inargs, cb)
 

@@ -6,6 +6,7 @@ log = require '../log'
 {BufferInStream} = require('gpg-wrapper')
 {gpg} = require '../gpg'
 {make_esc} = require 'iced-error'
+{env} = require '../env'
 
 ##=======================================================================
 
@@ -22,6 +23,10 @@ exports.Command = class Command extends Base
       alias : "track-local"
       action : "storeTrue"
       help : "don't prompt for remote tracking"
+    '6' :
+      alias : "base64"
+      action : "storeTrue"
+      help : "output result as base64-encoded data"
     m:
       alias : "message"
       help : "provide the message on the command line"
@@ -40,15 +45,18 @@ exports.Command = class Command extends Base
 
   #----------
 
-  do_encrypt : (cb) ->
-    args = [ "--decrypt" ]
+  do_decrypt : (cb) ->
+    args = [ "--decrypt" , "--keyserver" , env().get_key_server() ]
+    args.push( "--keyserver-options", "debug=1")  if env().get_debug()
     gargs = { args }
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
       args.push @argv.file 
+    else
+      gargs.stdin = process.stdin
     await gpg gargs, defer err, out
-    log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
+    log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
     cb err 
 
   #----------
