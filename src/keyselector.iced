@@ -1,5 +1,5 @@
 log = require './log'
-{gpg} = require 'gpg-wrapper'
+{gpg} = require './gpg'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require './prompter'
 {KeyManager} = require './keymanager'
