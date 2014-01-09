@@ -53,11 +53,11 @@ exports.Command = class Command extends Base
     args = [ "--encrypt", "-r", (@tssc.them.fingerprint true) ]
     args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
     gargs = { args }
+    args.push "-a"  unless @argv.binary
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
-    else if @argv.file.length is 1
-      args.push [ @argv.file[0] ]
-    args.push [ "-a" ] unless @argv.binary
+    else if @argv.file?
+      args.push @argv.file 
     await gpg gargs, defer err, out
     log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
     cb err 
