@@ -172,11 +172,11 @@ class GpgKey
   rollback : (cb) ->
     s = @to_string()
     err = null
-    if @keyring().is_temporary()
+    if env().get_preserve_tmp_keyring() and @keyring().is_temporary()
+      log.debug "| #{s}: preserving temporary keyring by command-line flag"
+    else if @keyring().is_temporary()
       log.debug "| #{s}: Rolling back temporary key"
       await @remove defer err
-    else if env().get_preserve_tmp_keyring()
-      log.debug "| #{s}: preserving temporary keyring by command-line flag"
     else
       log.debug "| #{s}: no need to rollback key, it's permanent"
     cb err
