@@ -12,6 +12,7 @@ mkdirp = require 'mkdirp'
 path = require 'path'
 fs = require 'fs'
 {GPG,colgrep} = require 'gpg-wrapper'
+util = require 'util'
 
 ##=======================================================================
 
@@ -46,6 +47,9 @@ class GpgKey
 
   # Return the raw armored PGP key data
   key_data : () -> @_key_data
+
+  # The keyring object that we've wrapped in
+  keyring : () -> @_keyring
 
   # These two functions are to fulfill to key manager interface
   get_pgp_key_id : () -> @key_id_64()
@@ -88,18 +92,18 @@ class GpgKey
 
   #-------------
 
-  to_string : () -> [ @username(), @key_id_64 ].join "/"
+  to_string : () -> [ @username(), @key_id_64() ].join "/"
 
   #-------------
 
-  gpg : (gargs, cb) -> @keyring.gpg gargs, cb
+  gpg : (gargs, cb) -> @keyring().gpg gargs, cb
 
   #-------------
 
   # Save this key to the underlying GPG keyring
   save : (cb) ->
     args = [ "--import" ]
-    log.debug "| Save key #{@to_string()} to #{@keyring.to_string()}"
+    log.debug "| Save key #{@to_string()} to #{@keyring().to_string()}"
     await @gpg { args, stdin : @_key_data, quiet : true }, defer err
     cb err
 
@@ -113,7 +117,7 @@ class GpgKey
       "-a",
       @load_id()
     ]
-    log.debug "| Load key #{@to_string()} from #{@keyring.to_string()}"
+    log.debug "| Load key #{@to_string()} from #{@keyring().to_string()}"
     await @gpg { args }, defer err, @_key_data
     cb err
 
@@ -127,7 +131,7 @@ class GpgKey
       "--yes",
       @fingerprint()
     ]
-    log.debug "| Delete key #{@to_string()} from #{@keyring.to_string()}"
+    log.debug "| Delete key #{@to_string()} from #{@keyring().to_string()}"
     await @gpg { args }, defer err
     cb err
 
@@ -136,7 +140,7 @@ class GpgKey
   # Read the userIds that have been signed with this key
   read_uids_from_key : (cb) ->
     args = { fingerprint : @fingerprint() }
-    await @keyring.read_uids_from_keys args, defer err, read_uids
+    await @keyring().read_uids_from_keys args, defer err, read_uids
     cb err, uids
 
   #-------------
@@ -152,7 +156,7 @@ class GpgKey
   # Assuming this is a temporary key, commit it to the master key chain, after signing it
   commit : (signer, cb) ->
     esc = make_esc cb, "GpgKey::commit"
-    if @keyring.is_temporary()
+    if @keyring().is_temporary()
       log.debug "+ #{@to_string()}: Commit temporary key"
       await @sign_key signer, esc defer()
       await @load esc defer()
@@ -168,7 +172,7 @@ class GpgKey
   rollback : () ->
     s = @to_string()
     err = null
-    if @keyring.is_temporary()
+    if @keyring().is_temporary()
       log.debug "| #{s}: Rolling back temporary key"
       await @remove defer err
     else
@@ -196,7 +200,7 @@ class GpgKey
     d = {}
     d[k[1...]] = v for k,v of @ when k[0] is '_'
     ret = new GpgKey d
-    ret.keyring = keyring
+    ret._keyring = keyring
     return ret
 
   #--------------
@@ -225,7 +229,7 @@ class GpgKey
         log.debug "| Successful map of #{ki64} -> #{@fingerprint()}"
 
     unless err?
-      await @keyring.assert_no_collision ki64, defer err
+      await @keyring().assert_no_collision ki64, defer err
 
     log.debug "- GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()} -> #{err}"
     cb err

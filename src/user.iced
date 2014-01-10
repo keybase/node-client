@@ -41,6 +41,7 @@ exports.User = class User
   #--------------
 
   set_is_self : (b) -> @_is_self = b
+  is_self : () -> @_is_self
 
   #--------------
 
