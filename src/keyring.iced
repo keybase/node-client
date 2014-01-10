@@ -30,9 +30,166 @@ exports.clean_key_imports = (cb) ->
 
 ##=======================================================================
 
-exports.TempKeyRing = class TempKeyRing
+class GpgKey 
+
+  constructor : (fields) ->
+    for k,v of fields
+      @["_#{k}"] = v
+
+  # The fingerprint of the key
+  fingerprint : () -> 
+
+  # The 64-bit GPG key ID
+  key_id_64 : () -> @fingerprint()[-16...]
+
+  # The full PGP-style username of the key
+  userid : () ->
+
+  # The keybase username of the keyholder
+  username : () ->
+
+  # The keybase UID of the keyholder
+  uid : () ->
+
+  # These two functions are to fulfill to key manager interface
+  get_pgp_key_id : () -> @key_id_64()
+  get_pgp_finterprint : () -> @fingerprint()
+
+  # Find the key in the keyring based on fingerprint
+  find : (cb) ->
+
+  # Check that this key has been signed by the signing key.
+  check_sig : (signing_key, cb) ->
+
+  #-------------
+
+  to_string : () -> [ @username(), @key_id_64 ].join "/"
+
+  #-------------
+
+  gpg : (gargs, cb) -> @keyring.gpg gargs, cb
+
+  #-------------
+
+  # Save this key to the underlying GPG keyring
+  save : (cb) ->
+    args = [ "--import" ]
+    log.debug "| Save key #{@to_string()} to #{@keyring.to_string()}"
+    await @gpg { args, stdin : @_key_data, quiet : true }, defer err
+    cb err
+
+  #-------------
+
+  # Load this key from the underlying GPG keyring
+  load : (cb) ->
+    args = [ 
+      (if @_secret then "--export-secret-key" else "--secret" ),
+      "--export-local-sigs", 
+      "-a",
+      @fingerprint()
+    ]
+    log.debug "| Load key #{@to_string()} from #{@keyring.to_string()}"
+    await @gpg { args }, defer err, @_key_data
+    cb err
+
+  #-------------
+
+  # Remove this key from the keyring
+  remove : (cb) ->
+    args = [
+      (if @_secret then "--delete-secret-and-public-key" else "--delete-keys"),
+      "--batch",
+      "--yes",
+      @fingerprint()
+    ]
+    log.debug "| Delete key #{@to_string()} from #{@keyring.to_string()}"
+    await @gpg { args }, defer err
+    cb err
+
+  #-------------
+
+  # Make a key object from a User object
+  @make_from_user : ({user, secret, keyring}) ->
+    new GpgKey {
+      user : user ,
+      secret : secret,
+      username : user.username(),
+      is_self : user.is_self(),
+      secret : false,
+      uid : user.id
+      key_data : user?.public_keys?.primary?.bundle,
+      keyring : keyring
+    }
+
+  #-------------
+
+  copy_to_keyring : (keyring) ->
+    d = {}
+    d[k[1...]] = v for k,v of @ when k[0] is '_'
+    ret = new GpgKey d
+    ret.keyring = keyring
+    return ret
+
+##=======================================================================
+
+exports.BaseKeyRing = class BaseKeyRing extends GPG
+
+  constructor : () ->
+
+  make_key : (opts) ->
+    opts.keyring = @
+    return new GpgKey opts
+
+  make_key_from_user : (user, secret) ->
+    return GpgKey.make_from_user { user, secret, keyring : @ }
+
+##=======================================================================
+
+exports.MasterKeyRing = class MasterKeyRing extends BaseKeyRing
+
+  to_string : () -> "master keyring"
+
+##=======================================================================
+
+_mring = new MasterKeyRing()
+exports.master_ring = () -> _mring
+
+##=======================================================================
+
+exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
 
   constructor : (@dir) ->
+
+  #------
+
+  to_string : () -> "tmp keyring #{@dir}"
+
+  #------
+
+  mkfile : (n) -> path.join @dir, n
+
+  #------
+
+  # The GPG class will call this right before it makes a call to the shell/gpg.
+  # Now is our chance to talk about our special keyring
+  mutate_args : (gargs) ->
+    gargs.args = [
+      "--no-default-keyring",
+      "--keyring",            @mkfile("pub.ring"),
+      "--secret-keyring",     @mkfile("sec.ring"),
+      "--trustdb-name",       @mkfile("trust.db")
+    ].concat gargs.args
+    log.debug "| Mutate GPG args; new args: #{gargs.inargs.join(' ')}"
+
+  #------
+
+  gpg : (gargs, cb) ->
+    log.debug "| Call to gpg: #{util.inspect(inargs)}"
+    gargs.quiet = false if gargs.quiet and env().get_debug()
+    await @run gargs, defer err, res
+    cb err, res
+
+  #------
 
   @make : (cb) ->
     mode = 0o700
@@ -59,8 +216,17 @@ exports.TempKeyRing = class TempKeyRing
       if err?
         log.error "Failed to make dir #{dir}: #{err.message}"
 
-    tkr = if err? then null else (new TempKeyRing dir)
+    tkr = if err? then null else (new TmpKeyRing dir)
     cb err, tkr
+
+  #----------------------------
+
+  copy_key : (k1, cb) ->
+    esc = make_esc cb, "TmpKeyRing::copy_key"
+    await k1.load defer esc defer()
+    k2 = k1.copy_to_keyring @
+    await k2.save defer esc defer()
+    cb()
 
   #----------------------------
 

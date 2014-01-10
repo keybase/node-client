@@ -35,7 +35,6 @@ exports.GpgKey = class GpgKey
 
   #----------
 
-
   query_key : (cb) ->
     if (fp = @_fingerprint)?
       args = [ "-" + (if @_secret then 'K' else 'k'), "--with-colons", fp ]

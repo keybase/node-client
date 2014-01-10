@@ -312,6 +312,26 @@ exports.User = class User
 
   #--------------
 
+  # Make a new temporary keyring; initialize it with the user's current
+  # public key and/or private key, depending on the passed options.  If we fail
+  # halfway through, make sure we nuke and clean up after ourselves.
+  new_tmp_keyring : (secret, cb) ->
+    tmp = err = null
+    await TmpKeyRing.make defer err, tmp
+    unless err?
+      k = master_ring().make_key_from_user @, secret
+      await k.load defer err2
+      unless err2?
+        k2 = k.copy_to_keyring tmp
+        await k2.save defer err2
+      if err2?
+        err = err2
+        await tmp.nuke defer err3
+        tmp = null
+    cb err, tmp
+
+  #--------------
+
   gen_untrack_obj : () ->
 
     pkp = @public_keys.primary
