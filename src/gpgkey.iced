@@ -9,8 +9,6 @@ log = require './log'
 
 #============================================================
 
-strip = (m) -> m.split(/\s+/).join('')
-
 #============================================================
 
 exports.GpgKey = class GpgKey 
@@ -104,45 +102,12 @@ exports.GpgKey = class GpgKey
   #--------------
 
   _sign_key : (signer, cb) ->
-    log.debug "| GPG-signing #{@username()}'s key with your key"
-    args = [ "-u", signer.fingerprint(), "--sign-key", "--batch", "--yes", @fingerprint() ]
-    await @gpg { args, quiet : 'true' }, defer err
-    cb err
 
   #--------------
 
   gpg_obj : () -> gpgmod.obj(@is_tmp())
 
-  #--------------
 
-  _verify_key_id_64 : ( {ki64, which, sig}, cb) ->
-    log.debug "+ GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()}"
-    err = null
-    if ki64 isnt @key_id_64() 
-      await @gpg { args : [ "--fingerprint", "--keyid-format", "long", ki64 ] }, defer err, out
-      if err? then # noop
-      else if not (m = out.toString('utf8').match(/Key fingerprint = ([A-F0-9 ]+)/) )?
-        err = new E.VerifyError "Querying for a fingerprint failed"
-      else if not (a = strip(m[1])) is (b = @fingerprint())
-        err = new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
-      else
-        log.debug "| Successful map of #{ki64} -> #{@fingerprint()}"
-
-    unless err?
-      await @assert_no_collision ki64, defer err
-
-    log.debug "- GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()} -> #{err}"
-    cb err
-
-  #--------------
-
-  _find_key_in_stderr : (which, buf) ->
-    err = ki64 = fingerprint = null
-    d = buf.toString('utf8')
-    if (m = d.match(/Primary key fingerprint: (.*)/))? then fingerprint = m[1]
-    else if (m = d.match(/using [RD]SA key ([A-F0-9]{16})/))? then ki64 = m[1]
-    else err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
-    return { err, ki64, fingerprint } 
 
   #--------------
 

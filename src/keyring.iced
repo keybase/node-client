@@ -8,58 +8,77 @@ mkdirp = require 'mkdirp'
 {env} = require './env'
 {prng} = require 'crypto'
 {base64u} = require('pgp-utils').util
+{E} = require './err'
 path = require 'path'
 fs = require 'fs'
+{colgrep} = require 'gpg-wrapper'
 
 ##=======================================================================
 
-exports.clean_key_imports = (cb) ->
-  esc = make_esc cb, "clean_key_imports"
-  log.debug "+ clean key imports"
-  state = constants.import_state.TEMPORARY
-  await db.select_key_imports_by_state state, esc defer keys
-  log.debug "| queried for temp keys, got: #{JSON.stringify keys}"
-  if keys.length
-    args = [ "--batch", "--delete-keys" ].concat(k.toUpperCase() for k in keys)
-    log.debug "| calling GPG client with #{JSON.stringify args}"  
-    await gpg { args, tmp : true }, defer err
-    state = constants.import_state.CANCELED
-    await db.batch_update_key_import { fingerprints : keys, state }, esc defer()
-  log.debug "- clean key imports"
-  cb null
+strip = (m) -> m.split(/\s+/).join('')
 
 ##=======================================================================
 
 class GpgKey 
 
+  #-------------
+
   constructor : (fields) ->
     for k,v of fields
       @["_#{k}"] = v
 
+  #-------------
+
   # The fingerprint of the key
-  fingerprint : () -> 
+  fingerprint : () -> @_fingerprint
 
   # The 64-bit GPG key ID
   key_id_64 : () -> @fingerprint()[-16...]
 
-  # The full PGP-style username of the key
-  userid : () ->
-
   # The keybase username of the keyholder
-  username : () ->
+  username : () -> @_username
 
   # The keybase UID of the keyholder
-  uid : () ->
+  uid : () -> @_uid
 
   # These two functions are to fulfill to key manager interface
   get_pgp_key_id : () -> @key_id_64()
   get_pgp_finterprint : () -> @fingerprint()
 
+  #-------------
+
   # Find the key in the keyring based on fingerprint
   find : (cb) ->
+    if (fp = @fingerprint())?
+      args = [ "-" + (if @_secret then 'K' else 'k'), "--with-colons", fp ]
+      await @gpg { args, quiet : true }, defer err, out
+      if err?
+        err = new E.NoLocalKeyError (
+          if @_is_self then "You don't have a local key!"
+          else "the user #{@_username} doesn't have a local key"
+        )
+    else
+      err = new E.NoRemoteKeyError (
+        if @_is_self then "You don't have a registered remote key! Try `keybase push`"
+        else "the user #{@_username} doesn't have a remote key"
+      )
+    cb err
+
+  #-------------
 
   # Check that this key has been signed by the signing key.
   check_sig : (signing_key, cb) ->
+    args = [ '--list-sigs', '--with-colon', @fingerprint() ]
+    await @gpg { args }, defer err, out
+    unless err?
+      rows = colgrep { buffer : out, patterns : {
+          0 : /^sub$/
+          4 : (new RegExp "^#{signing_key.key_id_64()}$", "i")
+        }
+      }
+      if rows.length is 0
+        err = new E.VerifyError "No signature of #{@to_string()} by #{signing_key.to_string()}"
+    cb err
 
   #-------------
 
@@ -108,6 +127,37 @@ class GpgKey
 
   #-------------
 
+  # Read the userIds that have been signed with this key
+  read_uids_from_key : (cb) ->
+    args = { fingerprint : @fingerprint() }
+    await @keyring.read_uids_from_keys args, defer err, read_uids
+    cb err, uids
+
+  #-------------
+
+  sign_key : (signer, cb) ->
+    log.debug "| GPG-signing #{@username()}'s key with your key"
+    args = [ "-u", signer.fingerprint(), "--sign-key", "--batch", "--yes", @fingerprint() ]
+    await @gpg { args, quiet : true }, defer err
+    cb err
+
+  #-------------
+
+  # Assuming this is a temporary key, commit it to the master key chain, after signing it
+  commit : (signer, cb) ->
+    esc = make_esc cb, "GpgKey::commit"
+    if @keyring.is_temporary()
+      log.debug "+ #{@to_string()}: Commit temporary key"
+      await @sign_key signer, esc defer()
+      await @load esc defer()
+      await (@copy_to_keyring master_ring()).save esc defer()
+      log.debug "- #{@to_string()}: Commit temporary key"
+    else
+      log.debug "| #{@to_string()}: key was previously commited; noop"
+    cb null
+
+  #-------------
+
   # Make a key object from a User object
   @make_from_user : ({user, secret, keyring}) ->
     new GpgKey {
@@ -116,7 +166,7 @@ class GpgKey
       username : user.username(),
       is_self : user.is_self(),
       secret : false,
-      uid : user.id
+      uid : user.id,
       key_data : user?.public_keys?.primary?.bundle,
       keyring : keyring
     }
@@ -129,6 +179,69 @@ class GpgKey
     ret = new GpgKey d
     ret.keyring = keyring
     return ret
+
+  #--------------
+
+  _find_key_in_stderr : (which, buf) ->
+    err = ki64 = fingerprint = null
+    d = buf.toString('utf8')
+    if (m = d.match(/Primary key fingerprint: (.*)/))? then fingerprint = m[1]
+    else if (m = d.match(/using [RD]SA key ([A-F0-9]{16})/))? then ki64 = m[1]
+    else err = new E.VerifyError "#{which}: can't parse PGP output in verify signature"
+    return { err, ki64, fingerprint } 
+
+  #--------------
+
+  _verify_key_id_64 : ( {ki64, which, sig}, cb) ->
+    log.debug "+ GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()}"
+    err = null
+    if ki64 isnt @key_id_64() 
+      await @gpg { args : [ "--fingerprint", "--keyid-format", "long", ki64 ] }, defer err, out
+      if err? then # noop
+      else if not (m = out.toString('utf8').match(/Key fingerprint = ([A-F0-9 ]+)/) )?
+        err = new E.VerifyError "Querying for a fingerprint failed"
+      else if not (a = strip(m[1])) is (b = @fingerprint())
+        err = new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
+      else
+        log.debug "| Successful map of #{ki64} -> #{@fingerprint()}"
+
+    unless err?
+      await @keyring.assert_no_collision ki64, defer err
+
+    log.debug "- GpgKey::_verify_key_id_64: #{which}: #{ki64} vs #{@fingerprint()} -> #{err}"
+    cb err
+
+  #-------------
+
+  verify_sig : ({which, sig, payload}, cb) ->
+    log.debug "+ GpgKey::verify_sig #{which}"
+    esc = make_esc cb, "GpgKEy::verify_sig"
+    err = null
+
+    stderr = new BufferOutStream()
+    await @gpg { args : [ "--decrypt", "--keyid-format", "long"], stdin : sig, stderr }, defer err, out
+
+    # Check that the signature verified, and that the intended data came out the other end
+    msg = if err? then "signature verification failed"
+    else if ((a = out.toString('utf8')) isnt (b = payload)) then "wrong payload: #{a} != #{b}"
+    else null
+
+    # If there's an exception, we can now throw out of this function
+    if msg? then await athrow (new E.VerifyError "#{which}: #{msg}") esc defer()
+
+    # Now we need to check that there's a short Key id 64, or a full fingerprint
+    # in the stderr output of the verify command
+    {err, ki64, fingerprint} = @_find_key_in_stderr which, stderr.data()
+
+    if err then #noop
+    else if ki64? 
+      await @_verify_key_id_64 { which, ki64, sig }, esc defer()
+    else if (a = strip(fingerprint)) isnt (b = @fingerprint())
+      err = new E.VerifyError "#{which}: mismatched fingerprint: #{a} != #{b}"
+
+    log.debug "- GpgKey::verify_sig #{which} -> #{err}"
+    cb err})
+
 
 ##=======================================================================
 
@@ -152,7 +265,7 @@ exports.MasterKeyRing = class MasterKeyRing extends BaseKeyRing
 ##=======================================================================
 
 _mring = new MasterKeyRing()
-exports.master_ring = () -> _mring
+exports.master_ring = master_ring = () -> _mring
 
 ##=======================================================================
 

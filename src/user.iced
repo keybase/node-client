@@ -219,10 +219,10 @@ exports.User = class User
   _load_me_2 : (cb) ->
     esc = make_esc cb, "User::_load_me_2"
     @set_is_self true
-    @pubkey = new GpgKey @, false
+    @key = @master_ring().make_key_from_user @, true 
     un = @username()
     log.debug "+ #{un}: checking public key"
-    await @pubkey.query_key esc defer()
+    await @key.find esc defer()
     log.debug "- #{un}: checked public key"
     log.debug "+ #{un}: verifying user and signatures"
     await @verify esc defer()
@@ -263,7 +263,7 @@ exports.User = class User
 
   # Also serves to compress the public signatures into a usable table.
   verify : (cb) ->
-    await @sig_chain.verify_sig { username : @username(), @pubkey }, defer err
+    await @sig_chain.verify_sig { @key }, defer err
     cb err
 
   #--------------
