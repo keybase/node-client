@@ -10,9 +10,8 @@ log = require './log'
 {session} = require './session'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
-{GpgKey} = require './gpgkey'
 {unix_time} = require('pgp-utils').util
-kerying = require './keyring'
+{load_key,master_ring} = require './keyring'
 IS = constants.import_state
 
 ##=======================================================================
@@ -309,7 +308,8 @@ exports.User = class User
 
   #--------------
 
-  remove_key : (cb) -> (new GpgKey @, { secret : false, import_state : IS.FINAL} ).remove cb
+  remove_key : (cb) -> 
+    (master_ring().make_key_from_user @, false).remove cb
 
   #--------------
 

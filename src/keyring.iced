@@ -11,7 +11,7 @@ mkdirp = require 'mkdirp'
 {E} = require './err'
 path = require 'path'
 fs = require 'fs'
-{colgrep} = require 'gpg-wrapper'
+{GPG,colgrep} = require 'gpg-wrapper'
 
 ##=======================================================================
 
@@ -292,7 +292,7 @@ exports.master_ring = master_ring = () -> _mring
 
 ##=======================================================================
 
-exports.load = (opts, cb) ->
+exports.load_key = (opts, cb) ->
   key = master_ring().make_key opts
   await key.load defer err
   cb err, key

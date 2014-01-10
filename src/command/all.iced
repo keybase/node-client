@@ -9,7 +9,6 @@ log = require '../log'
 {Config} = require '../config'
 req = require '../req'
 session = require '../session'
-{clean_key_imports} = require '../keyring'
 db = require '../db'
 gpg = require 'gpg-wrapper'
 
@@ -148,8 +147,6 @@ class Main
 
   cleanup_previous_crash : (cb) ->
     err = null
-    if @cmd.use_db()
-      await clean_key_imports defer err
     cb err
 
   #----------------------------------

@@ -2,7 +2,7 @@ log = require './log'
 {gpg} = require './gpg'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require './prompter'
-keyring = require './keyring'
+{load_key} = require './keyring'
 
 ##=======================================================================
 
@@ -40,7 +40,7 @@ exports.KeySelector = class KeySelector
     if keys.length > 1
       await @select_key keys, esc defer key
     else key = keys[0]
-    await keyring.load { @username, key_id_64 : key.ki64 }, esc defer km
+    await load_key { @username, key_id_64 : key.ki64 }, esc defer km
     cb null, km
 
   #----------
