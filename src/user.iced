@@ -7,12 +7,12 @@ deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
 log = require './log'
 {UntrackerProofGen,TrackerProofGen} = require './sigs'
-{KeyManager} = require './keymanager'
 {session} = require './session'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
 {GpgKey} = require './gpgkey'
 {unix_time} = require('pgp-utils').util
+kerying = require './keyring'
 IS = constants.import_state
 
 ##=======================================================================
@@ -239,7 +239,8 @@ exports.User = class User
 
   load_public_key : (cb) ->
     err = null
-    await KeyManager.load @fingerprint(), defer err, @km unless @km?
+    query = { username : @username(), fingerprint : @fingerprint() }
+    await keyring.load query, defer err, @km unless @km?
     cb err, @km
 
   #--------------
@@ -248,10 +249,10 @@ exports.User = class User
 
   #--------------
 
-  import_public_key : (cb) ->
-    @pubkey = new GpgKey @, false
-    await @pubkey.import_key defer err
-    cb err, @pubkey
+  import_public_key : ({keyring}, cb) ->
+    @key = keyring.make_key_from_user @, false
+    await @key.save defer err
+    cb err, @key
 
   #--------------
 
@@ -315,7 +316,7 @@ exports.User = class User
   # Make a new temporary keyring; initialize it with the user's current
   # public key and/or private key, depending on the passed options.  If we fail
   # halfway through, make sure we nuke and clean up after ourselves.
-  new_tmp_keyring : (secret, cb) ->
+  new_tmp_keyring : ({secret}, cb) ->
     tmp = err = null
     await TmpKeyRing.make defer err, tmp
     unless err?

@@ -2,12 +2,12 @@ log = require './log'
 {gpg} = require './gpg'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require './prompter'
-{KeyManager} = require './keymanager'
+keyring = require './keyring'
 
 ##=======================================================================
 
-find_short_id = (raw) ->
-  x = /^pub\s+[0-9]{4}R\/([0-9A-F]{8}) /
+find_key_id_64 = (raw) ->
+  x = /^pub\s+[0-9]{4}R\/([0-9A-F]{16}) /
   if (m = raw.match x) then m[1] else null
 
 log_10 = (x) ->
@@ -30,7 +30,7 @@ repeat = (c,i) -> (c for [0...i]).join('')
 
 exports.KeySelector = class KeySelector
 
-  constructor : ({@query}) ->
+  constructor : ({@username, @query}) ->
 
   #----------
 
@@ -40,20 +40,20 @@ exports.KeySelector = class KeySelector
     if keys.length > 1
       await @select_key keys, esc defer key
     else key = keys[0]
-    await KeyManager.load key.short_id, esc defer km
+    await keyring.load { @username, key_id_64 : key.ki64 }, esc defer km
     cb null, km
 
   #----------
 
   query_keys : (cb) ->
     @keys = null
-    args = [ "-k" ] 
+    args = [ "-k", "--keyid-format", "long" ] 
     args.push @query if @query
     await gpg { args }, defer err, out
     unless err?
       raw = out.toString().split("\n\n")
-      keys = for r in raw when (f = find_short_id r)
-        { lines : r.split("\n"), short_id : f }
+      keys = for r in raw when (f = find_key_id_64 r)
+        { lines : r.split("\n"), ki64 : f }
     cb err, keys
 
   #----------
@@ -92,11 +92,11 @@ exports.KeySelector = class KeySelector
     await prompt_for_int 1, keys.length, defer err, sel
     out = if err? then null else keys[sel-1]
     if out?
-      log.info "Picked key: #{out.short_id}"
+      log.info "Picked key: #{out.ki64}"
     cb err, out
 
 ##=======================================================================
 
-exports.key_select = (query, cb) -> (new KeySelector { query }).select cb
+exports.key_select = (username, query, cb) -> (new KeySelector { username, query }).select cb
 
 ##=======================================================================

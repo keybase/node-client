@@ -17,6 +17,7 @@ db = require './db'
 util = require 'util'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
+{TmpKeyRing} = require './keyring'
 
 ##=======================================================================
 
@@ -50,13 +51,16 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _key_cleanup : ({accept, their_pubkey}, cb) ->
+  _key_cleanup : ({accept} cb) ->
     err = null
     if accept 
       log.debug "| commit_key"
-      await their_pubkey.commit @me.pubkey, defer err
+      await @them.key.commit @me.key, defer err
     else
-      await their_pubkey.rollback defer err
+      await @them.key.rollback defer err
+    if @tmp_keyring
+      await @tmp_keyring.nuke defer e2
+      log.warn "Problem in cleanup: #{e2.message}"
     cb err
 
   #----------
@@ -66,9 +70,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     log.debug "+ id"
     accept = false
     await User.load { username : @args.them }, esc defer them
-    await them.import_public_key esc defer pubkey
+    await TmpKeyRing.make esc defer @tmp_keyring
     await @_id2 { them }, esc defer()
-    await @_key_cleanup { theiry_pubkey : pubkey }, esc defer()
+    await @_key_cleanup { }, esc defer()
     log.debug "- id"
     cb null
 
@@ -77,6 +81,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   _id2 : ({them}, cb ) ->
     esc = make_esc cb, "TrackSubSub:_id2"
     log.debug "+ _id2"
+    await them.import_public_key { keyring : @tmp_keyring }, esc defer()
     await them.verify esc defer()
     await them.check_remote_proofs false, esc defer warnings # err isn't a failure here
     log.debug "- _id2"
@@ -90,14 +95,14 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me esc defer @me
     await User.load { username : @args.them }, esc defer @them
-    await @them.import_public_key esc defer pubkey
+    await @me.new_tmp_keyring { secret : false }, esc defer @tmp_keyring
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.
     await @_run2 defer err, accept
 
     # Clean up the key if necessary
-    await @_key_cleanup { their_pubkey : pubkey, accept }, esc defer()
+    await @_key_cleanup { accept }, esc defer()
 
     log.debug "- run"
 
@@ -109,6 +114,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::_run2"
     log.debug "+ _run2"
 
+    await @them.import_public_key { keyring: @tmp_keyring }, esc defer
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer trackw
     

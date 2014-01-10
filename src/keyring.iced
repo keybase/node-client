@@ -33,7 +33,10 @@ class GpgKey
   fingerprint : () -> @_fingerprint
 
   # The 64-bit GPG key ID
-  key_id_64 : () -> @fingerprint()[-16...]
+  key_id_64 : () -> @_key_id_64 or @fingerprint()[-16...]
+
+  # Something to load a key by
+  load_id : () -> @key_id_64() or @fingerprint()
 
   # The keybase username of the keyholder
   username : () -> @_username
@@ -82,7 +85,7 @@ class GpgKey
 
   #-------------
 
-  to_string : () -> [ @username(), @key_id_64 ].join "/"
+  to_string : () -> [ (@username(), @key_id_64 ].join "/"
 
   #-------------
 
@@ -105,7 +108,7 @@ class GpgKey
       (if @_secret then "--export-secret-key" else "--secret" ),
       "--export-local-sigs", 
       "-a",
-      @fingerprint()
+      @load_id()
     ]
     log.debug "| Load key #{@to_string()} from #{@keyring.to_string()}"
     await @gpg { args }, defer err, @_key_data
@@ -150,11 +153,24 @@ class GpgKey
       log.debug "+ #{@to_string()}: Commit temporary key"
       await @sign_key signer, esc defer()
       await @load esc defer()
+      await @remove esc()
       await (@copy_to_keyring master_ring()).save esc defer()
       log.debug "- #{@to_string()}: Commit temporary key"
     else
       log.debug "| #{@to_string()}: key was previously commited; noop"
     cb null
+
+  #-------------
+
+  rollback : () ->
+    s = @to_string()
+    err = null
+    if @keyring.is_temporary()
+      log.debug "| #{s}: Rolling back temporary key"
+      await @remove defer err
+    else
+      log.debug "| #{s}: no need to rollback key, it's permanent"
+    cb err
 
   #-------------
 
@@ -240,8 +256,11 @@ class GpgKey
       err = new E.VerifyError "#{which}: mismatched fingerprint: #{a} != #{b}"
 
     log.debug "- GpgKey::verify_sig #{which} -> #{err}"
-    cb err})
+    cb err
 
+  #-------
+
+  is_temporary : () -> true
 
 ##=======================================================================
 
@@ -261,11 +280,19 @@ exports.BaseKeyRing = class BaseKeyRing extends GPG
 exports.MasterKeyRing = class MasterKeyRing extends BaseKeyRing
 
   to_string : () -> "master keyring"
+  is_temporary : () -> false
 
 ##=======================================================================
 
 _mring = new MasterKeyRing()
 exports.master_ring = master_ring = () -> _mring
+
+##=======================================================================
+
+exports.load = (opts, cb) ->
+  key = master_ring().make_key opts
+  await key.load defer err
+  cb err, key
 
 ##=======================================================================
 
