@@ -11,7 +11,7 @@ mkdirp = require 'mkdirp'
 {E} = require './err'
 path = require 'path'
 fs = require 'fs'
-{GPG,colgrep} = require 'gpg-wrapper'
+{BufferOutStream,GPG,colgrep} = require 'gpg-wrapper'
 util = require 'util'
 
 ##=======================================================================
@@ -140,7 +140,7 @@ class GpgKey
   # Read the userIds that have been signed with this key
   read_uids_from_key : (cb) ->
     args = { fingerprint : @fingerprint() }
-    await @keyring().read_uids_from_keys args, defer err, read_uids
+    await @keyring().read_uids_from_key args, defer err, uids
     cb err, uids
 
   #-------------
@@ -169,7 +169,7 @@ class GpgKey
 
   #-------------
 
-  rollback : () ->
+  rollback : (cb) ->
     s = @to_string()
     err = null
     if @keyring().is_temporary()
@@ -191,7 +191,8 @@ class GpgKey
       secret : false,
       uid : user.id,
       key_data : user?.public_keys?.primary?.bundle,
-      keyring : keyring
+      keyring : keyring,
+      fingerprint : user.fingerprint(true)
     }
 
   #-------------
@@ -267,7 +268,6 @@ class GpgKey
 
   #-------
 
-  is_temporary : () -> true
 
 ##=======================================================================
 
@@ -282,12 +282,13 @@ exports.BaseKeyRing = class BaseKeyRing extends GPG
   make_key_from_user : (user, secret) ->
     return GpgKey.make_from_user { user, secret, keyring : @ }
 
+  is_temporary : () -> false
+
 ##=======================================================================
 
 exports.MasterKeyRing = class MasterKeyRing extends BaseKeyRing
 
   to_string : () -> "master keyring"
-  is_temporary : () -> false
 
 ##=======================================================================
 
@@ -326,12 +327,12 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
       "--secret-keyring",     @mkfile("sec.ring"),
       "--trustdb-name",       @mkfile("trust.db")
     ].concat gargs.args
-    log.debug "| Mutate GPG args; new args: #{gargs.inargs.join(' ')}"
+    log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
 
   #------
 
   gpg : (gargs, cb) ->
-    log.debug "| Call to gpg: #{util.inspect(inargs)}"
+    log.debug "| Call to gpg: #{util.inspect gargs}"
     gargs.quiet = false if gargs.quiet and env().get_debug()
     await @run gargs, defer err, res
     cb err, res
@@ -340,6 +341,7 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
 
   @make : (cb) ->
     mode = 0o700
+    log.debug "+ Make new temporary keychain"
     parent = env().get_tmp_keyring_dir()
     await mkdirp parent, mode, defer err, made
     if err?
@@ -363,6 +365,7 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
       if err?
         log.error "Failed to make dir #{dir}: #{err.message}"
 
+    log.debug "- Made new temporary keychain"
     tkr = if err? then null else (new TmpKeyRing dir)
     cb err, tkr
 
@@ -374,6 +377,10 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
     k2 = k1.copy_to_keyring @
     await k2.save esc defer()
     cb()
+
+  #----------------------------
+
+  is_temporary : () -> true
 
   #----------------------------
 

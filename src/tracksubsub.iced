@@ -55,12 +55,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     err = null
     if accept 
       log.debug "| commit_key"
-      await @them.key.commit @me.key, defer err
+      await @them.key.commit @me?.key, defer err
     else
       await @them.key.rollback defer err
     if @tmp_keyring
       await @tmp_keyring.nuke defer e2
-      log.warn "Problem in cleanup: #{e2.message}"
+      log.warn "Problem in cleanup: #{e2.message}" if e2?
     cb err
 
   #----------
@@ -69,9 +69,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
-    await User.load { username : @args.them }, esc defer them
+    await User.load { username : @args.them }, esc defer @them
     await TmpKeyRing.make esc defer @tmp_keyring
-    await @_id2 { them }, esc defer()
+    await @_id2 { @them }, esc defer()
     await @_key_cleanup { }, esc defer()
     log.debug "- id"
     cb null

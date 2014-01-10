@@ -468,7 +468,7 @@ exports.SigChain = class SigChain
 
   verify_sig : ({key}, cb) ->
     esc = make_esc cb, "SigChain::verify_sig"
-    @username = key.username()
+    @username = username = key.username()
     @pubkey = key
     log.debug "+ #{username}: verifying sig"
     if (@fingerprint = @last()?.fingerprint())?

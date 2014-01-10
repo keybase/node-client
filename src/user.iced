@@ -250,14 +250,16 @@ exports.User = class User
   #--------------
 
   import_public_key : ({keyring}, cb) ->
+    log.debug "+ Import public key from #{keyring.to_string()}"
     @key = keyring.make_key_from_user @, false
     await @key.save defer err
+    log.debug "- Import public key from #{keyring.to_string()}"
     cb err, @key
 
   #--------------
 
   check_remote_proofs : (skip, cb) ->
-    await @sig_chain.check_remote_proofs { skip, @pubkey }, defer err, warnings
+    await @sig_chain.check_remote_proofs { skip, pubkey : @key }, defer err, warnings
     cb err, warnings
 
   #--------------
