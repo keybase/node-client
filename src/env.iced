@@ -62,44 +62,29 @@ class Env
   get_session_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_SESSION_FILE
-      arg    : (a) -> a["session-file"]
+      arg    : (a) -> a.session_file
       config : (c) -> c?.files?.session
       dflt   : ( ) -> join home(), FN.config_dir, FN.session_file
 
   get_db_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_DB_FILE
-      arg    : (a) -> a["db-file"]
+      arg    : (a) -> a.db_file
       config : (c) -> c?.files?.db
       dflt   : ( ) -> join home(), FN.config_dir, FN.db_file
 
   get_tmp_keyring_dir : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR
-      arg    : (a) -> a["tmp-keyring-dir"]
+      arg    : (a) -> a.tmp_keyring_dir
       config : (c) -> c?.files?.tmp_keyring_dir
       dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_keyring_dir
 
-  get_tmp_gpg_sec_keyring : () ->
+  get_preserve_tmp_keyring : () ->
     @get_opt
-      env    : (e) -> e.KEYBASE_TMP_GPG_SEC_KEYRING
-      arg    : (a) -> a["tmp-gpg-sec-keyring"]
-      config : (c) -> c?.files?.tmp_gpg?.sec_keyring
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_gpg.sec_keyring
-
-  get_tmp_gpg_pub_keyring : () ->
-    @get_opt
-      env    : (e) -> e.KEYBASE_TMP_GPG_SEC_KEYRING
-      arg    : (a) -> a["tmp-gpg-pub-keyring"]
-      config : (c) -> c?.files?.tmp_gpg?.pub_keyring
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_gpg.pub_keyring
-
-  get_tmp_gpg_trustdb : () ->
-    @get_opt
-      env    : (e) -> e.KEYBASE_TMP_GPG_TRUSTDB
-      arg    : (a) -> a["tmp-gpg-trustdb"]
-      config : (c) -> c?.files?.tmp_gpg?.trustdb
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_gpg.trustdb
+      env    : (e) -> e.KEYBASE_PRESERVE_TMP_KEYRING
+      arg    : (a) -> a.preserve_tmp_keyring
+      dflt   : ( ) -> false
 
   get_host   : ( ) ->
     @get_opt
@@ -118,14 +103,14 @@ class Env
   get_no_tls : ( ) ->
     @get_opt
       env    : (e) -> e.KEYBASE_NO_TLS
-      arg    : (a) -> a["no-tls"]
+      arg    : (a) -> a.no_tls
       config : (c) -> c.server?.no_tls
       dflt   : ( ) -> SRV.no_tls
 
   get_api_uri_prefix : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_API_URI_PREFIX
-      arg    : (a) -> a["api-uri-prefix"]
+      arg    : (a) -> a.api_uri_prefix
       config : (c) -> c.server?.api_uri_prefix
       dflt   : ( ) -> SRV.api_uri_prefix
 

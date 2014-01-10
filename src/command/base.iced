@@ -72,6 +72,9 @@ exports.Base = class Base
       alias : "batch"
       action : "storeTrue"
       help : "batch mode; disable all prompts"
+    "preserve-tmp-keyring" :
+      action : "storeTrue"
+      help : "preserve the temporary keyring; don't clean it up"
 
   #-------------------
 

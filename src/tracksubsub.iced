@@ -58,7 +58,11 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await @them.key.commit @me?.key, defer err
     else
       await @them.key.rollback defer err
-    if @tmp_keyring
+      
+    if not @tmp_keyring then #noop
+    else if env().get_preserve_tmp_keyring()
+      log.info "Preserving #{@tmp_keyring.to_string()}"
+    else
       await @tmp_keyring.nuke defer e2
       log.warn "Problem in cleanup: #{e2.message}" if e2?
     cb err
