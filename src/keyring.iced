@@ -44,6 +44,9 @@ class GpgKey
   # The keybase UID of the keyholder
   uid : () -> @_uid
 
+  # Return the raw armored PGP key data
+  key_data : () -> @_key_data
+
   # These two functions are to fulfill to key manager interface
   get_pgp_key_id : () -> @key_id_64()
   get_pgp_finterprint : () -> @fingerprint()
@@ -85,7 +88,7 @@ class GpgKey
 
   #-------------
 
-  to_string : () -> [ (@username(), @key_id_64 ].join "/"
+  to_string : () -> [ @username(), @key_id_64 ].join "/"
 
   #-------------
 
@@ -153,7 +156,7 @@ class GpgKey
       log.debug "+ #{@to_string()}: Commit temporary key"
       await @sign_key signer, esc defer()
       await @load esc defer()
-      await @remove esc()
+      await @remove esc defer()
       await (@copy_to_keyring master_ring()).save esc defer()
       log.debug "- #{@to_string()}: Commit temporary key"
     else
@@ -363,9 +366,9 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
 
   copy_key : (k1, cb) ->
     esc = make_esc cb, "TmpKeyRing::copy_key"
-    await k1.load defer esc defer()
+    await k1.load esc defer()
     k2 = k1.copy_to_keyring @
-    await k2.save defer esc defer()
+    await k2.save esc defer()
     cb()
 
   #----------------------------

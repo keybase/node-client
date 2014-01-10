@@ -97,6 +97,6 @@ exports.KeySelector = class KeySelector
 
 ##=======================================================================
 
-exports.key_select = (username, query, cb) -> (new KeySelector { username, query }).select cb
+exports.key_select = ({username, query}, cb) -> (new KeySelector { username, query }).select cb
 
 ##=======================================================================

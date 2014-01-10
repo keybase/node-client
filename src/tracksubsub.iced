@@ -51,7 +51,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _key_cleanup : ({accept} cb) ->
+  _key_cleanup : ({accept}, cb) ->
     err = null
     if accept 
       log.debug "| commit_key"
@@ -114,7 +114,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::_run2"
     log.debug "+ _run2"
 
-    await @them.import_public_key { keyring: @tmp_keyring }, esc defer
+    await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer trackw
     
