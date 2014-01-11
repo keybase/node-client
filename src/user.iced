@@ -2,7 +2,7 @@ req = require './req'
 db = require './db'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
-{E} = require './err'
+{GE,E} = require './err'
 deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
 log = require './log'
@@ -237,11 +237,17 @@ exports.User = class User
 
   #--------------
 
-  load_public_key : (cb) ->
+  load_public_key : ({signer, can_fail}, cb) ->
+    log.debug "+ load public key for #{@username()}"
     err = null
-    query = { username : @username(), fingerprint : @fingerprint() }
-    await load_key query, defer err, @km unless @km?
-    cb err, @km
+    query = { username : @username(), fingerprint : @fingerprint(), signer }
+    unless @key?
+      await load_key query, defer err, @key
+      if err? and (err instanceof GE.GpgError) and can_fail
+        log.debug "| Failed to load a key for #{@username()}, but we're allowed to failed: #{err.message}"
+        err = null
+    log.debug "- load public key; found=#{!!@key}; err=#{err}"
+    cb err, @key
 
   #--------------
 
@@ -273,8 +279,8 @@ exports.User = class User
 
   gen_remote_proof_gen : ({klass, remote_username}, cb) ->
     esc = make_esc cb, "User::gen_remote_proof_gen"
-    await @load_public_key esc defer()
-    arg =  { @km, remote_username }
+    await @load_public_key {}, esc defer()
+    arg =  { km : @key, remote_username }
     g = new klass arg
     cb null, g
 
@@ -282,11 +288,11 @@ exports.User = class User
 
   gen_track_proof_gen : ({uid, track_obj, untrack_obj}, cb) ->
     esc = make_esc cb, "User::gen_track_proof_gen"
-    await @load_public_key esc defer()
+    await @load_public_key {}, esc defer()
     last_link = @sig_chain?.last()
     klass = if untrack_obj? then UntrackerProofGen else TrackerProofGen
     arg = 
-      km : @km
+      km : @key
       seqno : (if last_link? then (last_link.seqno() + 1) else 1)
       prev : (if last_link? then last_link.id else null)
       uid : uid

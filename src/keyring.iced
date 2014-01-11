@@ -7,7 +7,7 @@ log = require './log'
 mkdirp = require 'mkdirp'
 {env} = require './env'
 {prng} = require 'crypto'
-{base64u} = require('pgp-utils').util
+{athrow,base64u} = require('pgp-utils').util
 {GE,E} = require './err'
 path = require 'path'
 fs = require 'fs'
@@ -18,6 +18,11 @@ util = require 'util'
 
 strip = (m) -> m.split(/\s+/).join('')
 
+states = 
+  NONE : 0
+  LOADED : 1
+  SAVED : 2
+
 ##=======================================================================
 
 class GpgKey 
@@ -25,6 +30,7 @@ class GpgKey
   #-------------
 
   constructor : (fields) ->
+    @_state = states.NONE
     for k,v of fields
       @["_#{k}"] = v
 
@@ -54,6 +60,26 @@ class GpgKey
   # These two functions are to fulfill to key manager interface
   get_pgp_key_id : () -> @key_id_64()
   get_pgp_fingerprint : () -> @fingerprint().toLowerCase()
+
+  is_signed : () -> !!@_is_signed
+
+  #-------------
+
+  check_is_signed : (signer, cb) ->
+    log.debug "+ Check if #{signer.to_string()} signed #{@to_string()}"
+    id = @load_id()
+    args = [ "--list-sigs", "--with-colons", id ]
+    await @gpg { args }, defer err, out
+    unless err?
+      rows = colgrep { buffer : out, patterns : { 0 : /^sig$/ }, separator : /:/  }
+      to_find = signer.key_id_64().toUpperCase()
+      for row in rows
+        if row[4] is to_find
+          log.debug "| Found in row: #{JSON.stringify row}"
+          @_is_signed = true
+          break
+    log.debug "- Check -> #{@_is_signed}"
+    cb err, @_is_signed
 
   #-------------
 
@@ -105,6 +131,7 @@ class GpgKey
     args = [ "--import" ]
     log.debug "| Save key #{@to_string()} to #{@keyring().to_string()}"
     await @gpg { args, stdin : @_key_data, quiet : true }, defer err
+    @_state = state.SAVED
     cb err
 
   #-------------
@@ -129,6 +156,7 @@ class GpgKey
       if (rows.length is 0) or not (@_fingerprint = rows[0][9])?
         err = new GE.GpgError "Couldn't find GPG fingerprint for #{id}"
       else
+        @_state = state.LOADED
         log.debug "- Map #{id} -> #{@_fingerprint} via gpg"
     cb err
 
@@ -174,6 +202,9 @@ class GpgKey
       await @remove esc defer()
       await (@copy_to_keyring master_ring()).save esc defer()
       log.debug "- #{@to_string()}: Commit temporary key"
+    else if not @_is_signed
+      log.debug "| #{@to_string()}: signing key, since it wasn't signed"
+      await @sign_key signer, esc defer()
     else
       log.debug "| #{@to_string()}: key was previously commited; noop"
     cb null
@@ -263,7 +294,7 @@ class GpgKey
     else null
 
     # If there's an exception, we can now throw out of this function
-    if msg? then await athrow (new E.VerifyError "#{which}: #{msg}") esc defer()
+    if msg? then await athrow (new E.VerifyError "#{which}: #{msg}"), esc defer()
 
     # Now we need to check that there's a short Key id 64, or a full fingerprint
     # in the stderr output of the verify command
@@ -323,8 +354,11 @@ exports.master_ring = master_ring = () -> _mring
 ##=======================================================================
 
 exports.load_key = (opts, cb) ->
+  delete opts.signer if (signer = opts.signer)?
   key = master_ring().make_key opts
   await key.load defer err
+  if not err? and signer?
+    await key.check_is_signed signer, defer err
   cb err, key
 
 ##=======================================================================

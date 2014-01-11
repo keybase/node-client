@@ -6,8 +6,8 @@ proofs = require 'keybase-proofs'
 {proof_type_to_string} = proofs
 ST = constants.signature_types
 deq = require 'deep-equal'
-{E} = require './err'
-{unix_time} = require('pgp-utils').util
+{GE,E} = require './err'
+{athrow,unix_time} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 {prompt_yn} = require './prompter'
 colors = require 'colors'
@@ -99,11 +99,17 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me esc defer @me
     await User.load { username : @args.them }, esc defer @them
-    await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
+
+    # First see if we already have the key, in which case we don't
+    # need to reimport it.
+    await @them.load_public_key { signer : @me.key, can_fail : true }, esc defer their_key
+    found_them = !!their_key
+    unless found_them
+      await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.
-    await @_run2 defer err, accept
+    await @_run2 { found_them }, defer err, accept
 
     # Clean up the key if necessary
     await @_key_cleanup { accept }, esc defer()
@@ -114,11 +120,13 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _run2 : (cb) ->
+  _run2 : ({found_them}, cb) ->
     esc = make_esc cb, "TrackSubSub::_run2"
     log.debug "+ _run2"
 
-    await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
+    unless found_them
+      await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
+
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer trackw
     
