@@ -240,7 +240,7 @@ exports.User = class User
   load_public_key : (cb) ->
     err = null
     query = { username : @username(), fingerprint : @fingerprint() }
-    await keyring.load query, defer err, @km unless @km?
+    await load_key query, defer err, @km unless @km?
     cb err, @km
 
   #--------------
