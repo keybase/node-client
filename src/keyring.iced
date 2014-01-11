@@ -53,7 +53,7 @@ class GpgKey
 
   # These two functions are to fulfill to key manager interface
   get_pgp_key_id : () -> @key_id_64()
-  get_pgp_fingerprint : () -> @fingerprint()
+  get_pgp_fingerprint : () -> @fingerprint().toLowerCase()
 
   #-------------
 
