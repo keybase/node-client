@@ -3,7 +3,7 @@ log = require '../log'
 {add_option_dict} = require './argparse'
 {E} = require '../err'
 {TrackSubSubCommand} = require '../tracksubsub'
-{BufferInStream} = require('gpg-wrapper')
+{BufferOutStream,BufferInStream} = require('gpg-wrapper')
 {gpg} = require '../gpg'
 {make_esc} = require 'iced-error'
 {env} = require '../env'
@@ -45,10 +45,17 @@ exports.Command = class Command extends Base
 
   #----------
 
+  handle_signature : (stderr, cb) ->
+    console.log stderr.data().toString()
+    cb()
+
+  #----------
+
   do_decrypt : (cb) ->
-    args = [ "--decrypt" , "--keyid-format", "long", "--keyserver" , env().get_key_server() ]
+    args = [ "--decrypt" , "--with-colons", "--keyid-format", "long", "--keyserver" , env().get_key_server() ]
     args.push( "--keyserver-options", "debug=1")  if env().get_debug()
     gargs = { args }
+    gargs.stderr = new BufferOutStream()
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
@@ -57,6 +64,8 @@ exports.Command = class Command extends Base
       gargs.stdin = process.stdin
     await gpg gargs, defer err, out
     log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
+    unless err?
+      await @handle_signature gargs.stderr, defer err
     cb err 
 
   #----------

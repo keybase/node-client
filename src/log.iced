@@ -50,7 +50,7 @@ class Level
     line = @color_fn line if @color_fn? and env.use_color
     @__log_line line
 
-  __log_line : (x) -> console.log x
+  __log_line : (x) -> console.error x
 
 #=========================================================================
 
