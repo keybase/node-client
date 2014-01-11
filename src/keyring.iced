@@ -112,12 +112,12 @@ class GpgKey
   # Load this key from the underlying GPG keyring
   load : (cb) ->
     args = [ 
-      (if @_secret then "--export-secret-key" else "--secret" ),
-      "--export-local-sigs", 
+      (if @_secret then "--export-secret-key" else "--export" ),
+      "--export-options", "export-local-sigs", 
       "-a",
       @load_id()
     ]
-    log.debug "| Load key #{@to_string()} from #{@keyring().to_string()}"
+    log.debug "| Load key #{@to_string()} from #{@keyring().to_string()} (secret=#{@_secret})"
     await @gpg { args }, defer err, @_key_data
     cb err
 
@@ -190,7 +190,6 @@ class GpgKey
       secret : secret,
       username : user.username(),
       is_self : user.is_self(),
-      secret : false,
       uid : user.id,
       key_data : user?.public_keys?.primary?.bundle,
       keyring : keyring,
@@ -277,15 +276,28 @@ exports.BaseKeyRing = class BaseKeyRing extends GPG
 
   constructor : () ->
 
+  #------
+
   make_key : (opts) ->
     opts.keyring = @
     return new GpgKey opts
 
+  #------
+
   make_key_from_user : (user, secret) ->
     return GpgKey.make_from_user { user, secret, keyring : @ }
 
+  #------
+
   is_temporary : () -> false
 
+  #------
+
+  gpg : (gargs, cb) ->
+    log.debug "| Call to gpg: #{util.inspect gargs}"
+    gargs.quiet = false if gargs.quiet and env().get_debug()
+    await @run gargs, defer err, res
+    cb err, res
 ##=======================================================================
 
 exports.MasterKeyRing = class MasterKeyRing extends BaseKeyRing
@@ -330,14 +342,6 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
       "--trustdb-name",       @mkfile("trust.db")
     ].concat gargs.args
     log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
-
-  #------
-
-  gpg : (gargs, cb) ->
-    log.debug "| Call to gpg: #{util.inspect gargs}"
-    gargs.quiet = false if gargs.quiet and env().get_debug()
-    await @run gargs, defer err, res
-    cb err, res
 
   #------
 

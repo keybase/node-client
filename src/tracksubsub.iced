@@ -99,7 +99,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me esc defer @me
     await User.load { username : @args.them }, esc defer @them
-    await @me.new_tmp_keyring { secret : false }, esc defer @tmp_keyring
+    await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
     # After this point, we have to recover any errors and throw away 
     # our key if necessary. So call into a subfunction.

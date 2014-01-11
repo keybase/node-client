@@ -11,7 +11,7 @@ log = require './log'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
 {unix_time} = require('pgp-utils').util
-{load_key,master_ring} = require './keyring'
+{TmpKeyRing,load_key,master_ring} = require './keyring'
 IS = constants.import_state
 
 ##=======================================================================
@@ -219,7 +219,7 @@ exports.User = class User
   _load_me_2 : (cb) ->
     esc = make_esc cb, "User::_load_me_2"
     @set_is_self true
-    @key = @master_ring().make_key_from_user @, true 
+    @key = master_ring().make_key_from_user @, true 
     un = @username()
     log.debug "+ #{un}: checking public key"
     await @key.find esc defer()
@@ -321,6 +321,7 @@ exports.User = class User
   # halfway through, make sure we nuke and clean up after ourselves.
   new_tmp_keyring : ({secret}, cb) ->
     tmp = err = null
+    log.debug "+ new_tmp_keyring for #{@username()} (secret=#{secret})"
     await TmpKeyRing.make defer err, tmp
     unless err?
       k = master_ring().make_key_from_user @, secret
@@ -332,6 +333,7 @@ exports.User = class User
         err = err2
         await tmp.nuke defer err3
         tmp = null
+    log.debug "- new_tmp_keyring -> #{err}"
     cb err, tmp
 
   #--------------
