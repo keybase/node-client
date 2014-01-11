@@ -102,9 +102,10 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     # First see if we already have the key, in which case we don't
     # need to reimport it.
-    await @them.load_public_key { signer : @me.key, can_fail : true }, esc defer their_key
-    found_them = !!their_key
-    unless found_them
+    await @them.check_public_key esc defer found_them
+    if found_them
+      await @them.load_public_key { signer : @me.key }, esc defer()
+    else
       await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
     # After this point, we have to recover any errors and throw away 

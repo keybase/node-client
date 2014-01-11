@@ -131,7 +131,7 @@ class GpgKey
     args = [ "--import" ]
     log.debug "| Save key #{@to_string()} to #{@keyring().to_string()}"
     await @gpg { args, stdin : @_key_data, quiet : true }, defer err
-    @_state = state.SAVED
+    @_state = states.SAVED
     cb err
 
   #-------------
@@ -156,7 +156,7 @@ class GpgKey
       if (rows.length is 0) or not (@_fingerprint = rows[0][9])?
         err = new GE.GpgError "Couldn't find GPG fingerprint for #{id}"
       else
-        @_state = state.LOADED
+        @_state = states.LOADED
         log.debug "- Map #{id} -> #{@_fingerprint} via gpg"
     cb err
 

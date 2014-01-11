@@ -232,20 +232,23 @@ exports.User = class User
   #--------------
 
   check_public_key : (cb) ->
-    await @query_key { secret : false }, defer err
-    cb err
+    log.debug "+ #{@username()}: check public key"
+    key = master_ring().make_key_from_user @, false
+    ret = false
+    await key.find defer err
+    if not err? then ret = true
+    else if (err instanceof E.NoLocalKeyError) then err = null
+    log.debug "- #{@username()}: key check: ret=#{ret}; err=#{err}"
+    cb err, ret
 
   #--------------
 
-  load_public_key : ({signer, can_fail}, cb) ->
+  load_public_key : ({signer}, cb) ->
     log.debug "+ load public key for #{@username()}"
     err = null
     query = { username : @username(), fingerprint : @fingerprint(), signer }
     unless @key?
       await load_key query, defer err, @key
-      if err? and (err instanceof GE.GpgError) and can_fail
-        log.debug "| Failed to load a key for #{@username()}, but we're allowed to failed: #{err.message}"
-        err = null
     log.debug "- load public key; found=#{!!@key}; err=#{err}"
     cb err, @key
 
