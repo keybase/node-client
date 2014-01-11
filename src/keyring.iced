@@ -8,7 +8,7 @@ mkdirp = require 'mkdirp'
 {env} = require './env'
 {prng} = require 'crypto'
 {base64u} = require('pgp-utils').util
-{E} = require './err'
+{GE,E} = require './err'
 path = require 'path'
 fs = require 'fs'
 {BufferOutStream,GPG,colgrep} = require 'gpg-wrapper'
@@ -111,14 +111,25 @@ class GpgKey
 
   # Load this key from the underlying GPG keyring
   load : (cb) ->
+    id = @load_id()
+    esc = make_esc cb, "GpgKey::load"
     args = [ 
       (if @_secret then "--export-secret-key" else "--export" ),
       "--export-options", "export-local-sigs", 
       "-a",
-      @load_id()
+      id
     ]
     log.debug "| Load key #{@to_string()} from #{@keyring().to_string()} (secret=#{@_secret})"
-    await @gpg { args }, defer err, @_key_data
+    await @gpg { args }, esc defer @_key_data
+    if not @fingerprint()?
+      log.debug "+ lookup fingerprint"
+      args = [ "-k", "--fingerprint", "--with-colons", id ]
+      await @gpg { args }, esc defer out
+      rows = colgrep { buffer : out, patterns : { 0 : /^fpr$/ } }
+      if (rows.length is 0) or not (@_fingerprint = rows[0][9])?
+        err = new GE.GpgError "Couldn't find GPG fingerprint for #{id}"
+      else
+        log.debug "- Map #{id} -> #{@_fingerprint} via gpg"
     cb err
 
   #-------------
