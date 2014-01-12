@@ -340,6 +340,7 @@ exports.BaseKeyRing = class BaseKeyRing extends GPG
     gargs.quiet = false if gargs.quiet and env().get_debug()
     await @run gargs, defer err, res
     cb err, res
+
 ##=======================================================================
 
 exports.MasterKeyRing = class MasterKeyRing extends BaseKeyRing
@@ -423,6 +424,15 @@ class TmpKeyRingBase extends BaseKeyRing
 
   #----------------------------
 
+  list : (cb) ->
+    await @gpg { args : [ "-k", "--with-colons" ], list : true }, defer err, out
+    unless err?
+      rows = colgrep { buffer : out, patterns : { 0 : /^pub$/ }, separator : /:/ }
+      @_all_id_64s = (row[4] for row in rows)
+    cb err, @_all_id_64s
+
+  #----------------------------
+
   nuke : (cb) ->
     await fs.readdir @dir, defer err, files
     if err?
@@ -474,9 +484,9 @@ exports.TmpPrimaryKeyRing = class TmpPrimaryKeyRing extends TmpKeyRingBase
   # The GPG class will call this right before it makes a call to the shell/gpg.
   # Now is our chance to talk about our special keyring
   mutate_args : (gargs) ->
-    gargs.args = [
-      "--primary-keyring", @mkfile("pub.ring")
-    ].concat gargs.args
+    prepend = [ "--primary-keyring", @mkfile("pub.ring") ]
+    if gargs.list then prepend.push "--no-default-keyring"
+    gargs.args = prepend.concat gargs.args
     log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
 
 ##=======================================================================
