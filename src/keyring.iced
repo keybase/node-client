@@ -424,8 +424,8 @@ class TmpKeyRingBase extends BaseKeyRing
 
   #----------------------------
 
-  list : (cb) ->
-    await @gpg { args : [ "-k", "--with-colons" ], list : true }, defer err, out
+  list_keys : (cb) ->
+    await @gpg { args : [ "-k", "--with-colons" ], list_keys : true }, defer err, out
     unless err?
       rows = colgrep { buffer : out, patterns : { 0 : /^pub$/ }, separator : /:/ }
       @_all_id_64s = (row[4] for row in rows)
@@ -485,7 +485,7 @@ exports.TmpPrimaryKeyRing = class TmpPrimaryKeyRing extends TmpKeyRingBase
   # Now is our chance to talk about our special keyring
   mutate_args : (gargs) ->
     prepend = [ "--primary-keyring", @mkfile("pub.ring") ]
-    if gargs.list then prepend.push "--no-default-keyring"
+    if gargs.list_keys then prepend.push "--no-default-keyring"
     gargs.args = prepend.concat gargs.args
     log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
 
