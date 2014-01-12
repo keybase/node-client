@@ -4,9 +4,9 @@ log = require '../log'
 {E} = require '../err'
 {TrackSubSubCommand} = require '../tracksubsub'
 {BufferOutStream,BufferInStream} = require('gpg-wrapper')
-{gpg} = require '../gpg'
 {make_esc} = require 'iced-error'
 {env} = require '../env'
+{TmpPrimaryKeyRing} = require '../keyring'
 
 ##=======================================================================
 
@@ -62,11 +62,17 @@ exports.Command = class Command extends Base
       args.push @argv.file 
     else
       gargs.stdin = process.stdin
-    await gpg gargs, defer err, out
+    await @tmp_keyring.gpg gargs, defer err, out
     log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
     unless err?
       await @handle_signature gargs.stderr, defer err
     cb err 
+
+  #----------
+
+  setup_tmp_keyring : (cb) ->
+    await TmpPrimaryKeyRing.make defer err, @tmp_keyring
+    cb err
 
   #----------
 
@@ -75,6 +81,7 @@ exports.Command = class Command extends Base
     opts = 
       remote : @argv.track_remote
       local : @argv.track_local
+    await @setup_tmp_keyring esc defer()
     await @do_decrypt esc defer()
     cb null
 

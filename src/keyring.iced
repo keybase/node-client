@@ -376,6 +376,9 @@ class TmpKeyRingBase extends BaseKeyRing
 
   mkfile : (n) -> path.join @dir, n
 
+  #------
+
+  post_make : (cb) -> cb null
 
   #------
 
@@ -407,6 +410,8 @@ class TmpKeyRingBase extends BaseKeyRing
 
     log.debug "- Made new temporary keychain"
     tkr = if err? then null else (new klass dir)
+    if tkr? and not err?
+      await tkr.post_make defer err
     cb err, tkr
 
   #----------------------------
@@ -488,6 +493,12 @@ exports.TmpPrimaryKeyRing = class TmpPrimaryKeyRing extends TmpKeyRingBase
     if gargs.list_keys then prepend.push "--no-default-keyring"
     gargs.args = prepend.concat gargs.args
     log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
+
+  #------
+
+  post_make : (cb) -> 
+    await fs.writeFile @mkfile("pub.ring"), (new Buffer []), defer err
+    cb err
 
 ##=======================================================================
 
