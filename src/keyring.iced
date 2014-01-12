@@ -363,7 +363,7 @@ exports.load_key = (opts, cb) ->
 
 ##=======================================================================
 
-exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
+class TmpKeyRingBase extends BaseKeyRing
 
   constructor : (@dir) ->
 
@@ -375,22 +375,10 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
 
   mkfile : (n) -> path.join @dir, n
 
-  #------
-
-  # The GPG class will call this right before it makes a call to the shell/gpg.
-  # Now is our chance to talk about our special keyring
-  mutate_args : (gargs) ->
-    gargs.args = [
-      "--no-default-keyring",
-      "--keyring",            @mkfile("pub.ring"),
-      "--secret-keyring",     @mkfile("sec.ring"),
-      "--trustdb-name",       @mkfile("trust.db")
-    ].concat gargs.args
-    log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
 
   #------
 
-  @make : (cb) ->
+  @make : (klass, cb) ->
     mode = 0o700
     log.debug "+ Make new temporary keychain"
     parent = env().get_tmp_keyring_dir()
@@ -417,7 +405,7 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
         log.error "Failed to make dir #{dir}: #{err.message}"
 
     log.debug "- Made new temporary keychain"
-    tkr = if err? then null else (new TmpKeyRing dir)
+    tkr = if err? then null else (new klass dir)
     cb err, tkr
 
   #----------------------------
@@ -453,4 +441,44 @@ exports.TmpKeyRing = class TmpKeyRing extends BaseKeyRing
     cb err
 
 ##=======================================================================
+
+exports.TmpKeyRing = class TmpKeyRing extends TmpKeyRingBase
+
+  #------
+
+  @make : (cb) -> TmpKeyRingBase.make TmpKeyRing, cb
+
+  #------
+
+  # The GPG class will call this right before it makes a call to the shell/gpg.
+  # Now is our chance to talk about our special keyring
+  mutate_args : (gargs) ->
+    gargs.args = [
+      "--no-default-keyring",
+      "--keyring",            @mkfile("pub.ring"),
+      "--secret-keyring",     @mkfile("sec.ring"),
+      "--trustdb-name",       @mkfile("trust.db")
+    ].concat gargs.args
+    log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
+
+##=======================================================================
+
+exports.TmpPrimaryKeyRing = class TmpPrimaryKeyRing extends TmpKeyRingBase
+
+  #------
+
+  @make : (cb) -> TmpKeyRingBase.make TmpPrimaryKeyRing, cb
+
+  #------
+
+  # The GPG class will call this right before it makes a call to the shell/gpg.
+  # Now is our chance to talk about our special keyring
+  mutate_args : (gargs) ->
+    gargs.args = [
+      "--primary-keyring", @mkfile("pub.ring")
+    ].concat gargs.args
+    log.debug "| Mutate GPG args; new args: #{gargs.args.join(' ')}"
+
+##=======================================================================
+
 
