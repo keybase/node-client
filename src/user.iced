@@ -151,11 +151,31 @@ exports.User = class User
 
   #--------------
 
+  @lookup_username_from_key_id_64 : (ki64, cb) ->
+    esc = make_esc cb, "User::lookup_username_from_key_id_64"
+    log.debug "+ #{ki64}: map to username"
+    args = 
+      endpoint : "key/basics"
+      args : { pgp_key_id : ki64 }
+    await req.get args, esc defer body
+    username = body.username
+    log.debug "- #{ki64}: map -> #{username}"
+    cb null, username
+
+  #--------------
+
   @load : ({username,ki64}, cb) ->
     esc = make_esc cb, "User::load"
+    k = if username? then username else "Key: #{ki64}"
     log.debug "+ #{username}: load user"
-    await User.load_from_server {username,ki64}, esc defer remote
+
     await User.load_from_storage {username,ki64}, esc defer local
+
+    # If we need to, get the new username
+    if not username? then username = local?.basics?.username
+    if not username? then await User.lookup_username_from_key_id_64 ki64, esc defer username
+
+    await User.load_from_server {username}, esc defer remote
     changed = true
     force_store = false
     if local?
@@ -173,7 +193,7 @@ exports.User = class User
 
   #--------------
 
-  @load_from_server : ({username,uid}, cb) ->
+  @load_from_server : ({username}, cb) ->
     log.debug "+ #{username}: load user from server"
     args = 
       endpoint : "user/lookup"
@@ -188,19 +208,16 @@ exports.User = class User
   #--------------
 
   @load_from_storage : ({username, ki64}, cb) ->
-    k = username or ki64
-    log.debug "+ #{k}: load user from local storage"
-    ret = null
-    if uid?
-      await db.get { key : uid }, defer err, row
-    else
-      await db.lookup { type : constants.lookups.username, name: username }, defer err, row
+    name = username or ki64
+    log.debug "+ #{name}: load user from local storage"
+    type = if username? then constants.lookup.username else constants.lookup.key_id_64_to_user
+    await db.lookup { type, name }, defer err, row
     if not err? and row?
       ret = new User row.value
       await ret.load_sig_chain_from_storage defer err
       if err?
         ret = null
-    log.debug "- #{k}: loaded user from local storage"
+    log.debug "- #{name}: loaded user from local storage"
     cb err, ret
 
   #--------------
