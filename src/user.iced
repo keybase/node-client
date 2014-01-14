@@ -210,7 +210,7 @@ exports.User = class User
   @load_from_storage : ({username, ki64}, cb) ->
     name = username or ki64
     log.debug "+ #{name}: load user from local storage"
-    type = if username? then constants.lookup.username else constants.lookup.key_id_64_to_user
+    type = if username? then constants.lookups.username else constants.lookups.key_id_64_to_user
     await db.lookup { type, name }, defer err, row
     if not err? and row?
       ret = new User row.value
