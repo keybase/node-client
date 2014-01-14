@@ -25,7 +25,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------------------
 
-  constructor : ({@args, @opts}) ->
+  constructor : ({@args, @opts, @tmp_keyring}) ->
 
   #----------------------
 
@@ -105,7 +105,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @them.check_public_key esc defer found_them
     if found_them
       await @them.load_public_key { signer : @me.key }, esc defer()
-    else
+    else if not (@tmp_keyring = @args.tmp_keyring)?
       await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
     # After this point, we have to recover any errors and throw away 

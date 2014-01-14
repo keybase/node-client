@@ -7,6 +7,8 @@ log = require '../log'
 {make_esc} = require 'iced-error'
 {env} = require '../env'
 {TmpPrimaryKeyRing} = require '../keyring'
+{TrackSubSubCommand} = require '../tracksubsub'
+{athrow} = require('pgp-utils').util
 
 ##=======================================================================
 
@@ -45,11 +47,23 @@ exports.Command = class Command extends Base
 
   #----------
 
-  handle_signature : (stderr, cb) ->
+  handle_signature : (cb) ->
     esc = make_esc cb, "Command::handle_signature"
+    opts = 
+      remote : @argv.track_remote
+      local : @argv.track_local
     await @tmp_keyring.list_keys esc defer ids
-    if ids.length > 0
-      log.debug "| Found key(s) in the keyring: #{JSON.stringify ids}"
+    if ids.length is 0
+      log.debug "| No new keys imported"
+      log.console.error @decrypt_stderr.data().toString('utf8')
+    else if ids.length > 1
+      await athrow (new E.CorruptionError "Too many imported keys: #{ids.length}"), esc defer()
+    else
+      ki64 = ids[0]
+      log.debug "| Found new key in the keyring: #{ki64}"
+      args = { them_ki64 : ki64 }
+      @tssc = new TrackSubSubCommand { args, opts, @tmp_keyring }
+      await @tssc.run esc defer()
     cb null
 
   #----------
@@ -58,7 +72,7 @@ exports.Command = class Command extends Base
     args = [ "--decrypt" , "--with-colons", "--keyid-format", "long", "--keyserver" , env().get_key_server() ]
     args.push( "--keyserver-options", "debug=1")  if env().get_debug()
     gargs = { args }
-    gargs.stderr = new BufferOutStream()
+    gargs.stderr = @decrypt_stderr = new BufferOutStream()
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
@@ -67,8 +81,6 @@ exports.Command = class Command extends Base
       gargs.stdin = process.stdin
     await @tmp_keyring.gpg gargs, defer err, out
     log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
-    unless err?
-      await @handle_signature gargs.stderr, defer err
     cb err 
 
   #----------
@@ -86,6 +98,7 @@ exports.Command = class Command extends Base
       local : @argv.track_local
     await @setup_tmp_keyring esc defer()
     await @do_decrypt esc defer()
+    await @handle_signature esc defer()
     cb null
 
 ##=======================================================================
