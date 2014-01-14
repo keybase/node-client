@@ -151,12 +151,11 @@ exports.User = class User
 
   #--------------
 
-  @load : (query, cb) ->
+  @load : ({username,ki64}, cb) ->
     esc = make_esc cb, "User::load"
-    k = JSON.stringify query
-    log.debug "+ #{k}: load user"
-    await User.load_from_server query, esc defer remote
-    await User.load_from_storage query, esc defer local
+    log.debug "+ #{username}: load user"
+    await User.load_from_server {username,ki64}, esc defer remote
+    await User.load_from_storage {username,ki64}, esc defer local
     changed = true
     force_store = false
     if local?
@@ -166,17 +165,16 @@ exports.User = class User
       await local.load_full_sig_chain esc defer()
       force_store = true
     else
-      err = new E.UserNotFoundError "User #{k} wasn't found"
+      err = new E.UserNotFoundError "User #{username} wasn't found"
     if not err?
       await local.store force_store, esc defer()
-    log.debug "- #{k}: loaded user"
+    log.debug "- #{username}: loaded user"
     cb err, local
 
   #--------------
 
-  @load_from_server : (query, cb) ->
-    k = JSON.stringify query
-    log.debug "+ #{k}: load user from server"
+  @load_from_server : ({username,uid}, cb) ->
+    log.debug "+ #{username}: load user from server"
     args = 
       endpoint : "user/lookup"
       args : {username }
@@ -189,12 +187,14 @@ exports.User = class User
 
   #--------------
 
-  @load_from_storage : (query, cb) ->
+  @load_from_storage : ({username, ki64}, cb) ->
     k = username or ki64
     log.debug "+ #{k}: load user from local storage"
     ret = null
-    type = if username? then constants.lookups.username else constants.lookups.key_id_64_to_user
-    await db.lookup { type , name: k }, defer err, row
+    if uid?
+      await db.get { key : uid }, defer err, row
+    else
+      await db.lookup { type : constants.lookups.username, name: username }, defer err, row
     if not err? and row?
       ret = new User row.value
       await ret.load_sig_chain_from_storage defer err
