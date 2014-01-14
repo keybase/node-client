@@ -82,25 +82,29 @@ exports.Command = class Command extends Base
 
   handle_signature : (cb) ->
     esc = make_esc cb, "handle_signature"
+    await @check_imports esc defer()
     arg = 
       type : constants.lookups.key_fingerprint_to_user
       name : @signing_key.primary
-    await @check_imports esc defer()
     await User.map_key_to_user arg, esc defer basics
+
+    opts =
+      local : @argv.track_local
+      remote : @argv.track_remote
+
     @username = basics.username
-    await User.load { @username }, esc defer them
-    them.reference_public_key { keyring : @tmp_keyring }
-    await User.load_me esc defer me
-    await them.verify esc defer()
     if (a = @argv.signed_by)? and (a isnt (b = @username))
       err = new E.WrongSignerError "Wrong signer: wanted '#{a}' but got '#{b}'"
-    else
-      await TrackWrapper.load { tracker : me, trackee : them }, esc defer trackw
-      {remote,local} = trackw.is_tracking()
-      tracks = if remote then "tracking remotely & locally"
-      else if local then "tracking locally only"
-      else "not tracking"
-      log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
+      await athrow err, esc defer()
+
+    @tssc = new TrackSubSubCommand { args : { them : @username }, opts, @tmp_keyring  }
+    await @tssc.on_decrypt esc defer()
+
+    {remote,local} = @tssc.trackw.is_tracking()
+    tracks = if remote then "tracking remotely & locally"
+    else if local then "tracking locally only"
+    else "not tracking"
+    log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
     cb null
 
   #----------
@@ -159,7 +163,12 @@ exports.Command = class Command extends Base
       local : @argv.track_local
     await @setup_tmp_keyring esc defer()
     await @_run2 esc defer()
-    await @tmp_keyring.nuke defer e2
+
+    if env().get_preserve_tmp_keyring()
+      log.info "Preserving #{@tmp_keyring.to_string()}"
+    else
+      await @tmp_keyring.nuke defer e2
+
     log.warn "Error cleaning up temporary keyring: #{e2.message}"if e2?
     cb null
 

@@ -211,9 +211,8 @@ exports.User = class User
 
     # If we need to, get the new username
     if not username? then username = local?.basics?.username
-    if not username? then await User.lookup_username_from_key_id_64 ki64, esc defer username
-
     await User.load_from_server {username}, esc defer remote
+    
     changed = true
     force_store = false
     if local?

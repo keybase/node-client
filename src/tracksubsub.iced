@@ -69,6 +69,17 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  on_decrypt : (cb) ->
+    esc = make_esc cb, "TrackSubSub::on_decrypt" 
+    await User.load { username : @args.them }, esc defer @them
+    @them.reference_public_key { keyring : @tmp_keyring }
+    await User.load_me esc defer @me
+    await @them.verify esc defer()
+    await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
+    cb null
+
+  #----------
+
   id : (cb) ->
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
@@ -129,9 +140,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
 
     await @them.verify esc defer()
-    await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer trackw
+    await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     
-    check = trackw.skip_remote_check()
+    check = @trackw.skip_remote_check()
     if (check is constants.skip.NONE)
       log.console.error "...checking identity proofs"
       skp = false
@@ -141,7 +152,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @them.check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
-    if ((approve = trackw.skip_approval()) isnt constants.skip.NONE)
+    if ((approve = @trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
     else if @opts.batch
@@ -159,7 +170,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else
       await @prompt_track esc defer do_remote
       await session.load_and_login esc defer() if do_remote
-      await trackw.store_track { do_remote }, esc defer()
+      await @trackw.store_track { do_remote }, esc defer()
 
     log.debug "- _run2"
     cb err, accept 
