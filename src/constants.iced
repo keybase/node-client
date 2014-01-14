@@ -27,6 +27,7 @@ exports.constants = constants =
   lookups :
     username : 1
     local_track : 2
+    key_id_64_to_user : 3
   ids :
     sig_chain_link : "e0"
     local_track : "e1"

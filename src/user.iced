@@ -53,7 +53,11 @@ exports.User = class User
 
   #--------------
 
-  name : () -> { type : constants.lookups.username, name : @basics.username }
+  names : () -> 
+    ret = [ { type : constants.lookups.username, name : @basics.username } ]
+    if (ki64 = @key_id_64())?
+      ret.push { type : constants.lookups.key_id_64_to_user, name : ki64 }
+    return ret
 
   #--------------
 
@@ -62,7 +66,7 @@ exports.User = class User
     un = @username()
     if force_store or @_dirty
       log.debug "+ #{un}: storing user to local DB"
-      await db.put { key : @id, value : @to_obj(), name : @name() }, defer err
+      await db.put { key : @id, value : @to_obj(), names : @names() }, defer err
       log.debug "- #{un}: stored user to local DB"
     if @sig_chain? and not err?
       log.debug "+ #{un}: storing signature chain"
@@ -147,6 +151,10 @@ exports.User = class User
 
   #--------------
 
+  @map_pgp_key_id_to_username : (cb) ->
+
+  #--------------
+
   @load : ({username}, cb) ->
     esc = make_esc cb, "User::load"
     log.debug "+ #{username}: load user"
@@ -203,6 +211,11 @@ exports.User = class User
         lc : @public_keys?.primary?.key_fingerprint?.toLowerCase()
       @_fingerprint.uc = @_fingerprint.lc?.toUpperCase()
     return @_fingerprint[if upper_case then 'uc' else 'lc']
+
+  #--------------
+
+  key_id_64 : () ->
+    if (fp = @fingerprint false)? then fp[-16...] else null
 
   #--------------
 

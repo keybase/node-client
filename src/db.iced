@@ -100,11 +100,13 @@ class DB
 
   #-----
 
-  put : ({type, key, value, name}, cb) ->
+  put : ({type, key, value, name, names}, cb) ->
     type or= key[-2...]
     esc = make_esc cb, "DB::put"
 
-    if name?
+    names = [ name ] if name? and not names?
+
+    if names? and names.length
       await @lock.acquire defer()
       await @db.run "BEGIN", esc defer()
 
@@ -112,10 +114,11 @@ class DB
     args = [ type, key, JSON.stringify(value) ]
     await @db.run q, args, esc defer()
 
-    if name?
-      q = "REPLACE INTO lookup(name_type,name,key_type,key) VALUES(?,?,?,?)"
-      args = [ name.type, name.name, type, key ]
-      await @db.run q, args, esc defer()
+    if names and names.length
+      for name in names
+        q = "REPLACE INTO lookup(name_type,name,key_type,key) VALUES(?,?,?,?)"
+        args = [ name.type, name.name, type, key ]
+        await @db.run q, args, esc defer()
       await @db.run "COMMIT", esc defer()
       @lock.release()
 

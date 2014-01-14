@@ -46,8 +46,11 @@ exports.Command = class Command extends Base
   #----------
 
   handle_signature : (stderr, cb) ->
-    console.log stderr.data().toString()
-    cb()
+    esc = make_esc cb, "Command::handle_signature"
+    await @tmp_keyring.list_keys esc defer ids
+    if ids.length > 0
+      log.debug "| Found key(s) in the keyring: #{JSON.stringify ids}"
+    cb null
 
   #----------
 
