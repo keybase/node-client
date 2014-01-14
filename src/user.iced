@@ -57,6 +57,8 @@ exports.User = class User
     ret = [ { type : constants.lookups.username, name : @basics.username } ]
     if (ki64 = @key_id_64())?
       ret.push { type : constants.lookups.key_id_64_to_user, name : ki64 }
+    if (fp = @fingerprint false)?
+      ret.push { type : constants.lookups.key_fingerprint_to_user, name : fp }
     return ret
 
   #--------------
@@ -151,16 +153,52 @@ exports.User = class User
 
   #--------------
 
-  @lookup_username_from_key_id_64 : (ki64, cb) ->
-    esc = make_esc cb, "User::lookup_username_from_key_id_64"
-    log.debug "+ #{ki64}: map to username"
-    args = 
-      endpoint : "key/basics"
-      args : { pgp_key_id : ki64 }
-    await req.get args, esc defer body
-    username = body.username
-    log.debug "- #{ki64}: map -> #{username}"
-    cb null, username
+  @map_key_to_user_local : (query, cb) ->
+    err = ret = null
+    await db.lookup query, defer err, rows
+    k = JSON.stringify query
+    if err? then # noop
+    else if not rows? or rows.length is 0 
+      err = new E.NotFoundError "Key not found for query #{k}"
+    else if rows.length > 1
+      err = new E.CorruptionError "Too many users for key #{k}: #{rows.length}"
+    else
+      b = rows[0].basics
+      ret = { uid : b.uid, username : b.username }
+    cb err, ret
+
+  #--------------
+
+  @map_key_to_user : (query, cb) ->
+    log.debug "+ map_key_to_user: #{JSON.stringify query}"
+    await User.map_key_to_user_local query, defer err, basics
+    await User.map_key_to_user_remote query, defer err, basics if err?
+    log.debug "- mapped -> #{err}"
+    cb err, basics
+
+  #--------------
+
+  @map_key_to_user_remote : (query, cb) ->
+    qs = JSON.stringify query
+    log.debug "+ #{qs}: map to username"
+    err = null
+    L = constants.lookups
+    body = null
+    key = switch query.type
+      when L.key_fingerprint_to_user then 'fingerprint'
+      when L.key_id_64_to_user then 'pgp_key_id'
+      else
+        err = new E.BadQueryError "Bad query type: #{query.type}"
+        null
+    unless err?
+      d = {}
+      d[key] = query.name
+      req_args = 
+        endpoint : "key/basics"
+        args : d
+      await req.get req_args, defer err, body
+    log.debug "- #{qs}: map -> #{err}"
+    cb err, body
 
   #--------------
 

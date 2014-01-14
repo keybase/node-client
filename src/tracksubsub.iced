@@ -31,7 +31,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   prompt_ok : (warnings, cb) ->
     prompt = if warnings
-      log.console.log colors.red "Some remote proofs failed!"
+      log.console.error colors.red "Some remote proofs failed!"
       "Still verify this user?"
     else
       "Are you satisfied with these proofs?"
@@ -133,7 +133,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     
     check = trackw.skip_remote_check()
     if (check is constants.skip.NONE)
-      log.console.log "...checking identity proofs"
+      log.console.error "...checking identity proofs"
       skp = false
     else 
       log.info "...all remote checks are up-to-date"

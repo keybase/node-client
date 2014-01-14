@@ -43,6 +43,7 @@ exports.E = E = ie.make_errors
   UNTRACK : "error in untracking"
   UNKNOWN_SERVICE : "unknown service"
   PROOF_NOT_AVAILABLE : "proof isn't available"
+  WRONG_SIGNER : "Expected a signature, but by someone else"
 
 #================================================
 

@@ -28,6 +28,7 @@ exports.constants = constants =
     username : 1
     local_track : 2
     key_id_64_to_user : 3
+    key_fingerprint_to_user : 4
   ids :
     sig_chain_link : "e0"
     local_track : "e1"

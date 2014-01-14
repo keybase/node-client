@@ -216,7 +216,7 @@ exports.Link = class Link
     ]
     msg.push ("(actual check skipped)") if skip
     msg.push "(failed with code #{rc})" if not ok
-    log.console.log msg.join(' ')
+    log.console.error msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"
 
     cb null
