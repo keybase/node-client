@@ -151,15 +151,12 @@ exports.User = class User
 
   #--------------
 
-  @map_pgp_key_id_to_username : (cb) ->
-
-  #--------------
-
-  @load : ({username}, cb) ->
+  @load : (query, cb) ->
     esc = make_esc cb, "User::load"
-    log.debug "+ #{username}: load user"
-    await User.load_from_server {username}, esc defer remote
-    await User.load_from_storage {username}, esc defer local
+    k = JSON.stringify query
+    log.debug "+ #{k}: load user"
+    await User.load_from_server query, esc defer remote
+    await User.load_from_storage query, esc defer local
     changed = true
     force_store = false
     if local?
@@ -169,16 +166,17 @@ exports.User = class User
       await local.load_full_sig_chain esc defer()
       force_store = true
     else
-      err = new E.UserNotFoundError "User #{username} wasn't found"
+      err = new E.UserNotFoundError "User #{k} wasn't found"
     if not err?
       await local.store force_store, esc defer()
-    log.debug "- #{username}: loaded user"
+    log.debug "- #{k}: loaded user"
     cb err, local
 
   #--------------
 
-  @load_from_server : ({username}, cb) ->
-    log.debug "+ #{username}: load user from server"
+  @load_from_server : (query, cb) ->
+    k = JSON.stringify query
+    log.debug "+ #{k}: load user from server"
     args = 
       endpoint : "user/lookup"
       args : {username }
@@ -191,16 +189,18 @@ exports.User = class User
 
   #--------------
 
-  @load_from_storage : ({username}, cb) ->
-    log.debug "+ #{username}: load user from local storage"
+  @load_from_storage : (query, cb) ->
+    k = username or ki64
+    log.debug "+ #{k}: load user from local storage"
     ret = null
-    await db.lookup { type : constants.lookups.username, name: username }, defer err, row
+    type = if username? then constants.lookups.username else constants.lookups.key_id_64_to_user
+    await db.lookup { type , name: k }, defer err, row
     if not err? and row?
       ret = new User row.value
       await ret.load_sig_chain_from_storage defer err
       if err?
         ret = null
-    log.debug "- #{username}: loaded user from local storage"
+    log.debug "- #{k}: loaded user from local storage"
     cb err, ret
 
   #--------------
