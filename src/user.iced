@@ -326,6 +326,11 @@ exports.User = class User
 
   #--------------
 
+  reference_public_key : ({keyring}, cb) ->
+    @key = keyring.make_key_from_user @, false
+
+  #--------------
+
   import_public_key : ({keyring}, cb) ->
     log.debug "+ Import public key from #{keyring.to_string()}"
     @key = keyring.make_key_from_user @, false

@@ -367,6 +367,7 @@ exports.load_key = (opts, cb) ->
 class TmpKeyRingBase extends BaseKeyRing
 
   constructor : (@dir) ->
+    @_nuked = false
 
   #------
 
@@ -439,20 +440,22 @@ class TmpKeyRingBase extends BaseKeyRing
   #----------------------------
 
   nuke : (cb) ->
-    await fs.readdir @dir, defer err, files
-    if err?
-      log.error "Cannot read dir #{@dir}: #{err.message}"
-    else 
-      for file in files
-        fp = path.join(@dir, file)
-        await fs.unlink fp, defer e2
-        if e2?
-          log.warn "Could not remove dir #{fp}: #{e2.message}"
-          err = e2
-      unless err?
-        await fs.rmdir @dir, defer err
-        if err?
-          log.error "Cannot delete tmp keyring @dir: #{err.message}"
+    unless @_nuked
+      await fs.readdir @dir, defer err, files
+      if err?
+        log.error "Cannot read dir #{@dir}: #{err.message}"
+      else 
+        for file in files
+          fp = path.join(@dir, file)
+          await fs.unlink fp, defer e2
+          if e2?
+            log.warn "Could not remove dir #{fp}: #{e2.message}"
+            err = e2
+        unless err?
+          await fs.rmdir @dir, defer err
+          if err?
+            log.error "Cannot delete tmp keyring @dir: #{err.message}"
+      @_nuked = true
     cb err
 
 ##=======================================================================
