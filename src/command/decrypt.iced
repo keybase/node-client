@@ -9,6 +9,7 @@ log = require '../log'
 {TmpPrimaryKeyRing} = require '../keyring'
 {TrackSubSubCommand} = require '../tracksubsub'
 {athrow} = require('pgp-utils').util
+{parse_signature} = require '../gpg'
 
 ##=======================================================================
 
@@ -17,6 +18,14 @@ exports.Command = class Command extends Base
   #----------
 
   OPTS :
+    s : 
+      alias : 'signed'
+      action : 'storeTrue'
+      help : "assert signed"
+    t :
+      alias : "track"
+      action : "storeTrue"
+      help : "prompt for tracking if necessary"
     r :
       alias : "track-remote"
       action : "storeTrue"
@@ -32,6 +41,9 @@ exports.Command = class Command extends Base
     m:
       alias : "message"
       help : "provide the message on the command line"
+    o:
+      alias : "output"
+      help : "output to the given file"
 
   #----------
 
@@ -55,7 +67,6 @@ exports.Command = class Command extends Base
     await @tmp_keyring.list_keys esc defer ids
     if ids.length is 0
       log.debug "| No new keys imported"
-      log.console.error @decrypt_stderr.data().toString('utf8')
     else if ids.length > 1
       await athrow (new E.CorruptionError "Too many imported keys: #{ids.length}"), esc defer()
     else
@@ -69,8 +80,15 @@ exports.Command = class Command extends Base
   #----------
 
   do_decrypt : (cb) ->
-    args = [ "--decrypt" , "--with-colons", "--keyid-format", "long", "--keyserver" , env().get_key_server() ]
+    args = [ 
+      "--decrypt" , 
+      "--with-colons", 
+      "--keyid-format", "long", 
+      "--keyserver" , env().get_key_server(),
+      "--with-fingerprint"
+    ]
     args.push( "--keyserver-options", "debug=1")  if env().get_debug()
+    args.push( "--output", o ) if (o = @argv.output)?
     gargs = { args }
     gargs.stderr = @decrypt_stderr = new BufferOutStream()
     if @argv.message
@@ -81,6 +99,13 @@ exports.Command = class Command extends Base
       gargs.stdin = process.stdin
     await @tmp_keyring.gpg gargs, defer err, out
     log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
+
+    unless err?
+      [err, @signing_key] = parse_signature gargs.stderr.data().toString('utf8')
+      if (err instanceof E.NotFoundError) and not @argv.signed
+        log.debug "| No signatured found; but we didn't require one"
+        err = null
+
     cb err 
 
   #----------
