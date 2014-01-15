@@ -34,6 +34,7 @@ $(BUILD_STAMP): \
 	lib/command/version.js \
 	lib/basex.js \
 	lib/bn.js \
+	lib/ca.js \
 	lib/checkers.js \
 	lib/config.js \
 	lib/constants.js \
