@@ -80,6 +80,15 @@ exports.Command = class Command extends Base
 
   #----------
 
+  handle_track : (cb) ->
+    await @tssc.all_prompts defer err, accept
+    await @tssc.key_cleanup { accept } , defer e2
+    if e2?
+      log.warn "Error in key cleanup: #{e2.message}"
+    cb err
+
+  #----------
+
   handle_signature : (cb) ->
     esc = make_esc cb, "handle_signature"
     await @check_imports esc defer()
@@ -133,6 +142,7 @@ exports.Command = class Command extends Base
       "--keyid-format", "long", 
       "--keyserver" , env().get_key_server(),
       "--with-fingerprint"
+      "--yes" # needed in the case of overwrite!
     ]
     args.push( "--keyserver-options", "debug=1")  if env().get_debug()
     args.push( "--output", o ) if (o = @argv.output)?
@@ -178,7 +188,9 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::_run2"
     await @do_decrypt esc defer()
     await @find_signature esc defer()
-    await @handle_signature esc defer() if @found_sig
+    if @found_sig
+      await @handle_signature esc defer()
+      await @handle_track     esc defer() if @try_track()
     cb null
 
 ##=======================================================================

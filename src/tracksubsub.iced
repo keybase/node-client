@@ -51,7 +51,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  _key_cleanup : ({accept}, cb) ->
+  key_cleanup : ({accept}, cb) ->
     err = null
     if accept 
       log.debug "| commit_key"
@@ -87,7 +87,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await User.load { username : @args.them }, esc defer @them
     await TmpKeyRing.make esc defer @tmp_keyring
     await @_id2 { @them }, esc defer()
-    await @_key_cleanup { }, esc defer()
+    await @key_cleanup { }, esc defer()
     log.debug "- id"
     cb null
 
@@ -124,7 +124,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @_run2 { found_them }, defer err, accept
 
     # Clean up the key if necessary
-    await @_key_cleanup { accept }, esc defer()
+    await @key_cleanup { accept }, esc defer()
 
     log.debug "- run"
 
@@ -135,12 +135,20 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   _run2 : ({found_them}, cb) ->
     esc = make_esc cb, "TrackSubSub::_run2"
     log.debug "+ _run2"
-
     unless found_them
       await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
-
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
+    await @all_prompts esc defer accept
+
+    log.debug "- _run2"
+    cb null, accept
+
+  #----------
+
+  all_prompts : (cb) ->
+    esc = make_esc cb, "TrackSubSub::all_prompts"
+    log.debug "+ TrackSubSub::all_prompts"
     
     check = @trackw.skip_remote_check()
     if (check is constants.skip.NONE)
@@ -172,7 +180,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await session.load_and_login esc defer() if do_remote
       await @trackw.store_track { do_remote }, esc defer()
 
-    log.debug "- _run2"
+    log.debug "- TrackSubSub::all_prompts"
     cb err, accept 
 
 ##=======================================================================
