@@ -7,10 +7,14 @@ session = require '../session'
 {make_esc} = require 'iced-error'
 {prompt_yn} = require '../prompter'
 log = require '../log'
-{key_select} = require '../keyselector'
-{KeybasePushProofGen} = require '../sigs'
 req = require '../req'
 {E} = require '../err'
+{User} = require '../user'
+{constants} = require '../constants'
+{format_fingerprint} = require('pgp-utils').util
+{env} = require '../env'
+{gpg} = require '../gpg'
+{bold} = require 'colors'
 
 ##=======================================================================
 
@@ -64,9 +68,25 @@ exports.Command = class Command extends Base
 
   #----------
 
+  show_key : (cb) ->
+    esc = make_esc cb, "show_key"
+    username = env().get_username()
+    await User.load { username }, esc defer me
+    fp = me.fingerprint(true)
+    log.warn "Loaded keys for #{username}@#{constants.canonical_host}"
+    log.warn "  Key fingerprint: #{format_fingerprint fp}"
+    await gpg { args : [ "-k", fp ] }, defer err_public
+    await gpg { args : [ "-K", fp ] }, defer err_secret
+    log.warn "  - Public key: #{if err_public? then 'unfound' else bold('found')}"
+    log.warn "  - Secret key: #{if err_secret? then 'unfound' else bold('found')}"
+    cb()
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "run"
     await session.login esc defer()
+    await @show_key esc defer()
     await @get_the_go_ahead esc defer()
     await @revoke_key esc defer()
     log.info "success!"
