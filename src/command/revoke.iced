@@ -43,25 +43,6 @@ exports.Command = class Command extends Base
 
   #----------
 
-  sign : (cb) ->
-    eng = new KeybasePushProofGen { @km }
-    await eng.run defer err, @sig
-    cb err
-
-  #----------
-
-  push : (cb) ->
-    args = 
-      is_primary : 1
-      sig : @sig.pgp
-      sig_id_base : @sig.id
-      sig_id_short : @sig.short_id
-      public_key : @km.key.toString('utf8')
-    await req.post { endpoint : "key/add", args }, defer err
-    cb err
-
-  #----------
-
   get_the_go_ahead : (cb) ->
     err = null
     unless @argv.force
