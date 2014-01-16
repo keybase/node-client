@@ -3,6 +3,7 @@ exports.constants = constants =
   version : 1
   api_version : "1.0"
   canonical_host : "keybase.io"
+  client_name : "keybase.io node.js client"
   server : 
     host : "api.keybase.io"
     port : 443

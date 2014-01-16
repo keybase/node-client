@@ -44,6 +44,7 @@ exports.E = E = ie.make_errors
   UNKNOWN_SERVICE : "unknown service"
   PROOF_NOT_AVAILABLE : "proof isn't available"
   WRONG_SIGNER : "Expected a signature, but by someone else"
+  REQUIRED_UPGRADE : "Software upgrade required"
 
 #================================================
 

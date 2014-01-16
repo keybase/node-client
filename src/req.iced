@@ -4,6 +4,7 @@ urlmod = require 'url'
 {E} = require './err'
 log = require './log'
 {certs} = require './ca'
+{PackageJson} = require './package'
 
 #=================================================
 
@@ -61,7 +62,8 @@ exports.Client = class Client
   req : ({method, endpoint, args, http_status, kb_status}, cb) ->
     method or= 'GET'
     opts = { method, json : true, jar : true }
-    opts.headers = @headers if @headers?
+    opts.headers = @headers or {}
+    opts.headers["X-Keybase-Client"] = (new PackageJson).identify_as()
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]
@@ -86,13 +88,20 @@ exports.Client = class Client
     await request opts, defer err, res, body
     if err? then #noop
     else if not (res.statusCode in http_status) 
-      err = new E.HttpError "Got reply #{res.statusCode}"
+      if res.statusCode is 400 and res.headers?["x-keybase-client-unsupported"]
+        v = res.headers["x-keybase-client-upgrade-to"]
+        err = new E.RequiredUpgradeError "Upgrade is required! Run `keybase-install` to upgrade to v#{v}"
+        err.upgrade_to = v
+      else
+        err = new E.HttpError "Got reply #{res.statusCode}"
     else if not (body?.status?.name in kb_status)
       err = new E.KeybaseError "#{body.status.desc} (error ##{body.status.code})"
       err.fields = body.status?.fields or {}
       log.debug "Full request: #{JSON.stringify opts}"
       log.debug "Full reply: #{JSON.stringify body}"
     else
+      if (v = res.headers["x-keybase-client-upgrade-to"])?
+        log.warn "Upgrade suggested! Run `keybase-install` to upgrade to v#{v}"
       @_find_cookies res
 
     # Note the swap --- we care more about the body in most cases.

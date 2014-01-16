@@ -30,7 +30,9 @@ exports.Command = class Command extends Base
       lines = [ 
         (pjs.bin() + " (keybase.io CLI) v" + pjs.version())
         ("- node.js " + process.version)
-      ].concat("- #{l}" for l in gpg_v)
+      ].concat("- #{l}" for l in gpg_v).concat [
+        ("Identifies as: '" + pjs.identify_as() + "'")
+      ]
       console.log lines.join("\n")
 
     cb err
