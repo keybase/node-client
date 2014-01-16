@@ -4,7 +4,7 @@ exports.constants = constants =
   api_version : "1.0"
   canonical_host : "keybase.io"
   server : 
-    host : "keybase.io"
+    host : "api.keybase.io"
     port : 443
     no_tls : false
   filenames : 

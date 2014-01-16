@@ -3,6 +3,7 @@ request = require 'request'
 urlmod = require 'url'
 {E} = require './err'
 log = require './log'
+{certs} = require './ca'
 
 #=================================================
 
@@ -64,9 +65,10 @@ exports.Client = class Client
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]
+    tls = not env().get_no_tls()
 
     uri_fields = {
-      protocol : "http#{if env().get_no_tls() then '' else 's'}"
+      protocol : "http#{if tls then 's' else ''}"
       hostname : env().get_host()
       port : env().get_port()
       pathname : [ env().get_api_uri_prefix(), (endpoint + ".json") ].join("/")
@@ -75,6 +77,10 @@ exports.Client = class Client
     opts.uri = urlmod.format uri_fields
     if method is 'POST'
       opts.body = args
+
+    if tls and (ca = certs[uri_fields.hostname])?
+      log.debug "| Adding a custom CA for host #{uri_fields.hostname} when tls=#{tls}"
+      opts.ca = [ ca ]
 
     log.debug "+ request to #{endpoint}"
     await request opts, defer err, res, body
