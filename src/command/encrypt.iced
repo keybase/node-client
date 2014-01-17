@@ -33,6 +33,9 @@ exports.Command = class Command extends Base
       alias : 'binary'
       action: "storeTrue"
       help : "output in binary (rather than ASCII/armored)"
+    o :
+      alias : 'output'
+      help : 'the output file to write the encryption to'
 
   #----------
 
@@ -53,13 +56,15 @@ exports.Command = class Command extends Base
     args = [ "--encrypt", "-r", (@tssc.them.fingerprint true) ]
     args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
     gargs = { args }
+    args.push("--output", o, "--yes") if (o = @argv.output)
     args.push "-a"  unless @argv.binary
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
       args.push @argv.file 
     await gpg gargs, defer err, out
-    log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
+    unless @argv.output?
+      log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
     cb err 
 
   #----------
