@@ -120,11 +120,15 @@ exports.Command = class Command extends Base
 
   #----------
 
+  do_output : (o) ->
+
+  #----------
+
   do_command : (cb) ->
     gargs = @make_gpg_args()
     @decrypt_stderr = gargs.stderr
     await @tmp_keyring.gpg gargs, defer err, out
-    log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
+    @do_output out
     cb err 
 
   #----------

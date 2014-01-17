@@ -26,6 +26,11 @@ exports.Command = class Command extends dv.Command
 
   #----------
 
+  do_output : (o) ->
+    log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
+
+  #----------
+  
   make_gpg_args : () ->
     args = [ 
       "--decrypt" , 
