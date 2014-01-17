@@ -59,6 +59,7 @@ class Main
       "switch"
       "track"
       "untrack"
+      "verify"
       "version"
     ]
 
@@ -90,7 +91,7 @@ class Main
         log.error "Subcommand not found: #{argv.subcommand_name}"
         err = new E.ArgsError "#{argv.subcommand_name} not found"
       else
-        @cmd.set_argv @argv
+        err = @cmd.set_argv @argv
     cb err
 
   #---------------------------------

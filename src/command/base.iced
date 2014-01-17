@@ -36,7 +36,9 @@ exports.Base = class Base
 
   #-------------------
 
-  set_argv : (a) -> @argv = a
+  set_argv : (a) -> 
+    @argv = a
+    return null
 
   #-------------------
 
