@@ -56,6 +56,7 @@ class Main
       "prove"
       "reset"
       "revoke"
+      "sign"
       "switch"
       "track"
       "untrack"

@@ -29,6 +29,7 @@ $(BUILD_STAMP): \
 	lib/command/push.js \
 	lib/command/reset.js \
 	lib/command/revoke.js \
+	lib/command/sign.js \
 	lib/command/switch.js \
 	lib/command/track.js \
 	lib/command/untrack.js \
