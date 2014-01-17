@@ -18,8 +18,7 @@ exports.parse_signature = (lines) ->
   strip = (m) -> m.split(/\s+/).join('')
   ends_in = (a,b) -> a[-(b.length)...] is b
   rxx = ///
-            \n
-            gpg:\sSignature\smade.*\n
+            (?:^|\n)gpg:\sSignature\smade.*\n
             gpg:\s+using\s[RD]SA\skey\s([A-F0-9]{16})\n
             (.*\n)* # Skip arbirarily many lines
             gpg:\sGood\ssignature\sfrom.*\n

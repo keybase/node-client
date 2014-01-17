@@ -18,6 +18,7 @@ $(BUILD_STAMP): \
 	lib/command/base.js \
 	lib/command/config.js \
 	lib/command/decrypt.js \
+	lib/command/decrypt_and_verify.js \
 	lib/command/encrypt.js \
 	lib/command/help.js \
 	lib/command/id.js \
