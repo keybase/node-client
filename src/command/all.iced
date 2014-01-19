@@ -11,6 +11,7 @@ req = require '../req'
 session = require '../session'
 db = require '../db'
 gpg = require 'gpg-wrapper'
+keyring = require '../keyring'
 
 ##=======================================================================
 
@@ -139,6 +140,11 @@ class Main
 
   #----------------------------------
 
+  init_keyring : () ->
+    keyring.init()
+
+  #----------------------------------
+
   load_db : (cb) ->
     err = null
     if @cmd.use_db()
@@ -159,6 +165,7 @@ class Main
     await @parse_args  esc defer()
     env().set_argv @argv
     @config_logger()
+    @init_keyring()
     await @load_config esc defer()
     env().set_config @config
     await @load_db esc defer()
