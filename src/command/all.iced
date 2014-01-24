@@ -58,6 +58,7 @@ class Main
       "reset"
       "revoke"
       "sign"
+      "status"
       "switch"
       "track"
       "untrack"

@@ -30,6 +30,7 @@ $(BUILD_STAMP): \
 	lib/command/reset.js \
 	lib/command/revoke.js \
 	lib/command/sign.js \
+	lib/command/status.js \
 	lib/command/switch.js \
 	lib/command/track.js \
 	lib/command/untrack.js \

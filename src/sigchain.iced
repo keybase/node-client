@@ -435,7 +435,7 @@ exports.SigChain = class SigChain
         when ST.UNTRACK
           if not (id = body?.untrack?.id)? then log.warn "Mssing untrack in signature: #{pjs}"
           else if not (link = out[ST.TRACK]?[id])? then log.warn "Unexpected untrack of #{id} in signature chain"
-          else if link.is_revoked() then log.warn "Tracking was already revoked for #{id} (ignoring untrack)"
+          else if link.is_revoked() then log.debug "| Tracking was already revoked for #{id} (ignoring untrack)"
           else link.revoke()
 
         else
