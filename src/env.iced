@@ -159,11 +159,11 @@ class Env
       config : (c) -> c.user?.email
       dflt   : -> null
 
-  get_home : () ->
+  get_home : (null_ok = false) ->
     @get_opt
       env    : (e) -> e.KEYBASE_HOME_DIR
-      arg    : (a) -> a.home_dir
-      dflt   : -> home()
+      arg    : (a) -> a.homedir
+      dflt   : -> if null_ok then null else home()
 
   get_key_server : () ->
     self = @

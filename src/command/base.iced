@@ -77,7 +77,7 @@ exports.Base = class Base
     "preserve-tmp-keyring" :
       action : "storeTrue"
       help : "preserve the temporary keyring; don't clean it up"
-    "home-dir" :
+    "homedir" :
       help : "specify a non-standard home directory; look for GPG keychain there"
 
   #-------------------
