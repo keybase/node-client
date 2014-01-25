@@ -19,12 +19,19 @@ class Config
 
   DEFAULT_FILE : ".node_client_test.conf"
 
+  #----------------
+
   constructor : ( { @file }) ->
+    @_data =  {}
+
+  #----------------
 
   init : (cb) ->
     esc = make_esc cb, "Config::init"
     await @open_config esc defer()
     cb null
+
+  #----------------
 
   open_config : (cb) ->
     file = if @file then @file else path.join(home(),@DEFAULT_FILE)
@@ -40,6 +47,11 @@ class Config
       err = null
     cb err
 
+  #----------------
+
+  scratch_dir : () ->
+    @_data?.scratch or path.join(__dirname, "..", "scratch")
+
 #====================================================================
 
 _config = null
@@ -47,6 +59,8 @@ exports.init = (opts, cb) ->
   _config = new Config opts
   await _config.init defer err
   cb err
+
+#----------------
 
 exports.config = () -> _config
 
