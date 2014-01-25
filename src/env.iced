@@ -57,28 +57,28 @@ class Env
     @get_opt
       env    : (e) -> e.KEYBASE_CONFIG_FILE
       arg    : (a) -> a.config
-      dflt   : ( ) -> join home(), FN.config_dir, FN.config_file
+      dflt   : ( ) => join @get_home(), FN.config_dir, FN.config_file
 
   get_session_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_SESSION_FILE
       arg    : (a) -> a.session_file
       config : (c) -> c?.files?.session
-      dflt   : ( ) -> join home(), FN.config_dir, FN.session_file
+      dflt   : ( ) => join @get_home(), FN.config_dir, FN.session_file
 
   get_db_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_DB_FILE
       arg    : (a) -> a.db_file
       config : (c) -> c?.files?.db
-      dflt   : ( ) -> join home(), FN.config_dir, FN.db_file
+      dflt   : ( ) => join @get_home(), FN.config_dir, FN.db_file
 
   get_tmp_keyring_dir : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR
       arg    : (a) -> a.tmp_keyring_dir
       config : (c) -> c?.files?.tmp_keyring_dir
-      dflt   : ( ) -> join home(), FN.config_dir, FN.tmp_keyring_dir
+      dflt   : ( ) => join @get_home(), FN.config_dir, FN.tmp_keyring_dir
 
   get_preserve_tmp_keyring : () ->
     @get_opt
@@ -158,6 +158,12 @@ class Env
       arg    : (a) -> a.email
       config : (c) -> c.user?.email
       dflt   : -> null
+
+  get_home : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_HOME_DIR
+      arg    : (a) -> a.home_dir
+      dflt   : -> home()
 
   get_key_server : () ->
     self = @

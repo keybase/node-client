@@ -31,13 +31,16 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
-    log.console.log "configged as #{env().get_username()}"
-    await session.check esc defer logged_in
-    log.console.log "  * #{if logged_in then '' else 'NOT '}logged in"
-    await User.load_me esc defer me
-    if me?
-      log.console.log "  * Key ID: #{me.key_id_64().toUpperCase()}"
-      log.console.log "  * Fingerprint: #{format_fingerprint me.fingerprint(true)}"
+    if (un = env().get_username())?
+      log.console.log "configged as #{env().get_username()}"
+      await session.check esc defer logged_in
+      log.console.log "  * #{if logged_in then '' else 'NOT '}logged in"
+      await User.load_me esc defer me
+      if me?
+        log.console.log "  * Key ID: #{me.key_id_64().toUpperCase()}"
+        log.console.log "  * Fingerprint: #{format_fingerprint me.fingerprint(true)}"
+    else
+      log.error "Not configured"
     cb null
 
 ##=======================================================================
