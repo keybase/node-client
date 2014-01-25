@@ -12,6 +12,7 @@ log = require '../../lib/log'
 {a_json_parse} = require('iced-utils').util
 path = require 'path'
 fs = require 'fs'
+{keyring} = require 'gpg-wrapper'
 
 #===================================================
 
@@ -21,7 +22,7 @@ class Config
 
   #----------------
 
-  constructor : ( { @file }) ->
+  constructor : ( { @file, @debug  }) ->
     @_data =  {}
 
   #----------------
@@ -29,6 +30,10 @@ class Config
   init : (cb) ->
     esc = make_esc cb, "Config::init"
     await @open_config esc defer()
+    keyring.init {
+      log : log,
+      get_debug : () => @debug
+    }
     cb null
 
   #----------------
