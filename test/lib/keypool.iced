@@ -33,11 +33,3 @@ exports.grab = grab = (cb) ->
   cb err, key
 
 #===================================================
-
-await grab defer err, k0
-console.log err
-console.log k0
-await grab defer err, k1
-console.log err
-console.log k1
-
