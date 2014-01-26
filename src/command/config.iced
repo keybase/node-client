@@ -6,6 +6,7 @@ log = require '../log'
 {gpg} = require 'gpg-wrapper'
 {E} = require '../err'
 {env} = require '../env'
+{a_json_parse} = require('iced-utils').util
 
 ##=======================================================================
 
@@ -24,6 +25,13 @@ exports.Command = class Command extends Base
   OPTS :
     get :
       help : "Read the given configuration option"
+    j :
+      alias : 'json'
+      help : 'interpret the value as JSON'
+      action : 'storeTrue'
+    pretty :
+      help : "pretty-print JSON"
+      action : 'storeTrue'
 
   #----------
 
@@ -47,15 +55,18 @@ exports.Command = class Command extends Base
     err = null
     c = env().config
     if (k = @argv.get)?
-      console.log c.get k
+      console.log JSON.stringify(c.get(k), null, (if @argv.pretty then "    " else null))
     else if @argv.kvs.length > 2
       msg = "Need either 0,1 or 2 arguments for setting values in config"
       log.error "Usage: #{msg}"
       err = new E.ArgsError msg
     else if @argv.kvs.length > 0
       k = @argv.kvs[0]
-      v = convert(if @argv.kvs.length is 2 then @argv.kvs[1] else null)
-      c.set k, v
+      if @argv.json and (@argv.kvs.length is 2)
+        await a_json_parse @argv.kvs[1], defer err, v
+      else
+        v = convert(if @argv.kvs.length is 2 then @argv.kvs[1] else null)
+      c.set k, v unless err?
     else if c.is_empty()
       pjs = new PackageJson()
       c.set "generated", {

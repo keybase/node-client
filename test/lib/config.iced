@@ -13,6 +13,7 @@ log = require '../../lib/log'
 path = require 'path'
 fs = require 'fs'
 {keyring} = require 'gpg-wrapper'
+urlmod = require 'url'
 
 #===================================================
 
@@ -22,8 +23,29 @@ class Config
 
   #----------------
 
-  constructor : ( { @file, @debug  }) ->
+  DEFAULT_CONFIG :
+    server : 
+      host : localhost
+      port : 3000
+      no_tls : 1
+
+  #----------------
+
+  constructor : ( { @file, @debug, @uri }) ->
     @_data =  {}
+
+  #----------------
+
+  server_obj : () ->
+    if (o = @_data?.server) then o
+    else if not uri? then @DEFAULT_CONFIG.server
+    else 
+      u = urlmod.parse(@uri)
+      {
+        host : u.host
+        port : u.port
+        no_tls : (u.protocol is 'http:')
+      }
 
   #----------------
 
@@ -51,6 +73,10 @@ class Config
       log.warn "No config file given, and none found in ~/#{@DEFAULT_FILE}; using defaults"
       err = null
     cb err
+
+  #----------------
+
+  homedir_config : () -> { server : @server_obj() }
 
   #----------------
 

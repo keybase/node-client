@@ -13,7 +13,10 @@ path = require 'path'
 {mkdir_p} = require('iced-utils').fs
 {make_esc} = require 'iced-error'
 {log} = require '../../lib/log'
-{AltKeyRing} = require('gpg-wrapper').keyring
+gpgw = require 'gpg-wrapper'
+{AltKeyRing} = gpgw.keyring
+{run} = gpgw
+keypool = require './keypool'
 
 #==================================================================
 
@@ -43,7 +46,13 @@ exports.User = class User
     esc = make_esc cb, "User::init"
     await @make_homedir esc defer()
     await @make_keyring esc defer()
+    await @grab_key esc defer()
+    await @write_config esc defer()
     cb null
+
+  #-----------------
+
+   
 
   #-----------------
 
@@ -57,6 +66,17 @@ exports.User = class User
 
   #-----------------
 
+  keybase : (inargs, cb) ->
+    inargs.args = [
+      "--homedir"
+      @homedir
+    ].concat inargs.args
+    ingargs.name = path.join __dirname, "..", "..", "bin", "main.js"
+    await inargs, defer err, out
+    cb err, out
+
+  #-----------------
+
   make_keyring : (cb) ->
     await AltKeyRing.make @keyring_dir(), defer err, @keyring
     cb err
@@ -67,28 +87,12 @@ exports.User = class User
 
   #-----------------
 
-  make_key : (cb) ->
-    esc = make_esc cb, "User::make_key"
-    bits = 1024
-    script = [
-      "Key-Type: RSA"
-      "Key-Length: #{bits}"
-      "Subkey-Type: RSA"
-      "Subkey-Length: #{bits}"
-      "Name-Real: #{@username}"
-      "Name-Email: #{@email}"
-      "Expire-date: 10y"
-      "%transient-key"
-      "%no-protection"
-      "%commit"
-    ]
-    args = [ "--gen-key", "--batch" ]
-    stdin = script.join("\n")
-    await @gpg { args, stdin }, defer err 
-    @key = @keyring.make_key { username : @username } 
-    await @key.load esc defer()
-    await @key.read_uids_from_key esc defer uids
-    @key._uid = uids[0]
+  grab_key : (cb) ->
+    esc = make_esc cb, "User::grab_key"
+    await keypool.grab defer err, tmp 
+    await tmp.load esc defer()
+    @key = tmp.copy_to_keyring @keyring
+    await @key.save esc defer()
     cb null
 
   #-----------------
@@ -115,7 +119,6 @@ test = (cb) ->
   await init { }, esc defer()
   user = User.generate()
   await user.init esc defer()
-  await user.make_key esc defer()
   cb null
 
 await test defer err
