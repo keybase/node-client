@@ -111,7 +111,18 @@ exports.User = class User
 
   #-----------------
 
-  signup : () ->
+  signup : (cb) ->
+    script = [
+      @username
+      @password
+      @password
+      @email
+      ""
+    ]
+    stdin = script.join("\n")
+    await @keybase { args : [ "signup" ], stdin }, defer err, out
+    console.log out.toString('utf8')
+    cb err
 
   #-----------------
 
@@ -129,6 +140,7 @@ test = (cb) ->
   await init { }, esc defer()
   user = User.generate()
   await user.init esc defer()
+  await user.signup esc defer()
   cb null
 
 await test defer err
