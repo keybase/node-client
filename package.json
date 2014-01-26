@@ -43,7 +43,8 @@
    "devDependencies" : {
     "iced-coffee-script" : "~1.6.3-j",
     "iced-test"          : "~0.0.8",
-    "optimist"           : "~0.6.0"
+    "optimist"           : "~0.6.0",
+    "iced-expect"        : "~0.0.1"
   },
   "bundleDependencies" : [
     "argparse",

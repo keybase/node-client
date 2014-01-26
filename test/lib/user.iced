@@ -17,6 +17,7 @@ gpgw = require 'gpg-wrapper'
 {AltKeyRing} = gpgw.keyring
 {run} = gpgw
 keypool = require './keypool'
+{Engine} = require 'iced-expect'
 
 #==================================================================
 
@@ -76,14 +77,25 @@ exports.User = class User
 
   #-----------------
 
+  _keybase_cmd : () -> path.join __dirname, "..", "..", "bin", "main.js"
+  _keybase_mutate_args : (args) -> [ "--homedir", @homedir ].concat args
+
+  #-----------------
+
   keybase : (inargs, cb) ->
-    inargs.args = [
-      "--homedir"
-      @homedir
-    ].concat inargs.args
-    inargs.name = path.join __dirname, "..", "..", "bin", "main.js"
+    inargs.args = @_keybase_mutate_args inargs.args
+    inargs.name = @_keybase_cmd()
     await run inargs, defer err, out
     cb err, out
+
+  #-----------------
+
+  keybase_expect : (args) ->
+    args = @_keybase_mutate_args args
+    name = @_keybase_cmd()
+    eng = new Engine { name, args }
+    eng.run()
+    return eng
 
   #-----------------
 
@@ -112,16 +124,23 @@ exports.User = class User
   #-----------------
 
   signup : (cb) ->
-    script = [
-      @username
-      @password
-      @password
-      @email
-      ""
-    ]
-    stdin = script.join("\n")
-    await @keybase { args : [ "signup" ], stdin }, defer err, out
-    console.log out.toString('utf8')
+    eng = @keybase_expect [ "signup" ]
+    await eng.conversation [
+        { expect : "Your desired username: " }
+        { sendline : @username }
+        { expect : "Your passphrase: " }
+        { sendline : @password }
+        { expect : "confirm passphrase: " }
+        { sendline : @password },
+        { expect : "Your email: "}
+        { sendline : @email }
+        { expect : "Invitation code: 123412341234123412341234" }
+        { sendline : "" }
+      ], defer err
+    unless err?
+      await eng.wait defer rc
+      if rc isnt 0
+        err = new Error "Command-line client failed with code #{rc}"
     cb err
 
   #-----------------
