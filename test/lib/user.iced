@@ -94,7 +94,6 @@ exports.User = class User
   keybase_expect : (args) ->
     inargs = { args }
     @_keybase_cmd inargs
-    console.log inargs
     eng = new Engine inargs
     eng.run()
     return eng
@@ -113,7 +112,7 @@ exports.User = class User
 
   grab_key : (cb) ->
     esc = make_esc cb, "User::grab_key"
-    await keypool.grab defer err, tmp 
+    await keypool.grab esc defer tmp
     await tmp.load esc defer()
     @key = tmp.copy_to_keyring @keyring
     await @key.save esc defer()
@@ -163,5 +162,3 @@ test = (cb) ->
   await user.signup esc defer()
   cb null
 
-await test defer err
-console.log err
