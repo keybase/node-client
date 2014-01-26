@@ -120,7 +120,9 @@ exports.User = class User
 
   #-----------------
 
-  push : () ->
+  push_key : (cb) ->
+    await @keybase { args : [ "push", @key.fingerprint() ]}, defer err
+    cb err
 
   #-----------------
 

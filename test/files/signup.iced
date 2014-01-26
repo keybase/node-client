@@ -16,3 +16,9 @@ exports.signup = (T,cb) ->
   await user.signup defer err
   T.no_error err
   cb()
+
+exports.push_key = (T,cb) ->
+  await user.push_key defer err
+  T.no_error err
+  cb()
+
