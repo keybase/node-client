@@ -52,7 +52,17 @@ exports.User = class User
 
   #-----------------
 
-   
+  write_config : (cb) ->
+    esc = make_esc cb, "User::write_config"
+    await @keybase { args : [ "config" ], quiet : true }, esc defer()  
+    args = [
+      "config"
+      "--json"
+      "server"
+      JSON.stringify(config().server_obj())
+    ]
+    await @keybase { args, quiet : true }, esc defer()
+    cb null
 
   #-----------------
 
@@ -71,8 +81,8 @@ exports.User = class User
       "--homedir"
       @homedir
     ].concat inargs.args
-    ingargs.name = path.join __dirname, "..", "..", "bin", "main.js"
-    await inargs, defer err, out
+    inargs.name = path.join __dirname, "..", "..", "bin", "main.js"
+    await run inargs, defer err, out
     cb err, out
 
   #-----------------

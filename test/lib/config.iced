@@ -25,7 +25,7 @@ class Config
 
   DEFAULT_CONFIG :
     server : 
-      host : localhost
+      host : "localhost"
       port : 3000
       no_tls : 1
 
@@ -73,10 +73,6 @@ class Config
       log.warn "No config file given, and none found in ~/#{@DEFAULT_FILE}; using defaults"
       err = null
     cb err
-
-  #----------------
-
-  homedir_config : () -> { server : @server_obj() }
 
   #----------------
 
