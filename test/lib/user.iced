@@ -77,23 +77,25 @@ exports.User = class User
 
   #-----------------
 
-  _keybase_cmd : () -> path.join __dirname, "..", "..", "bin", "main.js"
-  _keybase_mutate_args : (args) -> [ "--homedir", @homedir ].concat args
+  _keybase_cmd : (inargs) -> 
+    inargs.args = [ "--homedir", @homedir ].concat inargs.args
+    config().keybase_cmd inargs
+    return inargs
 
   #-----------------
 
   keybase : (inargs, cb) ->
-    inargs.args = @_keybase_mutate_args inargs.args
-    inargs.name = @_keybase_cmd()
+    @_keybase_cmd inargs
     await run inargs, defer err, out
     cb err, out
 
   #-----------------
 
   keybase_expect : (args) ->
-    args = @_keybase_mutate_args args
-    name = @_keybase_cmd()
-    eng = new Engine { name, args }
+    inargs = { args }
+    @_keybase_cmd inargs
+    console.log inargs
+    eng = new Engine inargs
     eng.run()
     return eng
 
@@ -153,10 +155,9 @@ exports.User = class User
 
 #==================================================================
 
-
 test = (cb) ->
   esc = make_esc cb, "test"
-  await init { }, esc defer()
+  await init { debug : true }, esc defer()
   user = User.generate()
   await user.init esc defer()
   await user.signup esc defer()

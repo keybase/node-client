@@ -12,7 +12,8 @@ log = require '../../lib/log'
 {a_json_parse} = require('iced-utils').util
 path = require 'path'
 fs = require 'fs'
-{keyring} = require 'gpg-wrapper'
+gpg = require 'gpg-wrapper'
+{keyring} = gpg
 urlmod = require 'url'
 
 #===================================================
@@ -49,14 +50,29 @@ class Config
 
   #----------------
 
+  config_logger : () ->
+    p = log.package()
+    p.env().set_level p.DEBUG if @debug
+    gpg.set_log log.warn
+
+  #----------------
+
   init : (cb) ->
     esc = make_esc cb, "Config::init"
     await @open_config esc defer()
+    @config_logger()
     keyring.init {
       log : log,
       get_debug : () => @debug
     }
     cb null
+
+  #----------------
+
+  keybase_cmd : (inargs) ->
+    inargs.args = [ "-d" ].concat(inargs.args) if @debug
+    inargs.name = path.join __dirname, "..", "..", "bin", "main.js"
+    return inargs
 
   #----------------
 
