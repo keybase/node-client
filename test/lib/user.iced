@@ -12,7 +12,7 @@
 path = require 'path'
 {mkdir_p} = require('iced-utils').fs
 {make_esc} = require 'iced-error'
-{log} = require '../../lib/log'
+log = require '../../lib/log'
 gpgw = require 'gpg-wrapper'
 {AltKeyRing} = gpgw.keyring
 {run} = gpgw
@@ -162,7 +162,7 @@ exports.User = class User
 
   #-----------------
 
-  has_live_key : () -> @_state.pushed and @_state.signedup and not(@_state_revoked)
+  has_live_key : () -> @_state.pushed and @_state.signedup and not(@_state.revoked)
 
   #-----------------
 
@@ -189,10 +189,10 @@ class Users
 
   cleanup : (cb) ->
     err = null
-    for u in @_list when k.has_live_key()
+    for u in @_list when u.has_live_key()
       await u.revoke_key defer tmp
       if tmp?
-        log.error "Error revoking user #{u.username}: #{err.message}"
+        log.error "Error revoking user #{u.username}: #{tmp.message}"
         err = tmp
     cb err
 
