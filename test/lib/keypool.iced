@@ -16,7 +16,7 @@ class Keypool
 
   grab : (cb) -> 
     err = ret = null
-    if @_keys?.length then ret = @_keys.shift()
+    if @_keys?.length then ret = @_keys[5]
     else err = new Error "no keys left"
     cb err, ret
 

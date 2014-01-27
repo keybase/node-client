@@ -62,7 +62,7 @@ exports.init = () ->
     get_debug : () -> env().get_debug()
     get_tmp_keyring_dir : () -> env().get_tmp_keyring_dir()
     get_key_klass : () -> GpgKey
-    get_home_dir : () -> env().get_home(true)
+    get_home_dir : () -> env().get_home_gnupg_dir(true)
     log : log
   }
 

@@ -165,6 +165,11 @@ class Env
       arg    : (a) -> a.homedir
       dflt   : -> if null_ok then null else home()
 
+  get_home_gnupg_dir : (null_ok = false) ->
+    ret = @get_home null_ok
+    ret = join(ret, ".gnupg") if ret?
+    return ret
+
   get_key_server : () ->
     self = @
     @get_opt

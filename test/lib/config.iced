@@ -18,9 +18,26 @@ urlmod = require 'url'
 
 #===================================================
 
+class CycleList 
+
+  constructor : (@v) ->
+    @_i = 0
+
+  get : () -> 
+    ret = null
+    if @v.length
+      ret = @v[@_i]
+      @_inc()
+    return ret
+
+  _inc : () ->
+    @_i = (@_i + 1) % @v.length
+
+#===================================================
+
 class Config
 
-  DEFAULT_FILE : ".node_client_test.conf"
+  DEFAULT_FILE : ".node_client_test.json"
 
   #----------------
 
@@ -34,6 +51,7 @@ class Config
 
   constructor : ( { @file, @debug, @uri }) ->
     @_data =  {}
+    @_dummies = {}
 
   #----------------
 
@@ -84,6 +102,8 @@ class Config
       await a_json_parse data, defer err, @_data
       if err?
         log.error "#{file}: Error parsing json: #{err.message}"
+      else
+        @load_dummy_accounts()
     else if @file
       log.error "#{file}: cannot open config file: #{err.message}"
     else
@@ -93,8 +113,20 @@ class Config
 
   #----------------
 
+  load_dummy_accounts : () ->
+    if @_data.dummies?
+      for k,v of @_data.dummies
+        @_dummies[k] = new CycleList v
+
+  #----------------
+
   scratch_dir : () ->
     @_data?.scratch or path.join(__dirname, "..", "scratch")
+
+  #----------------
+
+  get_dummy_account : (service_name) -> @_dummies?[service_name]?.get()
+
 
 #====================================================================
 

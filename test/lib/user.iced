@@ -10,7 +10,9 @@
 {prng} = require 'crypto'
 {init,config} = require './config'
 path = require 'path'
-{mkdir_p} = require('iced-utils').fs
+iutils = require 'iced-utils'
+{mkdir_p} = iutils.fs
+{athrow} = iutils.util
 {make_esc} = require 'iced-error'
 log = require '../../lib/log'
 gpgw = require 'gpg-wrapper'
@@ -18,6 +20,10 @@ gpgw = require 'gpg-wrapper'
 {run} = gpgw
 keypool = require './keypool'
 {Engine} = require 'iced-expect'
+
+#==================================================================
+
+strip = (x) -> if (m = x.match /^(\s*)([\S\s]*?)(\s*)$/) then m[2] else x
 
 #==================================================================
 
@@ -81,7 +87,7 @@ exports.User = class User
   #-----------------
 
   _keybase_cmd : (inargs) -> 
-    inargs.args = [ "--homedir", @keyring_dir() ].concat inargs.args
+    inargs.args = [ "--homedir", @homedir ].concat inargs.args
     config().keybase_cmd inargs
     return inargs
 
@@ -154,7 +160,31 @@ exports.User = class User
 
   #-----------------
 
-  prove_twitter : () ->
+  prove_twitter : (cb) ->
+    esc = make_esc cb, "User::prove_twitter"
+    eng = @keybase_expect [ "prove", "twitter" ]
+    unless (acct = config().get_dummy_account 'twitter')?
+      await athrow (new Error "No dummy accounts available for 'twitter'"), esc defer()
+    console.log "account ->"
+    console.log acct
+    await eng.expect { pattern : /Your username on twitter: / }, esc defer()
+    await eng.sendline acct.username, esc defer()
+    await eng.expect { pattern : /Check Twitter now\? \[Y\/n\] / }, esc defer data
+    if (m = data.toString('utf8').match /Please tweet the following:([\S\s]+)/ )
+      tweet = strip m[1]
+    else
+      await athrow (new Error "Didn't get a tweet text from the CLI"), esc defer()
+    cb null
+
+  #-----------------
+
+  send_tweet : (cb) ->
+
+    # Grabbing the auth token:
+    #
+    # JSON.parse($("#init-data").val()).formAuthenticityToken ->
+    #    8ee9db34e6bd66a57476ce2ef5851365f645e159
+
 
   #-----------------
 
