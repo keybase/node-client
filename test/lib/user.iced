@@ -78,7 +78,7 @@ exports.User = class User
   #-----------------
 
   _keybase_cmd : (inargs) -> 
-    inargs.args = [ "--homedir", @homedir ].concat inargs.args
+    inargs.args = [ "--homedir", @keyring_dir() ].concat inargs.args
     config().keybase_cmd inargs
     return inargs
 

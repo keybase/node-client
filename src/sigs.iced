@@ -5,7 +5,7 @@ req = require './req'
 session = require './session'
 {env} = require './env'
 log = require './log'
-{gpg} = require './gpg'
+{master_ring} = require './keyring'
 {decode} = require('pgp-utils').armor
 
 #===========================================
@@ -187,7 +187,7 @@ exports.SignatureEngine = class SignatureEngine
     arg = 
       stdin : new Buffer(msg, 'utf8')
       args : [ "-u", @km.get_pgp_key_id(), "--sign", "-a", "--keyid-format", "long" ] 
-    await gpg arg, defer err, pgp
+    await master_ring().gpg arg, defer err, pgp
     unless err?
       out.pgp = pgp = pgp.toString('utf8')
       [err,msg] = decode pgp

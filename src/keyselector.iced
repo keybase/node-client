@@ -2,7 +2,7 @@ log = require './log'
 {gpg} = require './gpg'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require './prompter'
-{load_key} = require './keyring'
+{master_ring,load_key} = require './keyring'
 
 ##=======================================================================
 
@@ -49,7 +49,7 @@ exports.KeySelector = class KeySelector
     @keys = null
     args = [ "-k", "--keyid-format", "long" ] 
     args.push @query if @query
-    await gpg { args }, defer err, out
+    await master_ring().gpg { args }, defer err, out
     unless err?
       raw = out.toString().split("\n\n")
       keys = for r in raw when (f = find_key_id_64 r)
