@@ -1,12 +1,16 @@
 
 request = require 'request'
 cheerio = require 'cheerio'
+{katch} = require('iced-utils').util
+{make_esc} = require('iced-error')
 
 #=====================================================================
 
 exports.TwitterBot = class TwitterBot
 
   constructor : ({@username, @password}) ->
+
+  #---------------------------------
 
   load_page : (path, status = [200], cb) ->
     uri = [ "https://twitter.com" , path ].join "/"
@@ -15,12 +19,27 @@ exports.TwitterBot = class TwitterBot
       err = new Error "HTTP status code #{sc}"
     cb err, body, res
 
+  #---------------------------------
+
+  grab_auth_token : ($, cb) ->
+    err = null
+    if not (raw = $("#init-data").val())? or raw.length is 0
+      err = new Error "No #init-data form data found"
+    else 
+      [err, json] = katch () -> JSON.parse(raw)
+    if not err? and not (ret = json.formAuthenticityToken)?
+      err = new Error "init-data didn't have a 'formAuthenticityToken'"
+    cb err, ret
+
+  #---------------------------------
+
   load_login_page : (cb) ->
-    await @load_page "/login", null, defer err, body
+    esc = make_esc cb, "load_log_page"
+    await @load_page "/login", null, esc defer body
     $ = cheerio.load body
-    tok = (JSON.parse $("#init-data").val()).formAuthenticityToken
+    await @grab_auth_token $, esc defer tok
     console.log tok
-    cb err
+    cb null
 
 #=====================================================================
 
