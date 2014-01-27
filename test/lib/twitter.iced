@@ -3,18 +3,23 @@ request = require 'request'
 cheerio = require 'cheerio'
 {katch} = require('iced-utils').util
 {make_esc} = require('iced-error')
+util = require 'util'
 
 #=====================================================================
 
 exports.TwitterBot = class TwitterBot
 
   constructor : ({@username, @password}) ->
+    @jar = request.jar()
 
   #---------------------------------
 
-  load_page : (path, status = [200], cb) ->
-    uri = [ "https://twitter.com" , path ].join "/"
-    await request { uri, cookie_jar : true }, defer err, res, body
+  load_page : ({path, status, form, method }, cb) ->
+    status or= [200]
+    uri = [ "https://twitter.com" , path ].join ""
+    form.authenticity_token = @tok if form? and @tok?
+    await request { uri, jar : true, form, method }, defer err, res, body
+    console.log util.inspect res, { depth : null }
     if not err? and not((sc = res.statusCode) in status)
       err = new Error "HTTP status code #{sc}"
     cb err, body, res
@@ -35,13 +40,42 @@ exports.TwitterBot = class TwitterBot
 
   load_login_page : (cb) ->
     esc = make_esc cb, "load_log_page"
-    await @load_page "/login", null, esc defer body
+    await @load_page {path : "/login" }, esc defer body
     $ = cheerio.load body
-    await @grab_auth_token $, esc defer tok
-    console.log tok
+    await @grab_auth_token $, esc defer @tok
     cb null
+
+  #---------------------------------
+
+  post_login : (cb) ->
+    form =
+      'session[username_or_email]' : @username
+      'session[password]' : @password
+    uri = "/session"
+    await @load_page { uri, form, method : "POST" }, defer err, body
+    $ = cheerio.load body
+    await @grab_auth_token $, defer err, @tok
+    cb err
+
+  #---------------------------------
+
+  tweet : (txt, cb) ->
+    console.log "shit"
+    await @load_page { 
+      path : "/i/tweet/create", 
+      method : "POST", 
+      form : {status : txt, place_id : "" },
+      }, defer err, body
+    cb err
 
 #=====================================================================
 
-bot = new TwitterBot {}
-await bot.load_login_page defer()
+test = (cb) ->
+  esc = make_esc cb, "tesT"
+  bot = new TwitterBot { username : "tacovontaco", password : "yoyoma" }
+  await bot.load_login_page esc defer()
+  await bot.post_login esc defer()
+  await bot.tweet "this be the tweet 22", esc defer()
+
+await test defer err
+console.log err
