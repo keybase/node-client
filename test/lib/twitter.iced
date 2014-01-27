@@ -77,5 +77,25 @@ test = (cb) ->
   await bot.post_login esc defer()
   await bot.tweet "this be the tweet 22", esc defer()
 
-await test defer err
+#=====================================================================
+
+d = { "username" : "tacovontaco", "password" : "yoyoma", 
+"consumer_key" : "5mWTsSzItVHdxaJfYi00Rw", 
+"consumer_secret" : "Hzz6fqwxrbAkKcPKjvtnqU1FN0OYi7gu93dS0gNbQ", 
+token : "2209163989-lTgnNUDINbH1ijvSyvO62CuMzyRCi3R6uOIfcHN", 
+token_secret : "gtskJSncqLQ7r9bXNnFcanfp1liW687KvYmbr30FLKheC" }
+tweet = (cb) ->
+  await request.post {
+    url : "https://api.twitter.com/1.1/statuses/update.json",
+    form : {
+      status : "this is the new way"
+    }
+    oauth : d
+  }, defer err, res, body
+  console.log err
+  console.log body
+
+
+
+await tweet defer err
 console.log err
