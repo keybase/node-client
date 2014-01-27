@@ -13,8 +13,8 @@ req = require '../req'
 {constants} = require '../constants'
 {format_fingerprint} = require('pgp-utils').util
 {env} = require '../env'
-{gpg} = require '../gpg'
 {bold} = require 'colors'
+{master_ring} = require '../keyring'
 
 ##=======================================================================
 
@@ -75,8 +75,8 @@ exports.Command = class Command extends Base
     fp = me.fingerprint(true)
     log.warn "Loaded keys for #{username}@#{constants.canonical_host}"
     log.warn "  Key fingerprint: #{format_fingerprint fp}"
-    await gpg { args : [ "-k", fp ] }, defer err_public
-    await gpg { args : [ "-K", fp ] }, defer err_secret
+    await master_ring().gpg { args : [ "-k", fp ] }, defer err_public
+    await master_ring().gpg { args : [ "-K", fp ] }, defer err_secret
     log.warn "  - Public key: #{if err_public? then 'unfound' else bold('found')}"
     log.warn "  - Secret key: #{if err_secret? then 'unfound' else bold('found')}"
     cb()

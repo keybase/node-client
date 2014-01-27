@@ -29,6 +29,8 @@ exports.User = class User
 
   constructor : ({@username, @email, @password, @homedir}) ->
     @keyring = null
+    @_state = {}
+    users().push @
 
   #---------------
 
@@ -49,6 +51,7 @@ exports.User = class User
     await @make_keyring esc defer()
     await @grab_key esc defer()
     await @write_config esc defer()
+    @_state.init = true
     cb null
 
   #-----------------
@@ -121,7 +124,8 @@ exports.User = class User
   #-----------------
 
   push_key : (cb) ->
-    await @keybase { args : [ "push", @key.fingerprint() ]}, defer err
+    await @keybase { args : [ "push", @key.fingerprint() ], quiet : true }, defer err
+    @_state.pushed = true unless err?
     cb err
 
   #-----------------
@@ -144,6 +148,8 @@ exports.User = class User
       await eng.wait defer rc
       if rc isnt 0
         err = new Error "Command-line client failed with code #{rc}"
+      else
+        @_state.signedup = true
     cb err
 
   #-----------------
@@ -154,13 +160,45 @@ exports.User = class User
 
   prove_github : () ->
 
+  #-----------------
+
+  has_live_key : () -> @_state.pushed and @_state.signedup and not(@_state_revoked)
+
+  #-----------------
+
+  revoke_key : (cb) ->
+    await @keybase { args : [ "revoke", "--force" ], quiet : true }, defer err
+    @_state.revoked = true unless err?
+    cb err
+
 #==================================================================
 
-test = (cb) ->
-  esc = make_esc cb, "test"
-  await init { debug : true }, esc defer()
-  user = User.generate()
-  await user.init esc defer()
-  await user.signup esc defer()
-  cb null
+class Users
 
+  constructor : () -> 
+    @_list = [] 
+    @_lookup = {}
+
+  pop : () -> @_list.pop()
+
+  push : (u) ->
+    @_list.push u
+    @_lookup[u.username] = u
+  
+  lookup : (u) -> @_lookup[u]
+
+  cleanup : (cb) ->
+    err = null
+    for u in @_list when k.has_live_key()
+      await u.revoke_key defer tmp
+      if tmp?
+        log.error "Error revoking user #{u.username}: #{err.message}"
+        err = tmp
+    cb err
+
+#==================================================================
+
+_users = new Users
+exports.users = users = () -> _users
+
+#==================================================================

@@ -72,6 +72,7 @@ class Config
   keybase_cmd : (inargs) ->
     inargs.args = [ "-d" ].concat(inargs.args) if @debug
     inargs.name = path.join __dirname, "..", "..", "bin", "main.js"
+    inargs.quiet = false if inargs.quiet and @debug
     return inargs
 
   #----------------
