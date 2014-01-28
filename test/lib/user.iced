@@ -20,6 +20,7 @@ gpgw = require 'gpg-wrapper'
 {run} = gpgw
 keypool = require './keypool'
 {Engine} = require 'iced-expect'
+{tweet_api} = require './twitter'
 
 #==================================================================
 
@@ -163,6 +164,7 @@ exports.User = class User
   prove_twitter : (cb) ->
     esc = make_esc cb, "User::prove_twitter"
     eng = @keybase_expect [ "prove", "twitter" ]
+    @twitter = {}
     unless (acct = config().get_dummy_account 'twitter')?
       await athrow (new Error "No dummy accounts available for 'twitter'"), esc defer()
     console.log "account ->"
@@ -174,17 +176,25 @@ exports.User = class User
       tweet = strip m[1]
     else
       await athrow (new Error "Didn't get a tweet text from the CLI"), esc defer()
-    cb null
+    unless (@twitter.dummy = config().get_dummy_account('twitter') )?
+      await athrow (new Error "No dummy accounts available for twitter"), esc defer()
+    await @send_tweet tweet, esc defer()
+    await eng.sendline "y", esc defer()
+    await eng.wait defer rc
+    console.log eng.stdout().toString('utf8')
+    if rc isnt 0
+      err = new Error "Error from keybase prove: #{rc}"
+    cb err
 
   #-----------------
 
-  send_tweet : (cb) ->
-
-    # Grabbing the auth token:
-    #
-    # JSON.parse($("#init-data").val()).formAuthenticityToken ->
-    #    8ee9db34e6bd66a57476ce2ef5851365f645e159
-
+  send_tweet : (tweet, cb) ->
+    console.log "sending tweet"
+    console.log @twitter.dummy
+    console.log tweet
+    await tweet_api @twitter.dummy, tweet, defer err, @twitter.tweet_id
+    console.log @twitter.tweet_id
+    cb err
 
   #-----------------
 
