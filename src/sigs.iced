@@ -163,9 +163,10 @@ exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
   imperative_verb : () -> "tweet"
   display_name : () -> "Twitter"
 
-exports.GithubProofGen = class TwitterProofGen extends RemoteServiceProofGen
+exports.GithubProofGen = class GithubProofGen extends RemoteServiceProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
+  imperative_verb : () -> "post a Gist with"
   display_name : () -> "GitHub"
 
 #===========================================

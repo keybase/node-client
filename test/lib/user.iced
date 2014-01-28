@@ -21,6 +21,7 @@ gpgw = require 'gpg-wrapper'
 keypool = require './keypool'
 {Engine} = require 'iced-expect'
 {tweet_api} = require './twitter'
+{gist_api} = require './github'
 
 #==================================================================
 
@@ -37,6 +38,7 @@ exports.User = class User
   constructor : ({@username, @email, @password, @homedir}) ->
     @keyring = null
     @_state = { proved : {} }
+    @_proofs = {}
     users().push @
 
   #---------------
@@ -161,37 +163,52 @@ exports.User = class User
 
   #-----------------
 
-  prove_twitter : (cb) ->
-    esc = make_esc cb, "User::prove_twitter"
-    eng = @keybase_expect [ "prove", "twitter" ]
+  prove : ({which, search_regex, http_action}, cb) ->
+    esc = make_esc cb, "User::prove"
+    eng = @keybase_expect [ "prove", which ]
     @twitter = {}
-    unless (acct = config().get_dummy_account 'twitter')?
-      await athrow (new Error "No dummy accounts available for 'twitter'"), esc defer()
-    await eng.expect { pattern : /Your username on twitter: / }, esc defer()
+    unless (acct = config().get_dummy_account which)?
+      await athrow (new Error "No dummy accounts available for '#{which}'"), esc defer()
+    await eng.expect { pattern : (new RegExp "Your username on #{which}: ", "i") }, esc defer()
+    console.log "got username"
     await eng.sendline acct.username, esc defer()
-    await eng.expect { pattern : /Check Twitter now\? \[Y\/n\] / }, esc defer data
-    if (m = data.toString('utf8').match /Please tweet the following:\s+(\S.*?)\n/)
-      tweet = m[1]
+    console.log "sent accounT"
+    console.log acct
+    await eng.expect { pattern : (new RegExp "Check #{which} now\? \[Y\/n\] ", "i") }, esc defer data
+    console.log "check now!"
+    if (m = data.toString('utf8').match search_regex)?
+      proof = m[1]
     else
-      await athrow (new Error "Didn't get a tweet text from the CLI"), esc defer()
-    unless (@twitter.dummy = config().get_dummy_account('twitter') )?
-      await athrow (new Error "No dummy accounts available for twitter"), esc defer()
-    await tweet_api acct, tweet, esc defer tweet_id
+      await athrow (new Error "Didn't get a #{which} text from the CLI"), esc defer()
+    await http_action acct, proof, esc defer proof_id
     await eng.sendline "y", esc defer()
     await eng.wait defer rc
     if rc isnt 0
       err = new Error "Error from keybase prove: #{rc}"
     else 
-      @twitter = 
-        tweet_id : tweet_id
-        acct : acct
-        tweet : tweet
-      @_state.proved.twitter = true
+      @_proofs[which] = { proof, proof_id, acct }
+      @_state.proved[which] = true
     cb err
 
   #-----------------
 
-  prove_github : () ->
+  prove_twitter : (cb) ->
+    opts = 
+      which : "twitter"
+      search_regex : /Please tweet the following:\s+(\S.*?)\n/
+      http_action : tweet_api
+    await @prove opts, defer err
+    cb err
+
+  #-----------------
+
+  prove_github : (cb) ->
+    opts = 
+      which : "github"
+      search_regex : /Please gist the following:\s+(\S[\s\S]*?)\n\n/
+      http_action : gist_api
+    await @prove opts, defer err
+    cb err
 
   #-----------------
 

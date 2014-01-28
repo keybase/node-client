@@ -71,6 +71,6 @@ test2 = (cb) ->
   console.log err
   console.log id
 
-await test2 defer()
+# await test2 defer()
 
 

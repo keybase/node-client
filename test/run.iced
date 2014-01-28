@@ -18,6 +18,7 @@ argv = require('optimist').
 class MyRunner extends itest.ServerRunner
 
   finish : (cb) ->
+    return cb true
     await users().cleanup defer()
     cb true
 
