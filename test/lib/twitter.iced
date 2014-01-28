@@ -18,8 +18,9 @@ exports.TwitterBot = class TwitterBot
     status or= [200]
     uri = [ "https://twitter.com" , path ].join ""
     form.authenticity_token = @tok if form? and @tok?
-    await request { uri, jar : true, form, method }, defer err, res, body
-    console.log util.inspect res, { depth : null }
+    headers = 
+      "User-Agent" : "user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
+    await request { uri, jar : true, form, method, headers }, defer err, res, body
     if not err? and not((sc = res.statusCode) in status)
       err = new Error "HTTP status code #{sc}"
     cb err, body, res
@@ -51,8 +52,15 @@ exports.TwitterBot = class TwitterBot
     form =
       'session[username_or_email]' : @username
       'session[password]' : @password
-    uri = "/session"
-    await @load_page { uri, form, method : "POST" }, defer err, body
+    path = "/sessions"
+    await @load_page { status : [302,200], path , form, method : "POST" }, defer err, body
+    cb err
+
+  #---------------------------------
+
+  get_home : (cb) ->
+    path = "/"
+    await @load_page { path , method : "GET" }, defer err, body
     $ = cheerio.load body
     await @grab_auth_token $, defer err, @tok
     cb err
@@ -60,7 +68,6 @@ exports.TwitterBot = class TwitterBot
   #---------------------------------
 
   tweet : (txt, cb) ->
-    console.log "shit"
     await @load_page { 
       path : "/i/tweet/create", 
       method : "POST", 
@@ -75,7 +82,9 @@ test = (cb) ->
   bot = new TwitterBot { username : "tacovontaco", password : "yoyoma" }
   await bot.load_login_page esc defer()
   await bot.post_login esc defer()
-  await bot.tweet "this be the tweet 22", esc defer()
+  await bot.get_home esc defer()
+  await bot.tweet "this be the tweet 3003", esc defer()
+  cb null
 
 #=====================================================================
 
@@ -97,5 +106,5 @@ tweet = (cb) ->
 
 
 
-await tweet defer err
+await test defer err
 console.log err
