@@ -36,7 +36,7 @@ exports.User = class User
 
   constructor : ({@username, @email, @password, @homedir}) ->
     @keyring = null
-    @_state = {}
+    @_state = { proved : {} }
     users().push @
 
   #---------------
@@ -167,33 +167,26 @@ exports.User = class User
     @twitter = {}
     unless (acct = config().get_dummy_account 'twitter')?
       await athrow (new Error "No dummy accounts available for 'twitter'"), esc defer()
-    console.log "account ->"
-    console.log acct
     await eng.expect { pattern : /Your username on twitter: / }, esc defer()
     await eng.sendline acct.username, esc defer()
     await eng.expect { pattern : /Check Twitter now\? \[Y\/n\] / }, esc defer data
-    if (m = data.toString('utf8').match /Please tweet the following:([\S\s]+)/ )
-      tweet = strip m[1]
+    if (m = data.toString('utf8').match /Please tweet the following:\s+(\S.*?)\n/)
+      tweet = m[1]
     else
       await athrow (new Error "Didn't get a tweet text from the CLI"), esc defer()
     unless (@twitter.dummy = config().get_dummy_account('twitter') )?
       await athrow (new Error "No dummy accounts available for twitter"), esc defer()
-    await @send_tweet tweet, esc defer()
+    await tweet_api acct, tweet, esc defer tweet_id
     await eng.sendline "y", esc defer()
     await eng.wait defer rc
-    console.log eng.stdout().toString('utf8')
     if rc isnt 0
       err = new Error "Error from keybase prove: #{rc}"
-    cb err
-
-  #-----------------
-
-  send_tweet : (tweet, cb) ->
-    console.log "sending tweet"
-    console.log @twitter.dummy
-    console.log tweet
-    await tweet_api @twitter.dummy, tweet, defer err, @twitter.tweet_id
-    console.log @twitter.tweet_id
+    else 
+      @twitter = 
+        tweet_id : tweet_id
+        acct : acct
+        tweet : tweet
+      @_state.proved.twitter = true
     cb err
 
   #-----------------
