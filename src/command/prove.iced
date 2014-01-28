@@ -72,9 +72,7 @@ exports.Command = class Command extends Base
   handle_post : (cb) ->
     log.console.log "Please #{@gen.imperative_verb()} the following:"
     log.console.log ""
-    lines = @gen.proof_text.split("\n")
-    for line in lines
-      log.console.log " #{line}"
+    log.console.log @gen.proof_text
     log.console.log ""
     prompt = true
     esc = make_esc cb, "Command::prompt"

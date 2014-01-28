@@ -49,7 +49,7 @@ class Config
 
   #----------------
 
-  constructor : ( { @file, @debug, @uri }) ->
+  constructor : ( { @file, @debug, @uri, @preserve }) ->
     @_data =  {}
     @_dummies = {}
 

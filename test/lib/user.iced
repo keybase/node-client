@@ -174,12 +174,14 @@ exports.User = class User
     await eng.sendline acct.username, esc defer()
     console.log "sent accounT"
     console.log acct
-    await eng.expect { pattern : (new RegExp "Check #{which} now\? \[Y\/n\] ", "i") }, esc defer data
+    await eng.expect { pattern : (new RegExp "Check #{which} now\\? \\[Y/n\\] ", "i") }, esc defer data
     console.log "check now!"
     if (m = data.toString('utf8').match search_regex)?
       proof = m[1]
     else
       await athrow (new Error "Didn't get a #{which} text from the CLI"), esc defer()
+    console.log "got proof ->"
+    console.log proof
     await http_action acct, proof, esc defer proof_id
     await eng.sendline "y", esc defer()
     await eng.wait defer rc
@@ -205,7 +207,7 @@ exports.User = class User
   prove_github : (cb) ->
     opts = 
       which : "github"
-      search_regex : /Please gist the following:\s+(\S[\s\S]*?)\n\n/
+      search_regex : /Please post a Gist with the following:\s+(\S[\s\S]*?)\n\nCheck GitHub now\?/i
       http_action : gist_api
     await @prove opts, defer err
     cb err
@@ -217,8 +219,12 @@ exports.User = class User
   #-----------------
 
   revoke_key : (cb) ->
-    await @keybase { args : [ "revoke", "--force" ], quiet : true }, defer err
-    @_state.revoked = true unless err?
+    err = null
+    if config().preserve
+      log.warn "Not deleting key / preserving due to command-line flag"
+    else
+      await @keybase { args : [ "revoke", "--force" ], quiet : true }, defer err
+      @_state.revoked = true unless err?
     cb err
 
 #==================================================================
