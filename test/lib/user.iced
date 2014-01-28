@@ -212,6 +212,21 @@ exports.User = class User
 
   #-----------------
 
+  full_monty : (T, gcb) ->
+    esc = (which, lcb) -> (err, args...) ->
+      T.waypoint "fully_monty: #{which}"
+      T.no_error err
+      if err? then gcb err
+      else lcb args...
+    await @init esc('init', defer())
+    await @signup esc('signup', defer())
+    await @push_key esc('push_key', defer())
+    await @prove_github esc('prove_github', defer())
+    await @prove_twitter esc('prove_twitter', defer())
+    gcb null
+
+  #-----------------
+
   revoke_key : (cb) ->
     err = null
     if config().preserve

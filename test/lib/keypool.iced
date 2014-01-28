@@ -12,11 +12,14 @@ class Keypool
 
   load : (cb) ->
     await @_keyring.find_keys_full { secret : true }, defer err, @_keys
+    dead = 2
+    for [0...dead]
+      @_keys.shift()
     cb err
 
   grab : (cb) -> 
     err = ret = null
-    if @_keys?.length then ret = @_keys[18]
+    if @_keys?.length then ret = @_keys.shift()
     else err = new Error "no keys left"
     cb err, ret
 

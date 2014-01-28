@@ -32,8 +32,3 @@ exports.prove_twitter = (T,cb) ->
   T.no_error err
   cb()
 
-exports.revoke_key = (T,cb) ->
-  await user.revoke_key defer err
-  T.no_error err
-  cb()
-
