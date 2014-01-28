@@ -1,9 +1,16 @@
 
 request = require 'request'
 cheerio = require 'cheerio'
-{katch} = require('iced-utils').util
+{a_json_parse,katch} = require('iced-utils').util
 {make_esc} = require('iced-error')
 util = require 'util'
+
+#=====================================================================
+
+make_body = (d) ->
+  pairs = for k,v of d
+    [ encodeURIComponent(k), encodeURIComponent(v)].join '='
+  pairs.join '&'
 
 #=====================================================================
 
@@ -17,10 +24,16 @@ exports.TwitterBot = class TwitterBot
   load_page : ({path, status, form, method }, cb) ->
     status or= [200]
     uri = [ "https://twitter.com" , path ].join ""
-    form.authenticity_token = @tok if form? and @tok?
+    body = null
+    if form?
+      form.authenticity_token = @tok if form? and @tok?
+      body = make_body form
+      body += "&authenticity_token=#{@tok}" if @tok
+    console.log body
     headers = 
-      "User-Agent" : "user-agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
-    await request { uri, jar : true, form, method, headers }, defer err, res, body
+      "User-Agent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
+      "referer" : "https://twitter.com/login"
+    await request { uri, jar : true, body, method, headers }, defer err, res, body
     if not err? and not((sc = res.statusCode) in status)
       err = new Error "HTTP status code #{sc}"
     cb err, body, res
@@ -52,8 +65,15 @@ exports.TwitterBot = class TwitterBot
     form =
       'session[username_or_email]' : @username
       'session[password]' : @password
+      'redirect_after_login' : ''
+      'remember_me' : 1
+      'scribe_log' : ""
     path = "/sessions"
-    await @load_page { status : [302,200], path , form, method : "POST" }, defer err, body
+    console.log "fuuuuuck"
+    console.log form
+    await @load_page { status : [302,200], path , form, method : "POST" }, defer err, body, res
+    console.log body
+    console.log res
     cb err
 
   #---------------------------------
@@ -68,23 +88,31 @@ exports.TwitterBot = class TwitterBot
   #---------------------------------
 
   tweet : (txt, cb) ->
+    esc = make_esc cb, "TwitterBot::tweet"
     await @load_page { 
       path : "/i/tweet/create", 
       method : "POST", 
       form : {status : txt, place_id : "" },
-      }, defer err, body
-    cb err
+      }, esc defer body
+    await a_json_parse body, esc defer json
+    cb err, json.tweet_id
+
+  #---------------------------------
+
+  run : (txt, cb) ->
+    esc = make_esc cb, "TwitterBot:run"
+    await @load_login_page esc defer()
+    await @post_login esc defer()
+    await @get_home esc defer()
+    await @tweet txt, esc defer tweet_id
+    cb null, tweet_id
 
 #=====================================================================
 
-test = (cb) ->
-  esc = make_esc cb, "tesT"
-  bot = new TwitterBot { username : "tacovontaco", password : "yoyoma" }
-  await bot.load_login_page esc defer()
-  await bot.post_login esc defer()
-  await bot.get_home esc defer()
-  await bot.tweet "this be the tweet 3003", esc defer()
-  cb null
+exports.tweet_scrape = tweet_scrape = ({username,password}, txt, cb) ->
+  bot = new TwitterBot { username, password }
+  await bot.run txt, defer err, tweet_id
+  cb err, tweet_id
 
 #=====================================================================
 
@@ -93,6 +121,13 @@ d = { "username" : "tacovontaco", "password" : "yoyoma",
 "consumer_secret" : "Hzz6fqwxrbAkKcPKjvtnqU1FN0OYi7gu93dS0gNbQ", 
 token : "2209163989-lTgnNUDINbH1ijvSyvO62CuMzyRCi3R6uOIfcHN", 
 token_secret : "gtskJSncqLQ7r9bXNnFcanfp1liW687KvYmbr30FLKheC" }
+
+test = (cb) ->
+  await tweet_scrape d, process.argv[2], defer err
+  cb err
+
+#=====================================================================
+
 tweet = (cb) ->
   await request.post {
     url : "https://api.twitter.com/1.1/statuses/update.json",
