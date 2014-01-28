@@ -107,6 +107,6 @@ exports.tweet_api = tweet_api = (d, status, cb) ->
     oauth : d
     json : true
   }, defer err, res, body
-  cb err, body.id
+  cb err, body.id_str
 
 #=====================================================================

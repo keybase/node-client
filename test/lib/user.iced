@@ -33,6 +33,12 @@ randhex = (len) -> prng(len).toString('hex')
 
 #==================================================================
 
+assert_kb_ok = (rc) ->
+  if rc is 0 then null
+  else new Error "Non-ok result from keybase: #{rc}"
+
+#==================================================================
+
 exports.User = class User
 
   constructor : ({@username, @email, @password, @homedir}) ->
@@ -212,7 +218,7 @@ exports.User = class User
 
   #-----------------
 
-  full_monty : (T, gcb) ->
+  full_monty : (T, {twitter, github}, gcb) ->
     esc = (which, lcb) -> (err, args...) ->
       T.waypoint "fully_monty: #{which}"
       T.no_error err
@@ -221,9 +227,43 @@ exports.User = class User
     await @init esc('init', defer())
     await @signup esc('signup', defer())
     await @push_key esc('push_key', defer())
-    await @prove_github esc('prove_github', defer())
-    await @prove_twitter esc('prove_twitter', defer())
+    await @prove_github esc('prove_github', defer()) if twitter
+    await @prove_twitter esc('prove_twitter', defer()) if github
     gcb null
+
+  #-----------------
+
+  check_proofs : (output, cb) ->
+    err = null
+    for k,v of @_proofs
+      x = new RegExp "#{v.acct.username}.*#{k}.*https://.*#{k}\\.com/.*#{v.proof_id}"
+      unless output.match x
+        err = new Error "Failed to find proof for #{k} for user: #{v.acct.username}"
+        break
+    cb err
+
+  #-----------------
+
+  follow : (followee, {remote}, cb) ->
+    esc = make_esc cb, "User::follow"
+    eng = @keybase_expect [ "track", followee.username ]
+    await eng.expect { pattern : /Are you satisfied with these proofs\? \[y\/N\] / }, esc defer data
+    await followee.check_proofs eng.stderr().toString('utf8'), esc defer()
+    await eng.sendline "y", esc defer()
+    await eng.expect { pattern : /Permanently track this user, and write proof to server\? \[Y\/n\] / }, esc defer data
+    await eng.sendline (if remote then "y" else "n"), esc defer()
+    await eng.wait defer rc
+    err = assert_kb_ok rc
+    cb err
+
+  #-----------------
+
+  unfollow : (followee, cb) ->
+    esc = make_esc cb, "User::follow"
+    eng = @keybase_expect [ "untrack", followee.username ]
+    await eng.wait defer rc
+    err = assert_kb_ok rc
+    cb err
 
   #-----------------
 
@@ -244,13 +284,13 @@ class Users
     @_list = [] 
     @_lookup = {}
 
-  pop : () -> @_list.pop()
-
   push : (u) ->
     @_list.push u
     @_lookup[u.username] = u
   
   lookup : (u) -> @_lookup[u]
+
+  get : (i) -> @_list[i]
 
   cleanup : (cb) ->
     err = null

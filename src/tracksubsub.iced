@@ -45,7 +45,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     if @opts.remote then ret = true
     else if (@opts.batch or @opts.local) then ret = false
     else
-      prompt = "Permnanently track this user, and write proof to server?"
+      prompt = "Permanently track this user, and write proof to server?"
       await prompt_yn { prompt, defval : true }, defer err, ret
     cb err, ret
 
