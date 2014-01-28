@@ -17,6 +17,11 @@ exports.signup = (T,cb) ->
   T.no_error err
   cb()
 
+exports.failed_revoke = (T,cb) ->
+  await user.revoke_key defer err
+  T.assert err, "We should fail to revoke a key that's not registered"
+  cb()
+
 exports.push_key = (T,cb) ->
   await user.push_key defer err
   T.no_error err

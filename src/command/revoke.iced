@@ -73,13 +73,17 @@ exports.Command = class Command extends Base
     username = env().get_username()
     await User.load { username }, esc defer me
     fp = me.fingerprint(true)
-    log.warn "Loaded keys for #{username}@#{constants.canonical_host}"
-    log.warn "  Key fingerprint: #{format_fingerprint fp}"
-    await master_ring().gpg { args : [ "-k", fp ] }, defer err_public
-    await master_ring().gpg { args : [ "-K", fp ] }, defer err_secret
-    log.warn "  - Public key: #{if err_public? then 'unfound' else bold('found')}"
-    log.warn "  - Secret key: #{if err_secret? then 'unfound' else bold('found')}"
-    cb()
+    err = null
+    if fp?
+      log.warn "Loaded keys for #{username}@#{constants.canonical_host}"
+      log.warn "  Key fingerprint: #{format_fingerprint fp}"
+      await master_ring().gpg { args : [ "-k", fp ] }, defer err_public
+      await master_ring().gpg { args : [ "-K", fp ] }, defer err_secret
+      log.warn "  - Public key: #{if err_public? then 'unfound' else bold('found')}"
+      log.warn "  - Secret key: #{if err_secret? then 'unfound' else bold('found')}"
+    else
+      err = new E.NoLocalKeyError "No local key to revoke!"
+    cb err
 
   #----------
 

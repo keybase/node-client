@@ -300,16 +300,18 @@ exports.SigChain = class SigChain
     args = { @uid, low : (@last_seqno() + 1) }
     await req.get { endpoint : "sig/get", args }, esc defer body
     new_links = [] 
+    did_update = false
     for obj in body.sigs
       link = new Link { obj }
       await asyncify link.verify(), esc defer()
       new_links.push link
+      did_update = true
     await asyncify (@check_chain (@_links.length is 0), new_links), esc defer()
     await asyncify (@check_chain false, (@_links[-1...].concat new_links[0..0])), esc defer()
     @_links = @_links.concat new_links
     @_new_links = new_links
     @_index_links new_links
-    cb null
+    cb null, did_update
 
   #-----------
 
@@ -329,10 +331,9 @@ exports.SigChain = class SigChain
     did_update = false
     if not (a = remote_seqno)? or a > (b = @last_seqno())
       log.debug "| sigchain update: #{a} vs. #{b}"
-      await @_update defer err
+      await @_update defer err, did_update
       if remote_seqno? and ((a = remote_seqno) isnt (b = @last_seqno()))
         err = new E.CorruptionError "failed to appropriately update chain: #{a} != #{b}"
-      did_update = true
     cb err, did_update
 
   #-----------

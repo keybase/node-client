@@ -17,17 +17,9 @@ argv = require('optimist').
 
 #=========================
 
-class MyRunner extends itest.ServerRunner
-
-  finish : (cb) ->
-    await users().cleanup defer()
-    cb true
-
-#=========================
-
 await config.init { file : argv.c, debug : argv.d, preserve : argv.p }, defer err
 process.exit(-2) if err?
 wl = if argv._.length > 0 then argv._ else null
-require('iced-test').run { mainfile : __filename, whitelist : wl, files_dir : "files", klass : MyRunner }
+require('iced-test').run { mainfile : __filename, whitelist : wl, files_dir : "files" }
 
 #=========================
