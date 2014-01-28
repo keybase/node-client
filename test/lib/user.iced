@@ -170,18 +170,12 @@ exports.User = class User
     unless (acct = config().get_dummy_account which)?
       await athrow (new Error "No dummy accounts available for '#{which}'"), esc defer()
     await eng.expect { pattern : (new RegExp "Your username on #{which}: ", "i") }, esc defer()
-    console.log "got username"
     await eng.sendline acct.username, esc defer()
-    console.log "sent accounT"
-    console.log acct
     await eng.expect { pattern : (new RegExp "Check #{which} now\\? \\[Y/n\\] ", "i") }, esc defer data
-    console.log "check now!"
     if (m = data.toString('utf8').match search_regex)?
       proof = m[1]
     else
       await athrow (new Error "Didn't get a #{which} text from the CLI"), esc defer()
-    console.log "got proof ->"
-    console.log proof
     await http_action acct, proof, esc defer proof_id
     await eng.sendline "y", esc defer()
     await eng.wait defer rc
