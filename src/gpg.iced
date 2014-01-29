@@ -22,6 +22,7 @@ exports.parse_signature = (lines) ->
             gpg:\s+using\s[RD]SA\skey\s([A-F0-9]{16})\n
             (?:.*\n)* # Skip arbirarily many lines
             gpg:\sGood\ssignature\sfrom.*\n
+            (?:.*\n)* # Skip arbirarily many lines
             Primary\skey\sfingerprint:\s([A-F0-9\s]+)\n
             \s+Subkey\sfingerprint:\s([A-F0-9\s]+)\n
        /// 

@@ -4,7 +4,7 @@ log = require '../log'
 {E} = require '../err'
 {TrackSubSubCommand} = require '../tracksubsub'
 {BufferOutStream,BufferInStream} = require('gpg-wrapper')
-{make_esc} = require 'iced-error'
+{chain,make_esc} = require 'iced-error'
 {env} = require '../env'
 {TmpPrimaryKeyRing} = require '../keyring'
 {TrackSubSubCommand} = require '../tracksubsub'
@@ -139,26 +139,21 @@ exports.Command = class Command extends Base
 
   #----------
 
-  run : (cb) ->
-    esc = make_esc cb, "Command::run"
-    opts = 
-      remote : @argv.track_remote
-      local : @argv.track_local
-    await @setup_tmp_keyring esc defer()
-    await @_run2 esc defer()
-
+  cleanup : (cb) ->
     if env().get_preserve_tmp_keyring()
       log.info "Preserving #{@tmp_keyring.to_string()}"
     else
       await @tmp_keyring.nuke defer e2
+      if e2?
+        log.warn "Error cleaning up temporary keyring: #{e2.message}"
+    cb()
 
-    log.warn "Error cleaning up temporary keyring: #{e2.message}"if e2?
-    cb null
+  #----------
 
-  #------
-
-  _run2 : (cb) ->
-    esc = make_esc cb, "Command::_run2"
+  run : (cb) ->
+    cb = chain cb, @cleanup.bind(@)
+    esc = make_esc cb, "Command::run"
+    await @setup_tmp_keyring esc defer()
     await @do_command esc defer()
     await @find_signature esc defer()
     if @found_sig
