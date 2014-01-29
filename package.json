@@ -29,6 +29,7 @@
     "iced-coffee-script" : "~1.6.3-j",
     "iced-data-structures" : "~0.0.5",
     "iced-error"         : "~0.0.6",
+    "iced-logger"        : "~0.0.1",
     "iced-utils"         : ">=0.1.3",
     "keybase-proofs"     : "keybase/proofs",
     "mkdirp"             : "~0.3.5",
