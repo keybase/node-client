@@ -11,7 +11,7 @@
 {init,config} = require './config'
 path = require 'path'
 iutils = require 'iced-utils'
-{mkdir_p} = iutils.fs
+{rm_r,mkdir_p} = iutils.fs
 {athrow} = iutils.util
 {make_esc} = require 'iced-error'
 log = require '../../lib/log'
@@ -280,7 +280,6 @@ exports.User = class User
     eng = @keybase_expect [ "track", followee.username ]
 
     eng.expect { pattern : /Are you satisfied with these proofs\? \[y\/N\] / }, (err, data, src) ->
-      console.log "shiiit 3"
       unless err?
         await followee.check_proofs eng.stderr().toString('utf8'), defer err
         if err?
@@ -290,7 +289,6 @@ exports.User = class User
           await eng.sendline "y", defer err
 
     eng.expect { pattern : /Permanently track this user, and write proof to server\? \[Y\/n\] / }, (err, data, src) ->
-      console.log "sdfoi js df oisjdfosidjf sdoifj 5"
       unless err?
         await eng.sendline (if remote then "y" else "n"), esc defer()
 
@@ -312,8 +310,6 @@ exports.User = class User
   write_pw : (cb) ->
     esc = make_esc cb, "User::write_pw"
     await @keybase { args : [ "config" ], quiet : true }, esc defer()  
-    console.log "fuuuucusudfoisdjf osdifj sodifj zdoif jzoifd jdoij"
-    console.log @password
     args = [
       "config"
       "user.passphrase"
@@ -332,6 +328,20 @@ exports.User = class User
 
   login : (cb) ->
     await @keybase { args : [ "login"], quiet : true }, defer err
+    cb err
+
+  #----------
+
+  cleanup : (cb) ->
+    await @revoke_key defer e1
+    await @rm_homedir defer e2
+    err = e1 or e2
+    cb err
+
+  #----------
+
+  rm_homedir : (cb) ->
+    await rm_r @homedir, defer err
     cb err
 
   #-----------------
@@ -364,9 +374,9 @@ class Users
   cleanup : (cb) ->
     err = null
     for u in @_list when u.has_live_key()
-      await u.revoke_key defer tmp
+      await u.cleanup defer tmp
       if tmp?
-        log.error "Error revoking user #{u.username}: #{tmp.message}"
+        log.error "Error cleaning up user #{u.username}: #{tmp.message}"
         err = tmp
     cb err
 
