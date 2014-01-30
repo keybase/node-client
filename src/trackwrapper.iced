@@ -95,7 +95,7 @@ exports.TrackWrapper = class TrackWrapper
   _skip_approval : (which) ->
     track_cert = @[which]
     log.debug "+ skip_approval(#{which})"
-    dlen = (d) -> Object.keys(d).length
+    dlen = (d) -> if d? then Object.keys(d).length else 0
 
     prob = if not track_cert? then "no cert found"
     else if ((a = track_cert.key?.key_fingerprint) isnt (b = @trackee.fingerprint()))

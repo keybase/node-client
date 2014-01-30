@@ -4,7 +4,7 @@ log = require '../log'
 {E} = require '../err'
 {TrackSubSubCommand} = require '../tracksubsub'
 {BufferInStream} = require('gpg-wrapper')
-{gpg} = require '../gpg'
+{master_ring} = require '../keyring'
 {make_esc} = require 'iced-error'
 
 ##=======================================================================
@@ -62,7 +62,7 @@ exports.Command = class Command extends Base
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
       args.push @argv.file 
-    await gpg gargs, defer err, out
+    await master_ring().gpg gargs, defer err, out
     unless @argv.output?
       log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
     cb err 
