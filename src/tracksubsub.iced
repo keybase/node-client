@@ -8,7 +8,7 @@ ST = constants.signature_types
 deq = require 'deep-equal'
 {GE,E} = require './err'
 {athrow,unix_time} = require('pgp-utils').util
-{make_esc} = require 'iced-error'
+{chain_err,make_esc} = require 'iced-error'
 {prompt_yn} = require './prompter'
 colors = require 'colors'
 {session} = require './session'
@@ -53,11 +53,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   key_cleanup : ({accept}, cb) ->
     err = null
-    if accept 
-      log.debug "| commit_key"
-      await @them.key.commit @me?.key, defer err
-    else
-      await @them.key.rollback defer err
+    if @them
+      if accept 
+        log.debug "| commit_key"
+        await @them.key.commit @me?.key, defer err
+      else
+        await @them.key.rollback defer err
       
     if not @tmp_keyring then #noop
     else if env().get_preserve_tmp_keyring()
@@ -81,25 +82,16 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   id : (cb) ->
+    cb = chain_err cb, @key_cleanup.bind(@, {})
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
     await User.load { username : @args.them }, esc defer @them
     await TmpKeyRing.make esc defer @tmp_keyring
-    await @_id2 { @them }, esc defer()
-    await @key_cleanup { }, esc defer()
+    await @them.import_public_key { keyring : @tmp_keyring }, esc defer()
+    await @them.verify esc defer()
+    await @them.check_remote_proofs false, esc defer warnings # err isn't a failure here
     log.debug "- id"
-    cb null
-
-  #----------
-
-  _id2 : ({them}, cb ) ->
-    esc = make_esc cb, "TrackSubSub:_id2"
-    log.debug "+ _id2"
-    await them.import_public_key { keyring : @tmp_keyring }, esc defer()
-    await them.verify esc defer()
-    await them.check_remote_proofs false, esc defer warnings # err isn't a failure here
-    log.debug "- _id2"
     cb null
 
   #----------
