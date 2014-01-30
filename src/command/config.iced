@@ -13,8 +13,8 @@ log = require '../log'
 convert = (s) ->
   if s is 'true' then true
   else if s is 'false' then false
-  else if isNaN(i = parseInt(s)) then s
-  else i
+  else if s.match /^[0-9]+$/ and not(isNaN(i = parseInt(s,10))) then i
+  else s
 
 ##=======================================================================
 

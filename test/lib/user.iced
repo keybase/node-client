@@ -22,6 +22,8 @@ keypool = require './keypool'
 {Engine} = require 'iced-expect'
 {tweet_api} = require './twitter'
 {gist_api} = require './github'
+fs = require 'fs'
+{Rendezvous} = require('iced-coffee-script').iced
 
 #==================================================================
 
@@ -49,14 +51,24 @@ exports.User = class User
 
   #---------------
 
-  @generate : () -> 
-    base = randhex(3)
+  @generate : (base) -> 
+    base or= randhex(3)
     opts =
       username : "test_#{base}"
       password : randhex(6)
       email    : "test+#{base}@test.keybase.io"
       homedir  : path.join(config().scratch_dir(), "home_#{base}")
     new User opts
+
+  #-----------------
+
+  check_if_exists : (cb) ->
+    tmpcb = (err) -> cb false
+    esc = make_esc tmpcb, "User::check_if_exists"
+    await fs.stat @homedir, esc defer()
+    await fs.stat @keyring_dir(), esc defer()
+    await fs.stat path.join(@homedir, ".keybase", "config.json"), esc defer()
+    cb true
 
   #-----------------
 
@@ -98,6 +110,7 @@ exports.User = class User
   _keybase_cmd : (inargs) -> 
     inargs.args = [ "--homedir", @homedir ].concat inargs.args
     config().keybase_cmd inargs
+    log.debug "Running keybase: " + JSON.stringify(inargs)
     return inargs
 
   #-----------------
@@ -110,7 +123,8 @@ exports.User = class User
   #-----------------
 
   keybase_expect : (args) ->
-    inargs = { args }
+    inargs = { args, opts : {} }
+    inargs.opts.debug = { stdout : true } if config().debug
     @_keybase_cmd inargs
     eng = new Engine inargs
     eng.run()
@@ -146,6 +160,7 @@ exports.User = class User
   #-----------------
 
   signup : (cb) ->
+    console.log "signup fuckkkkkk"
     eng = @keybase_expect [ "signup" ]
     await eng.conversation [
         { expect : "Your desired username: " }
@@ -182,8 +197,20 @@ exports.User = class User
       proof = m[1]
     else
       await athrow (new Error "Didn't get a #{which} text from the CLI"), esc defer()
+    log.debug "+ Doing HTTP action #{acct.username}@#{which}"
     await http_action acct, proof, esc defer proof_id
+    log.debug "- Did HTTP action, completed w/ proof_id=#{proof_id}"
     await eng.sendline "y", esc defer()
+
+    eng.expect { 
+      repeat : true,
+      pattern : (new RegExp "Check #{which} again now\\? \\[Y/n\\] ", "i") 
+    }, (err, data, source) =>
+      log.info "Trying #{which} again, maybe they're slow to update?"
+      await setTimeout defer(), 1000
+      await eng.sendline "y", defer err
+      log.warn "Failed to send a yes: #{err.message}" if err?
+
     await eng.wait defer rc
     if rc isnt 0
       err = new Error "Error from keybase prove: #{rc}"
@@ -218,9 +245,10 @@ exports.User = class User
 
   #-----------------
 
-  full_monty : (T, {twitter, github}, gcb) ->
+  full_monty : (T, {twitter, github, save_pw}, gcb) ->
+    un = @username
     esc = (which, lcb) -> (err, args...) ->
-      T.waypoint "fully_monty: #{which}"
+      T.waypoint "fully_monty #{un}: #{which}"
       T.no_error err
       if err? then gcb err
       else lcb args...
@@ -229,6 +257,7 @@ exports.User = class User
     await @push_key esc('push_key', defer())
     await @prove_github esc('prove_github', defer()) if twitter
     await @prove_twitter esc('prove_twitter', defer()) if github
+    await @write_pw esc('write_pw', defer()) if save_pw
     gcb null
 
   #-----------------
@@ -263,6 +292,33 @@ exports.User = class User
     eng = @keybase_expect [ "untrack", followee.username ]
     await eng.wait defer rc
     err = assert_kb_ok rc
+    cb err
+
+  #-----------------
+
+  write_pw : (cb) ->
+    esc = make_esc cb, "User::write_pw"
+    await @keybase { args : [ "config" ], quiet : true }, esc defer()  
+    console.log "fuuuucusudfoisdjf osdifj sodifj zdoif jzoifd jdoij"
+    console.log @password
+    args = [
+      "config"
+      "user.passphrase"
+      @password
+    ]
+    await @keybase { args, quiet : true }, esc defer()
+    cb null
+
+  #-----------------
+
+  logout : (cb) ->
+    await @keybase { args : [ "logout"], quiet : true }, defer err
+    cb err
+
+  #-----------------
+
+  login : (cb) ->
+    await @keybase { args : [ "login"], quiet : true }, defer err
     cb err
 
   #-----------------
