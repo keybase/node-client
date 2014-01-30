@@ -36,6 +36,10 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       action : 'append'
       alias : "assert"
       help : "provide a key assertion"
+    b : 
+      alias : "batch"
+      action : 'storeTrue'
+      help : "batch-mode without interactivity"
 
   #----------------------
 
@@ -111,6 +115,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   run : (cb) ->
+    opts = {}
+    cb = chain_err cb, @key_cleanup.bind(@, opts)
+
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
@@ -126,29 +133,17 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
     # After this point, we have to recover any errors and throw away 
-    # our key if necessary. So call into a subfunction.
-    await @_run2 { found_them }, defer err, accept
+    # our key if necessary
 
-    # Clean up the key if necessary
-    await @key_cleanup { accept }, esc defer()
-
-    log.debug "- run"
-
-    cb err
-
-  #----------
-
-  _run2 : ({found_them}, cb) ->
-    esc = make_esc cb, "TrackSubSub::_run2"
-    log.debug "+ _run2"
     unless found_them
       await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
-    await @all_prompts esc defer accept
+    await @all_prompts esc defer opts.accept
 
-    log.debug "- _run2"
-    cb null, accept
+    log.debug "- run"
+
+    cb null
 
   #----------
 
