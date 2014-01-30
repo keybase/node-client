@@ -23,6 +23,20 @@ util = require 'util'
 
 exports.TrackSubSubCommand = class TrackSubSubCommand
 
+  @OPTS :
+    r :
+      alias : "track-remote"
+      action : "storeTrue"
+      help : "remotely track by default"
+    l : 
+      alias : "track-local"
+      action : "storeTrue"
+      help : "don't prompt for remote tracking"
+    a :
+      action : 'append'
+      alias : "assert"
+      help : "provide a key assertion"
+
   #----------------------
 
   constructor : ({@args, @opts, @tmp_keyring}) ->

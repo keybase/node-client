@@ -10,15 +10,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS :
-    r :
-      alias : "remote"
-      action : "storeTrue"
-      help : "remotely track by default"
-    l : 
-      alias : "local"
-      action : "storeTrue"
-      help : "don't prompt for remote tracking"
+  OPTS : TrackSubSubCommand.OPTS
 
   #----------
 
