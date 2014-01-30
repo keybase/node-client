@@ -22,12 +22,16 @@ class Assertions
     ret.found()
     ret
 
+  met : () -> @_met
+  clean : () -> @_met and not @_unspecified.length
+
   check : () ->
     ret = true
     for a in @_list
       ret = false unless a.check()
     for a in @_unspecified
       a.generate_warning()
+    @_met = ret
     return ret
 
 #=======================================================================

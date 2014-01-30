@@ -65,8 +65,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   prompt_track : (cb) ->
     ret = err = null
-    if @opts.remote then ret = true
-    else if (@is_batch() or @opts.local) then ret = false
+    if @opts.track_remote then ret = true
+    else if (@is_batch() or @opts.track_local) then ret = false
     else
       prompt = "Permanently track this user, and write proof to server?"
       await prompt_yn { prompt, defval : true }, defer err, ret
@@ -190,6 +190,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if @is_batch()
       log.debug "| We needed approval, but we were in batch mode"
       accept = false
+    else if @assertions?.clean()
+      log.debug "| We can approve due to clean assertions"
+      accept = true
     else
       await @prompt_ok n_warnings, esc defer accept
 
