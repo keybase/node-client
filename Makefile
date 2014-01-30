@@ -36,6 +36,7 @@ $(BUILD_STAMP): \
 	lib/command/untrack.js \
 	lib/command/verify.js \
 	lib/command/version.js \
+	lib/assertions.js \
 	lib/basex.js \
 	lib/bn.js \
 	lib/ca.js \

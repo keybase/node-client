@@ -339,8 +339,9 @@ exports.User = class User
 
   #--------------
 
-  check_remote_proofs : (skip, cb) ->
-    await @sig_chain.check_remote_proofs { skip, pubkey : @key }, defer err, warnings
+  check_remote_proofs : (opts, cb) ->
+    opts.pubkey = @key
+    await @sig_chain.check_remote_proofs opts, defer err, warnings
     cb err, warnings
 
   #--------------

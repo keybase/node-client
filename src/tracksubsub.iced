@@ -18,6 +18,7 @@ util = require 'util'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
 {TmpKeyRing} = require './keyring'
+assertions = require './assertions'
 
 ##=======================================================================
 
@@ -43,7 +44,11 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------------------
 
-  constructor : ({@args, @opts, @tmp_keyring}) ->
+  constructor : ({@args, @opts, @tmp_keyring, @batch}) ->
+
+  #----------------------
+
+  is_batch : () -> @opts.batch or @batch
 
   #----------------------
 
@@ -61,7 +66,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   prompt_track : (cb) ->
     ret = err = null
     if @opts.remote then ret = true
-    else if (@opts.batch or @opts.local) then ret = false
+    else if (@is_batch() or @opts.local) then ret = false
     else
       prompt = "Permanently track this user, and write proof to server?"
       await prompt_yn { prompt, defval : true }, defer err, ret
@@ -99,6 +104,17 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  check_remote_proofs : (skip, cb) ->
+    esc = make_esc cb, "TrackSubSub::check_remote_proofs"
+    await @parse_assertions esc defer()
+    opts = { skip, @assertions } 
+    await @them.check_remote_proofs opts, esc defer warnings
+    if not err? and @assertions? and not(@assertions.check())
+      err = new E.BadAssertionError()
+    cb err, warnings
+
+  #----------
+
   id : (cb) ->
     cb = chain_err cb, @key_cleanup.bind(@, {})
     esc = make_esc cb, "TrackSubSub:id"
@@ -108,9 +124,16 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await TmpKeyRing.make esc defer @tmp_keyring
     await @them.import_public_key { keyring : @tmp_keyring }, esc defer()
     await @them.verify esc defer()
-    await @them.check_remote_proofs false, esc defer warnings # err isn't a failure here
+    await @check_remote_proofs false, esc defer warnings # err isn't a failure here
     log.debug "- id"
     cb null
+
+  #----------
+
+  parse_assertions : (cb) ->
+    err = null
+    [err, @assertions] = assertions.parse(a) if (a = @opts.assert)?
+    cb err
 
   #----------
 
@@ -158,13 +181,13 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else 
       log.info "...all remote checks are up-to-date"
       skp = true
-    await @them.check_remote_proofs skp, esc defer warnings
+    await @check_remote_proofs skp, esc defer warnings
     n_warnings = warnings.warnings().length
 
     if ((approve = @trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
-    else if @opts.batch
+    else if @is_batch()
       log.debug "| We needed approval, but we were in batch mode"
       accept = false
     else
