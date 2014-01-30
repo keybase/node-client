@@ -73,9 +73,6 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
-    opts = 
-      remote : @argv.track_remote
-      local : @argv.track_local
     @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts }
     await @tssc.run esc defer()
     await @do_encrypt esc defer()

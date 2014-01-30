@@ -37,8 +37,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       action : 'append'
       alias : "assert"
       help : "provide a key assertion"
-    b : 
-      alias : "batch"
+    batch : 
       action : 'storeTrue'
       help : "batch-mode without interactivity"
 
