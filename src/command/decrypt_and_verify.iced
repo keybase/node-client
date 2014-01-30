@@ -150,6 +150,10 @@ exports.Command = class Command extends Base
 
   #----------
 
+  rm_homedir : (cb) ->
+
+  #----------
+
   run : (cb) ->
     cb = chain cb, @cleanup.bind(@)
     esc = make_esc cb, "Command::run"

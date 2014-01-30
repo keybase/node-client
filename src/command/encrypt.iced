@@ -62,6 +62,8 @@ exports.Command = class Command extends Base
       gargs.stdin = new BufferInStream @argv.message 
     else if @argv.file?
       args.push @argv.file 
+    else
+      gargs.stdin = process.stdin
     await master_ring().gpg gargs, defer err, out
     unless @argv.output?
       log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )

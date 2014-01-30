@@ -278,11 +278,22 @@ exports.User = class User
   follow : (followee, {remote}, cb) ->
     esc = make_esc cb, "User::follow"
     eng = @keybase_expect [ "track", followee.username ]
-    await eng.expect { pattern : /Are you satisfied with these proofs\? \[y\/N\] / }, esc defer data
-    await followee.check_proofs eng.stderr().toString('utf8'), esc defer()
-    await eng.sendline "y", esc defer()
-    await eng.expect { pattern : /Permanently track this user, and write proof to server\? \[Y\/n\] / }, esc defer data
-    await eng.sendline (if remote then "y" else "n"), esc defer()
+
+    eng.expect { pattern : /Are you satisfied with these proofs\? \[y\/N\] / }, (err, data, src) ->
+      console.log "shiiit 3"
+      unless err?
+        await followee.check_proofs eng.stderr().toString('utf8'), defer err
+        if err?
+          log.warn "Failed to find the correct proofs"
+          await eng.sendline "n", defer err
+        else
+          await eng.sendline "y", defer err
+
+    eng.expect { pattern : /Permanently track this user, and write proof to server\? \[Y\/n\] / }, (err, data, src) ->
+      console.log "sdfoi js df oisjdfosidjf sdoifj 5"
+      unless err?
+        await eng.sendline (if remote then "y" else "n"), esc defer()
+
     await eng.wait defer rc
     err = assert_kb_ok rc
     cb err
