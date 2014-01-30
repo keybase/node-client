@@ -124,7 +124,10 @@ exports.User = class User
 
   keybase_expect : (args) ->
     inargs = { args, opts : {} }
-    inargs.opts.debug = { stdout : true } if config().debug
+    if config().debug
+      inargs.opts = 
+        debug : { stdout : true } 
+        passthrough : { stderr : true }
     @_keybase_cmd inargs
     eng = new Engine inargs
     eng.run()
@@ -160,7 +163,6 @@ exports.User = class User
   #-----------------
 
   signup : (cb) ->
-    console.log "signup fuckkkkkk"
     eng = @keybase_expect [ "signup" ]
     await eng.conversation [
         { expect : "Your desired username: " }

@@ -192,6 +192,7 @@ exports.Link = class Link
       rc = proofs.constants.v_codes.NOT_FOUND
     else
       await @alloc_scraper type, esc defer scraper
+      log.debug "+ Calling into scraper -> #{remote_username}@#{type_s} -> #{@api_url()}"
       await scraper.validate {
         username : remote_username,
         api_url : @api_url(),
@@ -199,6 +200,7 @@ exports.Link = class Link
         proof_text_check : @proof_text_check()
         remote_id : (""+@remote_id())
       }, esc defer rc
+      log.debug "- Called scraper -> #{rc}"
 
     ok = false
     if rc isnt proofs.constants.v_codes.OK
