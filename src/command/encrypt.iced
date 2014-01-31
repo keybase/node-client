@@ -68,7 +68,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     batch = (not @argv.message and not @argv.file?)
-    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv, batch }
+    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv, batch, track_local : true }
     await @tssc.run esc defer()
     await @do_encrypt esc defer()
     cb null

@@ -40,10 +40,13 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     batch : 
       action : 'storeTrue'
       help : "batch-mode without interactivity"
+    "prompt-remote" :
+      action : 'storeTrue'
+      help : "prompt for remote tracking"
 
   #----------------------
 
-  constructor : ({@args, @opts, @tmp_keyring, @batch}) ->
+  constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local}) ->
 
   #----------------------
 
@@ -65,7 +68,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   prompt_track : (cb) ->
     ret = err = null
     if @opts.track_remote then ret = true
-    else if (@is_batch() or @opts.track_local) then ret = false
+    else if (@is_batch() or @opts.track_local or @track_local) and not @opts.prompt_remote 
+      ret = false
     else
       prompt = "Permanently track this user, and write proof to server?"
       await prompt_yn { prompt, defval : true }, defer err, ret
