@@ -15,7 +15,7 @@ exports.gpg = (inargs, cb) ->
 #====================================================================
 
 exports.parse_signature = (lines) -> 
-  strip = (m) -> m.split(/\s+/).join('')
+  strip = (m) -> if m? then m.split(/\s+/).join('') else null
   ends_in = (a,b) -> a[-(b.length)...] is b
   rxx = ///
             (?:^|\n)gpg:\sSignature\smade.*\n
@@ -24,7 +24,7 @@ exports.parse_signature = (lines) ->
             gpg:\sGood\ssignature\sfrom.*\n
             (?:.*\n)* # Skip arbirarily many lines
             Primary\skey\sfingerprint:\s([A-F0-9\s]+)\n
-            \s+Subkey\sfingerprint:\s([A-F0-9\s]+)\n
+            (?:\s+Subkey\sfingerprint:\s([A-F0-9\s]+)\n)?
        /// 
   err = ret = null
   if not (m = lines.match rxx)? 

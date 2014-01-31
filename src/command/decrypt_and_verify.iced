@@ -53,7 +53,7 @@ exports.Command = class Command extends Base
     [err, @signing_key] = parse_signature @decrypt_stderr.data().toString('utf8')
     @found_sig = not err?
     if (err instanceof E.NotFoundError) and not @argv.signed and not @argv.signed_by?
-      log.debug "| No signatured found; but we didn't require one"
+      log.debug "| No signature found; but we didn't require one"
       err = null
     cb err
 
@@ -124,6 +124,8 @@ exports.Command = class Command extends Base
     @decrypt_stderr = gargs.stderr
     await @tmp_keyring.gpg gargs, defer err, out
     @do_output out
+    if env().get_debug()
+      log.debug @decrypt_stderr.data().toString('utf8')
     cb err 
 
   #----------
