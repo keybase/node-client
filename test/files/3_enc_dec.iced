@@ -71,3 +71,9 @@ exports.charlie_decrypt_from_alice_with_sig = (T,cb) ->
   T.equal out.toString('utf8'), (msg+"\n"), "Got back original message"
   cb()
 
+exports.cleanup = (T,cb) ->
+  await bob.unfollow alice, defer err
+  await alice.unfollow charlie, defer err
+  await charlie.unfollow alice, defer err
+  cb()
+
