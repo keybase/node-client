@@ -1,20 +1,27 @@
 
 {User} = require '../lib/user'
-bob = null
 log = require '../../lib/log'
 keypool = require '../lib/keypool'
 
-exports.signup = (T,cb) ->
-  bob = User.generate 'bob'
-  T.assert bob, "bob was generated"
-  await bob.check_if_exists defer found
+exports.signup_bob = (T,cb) ->
+  await signup T, 'bob', defer()
+  cb()
+
+exports.signup_charlie = (T,cb) ->
+  await signup T, 'charlie', defer()
+  cb()
+
+signup = (T,name,cb) ->
+  u = User.generate name
+  T.assert u, "#{name} was generated"
+  await u.check_if_exists defer found
   if found
-    log.info "Bob found; not remaking him"
-    await bob.login defer esc
+    log.info "#{name} found; not remaking him"
+    await u.login defer esc
     T.no_error err
   else
-    log.info "Bob not found; remaking him "
+    log.info "#{name} not found; remaking him "
     await keypool.grab defer err, key
-    await bob.full_monty T, { twitter : true, github : false, save_pw : true }, defer err
+    await u.full_monty T, { twitter : true, github : true, save_pw : true }, defer err
     T.no_error err
   cb()

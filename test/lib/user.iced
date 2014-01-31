@@ -223,6 +223,23 @@ exports.User = class User
 
   #-----------------
 
+  accounts : () ->
+    out = {}
+    for k,v of @_proofs
+      out[k] = v.acct.username
+    return out
+
+  #-----------------
+
+  assertions : () ->
+    d = @accounts()
+    out = []
+    for k,v of d
+      out.push("--assert", k, v)
+    return out
+    
+  #-----------------
+
   prove_twitter : (cb) ->
     opts = 
       which : "twitter"
