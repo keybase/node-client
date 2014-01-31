@@ -16,6 +16,14 @@ exports.Command = class Command extends Base
 
   #----------
 
+  OPTS : 
+    T :
+      alias : 'text'
+      action : 'storeTrue'
+      help : 'output in text format; default is JSON'
+
+  #----------
+
   use_session : () -> true
 
   #----------
@@ -25,23 +33,59 @@ exports.Command = class Command extends Base
       help : "print current status"
     name = "status"
     sub = scp.addParser name, opts
+    add_option_dict sub, @OPTS
     return [ name ]
 
   #----------
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+
     if (un = env().get_username())?
-      log.console.log "configged as #{env().get_username()}"
       await session.check esc defer logged_in
-      log.console.log "  * #{if logged_in then '' else 'NOT '}logged in"
       await User.load_me esc defer me
+
+      obj = 
+        status :
+          configured : true
+          logged_in : logged_in
+        user : 
+          name : un
       if me?
-        log.console.log "  * Key ID: #{me.key_id_64().toUpperCase()}"
-        log.console.log "  * Fingerprint: #{format_fingerprint me.fingerprint(true)}"
+        obj.user.key = 
+          key_id : me.key_id_64().toUpperCase()
+          fingerprint : format_fingerprint me.fingerprint(true)
+        if (rp = me.list_remote_proofs())?
+          obj.user.proofs = rp
+    else
+      obj = { status : { configured : false } }
+
+    @output obj
+    cb null
+
+  #-----------------
+
+  output_text : (obj) ->
+    if obj.status.configured
+      log.console.log "configged as #{obj.user.name}"
+      log.console.log "  * #{if obj.status.logged_in then '' else 'NOT '}logged in"
+      if (ko = obj.user.key)?
+        log.console.log "  * Key ID: #{ko.key_id}"
+        log.console.log "  * Fingerprint: #{ko.fingerprint}"
+      if (rp = obj.user.proofs)?
+          log.console.log "Remote proofs:"
+          for k,v of rp
+            log.console.log "  * #{k}: #{v}"
     else
       log.error "Not configured"
-    cb null
+
+  #-----------------
+
+  output : (obj) ->
+    if @argv.text
+      @output_text obj
+    else
+      log.console.log JSON.stringify(obj, null, "  ")
 
 ##=======================================================================
 

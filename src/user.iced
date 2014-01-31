@@ -353,6 +353,10 @@ exports.User = class User
 
   #--------------
 
+  list_remote_proofs : () -> @sig_chain?.list_remote_proofs()
+
+  #--------------
+
   gen_remote_proof_gen : ({klass, remote_username}, cb) ->
     esc = make_esc cb, "User::gen_remote_proof_gen"
     await @load_public_key {}, esc defer()

@@ -53,6 +53,7 @@ exports.Link = class Link
   short_key_id : () -> @fingerprint()[-8...].toUpperCase()
   is_self_sig : () -> @sig_type() in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
   self_signer : () -> @payload_json()?.body?.key?.username
+  remote_username : () -> @payload_json()?.body?.service?.username
   sig_type : () -> @obj.sig_type
   proof_type : () -> @obj.proof_type
   sig_id : () -> @obj.sig_id
@@ -179,7 +180,7 @@ exports.Link = class Link
     assert = assertions?.found type_s
 
     await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
-    if not (remote_username = @payload_json()?.body?.service?.username)?
+    if not (remote_username = @remote_username())?
       err = new E.VerifyError "no remote username found in proof"
       await athrow err, esc defer()
 
@@ -490,6 +491,18 @@ exports.SigChain = class SigChain
       log.debug "| Skipped since no fingerprint found in key"
     log.debug "- #{username}: verified sig"
     cb null
+
+  #-----------
+
+  list_remote_proofs : () ->
+    out = null
+    if (tab = @table[ST.REMOTE_PROOF])?
+      for type,link of tab
+        type = proofs.proof_type_to_string[parseInt(type)]
+        out or= {}
+        out[type] = link.remote_username()
+
+    return out
 
   #-----------
 
