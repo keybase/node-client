@@ -10,7 +10,7 @@ default: build
 all: build
 
 lib/%.js: src/%.iced
-	$(ICED) -I browserify -c -o `dirname $@` $<
+	$(ICED) -I node -c -o `dirname $@` $<
 
 $(BUILD_STAMP): \
 	lib/command/argparse.js \
