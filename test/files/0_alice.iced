@@ -71,3 +71,8 @@ exports.prove_twitter = (T,cb) ->
     await user.prove_twitter defer err
     T.no_error err
   cb()
+
+exports.load_status = (T,cb) ->
+  await user.load_status defer err
+  T.no_error err
+  cb()

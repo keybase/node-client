@@ -12,7 +12,7 @@
 path = require 'path'
 iutils = require 'iced-utils'
 {rm_r,mkdir_p} = iutils.fs
-{athrow} = iutils.util
+{a_json_parse,athrow} = iutils.util
 {make_esc} = require 'iced-error'
 log = require '../../lib/log'
 gpgw = require 'gpg-wrapper'
@@ -224,10 +224,19 @@ exports.User = class User
   #-----------------
 
   accounts : () ->
-    out = {}
-    for k,v of @_proofs
-      out[k] = v.acct.username
+    unless (out = @_status?.user?.proofs)?
+      out = {}
+      for k,v of @_proofs
+        out[k] = v.acct.username
     return out
+
+  #-----------------
+
+  # Load proofs in from the output of `keybase status`
+  _load_proofs : (obj) ->
+    if (d = obj?.user?.proofs)?
+      for k,v of d
+        @_proofs[k] = { acct : { username : v } }
 
   #-----------------
 
@@ -235,9 +244,9 @@ exports.User = class User
     d = @accounts()
     out = []
     for k,v of d
-      out.push("--assert", k, v)
+      out.push("--assert", [k, v].join(":") )
     return out
-    
+
   #-----------------
 
   prove_twitter : (cb) ->
@@ -371,6 +380,15 @@ exports.User = class User
       await @keybase { args : [ "revoke", "--force" ], quiet : true }, defer err
       @_state.revoked = true unless err?
     cb err
+
+  #-----------------
+
+  load_status : (cb) ->
+    esc = make_esc cb, "User::load_status"
+    await @keybase { args : [ "status"] }, esc defer out 
+    await a_json_parse out, esc defer json
+    @_status = json
+    cb null
 
 #==================================================================
 
