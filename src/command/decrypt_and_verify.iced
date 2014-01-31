@@ -45,7 +45,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  try_track : () -> @argv.track or @argv.track_remote or @argv.track_local
+  try_track : () -> @argv.track or @argv.track_remote or @argv.track_local or @argv.assert?.length
 
   #----------
 
