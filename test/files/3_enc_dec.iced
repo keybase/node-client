@@ -56,3 +56,18 @@ exports.charlie_decrypt_from_alice = (T,cb) ->
   await decrypt T, charlie, defer()
   cb()
 
+exports.alice_encrypt_for_charlie_with_sig = (T,cb) ->
+  args = [ "encrypt", "--batch", "--sign" ].concat [ charlie.username ]
+  await alice.keybase { args, stdin : msg, quiet : true }, defer err, out
+  T.no_error err
+  T.assert out, "got back a PGP message"
+  ctext = out
+  cb()
+
+exports.charlie_decrypt_from_alice_with_sig = (T,cb) ->
+  args = [ "decrypt" , "--batch", "--signed" ].concat(alice.assertions())
+  await charlie.keybase { args, stdin : ctext, quiet : true }, defer err, out
+  T.no_error err
+  T.equal out.toString('utf8'), (msg+"\n"), "Got back original message"
+  cb()
+
