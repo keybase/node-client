@@ -175,7 +175,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     
     check = @trackw.skip_remote_check()
     if (check is constants.skip.NONE)
-      log.console.error "...checking identity proofs"
+      log.info "...checking identity proofs"
       skp = false
     else 
       log.info "...all remote checks are up-to-date"
@@ -186,12 +186,14 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     if ((approve = @trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
-    else if @is_batch()
-      log.debug "| We needed approval, but we were in batch mode"
-      accept = false
     else if @assertions?.clean()
+      log.info "Identity accepted due to clean and complete assertions"
       log.debug "| We can approve due to clean assertions"
       accept = true
+    else if @is_batch()
+      log.warn "Interactive approval is needed"
+      log.debug "| We needed approval, but we were in batch mode"
+      accept = false
     else
       await @prompt_ok n_warnings, esc defer accept
 

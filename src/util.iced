@@ -5,6 +5,14 @@ path = require 'path'
 
 #=========================================================================
 
+exports.dict_union = (args...) ->
+  out = {}
+  for d in args
+    out[k] = v for k,v of d
+  return out
+
+#=========================================================================
+
 exports.rmkey = (obj, key) ->
   ret = obj[key]
   delete obj[key]

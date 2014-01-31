@@ -2,6 +2,7 @@ dv = require './decrypt_and_verify'
 {add_option_dict} = require './argparse'
 {env} = require '../env'
 {BufferOutStream,BufferInStream} = require('gpg-wrapper')
+{TrackSubSubCommand} = require '../tracksubsub'
 log = require '../log'
 
 ##=======================================================================
@@ -51,6 +52,7 @@ exports.Command = class Command extends dv.Command
       args.push @argv.file 
     else
       gargs.stdin = process.stdin
+      @batch = true
     return gargs
 
 ##=======================================================================

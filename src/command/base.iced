@@ -33,6 +33,7 @@ exports.Base = class Base
   #-------------------
 
   constructor : (@parent) ->
+    @batch = false # We sometimes turn this on if we're reading from stdin
 
   #-------------------
 

@@ -14,6 +14,7 @@ log = require '../log'
 colors = require 'colors'
 {constants} = require '../constants'
 {User} = require '../user'
+{dict_union} = require '../util'
 
 ##=======================================================================
 
@@ -21,7 +22,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  @OPTS :
+  @OPTS : dict_union TrackSubSubCommand.OPTS, {
     s : 
       alias : 'signed'
       action : 'storeTrue'
@@ -33,14 +34,6 @@ exports.Command = class Command extends Base
       alias : "track"
       action : "storeTrue"
       help : "prompt for tracking if necessary"
-    r :
-      alias : "track-remote"
-      action : "storeTrue"
-      help : "remotely track by default"
-    l : 
-      alias : "track-local"
-      action : "storeTrue"
-      help : "don't prompt for remote tracking"
     '6' :
       alias : "base64"
       action : "storeTrue"
@@ -48,6 +41,7 @@ exports.Command = class Command extends Base
     m:
       alias : "message"
       help : "provide the message on the command line"
+  }
 
   #----------
 
@@ -82,16 +76,17 @@ exports.Command = class Command extends Base
       name : @signing_key.primary
     await User.map_key_to_user arg, esc defer basics
 
-    opts =
-      local : @argv.track_local
-      remote : @argv.track_remote
-
     @username = basics.username
     if (a = @argv.signed_by)? and (a isnt (b = @username))
       err = new E.WrongSignerError "Wrong signer: wanted '#{a}' but got '#{b}'"
       await athrow err, esc defer()
 
-    @tssc = new TrackSubSubCommand { args : { them : @username }, opts, @tmp_keyring  }
+    @tssc = new TrackSubSubCommand { 
+      args : { them : @username }, 
+      opts : @argv, 
+      @tmp_keyring, 
+      @batch 
+    }
     await @tssc.on_decrypt esc defer()
 
     {remote,local} = @tssc.trackw.is_tracking()

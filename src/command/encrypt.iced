@@ -6,6 +6,7 @@ log = require '../log'
 {BufferInStream} = require('gpg-wrapper')
 {master_ring} = require '../keyring'
 {make_esc} = require 'iced-error'
+{dict_union} = require '../util'
 
 ##=======================================================================
 
@@ -13,15 +14,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS :
-    r :
-      alias : "track-remote"
-      action : "storeTrue"
-      help : "remotely track by default"
-    l : 
-      alias : "track-local"
-      action : "storeTrue"
-      help : "don't prompt for remote tracking"
+  OPTS : dict_union TrackSubSubCommand.OPTS, {
     s:
       alias : "sign"
       action : "storeTrue"
@@ -36,6 +29,7 @@ exports.Command = class Command extends Base
     o :
       alias : 'output'
       help : 'the output file to write the encryption to'
+  }
 
   #----------
 
@@ -73,7 +67,8 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
-    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts }
+    batch = (not @argv.message and not @argv.file?)
+    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv, batch }
     await @tssc.run esc defer()
     await @do_encrypt esc defer()
     cb null

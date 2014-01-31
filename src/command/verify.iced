@@ -48,6 +48,7 @@ exports.Command = class Command extends dv.Command
       args.push @argv.files...
     else
       gargs.stdin = process.stdin
+      @batch = true
     return gargs
 
 ##=======================================================================
