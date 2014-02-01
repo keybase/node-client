@@ -8,7 +8,9 @@ req = require './req'
 {constants} = require './constants'
 SC = constants.security
 triplesec = require 'triplesec'
+{WordArray} = triplesec
 ProgressBar = require 'progress'
+{createHmac} = require 'crypto'
 
 #======================================================================
 
@@ -123,6 +125,16 @@ exports.Session = class Session
 
   #-----
 
+  gen_hmac_pwh : ( {passphrase, salt, login_session}, cb) ->
+    await @gen_pwh { passphrase, salt }, defer err, pwh
+    unless err?
+      hmac_pwh = createHmac('SHA512', pwh).update(login_session).digest()
+    else
+      hmac_pwh = null
+    cb err, hmac_pwh
+
+  #-----
+
   get_id : () -> @_id or @_file?.obj()?.session
 
   #-----
@@ -151,12 +163,13 @@ exports.Session = class Session
   #-----
 
   get_salt : (args, cb) ->
-    salt = null
+    salt = login_session = null
     await req.get { endpoint : "getsalt", args }, defer err, body
     unless err?
       salt = (new Buffer body.salt, 'hex')
       env().config.set "user.salt", body.salt
-    cb err, salt
+      login_session = new Buffer body.login_session, 'base64'
+    cb err, salt, login_session
 
   #-----
 
@@ -183,9 +196,14 @@ exports.Session = class Session
     if not @logged_in()
       await @get_email_or_username esc defer email_or_username
       await @get_passphrase esc defer passphrase
-      await @get_salt {email_or_username }, esc defer salt
-      await @gen_pwh { passphrase, salt }, esc defer pwh
-      await @post_login {email_or_username, pwh : pwh.toString('hex') }, esc defer()
+      await @get_salt {email_or_username }, esc defer salt, login_session
+      await @gen_hmac_pwh { passphrase, salt, login_session }, esc defer hmac_pwh
+      args =  {
+        email_or_username,
+        hmac_pwh : hmac_pwh.toString('hex'),
+        login_session : login_session.toString('base64')
+      }
+      await @post_login args, esc defer()
     await @write esc defer()
     cb null
 
