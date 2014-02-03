@@ -31,6 +31,7 @@
     "iced-error"         : ">=0.0.8",
     "iced-logger"        : "~0.0.1",
     "iced-utils"         : ">=0.1.8",
+    "kbpgp"              : "~0.0.1",
     "keybase-proofs"     : ">=0.0.1",
     "mkdirp"             : "~0.3.5",
     "pgp-utils"          : ">=0.0.8",
@@ -42,7 +43,7 @@
     "triplesec"          : ">=3.0.3"
    },
    "devDependencies" : {
-    "iced-coffee-script" : "~1.6.3-j",
+    "iced-coffee-script" : "~1.7.0",
     "iced-test"          : ">=0.0.10",
     "optimist"           : "~0.6.0",
     "iced-expect"        : ">=0.0.3"
@@ -60,6 +61,7 @@
     "iced-error",
     "iced-logger",
     "iced-utils",
+    "kbpgp",
     "keybase-proofs",
     "mkdirp",
     "pgp-utils",
