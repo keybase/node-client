@@ -47,6 +47,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------------------
 
   constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local}) ->
+    @opts or= {}
 
   #----------------------
 
