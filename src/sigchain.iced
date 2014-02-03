@@ -273,13 +273,17 @@ exports.SigChain = class SigChain
     err = null
     ret = null
     while curr and not err?
+      log.debug "| #{uid}: Loading link #{curr}"
       await Link.load curr, defer err, link
       if err?
         log.error "Couldn't find link: #{last}"
+        log.debug "| -> error"
       else if link?
         links.push link
         curr = link.prev()
+        log.debug "| -> found link and previous; prev=#{curr}"
       else 
+        log.debug "| -> reached the chain end"
         curr = null
     unless err?
       ret = new SigChain uid, links.reverse()
@@ -430,7 +434,10 @@ exports.SigChain = class SigChain
         when ST.REMOTE_PROOF then MAKE(out, lt, {})[link.proof_type()] = link
 
         when ST.TRACK 
-          if not (id = body?.track?.id)? then log.warn "Missing track in signature"
+          if not (id = body?.track?.id)? 
+            log.warn "Missing track in signature"
+            log.debug "Full JSON in signature:"
+            log.debug pjs
           else MAKE(out,lt,{})[id] = link
 
         when ST.REVOKE
@@ -459,7 +466,6 @@ exports.SigChain = class SigChain
 
     # remove all revoked signatures in one final pass
     prune out
-
 
     log.debug "- signature chain compressed"
     @table = out
@@ -511,9 +517,12 @@ exports.SigChain = class SigChain
     log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
     if (tab = @table[ST.REMOTE_PROOF])?
+      log.debug "| Loaded table with #{Object.keys(tab).length} keys"
       for type,link of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
         await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
+    else
+      log.debug "| No remote proofs found"
     log.debug "- #{pubkey.username()}: checked remote proofs"
     cb null, warnings
 

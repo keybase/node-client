@@ -110,11 +110,13 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   check_remote_proofs : (skip, cb) ->
     esc = make_esc cb, "TrackSubSub::check_remote_proofs"
+    log.debug "+ TrackSubSub::check_remote_proofs"
     await @parse_assertions esc defer()
     opts = { skip, @assertions } 
     await @them.check_remote_proofs opts, esc defer warnings
     if not err? and @assertions? and not(@assertions.check())
       err = new E.BadAssertionError()
+    log.debug "- TrackSubSub::check_remote_proofs -> #{err?.message}"
     cb err, warnings
 
   #----------

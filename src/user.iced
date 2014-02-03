@@ -100,6 +100,7 @@ exports.User = class User
       log.debug "| loading sig chain w/ payload hash #{ph}"
       await SigChain.load @id, ph, defer err, @sig_chain
     else
+      log.debug "| No payload hash tail pointer found"
       @sig_chain = new SigChain @id
     log.debug "- loaded sig chain from local storage"
     cb err

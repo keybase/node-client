@@ -84,7 +84,7 @@ exports.Client = class Client
       log.debug "| Adding a custom CA for host #{uri_fields.hostname} when tls=#{tls}"
       opts.ca = [ ca ]
 
-    log.debug "+ request to #{endpoint}"
+    log.debug "+ request to #{endpoint} (#{opts.uri})"
     await request opts, defer err, res, body
     if err? then #noop
     else if not (res.statusCode in http_status) 
