@@ -55,7 +55,7 @@ exports.constants = constants =
   keygen :
     expire : "10y"
     master : bits : 4096
-    subkey : bits : 3172
+    subkey : bits : 4096
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 
