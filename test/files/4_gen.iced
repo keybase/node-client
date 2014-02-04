@@ -39,7 +39,7 @@ exports.gen = (T,cb) ->
 #-----------------------
 
 exports.export_to_p3skb = (T,cb) ->
-  await keymanager.export_to_p3skb defer err, tmp
+  await keymanager.export_to_p3skb {}, defer err, tmp
   T.no_error err
   p3skb = tmp
   cb()

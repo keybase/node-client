@@ -11,7 +11,7 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
-  constructor : ({@username, @config, @passphrase, @ring, @tsenc}) ->
+  constructor : ({@username, @config, @passphrase, @ring, @tsenc, @key, @fingerprint}) ->
     @ring or= master_ring()
     @key = null
     @lib = 
@@ -56,6 +56,21 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
+  _load : (cb) ->
+    await @ring.make_key { @fingerprint , secret : true }
+    await @key.load defer err
+    cb err
+
+  #--------------
+
+  @load : (opts, cb) ->
+    km = new KeyManager opts
+    await km._load defer err
+    km = null if err?
+    cb err, km
+
+  #--------------
+
   load_public : (cb) ->
     pubkey = @ring.make_key { fingerprint : @key.fingerprint(), secret : false }
     await pubkey.load defer err
@@ -71,14 +86,39 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
-  export_to_p3skb : (cb) ->
-    esc = make_esc cb, "KeyManager::encrypt_to_p3skb"
+  import_from_pgp : (cb) ->
     raw = @key.key_data().toString('utf8')
-    await @lib.KeyManager.import_from_armored_pgp { raw }, esc defer @km, warnings
+    await @lib.KeyManager.import_from_armored_pgp { raw }, defer err, @km, warnings
     @warn "Export to P3SKB format", warnings
-    await @km.unlock_pgp { @passphrase }, esc defer()
+    cb err
+
+  #--------------
+
+  unlock_pgp : ({passphrase,prompter}, cb) ->
+    esc = make_esc cb, "KeyManager::unlock_pgp"
+    passphrase or= @passphrase
+    if @km.is_pgp_locked()
+      if not passphrase?
+        await prompter esc defer passphrase
+        @passphrase = passphrase
+      await @km.unlock_pgp { passphrase }, defer err
+    cb err
+
+  #--------------
+
+  sign_and_export : (cb) ->
+    esc = make_esc cb, "KeyManager::sign_and_export"
     await @km.sign {}, esc defer()
     await @km.export_private_to_server { tsenc : @get_tsenc() }, esc defer @p3skb
+    cb null
+
+  #--------------
+ 
+  export_to_p3skb : ({prompter}, cb) ->
+    esc = make_esc cb, "KeyManager::encrypt_to_p3skb"
+    await @import_from_pgp esc defer()
+    await @unlock_pgp {prompter}, esc defer()
+    await @sign_and_export esc defer()
     cb null, @p3skb
 
   #--------------

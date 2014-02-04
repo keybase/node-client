@@ -70,9 +70,17 @@ exports.Command = class Command extends Base
 
   #----------
 
+  load_key_manager : (cb) ->
+    esc = make_esc cb, "KeyManager::load_secret"
+    await KeyManager.load { fingerprint : @key.fingerprint() }, esc defer @keymanager
+    cb null
+
+  #----------
+
   package_secret_key : (cb) ->
     log.debug "+ package secret key"
-    await @keymanager.export_to_p3skb defer err, p3skb
+    prompter = @prompt_passphrase.bind(@)
+    await @keymanager.export_to_p3skb { prompter }, defer err, p3skb
     @p3skb = p3skb unless err?
     log.debug "- package secret key -> #{err?.message}"
     cb err
@@ -80,6 +88,14 @@ exports.Command = class Command extends Base
   #----------
 
   prompt_passphrase : (cb) ->
+    args = 
+      prompt : "Your key passphrase (can be the same as your login passphrase)"
+    await prompt_passphrase args, defer err, pp
+    cb err, pp
+
+  #----------
+
+  prompt_new_passphrase : (cb) ->
     args = 
       prompt : "Your key passphrase (can be the same as your login passphrase)"
       confirm : prompt: "Repeat to confirm"
@@ -92,7 +108,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "do_key_gen"
     if @argv.search?
       athrow (new E.ArgsError "Cannot provide a search query with then --gen flag"), esc defer()
-    await @prompt_passphrase esc defer passphrase 
+    await @prompt_new_passphrase esc defer passphrase 
     log.debug "+ generating public/private keypair"
     await KeyManager.generate { passphrase }, esc defer @keymanager
     log.debug "- generated"
@@ -109,6 +125,7 @@ exports.Command = class Command extends Base
       await @do_key_gen esc defer @key
     else
       await key_select {username: env().get_username(), query : @argv.search }, esc defer @key
+      await @load_key_manager defer() if @argv.push_secret
     await session.login esc defer()
     await @sign esc defer()
     await @package_secret_key esc defer() if (@argv.push_secret and @keymanager?)
