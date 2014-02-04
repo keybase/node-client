@@ -89,7 +89,7 @@ exports.Command = class Command extends Base
 
   prompt_passphrase : (cb) ->
     args = 
-      prompt : "Your key passphrase (can be the same as your login passphrase)"
+      prompt : "Your key passphrase"
     await prompt_passphrase args, defer err, pp
     cb err, pp
 

@@ -57,7 +57,7 @@ exports.KeyManager = class KeyManager
   #--------------
 
   _load : (cb) ->
-    await @ring.make_key { @fingerprint , secret : true }
+    @key = @ring.make_key { @fingerprint , secret : true }
     await @key.load defer err
     cb err
 
