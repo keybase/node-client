@@ -48,6 +48,7 @@ exports.E = E = ie.make_errors
   BAD_ASSERTION : "Bad assertion"
   KEY_EXISTS : "Key already exists"
   GENERATE : "key generation error"
+  MISSING_PW : "missing passphrase"
 
 #================================================
 

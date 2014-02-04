@@ -8,6 +8,8 @@ log = require '../log'
 log = require '../log'
 {User} = require '../user'
 req = require '../req'
+{prompt_passphrase} = require '../prompter'
+{KeyManager} = require '../keymanager'
 
 ##=======================================================================
 
@@ -39,8 +41,19 @@ exports.Command = class Command extends Base
 
   #----------
 
+  prompt_passphrase : (cb) ->
+    args = 
+      prompt : "Your keybase passphrase"
+    await prompt_passphrase args, defer err, @passphrase
+    cb err, @passphrase 
+
+  #----------
+
   unlock_key : (cb) ->
-    cb null
+    prompter = @prompt_passphrase.bind(@)
+    await KeyManager.import_from_p3skb { raw : @p3skb, prompter }, defer err, @km
+    console.log @km
+    cb err
 
   #----------
 
@@ -50,8 +63,6 @@ exports.Command = class Command extends Base
     await @get_private_key esc defer()
     await @unlock_key esc defer()
     cb null
-
-  #-----------------
 
 ##=======================================================================
 

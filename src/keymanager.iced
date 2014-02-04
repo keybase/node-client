@@ -136,9 +136,9 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
-  @import_from_p3skb : ({raw, ring, tsenc, passphrase}, cb) ->
+  @import_from_p3skb : ({raw, ring, tsenc, passphrase, prompter}, cb) ->
     km = new KeyManager { ring, tsenc, passphrase }
-    await km._import_from_p3skb {raw }, defer err
+    await km._import_from_p3skb {raw, prompter}, defer err
     km = null if err?
     cb err, km
 
@@ -162,12 +162,18 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
-  _import_from_p3skb : ({raw}, cb) ->
+  _import_from_p3skb : ({raw, prompter}, cb) ->
     esc = make_esc cb, "KeyManager::_import_from_p3skb"
+    err = null
     await @lib.KeyManager.import_from_p3skb { raw }, esc defer @km, warnings
     @warn "Import from P3SKB format", warnings
-    if @km.is_p3skb_locked() and @passphrase?
-      await @km.unlock_p3skb { tsenc : @get_tsenc() }, esc defer()
-    cb null
+    if @km.is_p3skb_locked() 
+      if not @passphrase? and prompter?
+        await prompter esc defer @passphrase
+      if not @passphrase
+        err = new E.MissingPwError "No passphrase given"
+      else
+        await @km.unlock_p3skb { tsenc : @get_tsenc() }, esc defer()
+    cb err
 
 #=====================================================
