@@ -2,6 +2,8 @@ pg = require './push_and_keygen'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
 {add_option_dict} = require './argparse'
+{env} = require '../env'
+{key_select} = require '../keyselector'
 
 ##=======================================================================
 
