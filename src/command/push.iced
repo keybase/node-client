@@ -11,10 +11,22 @@ log = require '../log'
 {KeybasePushProofGen} = require '../sigs'
 req = require '../req'
 {env} = require '../env'
+{prompt_passphrase} = require '../prompter'
+{KeyManager} = require '../keymanager'
+{E} = require '../err'
+{athrow} = require('iced-utils').util
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  OPTS :
+    g :
+      alias : "gen"
+      action : "storeTrue"
+      help : "generate a new key"
 
   #----------
 
@@ -28,6 +40,7 @@ exports.Command = class Command extends Base
       help : "push a PGP key from the client to the server"
     name = "push"
     sub = scp.addParser name, opts
+    add_option_dict sub, @OPTS
     sub.addArgument [ "search" ], { nargs : '?' }
     return opts.aliases.concat [ name ]
 
@@ -52,9 +65,33 @@ exports.Command = class Command extends Base
 
   #----------
 
+  prompt_passphrase : (cb) ->
+    args = 
+      prompt : "Your key passphrase (can be the same as your login passphrase)"
+      confirm : prompt: "Repeat to confirm"
+    await prompt_passphrase args, defer err, pp
+    cb null, pp
+
+  #----------
+
+  do_key_gen : (cb) ->
+    esc = make_esc cb, "do_key_gen"
+    if @argv.search?
+      athrow (new E.ArgsError "Cannot provide a search query with then --gen flag"), esc defer()
+    await @prompt_passphrase esc defer passphrase 
+    log.debug "+ generating public/private keypair"
+    await KeyManager.generate { passphrase }, esc defer km_tmp
+    log.debug "- generated"
+    cb null, km_tmp.key
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "run"
-    await key_select {username: env().get_username(), query : @argv.search }, esc defer @km
+    if @argv.gen
+      await @do_key_gen esc defer @km
+    else
+      await key_select {username: env().get_username(), query : @argv.search }, esc defer @km
     await session.login esc defer()
     await @sign esc defer()
     await @push esc defer()

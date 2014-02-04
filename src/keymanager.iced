@@ -21,6 +21,9 @@ exports.KeyManager = class KeyManager
   #--------------
 
   @generate : ({username, config, passphrase, ring}, cb) ->
+    username or= env().get_username()
+    config or= constants.keygen
+    ring or= master_ring()
     km = new KeyManager { username, config, passphrase, ring }
     await km._gen defer err
     km = null if err?
@@ -39,7 +42,6 @@ exports.KeyManager = class KeyManager
       "Subkey-Type: RSA"
       "Subkey-Length: #{@config.subkey.bits}"
       "Name-Real: #{h}/#{@username}"
-      "Name-Comment: #{(new PackageJson).identify_as()}"
       "Name-Email: #{email}"
       "Expire-date: #{@config.expire}"
       "Passphrase: #{@passphrase}"

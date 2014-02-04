@@ -88,12 +88,13 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
 
 #========================================================================
 
-exports.prompt_passphrase = (cb) ->
+exports.prompt_passphrase = ({prompt,confirm}, cb) ->
   seq = 
     passphrase :
-      prompt : "Your login passphrase"
+      prompt : (prompt or "Your login passphrase")
       passphrase : true
       checker : checkers.passphrase
+      confirm : confirm
   p = new Prompter seq
   await p.run defer err
   cb err, p.data().passphrase
