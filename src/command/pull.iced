@@ -7,6 +7,7 @@ log = require '../log'
 {env} = require '../env'
 log = require '../log'
 {User} = require '../user'
+req = require '../req'
 
 ##=======================================================================
 
@@ -28,8 +29,26 @@ exports.Command = class Command extends Base
 
   #----------
 
+  get_private_key : (cb) ->
+    log.debug "+ Fetching me.json from server"
+    await req.get { endpoint : "me" }, defer err, body
+    if not err? and not (@p3skb = body.me.private_keys?.primary?.bundle)?
+      err = new E.NoRemoteKeyError "no private key found on server"
+    log.debug "- fetched me"
+    cb err
+
+  #----------
+
+  unlock_key : (cb) ->
+    cb null
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+    await session.login esc defer()
+    await @get_private_key esc defer()
+    await @unlock_key esc defer()
     cb null
 
   #-----------------
