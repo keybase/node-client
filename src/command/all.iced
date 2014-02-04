@@ -54,6 +54,7 @@ class Main
       "keygen"
       "login"
       "logout"
+      "pull"
       "push"
       "prove"
       "reset"

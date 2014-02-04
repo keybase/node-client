@@ -27,6 +27,7 @@ $(BUILD_STAMP): \
 	lib/command/login.js \
 	lib/command/logout.js \
 	lib/command/prove.js \
+	lib/command/pull.js \
 	lib/command/push.js \
 	lib/command/push_and_keygen.js \
 	lib/command/reset.js \
