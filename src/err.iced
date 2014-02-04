@@ -47,6 +47,7 @@ exports.E = E = ie.make_errors
   REQUIRED_UPGRADE : "Software upgrade required"
   BAD_ASSERTION : "Bad assertion"
   KEY_EXISTS : "Key already exists"
+  GENERATE : "key generation error"
 
 #================================================
 

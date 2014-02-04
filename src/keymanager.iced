@@ -4,6 +4,7 @@
 {PackageJson} = require './package'
 {init,master_ring} = require './keyring'
 {env,init_env} = require './env'
+{BufferOutStream} = require 'gpg-wrapper'
 
 #=====================================================
 
@@ -48,11 +49,17 @@ exports.KeyManager = class KeyManager
       "%commit"
     ]
     stdin = script.join("\n")
-    args = [ "--batch", "--gen-key" ]
-    await @ring.gpg { args, stdin, quiet : true }, esc defer()
-    @key = @ring.make_key { username : "<#{email}>", secret : true }
-    await @key.load esc defer()
-    cb null
+    args = [ "--batch", "--gen-key", "--keyid-format", "long" ]
+    stderr = new BufferOutStream()
+    await @ring.gpg { args, stdin, stderr }, esc defer out
+    err = null
+    if (m = stderr.data().toString('utf8').match /key ([A-F0-9]{16}) marked as/) 
+      key_id_64 = m[1]
+      @key = @ring.make_key { key_id_64, secret : true }
+      await @key.load esc defer()
+    else
+      err = new E.GenerationError "Failed to parse output of key generation"
+    cb err
 
   #--------------
 
