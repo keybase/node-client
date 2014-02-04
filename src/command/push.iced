@@ -71,8 +71,10 @@ exports.Command = class Command extends Base
   #----------
 
   package_secret_key : (cb) ->
+    log.debug "+ package secret key"
     await @keymanager.export_to_p3skb defer err, p3skb
     @p3skb = p3skb unless err?
+    log.debug "- package secret key -> #{err?.message}"
     cb err
 
   #----------
@@ -82,7 +84,7 @@ exports.Command = class Command extends Base
       prompt : "Your key passphrase (can be the same as your login passphrase)"
       confirm : prompt: "Repeat to confirm"
     await prompt_passphrase args, defer err, pp
-    cb null, pp
+    cb err, pp
 
   #----------
 
@@ -109,7 +111,7 @@ exports.Command = class Command extends Base
       await key_select {username: env().get_username(), query : @argv.search }, esc defer @key
     await session.login esc defer()
     await @sign esc defer()
-    await @pacakge_secret_key esc defer() if @argv.s and @keymanager
+    await @package_secret_key esc defer() if (@argv.push_secret and @keymanager?)
     await @push esc defer()
     log.info "success!"
     cb null
