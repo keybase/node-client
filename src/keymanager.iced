@@ -20,7 +20,7 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
-  @generate : ({username, config, passphrase, ring}) ->
+  @generate : ({username, config, passphrase, ring}, cb) ->
     km = new KeyManager { username, config, passphrase, ring }
     await km._gen defer err
     km = null if err?
@@ -47,7 +47,7 @@ exports.KeyManager = class KeyManager
     ]
     stdin = script.join("\n")
     args = [ "--batch", "--gen-key" ]
-    await @ring.gpg { args, stdin, quiet : false }, esc defer()
+    await @ring.gpg { args, stdin, quiet : true }, esc defer()
     @key = @ring.make_key { username : "<#{email}>", secret : true }
     await @key.load esc defer()
     cb null
