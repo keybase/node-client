@@ -56,20 +56,3 @@ exports.KeyGen = class KeyGen
     cb null, @p3skb
 
 #=====================================================
-
-test = (cb) ->
-  init_env()
-  env().set_argv {}
-  init()
-  kg = new KeyGen {
-    username : "tacotime",
-    config : constants.keygen,
-    passphrase : "now is the time for all men"
-  }
-  await kg.gen defer err
-  console.log err
-  await kg.encrypt_to_p3skb defer err
-  console.log err
-  console.log kg.p3skb
-  cb()
-
