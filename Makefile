@@ -23,10 +23,12 @@ $(BUILD_STAMP): \
 	lib/command/help.js \
 	lib/command/id.js \
 	lib/command/join.js \
+	lib/command/keygen.js \
 	lib/command/login.js \
 	lib/command/logout.js \
 	lib/command/prove.js \
 	lib/command/push.js \
+	lib/command/push_and_keygen.js \
 	lib/command/reset.js \
 	lib/command/revoke.js \
 	lib/command/sign.js \

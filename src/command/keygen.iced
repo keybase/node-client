@@ -2,28 +2,28 @@ pg = require './push_and_keygen'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
 {add_option_dict} = require './argparse'
+{prompt_yn} = require '../prompter'
 
 ##=======================================================================
 
 exports.Command = class Command extends pg.Command
 
-  OPTS :
-    g :
-      alias : "gen"
+  OPTS : 
+    p:
+      alias : "push"
       action : "storeTrue"
-      help : "generate a new key"
+      help : "true if we should push"
 
   #----------
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases  : []
+      aliases  : ['gen', 'generate']
       help : "push a PGP key from the client to the server"
-    name = "push"
+    name = "keygen"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
     add_option_dict sub, pg.Command.OPTS
-    sub.addArgument [ "search" ], { nargs : '?' }
     return opts.aliases.concat [ name ]
 
   #----------
@@ -36,13 +36,27 @@ exports.Command = class Command extends pg.Command
 
   #----------
 
-  prepare_key : (cb) ->
-    esc = make_esc cb, "Command::prepare_key"
-    if @argv.gen
-      await @do_key_gen esc defer @key
+  should_push : (cb) ->
+    err = ret = null
+    if @argv.push then ret = true
     else
-      await key_select {username: env().get_username(), query : @argv.search }, esc defer @key
-    cb null
+      await prompt_yn { prompt : "Push your public key to the server?", defval : true }, defer err, ret
+    cb err, ret 
+
+  #----------
+
+  should_push_secret : (cb) ->
+    err = ret = null
+    if @argv.secret then ret = true
+    else
+      await prompt_yn { prompt : "Push your encrypted private key to the server?", defval : true }, defer err, ret
+    cb err, ret
+
+  #----------
+
+  prepare_key : (cb) ->
+    await @do_key_gen defer err
+    cb err
 
   #----------
 
