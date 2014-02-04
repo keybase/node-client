@@ -49,6 +49,7 @@ $(BUILD_STAMP): \
 	lib/file.js \
 	lib/fs.js \
     lib/gpg.js \
+    lib/keygen.js \
 	lib/keyring.js \
 	lib/keyselector.js \
 	lib/keyutils.js \

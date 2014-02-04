@@ -82,6 +82,7 @@ class Config
     keyring.init {
       log : log,
       get_debug : () => @debug
+      get_tmp_keyring_dir : () => @scratch_dir()
     }
     cb null
 

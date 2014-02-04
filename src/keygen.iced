@@ -1,13 +1,13 @@
 
-{init,master_ring} = require './keyring'
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
 {PackageJson} = require './package'
+{init,master_ring} = require './keyring'
 {env,init_env} = require './env'
 
 #=====================================================
 
-class KeyGen
+exports.KeyGen = class KeyGen
 
   #--------------
 
@@ -36,9 +36,7 @@ class KeyGen
     ]
     stdin = script.join("\n")
     args = [ "--batch", "--gen-key" ]
-    console.log "ok generating...."
     await @ring.gpg { args, stdin, quiet : false }, esc defer()
-    console.log "ok, generated!"
     @key = @ring.make_key { username : "<#{email}>", secret : true }
     await @key.load esc defer()
     cb null
@@ -50,21 +48,12 @@ class KeyGen
     {Encryptor} = require 'triplesec'
     esc = make_esc cb, "KeyGen::encrypt_to_p3skb"
     raw = @key.key_data().toString('utf8')
-    console.log typeof raw
     await KeyManager.import_from_armored_pgp { raw }, esc defer @km
-    console.log "ok got a km"
-    console.log @km
     await @km.unlock_pgp { @passphrase }, esc defer()
-    console.log "unlocked!"
     @tsenc = new Encryptor { key : new Buffer(@passphrase, 'utf8') }
     await @km.sign {}, esc defer()
-    console.log "ok, signed!"
     await @km.export_private_to_server { @tsenc }, esc defer @p3skb
-    console.log "back from export"
     cb null, @p3skb
-
-  #--------------
-
 
 #=====================================================
 
@@ -84,4 +73,3 @@ test = (cb) ->
   console.log kg.p3skb
   cb()
 
-await test defer()
