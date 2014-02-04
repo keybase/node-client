@@ -311,6 +311,21 @@ exports.User = class User
 
   #--------------
 
+  has_public_key : (cb) ->
+    log.debug "+ #{@username()}: has public key"
+    key = master_ring().make_key_from_user @, false
+    ret = false
+    await key.find defer err
+    if not err? then ret = true
+    else if ((err instanceof E.NoLocalKeyError) or (err instanceof E.NoRemoteKeyError))
+      ret = false
+    else
+      ret = true
+    log.debug "- #{@username()}: key check: ret=#{ret}; err=#{err}"
+    cb err, ret
+
+  #--------------
+
   load_public_key : ({signer}, cb) ->
     log.debug "+ load public key for #{@username()}"
     err = null

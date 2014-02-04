@@ -46,6 +46,7 @@ exports.E = E = ie.make_errors
   WRONG_SIGNER : "Expected a signature, but by someone else"
   REQUIRED_UPGRADE : "Software upgrade required"
   BAD_ASSERTION : "Bad assertion"
+  KEY_EXISTS : "Key already exists"
 
 #================================================
 

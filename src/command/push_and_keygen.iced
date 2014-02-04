@@ -10,6 +10,8 @@ req = require '../req'
 {KeyManager} = require '../keymanager'
 {E} = require '../err'
 {athrow} = require('iced-utils').util
+{env} = require '../env'
+{User} = require '../user'
 
 ##=======================================================================
 
@@ -112,8 +114,19 @@ exports.Command = class Command extends Base
 
   #----------
 
+  check_no_key : (cb) ->
+    esc = make_esc cb, "check_no_key"
+    await User.load { username : env().get_username() }, esc defer me
+    await me.has_public_key defer err, exists
+    err = if exists then new E.KeyExistsError "You already have a key registered; you must revoke first"
+    else null
+    cb err
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "run"
+    await @check_no_key esc defer()
     await @check_args esc defer()
     await @prepare_key esc defer()
     await @should_push esc defer go
