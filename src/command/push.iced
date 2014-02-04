@@ -27,6 +27,10 @@ exports.Command = class Command extends Base
       alias : "gen"
       action : "storeTrue"
       help : "generate a new key"
+    s :
+      alias : "push-secret"
+      action : "storeTrue"
+      help : "push the secret key to the server"
 
   #----------
 
@@ -47,7 +51,7 @@ exports.Command = class Command extends Base
   #----------
 
   sign : (cb) ->
-    eng = new KeybasePushProofGen { @km }
+    eng = new KeybasePushProofGen { km : @key }
     await eng.run defer err, @sig
     cb err
 
@@ -59,8 +63,16 @@ exports.Command = class Command extends Base
       sig : @sig.pgp
       sig_id_base : @sig.id
       sig_id_short : @sig.short_id
-      public_key : @km.key_data().toString('utf8')
+      public_key : @key.key_data().toString('utf8')
+    args.private_key = @p3skb if @p3skb
     await req.post { endpoint : "key/add", args }, defer err
+    cb err
+
+  #----------
+
+  package_secret_key : (cb) ->
+    await @keymanager.export_to_p3skb defer err, p3skb
+    @p3skb = p3skb unless err?
     cb err
 
   #----------
@@ -80,20 +92,24 @@ exports.Command = class Command extends Base
       athrow (new E.ArgsError "Cannot provide a search query with then --gen flag"), esc defer()
     await @prompt_passphrase esc defer passphrase 
     log.debug "+ generating public/private keypair"
-    await KeyManager.generate { passphrase }, esc defer km_tmp
+    await KeyManager.generate { passphrase }, esc defer @keymanager
     log.debug "- generated"
-    cb null, km_tmp.key
+    log.debug "+ loading public key"
+    await @keymanager.load_public esc defer key
+    log.debug "- loaded public key"
+    cb null, key
 
   #----------
 
   run : (cb) ->
     esc = make_esc cb, "run"
     if @argv.gen
-      await @do_key_gen esc defer @km
+      await @do_key_gen esc defer @key
     else
-      await key_select {username: env().get_username(), query : @argv.search }, esc defer @km
+      await key_select {username: env().get_username(), query : @argv.search }, esc defer @key
     await session.login esc defer()
     await @sign esc defer()
+    await @pacakge_secret_key esc defer() if @argv.s and @keymanager
     await @push esc defer()
     log.info "success!"
     cb null

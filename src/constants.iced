@@ -54,8 +54,8 @@ exports.constants = constants =
     remote_proof_recheck_interval : 60 * 60 * 24 # check remote proofs every day
   keygen :
     expire : "10y"
-    master : bits : 4096
-    subkey : bits : 4096
+    master : bits : 1024
+    subkey : bits : 1024
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

@@ -56,6 +56,14 @@ exports.KeyManager = class KeyManager
 
   #--------------
 
+  load_public : (cb) ->
+    pubkey = @ring.make_key { fingerprint : @key.fingerprint(), secret : false }
+    await pubkey.load defer err
+    @pubkey = pubkey unless err?
+    cb err, pubkey
+
+  #--------------
+
   get_tsenc : () ->
     unless @tsenc
       @tsenc = new @lib.Encryptor { key : new Buffer(@passphrase, 'utf8') }
