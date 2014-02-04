@@ -43,3 +43,8 @@ exports.encrypt_to_p3skb = (T,cb) ->
   cb()
 
 #-----------------------
+
+exports.import_from_p3skb = (T,cb) ->
+  {KeyManager} = require 'kbpgp'
+
+#-----------------------

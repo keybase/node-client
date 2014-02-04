@@ -7,17 +7,28 @@
 
 #=====================================================
 
-exports.KeyGen = class KeyGen
+exports.KeyManager = class KeyManager
 
   #--------------
 
-  constructor : ({@username, @config, @passphrase, @ring}) ->
+  constructor : ({@username, @config, @passphrase, @ring, @tsenc}) ->
     @ring or= master_ring()
     @key = null
+    @lib = 
+      KeyManager : require('kbpgp').KeyManager
+      Encryptor : require('triplesec').Encryptor
 
   #--------------
 
-  gen : (cb) ->
+  @generate : ({username, config, passphrase, ring}) ->
+    km = new KeyManager { username, config, passphrase, ring }
+    await km._gen defer err
+    km = null if err?
+    cb err, km
+
+  #--------------
+
+  _gen : (cb) ->
     esc = make_esc cb, "KeyGen::Gen"
     h = constants.canonical_host
     email = @username + "@#{h}"
@@ -43,16 +54,63 @@ exports.KeyGen = class KeyGen
 
   #--------------
 
-  encrypt_to_p3skb : (cb) ->
-    {KeyManager} = require 'kbpgp'
-    {Encryptor} = require 'triplesec'
-    esc = make_esc cb, "KeyGen::encrypt_to_p3skb"
+  get_tsenc : () ->
+    unless @tsenc
+      @tsenc = new @lib.Encryptor { key : new Buffer(@passphrase, 'utf8') }
+    return @tsenc
+
+  #--------------
+
+  export_to_p3skb : (cb) ->
+    esc = make_esc cb, "KeyManager::encrypt_to_p3skb"
     raw = @key.key_data().toString('utf8')
-    await KeyManager.import_from_armored_pgp { raw }, esc defer @km
+    await @lib.KeyManager.import_from_armored_pgp { raw }, esc defer @km, warnings
+    @warn "Export to P3SKB format", warnings
     await @km.unlock_pgp { @passphrase }, esc defer()
-    @tsenc = new Encryptor { key : new Buffer(@passphrase, 'utf8') }
     await @km.sign {}, esc defer()
-    await @km.export_private_to_server { @tsenc }, esc defer @p3skb
+    await @km.export_private_to_server { tsenc : @get_tsenc() }, esc defer @p3skb
     cb null, @p3skb
+
+  #--------------
+
+  set_passphrase : (p) ->
+    @passphrase = p
+    @tsenc = null
+
+  #--------------
+
+  @import_from_p3skb : ({raw, ring, tsenc, passphrase}, cb) ->
+    km = new KeyManager { ring, tsenc, passphrase }
+    await km._import_from_p3skb {raw }, defer err
+    km = null if err?
+    cb err, km
+
+  #--------------
+
+  warn : (what, warnings) ->
+    for w in warnings.warnings()
+      log.warn "#{what}: #{w}"
+
+  #--------------
+
+  save_to_ring : ({passphrase, ring}, cb) ->
+    esc = make_esc cb, "KeyManager::save_to_ring"
+    @ring = ring if ring?
+    @set_passphrase(passphrase) if passphrase?
+    await @km.sign {}, esc defer()
+    await @km.export_pgp_private_to_client { @passphrase }, esc defer key_data
+    @key = @ring.make_key { key_data, fingerprint : @km.get_pgp_fingerprint() }
+    await @key.save esc defer()
+    cb null
+
+  #--------------
+
+  _import_from_p3skb : ({raw}, cb) ->
+    esc = make_esc cb, "KeyManager::_import_from_p3skb"
+    await @lib.KeyManager.import_from_p3skb { raw }, esc defer @km, warnings
+    @warn "Import from P3SKB format", warnings
+    if @km.is_p3skb_locked() and @passphrase?
+      await @km.unlock_p3skb { tsenc : @get_tsenc() }, esc defer()
+    cb null
 
 #=====================================================
