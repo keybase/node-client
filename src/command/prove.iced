@@ -9,10 +9,20 @@ log = require '../log'
 {TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
 {req} = require '../req'
+assert = require 'assert'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  TABLE : 
+    twitter : TwitterProofGen
+    twtr : TwitterProofGen
+    git : GithubProofGen
+    github : GithubProofGen
+    gith : GithubProofGen
 
   #----------
 
@@ -43,17 +53,17 @@ exports.Command = class Command extends Base
   #----------
 
   allocate_proof_gen : (cb) ->
-    table =
-      twitter : TwitterProofGen
-      twtr : TwitterProofGen
-      git : GithubProofGen
-      github : GithubProofGen
-      gith : GithubProofGen
-    klass = table[@argv.service[0].toLowerCase()]
-    if klass?
-      await @me.gen_remote_proof_gen { klass, @remote_username }, defer err, @gen
-    else
-      err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
+    klass = @TABLE[@argv.service[0].toLowerCase()]
+    assert.ok klass?
+    await @me.gen_remote_proof_gen { klass, @remote_username }, defer err, @gen
+    cb err
+
+  #----------
+
+  parse_args : (cb) ->
+    err = null
+    unless @TABLE[(s = @argv.service)]?
+      err = new E.UnknownServiceError "Unknown service: #{s}"
     cb err
 
   #----------
@@ -94,6 +104,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+    await @parse_args esc defer()
     await @prompt_remote_username esc defer()
     await User.load_me esc defer @me
     await @allocate_proof_gen esc defer()
