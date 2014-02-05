@@ -17,12 +17,18 @@ exports.Command = class Command extends Base
 
   #----------
 
+  ALIASES :
+    twitter : "twitter"
+    twtr    : "twitter"
+    git     : "github"
+    github  : "github"
+    gith    : "github"
+
+  #----------
+
   TABLE : 
     twitter : TwitterProofGen
-    twtr : TwitterProofGen
-    git : GithubProofGen
     github : GithubProofGen
-    gith : GithubProofGen
 
   #----------
 
@@ -53,7 +59,7 @@ exports.Command = class Command extends Base
   #----------
 
   allocate_proof_gen : (cb) ->
-    klass = @TABLE[@argv.service[0].toLowerCase()]
+    klass = @TABLE[@service_name]
     assert.ok klass?
     await @me.gen_remote_proof_gen { klass, @remote_username }, defer err, @gen
     cb err
@@ -62,8 +68,23 @@ exports.Command = class Command extends Base
 
   parse_args : (cb) ->
     err = null
-    unless @TABLE[(s = @argv.service)]?
-      err = new E.UnknownServiceError "Unknown service: #{s}"
+    if (s = @ALIASES[@argv.service[0].toLowerCase()])?
+      @service_name = s
+    else
+      err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
+    cb err
+
+  #----------
+
+  check_exists : (cb) ->
+    rp = @me.list_remote_proofs() 
+    err = null
+    if (v = rp[@service_name]) 
+      await prompt_yn { 
+        prompt : "You already have a proved you are #{v} at #{@service_name}; overwrite? ", 
+        defval : false }, defer err, ok
+      if not err? and not ok
+        err = new E.ProofExistsError "Proof already exists"
     cb err
 
   #----------
@@ -105,8 +126,9 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     await @parse_args esc defer()
-    await @prompt_remote_username esc defer()
     await User.load_me esc defer @me
+    await @check_exists esc defer()
+    await @prompt_remote_username esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     await @handle_post esc defer()
