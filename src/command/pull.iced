@@ -10,6 +10,7 @@ log = require '../log'
 req = require '../req'
 {prompt_passphrase} = require '../prompter'
 {KeyManager} = require '../keymanager'
+{E} = require '../err'
 
 ##=======================================================================
 
@@ -52,16 +53,22 @@ exports.Command = class Command extends Base
   unlock_key : (cb) ->
     prompter = @prompt_passphrase.bind(@)
     await KeyManager.import_from_p3skb { raw : @p3skb, prompter }, defer err, @km
-    console.log @km
     cb err
 
   #----------
 
+  save : (cb) ->  
+    await @km.save_to_ring { @passphrase }, defer err
+    cb err
+
+  #----------
+  
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     await session.login esc defer()
     await @get_private_key esc defer()
     await @unlock_key esc defer()
+    await @save esc defer()
     cb null
 
 ##=======================================================================

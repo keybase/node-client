@@ -156,7 +156,7 @@ exports.KeyManager = class KeyManager
     @set_passphrase(passphrase) if passphrase?
     await @km.sign {}, esc defer()
     await @km.export_pgp_private_to_client { @passphrase }, esc defer key_data
-    @key = @ring.make_key { key_data, fingerprint : @km.get_pgp_fingerprint() }
+    @key = @ring.make_key { key_data, fingerprint : @km.get_pgp_fingerprint().toString('hex') }
     await @key.save esc defer()
     cb null
 
