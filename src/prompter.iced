@@ -120,7 +120,7 @@ exports.prompt_email_or_username = (cb) ->
       checker : checkers.email_or_username
   p = new Prompter seq
   await p.run defer err
-  if err? then out = null
+  if err? then out = {}
   else
     v = p.data().email_or_username
     out =
