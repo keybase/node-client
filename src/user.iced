@@ -312,7 +312,7 @@ exports.User = class User
   #--------------
 
   has_public_key : (cb) ->
-    log.debug "+ #{@username()}: has public key"
+    log.debug "+ #{@username()}: has_public_key"
     key = master_ring().make_key_from_user @, false
     ret = false
     await key.find defer err
@@ -321,7 +321,7 @@ exports.User = class User
       ret = false
     else
       ret = true
-    log.debug "- #{@username()}: key check: ret=#{ret}; err=#{err}"
+    log.debug "- #{@username()}: has_public_key: ret=#{ret}; err=#{err}"
     cb err, ret
 
   #--------------

@@ -192,6 +192,7 @@ exports.Session = class Session
 
   login : (cb) ->
     esc = make_esc cb, "login"
+    did_login = false
     await @check esc defer()
     if not @logged_in()
       await @get_email_or_username esc defer email_or_username
@@ -204,8 +205,9 @@ exports.Session = class Session
         login_session : login_session.toString('base64')
       }
       await @post_login args, esc defer()
+      did_login = true
     await @write esc defer()
-    cb null
+    cb null, did_login
 
   #-----
 

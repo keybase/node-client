@@ -382,11 +382,11 @@ exports.SigChain = class SigChain
     esc = make_esc cb, "_verify_userid"
 
     log.debug "+ _verify_userid for #{@username}"
+    found = false
 
     # first try to see if the username is baked into the key, and be happy with that
     await @pubkey.read_uids_from_key esc defer uids
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
-    found = false
 
     # Search for an explicit self-signature of this key
     if not found and (v = @table[ST.SELF_SIG])?
