@@ -1,8 +1,8 @@
 
 exports.checkers = checkers = 
   username :
-    hint : "between 4 and 12 letters long"
-    f : (x) -> x.length >= 4 and x.length <= 12
+    hint : "between 2 and 16 letters long"
+    f : (x) -> x.length >= 2 and x.length <= 16
   passphrase: 
     hint : "must be at least 12 letters long"
     f : (x) -> x.length >= 12
