@@ -222,7 +222,7 @@ exports.Link = class Link
        (type_s + ":")
        @human_url()
     ]
-    msg.push ("(actual check skipped)") if skip
+    msg.push ("(you've recently OK'ed these proofs)") if skip
     msg.push "(failed with code #{rc})" if not ok
     log.console.error msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"

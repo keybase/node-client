@@ -58,9 +58,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   prompt_ok : (warnings, cb) ->
     prompt = if warnings
       log.console.error colors.red "Some remote proofs failed!"
-      "Still verify this user?"
+      "Still verify this user as #{@args.them}?"
     else
-      "Are you satisfied with these proofs?"
+      "Is this the #{@args.them} you wanted?"
     await prompt_yn { prompt, defval : false }, defer err, ret
     cb err, ret
 
