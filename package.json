@@ -40,7 +40,7 @@
     "read"               : "keybase/read",
     "sqlite3"            : "~2.1.9",
     "request"            : "~2.30.0",
-    "triplesec"          : ">=3.0.3"
+    "triplesec"          : ">=3.0.4"
    },
    "devDependencies" : {
     "iced-coffee-script" : "~1.7.0",
