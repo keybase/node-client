@@ -47,7 +47,12 @@ exports.Command = class Command extends Base
   #----------
 
   do_encrypt : (cb) ->
-    args = [ "--encrypt", "-r", (@tssc.them.fingerprint true) ]
+    tp = @tssc.them.fingerprint true
+    args = [ 
+      "--encrypt", 
+      "-r", tp,
+      "--trusted-key", tp
+    ]
     args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
     gargs = { args }
     args.push("--output", o, "--yes") if (o = @argv.output)
@@ -68,7 +73,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     batch = (not @argv.message and not @argv.file?)
-    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv, batch, track_local : true }
+    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv, batch }
     await @tssc.run esc defer()
     await @do_encrypt esc defer()
     cb null
