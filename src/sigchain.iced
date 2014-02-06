@@ -502,7 +502,7 @@ exports.SigChain = class SigChain
 
   list_remote_proofs : () ->
     out = null
-    if (tab = @table[ST.REMOTE_PROOF])?
+    if @table? and (tab = @table[ST.REMOTE_PROOF])?
       for type,link of tab
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
