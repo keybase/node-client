@@ -473,7 +473,7 @@ exports.SigChain = class SigChain
   #-----------
 
   remote_proofs_to_track_obj : () ->
-    if (d = @table[ST.REMOTE_PROOF])?
+    if (d = @table?[ST.REMOTE_PROOF])?
       (link.remote_proof_to_track_obj() for key,link of d when not link.is_revoked())
     else []
 
@@ -516,7 +516,7 @@ exports.SigChain = class SigChain
     esc = make_esc cb, "SigChain::check_remote_proofs"
     log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
-    if (tab = @table[ST.REMOTE_PROOF])?
+    if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"
       for type,link of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
