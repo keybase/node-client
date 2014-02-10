@@ -79,11 +79,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   key_cleanup : ({accept}, cb) ->
+    log.debug "+ key_cleanup"
     err = null
     if @them
       if accept 
         log.debug "| commit_key"
-        await @them.key.commit @me?.key, defer err
+        await @them.key.commit {}, defer err
       else
         await @them.key.rollback defer err
       
@@ -93,6 +94,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else
       await @tmp_keyring.nuke defer e2
       log.warn "Problem in cleanup: #{e2.message}" if e2?
+    log.debug "- key_cleanup"
     cb err
 
   #----------

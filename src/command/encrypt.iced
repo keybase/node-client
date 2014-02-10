@@ -48,10 +48,11 @@ exports.Command = class Command extends Base
 
   do_encrypt : (cb) ->
     tp = @tssc.them.fingerprint true
+    ti = @tssc.them.key_id_64()
     args = [ 
       "--encrypt", 
       "-r", tp,
-      "--trusted-key", tp
+      "--trusted-key", ti
     ]
     args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
     gargs = { args }

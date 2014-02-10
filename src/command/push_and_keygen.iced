@@ -32,8 +32,10 @@ exports.Command = class Command extends Base
   #----------
 
   sign : (cb) ->
+    log.debug "+ Command::sign"
     eng = new KeybasePushProofGen { km : @key }
     await eng.run defer err, @sig
+    log.debug "- Command::sign"
     cb err
 
   #----------
@@ -104,7 +106,7 @@ exports.Command = class Command extends Base
     log.debug "+ loading public key"
     await @keymanager.load_public esc defer @key
     log.debug "- loaded public key"
-    cb null
+    cb null, @key
 
   #----------
 
