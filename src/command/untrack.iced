@@ -10,10 +10,27 @@ db = require '../db'
 {session} = require '../session'
 {TrackWrapper} = require '../trackwrapper'
 {athrow} = require('pgp-utils').util
+{prompt_yn} = require '../prompter'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  OPTS :
+    k :
+      alias : 'remove-key'
+      action : 'storeTrue'
+      help : 'remove key from GPG keyring'
+    b : 
+      alias : 'batch'
+      action : 'storeTrue'
+      help : "run in batch mode / don't prompt"
+    K:
+      alias : "keep-key"
+      action : 'storeTrue'
+      help : "preserve key in GPG keyring"
 
   #----------
 
@@ -23,8 +40,28 @@ exports.Command = class Command extends Base
       help : "untrack this user"
     name = "untrack"
     sub = scp.addParser name, opts
-    sub.addArgument ["them"], { nargs : 1 }
+    sub.addArgument ["them"], { nargs : 1 , help : "the username of the user to untrack" }
+    add_option_dict sub, @OPTS
     return opts.aliases.concat [ name ]
+
+  #----------
+
+  remove_key : (them, cb) ->
+    esc = make_esc cb, "Untrack::remove_key"
+    go = false
+    if @argv.remove_key then go = true
+    else if @argv.keep_key then go = false
+    else if @argv.batch
+      log.warn "Not removing key; in batch mode"
+      go = false
+    else
+      args = 
+        prompt : "Remove #{@argv.them[0]}'s public key from your local keyring? "
+        defval : true 
+      await prompt_yn args, esc defer go
+    if go
+      await them.remove_key esc defer()
+    cb null
 
   #----------
 
@@ -47,7 +84,7 @@ exports.Command = class Command extends Base
     else
       log.warn "You're not remotely tracking '#{them.username()}'; purging local state"
 
-    await them.remove_key esc defer()
+    await @remove_key them, esc defer() 
     await TrackWrapper.remove_local_track {uid : them.id}, esc defer()
 
     log.debug "- run"
