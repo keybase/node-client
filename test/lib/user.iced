@@ -303,9 +303,10 @@ exports.User = class User
 
   follow : (followee, {remote}, cb) ->
     esc = make_esc cb, "User::follow"
-    eng = @keybase_expect [ "track", followee.username ]
+    un = followee.username
+    eng = @keybase_expect [ "track", un ]
 
-    eng.expect { pattern : /Are you satisfied with these proofs\? \[y\/N\] / }, (err, data, src) ->
+    eng.expect { pattern : new RegExp("Is this the #{un} you wanted\\? \\[y\\/N\\] ") }, (err, data, src) ->
       unless err?
         await followee.check_proofs eng.stderr().toString('utf8'), defer err
         if err?
