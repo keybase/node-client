@@ -1,6 +1,6 @@
 {
   "name": "keybase",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "CLI interface to keybase.io",
   "repository": {
     "type": "git",
@@ -11,44 +11,44 @@
   "bugs": {
     "url": "https://github.com/keybase/node-client/issues"
   },
-  "bin" : {
-    "keybase" : "./bin/main.js"
+  "bin": {
+    "keybase": "./bin/main.js"
   },
-  "scripts" : {
-    "test" : "make test",
-    "build" : "make build"
+  "scripts": {
+    "test": "make test",
+    "build": "make build"
   },
-  "dependencies" : {
-    "argparse"           : "~0.1.15",
-    "bn"                 : "~0.0.1",
-    "cheerio"            : "~0.13.0",
-    "colors"             : "~0.6.2",
-    "deep-equal"         : "~0.1.2",
-    "framed-msgpack-rpc" : "~1.1.1",
-    "gpg-wrapper"        : ">=0.0.20",
-    "iced-coffee-script" : "~1.7.1",
-    "iced-data-structures" : "~0.0.5",
-    "iced-error"         : ">=0.0.8",
-    "iced-logger"        : "~0.0.1",
-    "iced-utils"         : ">=0.1.8",
-    "kbpgp"              : "~0.0.1",
-    "keybase-proofs"     : ">=0.0.1",
-    "mkdirp"             : "~0.3.5",
-    "pgp-utils"          : ">=0.0.8",
-    "progress"           : "~1.1.3",
-    "purepack"           : "~1.0.0",
-    "read"               : "keybase/read",
-    "sqlite3"            : "~2.1.9",
-    "request"            : "~2.30.0",
-    "triplesec"          : ">=3.0.4"
-   },
-   "devDependencies" : {
-    "iced-coffee-script" : "~1.7.0",
-    "iced-test"          : ">=0.0.10",
-    "optimist"           : "~0.6.0",
-    "iced-expect"        : ">=0.0.3"
+  "dependencies": {
+    "argparse": "~0.1.15",
+    "bn": "~0.0.1",
+    "cheerio": "~0.13.0",
+    "colors": "~0.6.2",
+    "deep-equal": "~0.1.2",
+    "framed-msgpack-rpc": "~1.1.1",
+    "gpg-wrapper": ">=0.0.20",
+    "iced-coffee-script": "~1.7.1",
+    "iced-data-structures": "~0.0.5",
+    "iced-error": ">=0.0.8",
+    "iced-logger": "~0.0.1",
+    "iced-utils": ">=0.1.8",
+    "kbpgp": "~0.0.1",
+    "keybase-proofs": ">=0.0.1",
+    "mkdirp": "~0.3.5",
+    "pgp-utils": ">=0.0.8",
+    "progress": "~1.1.3",
+    "purepack": "~1.0.0",
+    "read": "keybase/read",
+    "sqlite3": "~2.1.9",
+    "request": "~2.30.0",
+    "triplesec": ">=3.0.4"
   },
-  "bundleDependencies" : [
+  "devDependencies": {
+    "iced-coffee-script": "~1.7.0",
+    "iced-test": ">=0.0.10",
+    "optimist": "~0.6.0",
+    "iced-expect": ">=0.0.3"
+  },
+  "bundleDependencies": [
     "argparse",
     "bn",
     "cheerio",
