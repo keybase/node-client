@@ -12,6 +12,7 @@ log = require './log'
 {TrackWrapper} = require './trackwrapper'
 {unix_time} = require('pgp-utils').util
 {TmpKeyRing,load_key,master_ring} = require './keyring'
+{athrow} = require('iced-utils').util
 IS = constants.import_state
 
 ##=======================================================================
@@ -203,7 +204,7 @@ exports.User = class User
 
   #--------------
 
-  @load : ({username,ki64}, cb) ->
+  @load : ({username,ki64,require_public_key}, cb) ->
     esc = make_esc cb, "User::load"
     k = if username? then username else "Key: #{ki64}"
     log.debug "+ #{username}: load user"
@@ -213,6 +214,9 @@ exports.User = class User
     # If we need to, get the new username
     if not username? then username = local?.basics?.username
     await User.load_from_server {username}, esc defer remote
+
+    if require_public_key and not remote.public_keys?.primary?
+      await athrow new Error("user doesn't have a public key"), esc defer()
     
     changed = true
     force_store = false
@@ -226,6 +230,7 @@ exports.User = class User
       err = new E.UserNotFoundError "User #{username} wasn't found"
     if not err?
       await local.store force_store, esc defer()
+
     log.debug "- #{username}: loaded user"
     cb err, local
 

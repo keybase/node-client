@@ -128,7 +128,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
-    await User.load { username : @args.them }, esc defer @them
+    await User.load { username : @args.them, require_public_key : true }, esc defer @them
     await TmpKeyRing.make esc defer @tmp_keyring
     await @them.import_public_key { keyring : @tmp_keyring }, esc defer()
     await @them.verify esc defer()
@@ -153,7 +153,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     log.debug "+ run"
 
     await User.load_me esc defer @me
-    await User.load { username : @args.them, ki64 : @args.them_ki64 }, esc defer @them
+    await User.load { username : @args.them, ki64 : @args.them_ki64, require_public_key : true }, esc defer @them
 
     # First see if we already have the key, in which case we don't
     # need to reimport it.
