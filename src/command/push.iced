@@ -41,7 +41,8 @@ exports.Command = class Command extends pg.Command
   prepare_key : (cb) ->
     esc = make_esc cb, "Command::prepare_key"
     if @argv.gen
-      await @do_key_gen esc defer @key
+      # On success, will set @key appropriately, so no need to set it ourselves.
+      await @do_key_gen esc defer()
     else
       await key_select {username: env().get_username(), query : @argv.search }, esc defer @key
     cb null
