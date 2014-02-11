@@ -80,7 +80,7 @@ exports.Command = class Command extends Base
   gen_pwh : (cb) ->
     passphrase = @data.passphrase
     if not(@pp_last) or (@pp_last isnt passphrase)
-      await session.gen_pwh { passphrase }, defer err, @pwh, @salt
+      await session.gen_pwh { passphrase }, defer err, @pwh, @salt, @pwh_version
       @pp_last = passphrase if not err?
     cb err
 
@@ -93,6 +93,7 @@ exports.Command = class Command extends Base
       username : @data.username
       email : @data.email
       invitation_id : @data.invite
+      pwh_version : @pwh_version
 
     await req.post { endpoint : "signup", args }, defer err, body
     retry = false

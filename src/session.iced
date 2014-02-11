@@ -121,7 +121,8 @@ exports.Session = class Session
     unless err?
       @_salt = @enc.salt.to_buffer()
       @_pwh = km.extra[0...SC.pwh.derived_key_bytes]
-    cb err, @_pwh, @_salt
+      @_pwh_version = triplesec.CURRENT_VERSION
+    cb err, @_pwh, @_salt, @_pwh_version
 
   #-----
 
