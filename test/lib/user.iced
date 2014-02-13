@@ -173,7 +173,7 @@ exports.User = class User
         { sendline : @password },
         { expect : "Your email: "}
         { sendline : @email }
-        { expect : "Invitation code: 123412341234123412341234" }
+        { expect : "Invitation code: " }
         { sendline : "" }
       ], defer err
     unless err?
