@@ -145,6 +145,15 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  check_not_self : (cb) ->
+    err = null
+    if (((t = @args.them)? and (t is @me.username())) or
+        ((t = @args.them_ki64)? and (t is @me.key_id_64())))
+      err = new E.SelfError "Cannot track yourself"
+    cb err
+
+  #----------
+
   run : (cb) ->
     opts = {}
     cb = chain_err cb, @key_cleanup.bind(@, opts)
@@ -153,6 +162,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     log.debug "+ run"
 
     await User.load_me esc defer @me
+    await @check_not_self esc defer()
     await User.load { username : @args.them, ki64 : @args.them_ki64, require_public_key : true }, esc defer @them
 
     # First see if we already have the key, in which case we don't

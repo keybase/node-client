@@ -50,6 +50,7 @@ exports.E = E = ie.make_errors
   GENERATE : "key generation error"
   MISSING_PW : "missing passphrase"
   PROOF_EXISTS : "Proof already exists"
+  SELF : "Can't perform this action on yourself"
 
 #================================================
 
