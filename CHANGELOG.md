@@ -1,9 +1,14 @@
 ## 0.0.6
 
 Bugfixes:
-  - Remove dummy invitation code
 
-Features:
+  - Remove dummy invitation code
+  - Upgrade SQLite dependency to v2.2.0; there were reported breaks with v2.1.19 on
+    Arch Linux.
+
+Tweaks:
+
+  - Regenerate all files with IcedCoffeeScript v1.7.1-a
 
 ## 0.0.5 (2014-02-13)
 
