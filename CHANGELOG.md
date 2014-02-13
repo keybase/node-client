@@ -1,3 +1,12 @@
+## 0.0.7
+
+Bugfixes:
+  
+  - Downgrade SQLite to v2.1.15, which still works with Arch linux (hopefully?)
+    but doesn't fetch code remotely.  Turns out v2.2.0 is doing that via node-pre-gyp,
+    which is therefore breaking the security of the install process.
+  - Fix regression tests to handle lack of dummy invitation code.
+
 ## 0.0.6
 
 Bugfixes:

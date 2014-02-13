@@ -174,7 +174,7 @@ exports.User = class User
         { expect : "Your email: "}
         { sendline : @email }
         { expect : "Invitation code: " }
-        { sendline : "" }
+        { sendline : "202020202020202020202020" }
       ], defer err
     unless err?
       await eng.wait defer rc
