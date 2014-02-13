@@ -7,6 +7,8 @@ log = require '../log'
 {master_ring} = require '../keyring'
 {make_esc} = require 'iced-error'
 {dict_union} = require '../util'
+{User} = require '../user'
+{env} = require '../env'
 
 ##=======================================================================
 
@@ -40,15 +42,15 @@ exports.Command = class Command extends Base
     name = "encrypt"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
-    sub.addArgument [ "them" ], { nargs : 1 }
-    sub.addArgument [ "file" ], { nargs : '?' }
+    sub.addArgument [ "them" ], { nargs : 1 , help : "the username of the receiver" }
+    sub.addArgument [ "file" ], { nargs : '?', help : "the file to be encrypted" }
     return opts.aliases.concat [ name ]
 
   #----------
 
   do_encrypt : (cb) ->
-    tp = @tssc.them.fingerprint true
-    ti = @tssc.them.key_id_64()
+    tp = @them.fingerprint true
+    ti = @them.key_id_64()
     args = [ 
       "--encrypt", 
       "-r", tp,
@@ -56,6 +58,7 @@ exports.Command = class Command extends Base
     ]
     args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
     gargs = { args }
+    gargs.quiet = true
     args.push("--output", o, "--yes") if (o = @argv.output)
     args.push "-a"  unless @argv.binary
     if @argv.message
@@ -74,8 +77,13 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     batch = (not @argv.message and not @argv.file?)
-    @tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv, batch }
-    await @tssc.run esc defer()
+    them_un = @argv.them[0]
+    if them_un is env().get_username()
+      await User.load_me esc defer @them
+    else
+      @tssc = new TrackSubSubCommand { args : { them : them_un }, opts : @argv, batch }
+      await @tssc.run esc defer()
+      @them = @tssc.them
     await @do_encrypt esc defer()
     cb null
 
