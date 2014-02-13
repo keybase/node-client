@@ -73,8 +73,8 @@ exports.TrackWrapper = class TrackWrapper
     else if not (last = @last())?                 then "no last link found"
     else if not (last_check = track_cert.ctime)?  then "no last_check"
     else if (unix_time() - last_check > rpri)     then "timed out!"
-    else if ((a = track_cert.seq_tail?.payload_hash) isnt (b = last.id))
-      "id/hash mismatch: #{a} != #{b}"
+    else if not (@sig_chain.is_track_fresh(a = track_cert.seq_tail?.payload_hash))
+      "we've signed link #{a} which is no longer a fresh track"
     else if not (_check_all_proofs_ok track_cert.remote_proofs)
       "all proofs were not OK"
 

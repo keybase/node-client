@@ -357,6 +357,18 @@ exports.SigChain = class SigChain
 
   #-----------
 
+  # Given that I signed hash id `id`, is this still a fresh track?
+  # The answer is yes if I signed the last link in the chain, or links
+  # further back in the chain so long there were only TRACK and UNTRACK
+  # signatures in between.
+  is_track_fresh : (id) ->
+    for l in @_links by -1
+      if l.id is id then return true
+      else if not (l.sig_type() in [ ST.TRACK, ST.UNTRACK ]) then return false
+    return false
+
+  #-----------
+
   # Limit the chain to only those links signed by the key used in the last link
   _limit : () ->
     c = []
