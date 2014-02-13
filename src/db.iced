@@ -57,25 +57,6 @@ class DB
 
   #-----
 
-  log_key_import : ({uid,fingerprint,state}, cb) ->
-    now = util.unix_time()
-    q = """INSERT OR REPLACE INTO `key_import_log`
-             (fingerprint,uid,mtime,state,ctime)
-           VALUES($fingerprint,$uid,$now,$state,
-              COALESCE (
-                (SELECT ctime FROM key_import_log WHERE fingerprint = $fingerprint), 
-                 $now
-               ))"""
-    args = 
-      $uid : uid
-      $fingerprint : fingerprint
-      $state : state
-      $now : now
-    await @db.run q, args, defer err
-    cb err
-
-  #-----
-
   get_import_state : ({uid, fingerprint}, cb) ->
     q = "SELECT state FROM key_import_log WHERE uid=$uid AND fingerprint=$fingerprint"
     await @db.get q, { $uid: uid, $fingerprint : fingerprint }, defer err, row
