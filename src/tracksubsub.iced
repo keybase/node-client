@@ -104,6 +104,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await User.load { username : @args.them }, esc defer @them
     @them.reference_public_key { keyring : @tmp_keyring }
     await User.load_me esc defer @me
+    await @check_not_self esc defer()
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     cb null

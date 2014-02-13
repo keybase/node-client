@@ -45,7 +45,8 @@ exports.Command = class Command extends Base
 
   #----------
 
-  try_track : () -> @argv.track or @argv.track_remote or @argv.track_local or @argv.assert?.length
+  try_track : () -> 
+    (@argv.track or @argv.track_remote or @argv.track_local or @argv.assert?.length) and not @is_self
 
   #----------
 
@@ -81,19 +82,24 @@ exports.Command = class Command extends Base
       err = new E.WrongSignerError "Wrong signer: wanted '#{a}' but got '#{b}'"
       await athrow err, esc defer()
 
-    @tssc = new TrackSubSubCommand { 
-      args : { them : @username }, 
-      opts : @argv, 
-      @tmp_keyring, 
-      @batch 
-    }
-    await @tssc.on_decrypt esc defer()
+    if @username is env().get_username()
+      @is_self = true
+      log.info "Valid signature from #{colors.bold('you')}"
+    else
+      @is_self = false
+      @tssc = new TrackSubSubCommand { 
+        args : { them : @username }, 
+        opts : @argv, 
+        @tmp_keyring, 
+        @batch 
+      }
+      await @tssc.on_decrypt esc defer()
 
-    {remote,local} = @tssc.trackw.is_tracking()
-    tracks = if remote then "tracking remotely & locally"
-    else if local then "tracking locally only"
-    else "not tracking"
-    log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
+      {remote,local} = @tssc.trackw.is_tracking()
+      tracks = if remote then "tracking remotely & locally"
+      else if local then "tracking locally only"
+      else "not tracking"
+      log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
     cb null
 
   #----------
