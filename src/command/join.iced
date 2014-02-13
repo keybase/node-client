@@ -63,7 +63,6 @@ exports.Command = class Command extends Base
       invite:
         prompt : "Invitation code"
         checker : checkers.invite_code
-        defval : "123412341234123412341234"
 
     if not @prompter
       if (u = env().get_username())?   then seq.username.defval   = u

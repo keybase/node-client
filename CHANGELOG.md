@@ -1,5 +1,11 @@
+## 0.0.6
 
-## 0.0.5
+Bugfixes:
+  - Remove dummy invitation code
+
+Features:
+
+## 0.0.5 (2014-02-13)
 
 Bugfixes:
 
