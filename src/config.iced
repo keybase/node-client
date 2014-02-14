@@ -28,7 +28,6 @@ exports.Config = class Config
       await @load defer err
     else if not @opts.quiet
       log.warn "No config file found; tried '#{@filename}'"
-      log.warn "Run 'keybase config' to make a new config file"
     log.debug "- opened config file; found=#{@found}"
     cb err
 

@@ -137,6 +137,7 @@ exports.Session = class Session
   #-----
 
   get_id : () -> @_id or @_file?.obj()?.session
+  get_uid : () -> @uid
 
   #-----
 
@@ -186,6 +187,7 @@ exports.Session = class Session
       @set_id body.session
       @set_csrf body.csrf_token
       @uid = body.uid
+      env().config.set "user.id", body.uid
       @_logged_in = true
     cb err
 

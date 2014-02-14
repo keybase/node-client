@@ -38,7 +38,7 @@ class BaseSigGen
       host : constants.canonical_host,
       user : 
         local :
-          uid : env().get_uid()
+          uid : session.get_uid()
           username : env().get_username()
     }
 
