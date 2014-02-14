@@ -2,8 +2,8 @@
 
 Bugfixes:
 
-  - Add UID into keybase.json on successful login, if it's not there
-  - Use session.get_uid() and not env().get_uid() for proofs, which should be more robust
+  - Add UID into keybase.json on successful login, if it's not there (Issue #78)
+  - Use session.get_uid() and not env().get_uid() for proofs, which should be more robust (Issue #78)
 
 ## 0.0.7
 
