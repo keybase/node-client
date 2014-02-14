@@ -92,6 +92,7 @@ exports.Config = class Config
   #-------------------
 
   load : (cb) ->
+    log.debug "+ loading config file #{@filename}"
     err = null
     await fs.readFile @filename, defer err, file
     if err?
@@ -109,6 +110,7 @@ exports.Config = class Config
           log.error "Missing JSON component '#{key}' in #{@filename}" 
           err = new E.ConfigError "missing component '#{key}'"
 
+    log.debug "- loaded config file -> #{JSON.stringify @json}"
     cb err
 
   #-------------------
