@@ -84,7 +84,7 @@ exports.TrackWrapper = class TrackWrapper
       log.debug "| last link: #{JSON.stringify last}" if last?
       false
     else
-      log.debug "| Timing was ok: #{unix_time()} - #{last_check} > #{rpri}" 
+      log.debug "| Timing was ok: #{unix_time()} - #{last_check} < #{rpri}" 
       true
 
     log.debug "- _skip_remote_check -> #{ret}"
@@ -122,9 +122,11 @@ exports.TrackWrapper = class TrackWrapper
   #--------
 
   skip_remote_check : () ->
-    if (@_skip_remote_check 'remote') then constants.skip.REMOTE
+    ret = if (@_skip_remote_check 'remote') then constants.skip.REMOTE
     else if (@_skip_remote_check 'local') then constants.skip.LOCAL
     else constants.skip.NONE
+    log.debug "| skip_remote_check -> #{ret}"
+    return ret
 
   #--------
 
@@ -133,9 +135,11 @@ exports.TrackWrapper = class TrackWrapper
   #  2. an identity was deleted or added or changed
   # If we have acceptance on either local or remote, we can leave it as is.
   skip_approval : () ->
-    if (@_skip_approval 'remote') then constants.skip.REMOTE
+    ret = if (@_skip_approval 'remote') then constants.skip.REMOTE
     else if (@_skip_approval 'local') then constants.skip.LOCAL
     else constants.skip.NONE
+    log.debug "| skip_approval -> #{ret}"
+    return ret
 
   #--------
 
