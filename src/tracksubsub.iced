@@ -218,11 +218,15 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     if not accept
       log.warn "Bailing out; proofs were not accepted"
       err = new E.CancelError "operation was canceled"
-    else if (approve is constants.skip.REMOTE)
+    else if (check is constants.skip.REMOTE) and (approve is constants.skip.REMOTE)
       log.info "Nothing to do; tracking is up-to-date"
     else
-      await @prompt_track esc defer do_remote
-      await session.load_and_login esc defer() if do_remote
+      if (approve is constants.skip.REMOTE) or @is_batch()
+        do_remote = false
+      else
+        await @prompt_track esc defer do_remote
+        if do_remote
+          await session.load_and_login esc defer()
       await @trackw.store_track { do_remote }, esc defer()
 
     log.debug "- TrackSubSub::all_prompts"
