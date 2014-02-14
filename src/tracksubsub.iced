@@ -221,7 +221,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if (check is constants.skip.REMOTE) and (approve is constants.skip.REMOTE)
       log.info "Nothing to do; tracking is up-to-date"
     else
-      if (approve is constants.skip.REMOTE) or @is_batch()
+      if (approve is constants.skip.REMOTE)
         do_remote = false
       else
         await @prompt_track esc defer do_remote
