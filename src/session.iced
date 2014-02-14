@@ -146,6 +146,7 @@ exports.Session = class Session
       await req.get { endpoint : "sesscheck" }, defer err, body
       if not err? 
         @_logged_in = true
+        @uid = body.logged_in_uid
         env().config.set "user.id", body.logged_in_uid
         @set_csrf t if (t = body.csrf_token)?
       else if err and (err instanceof E.KeybaseError) and (body?.status?.name is "BAD_SESSION")

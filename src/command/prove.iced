@@ -10,6 +10,7 @@ log = require '../log'
 {User} = require '../user'
 {req} = require '../req'
 assert = require 'assert'
+session = require '../session'
 
 ##=======================================================================
 
@@ -126,6 +127,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     await @parse_args esc defer()
+    await session.login esc defer()
     await User.load_me esc defer @me
     await @check_exists esc defer()
     await @prompt_remote_username esc defer()
