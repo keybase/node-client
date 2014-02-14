@@ -27,10 +27,10 @@ exports.Session = class Session
 
   #-----
 
-  get_email_or_username : (cb) ->
+  get_email_or_username_i : (cb) ->
     err = null
     username = env().get_username()
-    email = env().get_username()
+    email = env().get_email()
     unless (username? or email?)
       await prompt_email_or_username defer err, {email, username}
       unless err?
@@ -148,6 +148,8 @@ exports.Session = class Session
         @_logged_in = true
         @uid = body.logged_in_uid
         env().config.set "user.id", body.logged_in_uid
+        @username = body.username
+        env().config.set "user.name", @username if @username?
         @set_csrf t if (t = body.csrf_token)?
       else if err and (err instanceof E.KeybaseError) and (body?.status?.name is "BAD_SESSION")
         err = null
@@ -188,7 +190,9 @@ exports.Session = class Session
       @set_id body.session
       @set_csrf body.csrf_token
       @uid = body.uid
+      @username = body.me.basics.username
       env().config.set "user.id", body.uid
+      env().config.set "user.name", @username if @username
       @_logged_in = true
     cb err
 
@@ -199,7 +203,7 @@ exports.Session = class Session
     did_login = false
     await @check esc defer()
     if not @logged_in()
-      await @get_email_or_username esc defer email_or_username
+      await @get_email_or_username_i esc defer email_or_username
       await @get_passphrase esc defer passphrase
       await @get_salt {email_or_username }, esc defer salt, login_session
       await @gen_hmac_pwh { passphrase, salt, login_session }, esc defer hmac_pwh

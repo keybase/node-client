@@ -283,7 +283,7 @@ exports.User = class User
     esc = make_esc cb, "User::load_me"
     log.debug "+ User::load_me"
     unless (username = env().get_username())?
-      await athrow (new E.NoUsernameError "no username for current user"), esc defer()
+      await athrow (new E.NoUsernameError "no username for current user; try `keybase login`"), esc defer()
     await User.load { username }, esc defer me
     await me._load_me_2 esc defer()
     log.debug "- User::load_me"
