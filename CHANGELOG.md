@@ -1,3 +1,10 @@
+## 0.0.9 (2014-02-14)
+
+Bugfixes:
+
+  - Issue #82: A regression from the previous release, in which we weren't asking properly for 
+    remote tracking.  Hopefully this fixes it, but it's quite fussy
+
 ## 0.0.8 (2014-02-14)
 
 Bugfixes:
