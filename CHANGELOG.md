@@ -2,9 +2,9 @@
 
 Bugfixes:
 
-  - Add UID and username into config.json on successful login, if it's not there (Issue #78)
-  - Use session.get_uid() and not env().get_uid() for proofs, which should be more robust (Issue #78)
-  - Some services weren't logging in, so add logins for them (Issue #78)
+  - Add UID and username into config.json on successful login, if it's not there (Issue #78 & #79)
+  - Use session.get_uid() and not env().get_uid() for proofs, which should be more robust (Issue #78 & #79)
+  - Some services weren't logging in, so add logins for them (Issue #78 & #79)
   - Upgrade to gpg-wrapper v0.0.25, for less dependence on parsing GPG text output.
 
 ## 0.0.7
