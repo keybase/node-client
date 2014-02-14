@@ -174,9 +174,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if not (@tmp_keyring = @args.tmp_keyring)?
       await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
-    # After this point, we have to recover any errors and throw away 
-    # our key if necessary
-
     unless found_them
       await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
     await @them.verify esc defer()
@@ -221,7 +218,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     if not accept
       log.warn "Bailing out; proofs were not accepted"
       err = new E.CancelError "operation was canceled"
-    else if (check is constants.skip.REMOTE) and (approve is constants.skip.REMOTE)
+    else if (approve is constants.skip.REMOTE)
       log.info "Nothing to do; tracking is up-to-date"
     else
       await @prompt_track esc defer do_remote
