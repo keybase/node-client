@@ -52,6 +52,7 @@ exports.E = E = ie.make_errors
   PROOF_EXISTS : "Proof already exists"
   SELF : "Can't perform this action on yourself"
   NO_USERNAME : "Your username isn't known"
+  CLEAN_CANCEL : "Cleanly bailed out"
 
 #================================================
 

@@ -22,7 +22,7 @@ exports.Prompter = class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,passphrase,checker,confirm,defval}, cb) ->
+  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower}, cb) ->
     err = null
     ok = false
     first = true
@@ -42,7 +42,8 @@ exports.Prompter = class Prompter
       await read obj, defer err, res, isDefault
       break if err?
 
-      if checker?.f? and not checker.f res then ok = false
+      if thrower? and (err = thrower(k, res))? then # noop
+      else if checker?.f? and not checker.f res then ok = false
       else if not confirm? or isDefault then ok = true
       else
         delete obj.default

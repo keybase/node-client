@@ -15,6 +15,7 @@ req = require '../req'
 {env} = require '../env'
 read = require 'read'
 session = require '../session'
+{dict_union} = require '../util'
 
 ##=======================================================================
 
@@ -48,6 +49,13 @@ exports.Command = class Command extends Base
 
   prompt : (cb) ->
     seq =
+       email :
+        prompt : "Your email"
+        checker : checkers.email
+      invite:
+        prompt : "Invitation code (leave blank if you don't have one)"
+        checker : checkers.invite_code
+        thrower : (k,s) -> if (s.match /^\s+$/)? then (new E.CleanCancelError(k)) else null
       username : 
         prompt : "Your desired username"
         checker : checkers.username
@@ -57,12 +65,6 @@ exports.Command = class Command extends Base
         checker: checkers.passphrase
         confirm : 
           prompt : "confirm passphrase"
-      email :
-        prompt : "Your email"
-        checker : checkers.email
-      invite:
-        prompt : "Invitation code"
-        checker : checkers.invite_code
 
     if not @prompter
       if (u = env().get_username())?   then seq.username.defval   = u
@@ -157,7 +159,61 @@ exports.Command = class Command extends Base
 
   #----------
 
+  request_invite : (cb) ->
+    esc = make_esc cb, "request_invite"
+    await @ri_prompt_for_ok esc defer()
+    await @ri_prompt_for_data esc defer d2
+    await @ri_post_request d2, esc defer()
+    cb err
+
+  #----------
+
+  ri_prompt_for_ok : (cb) ->
+    opts = 
+      prompt : "Would you like to be added to the invite list? "
+      defval : true
+    await prompt_yn opts, defer err, go
+    if not err? and go
+      err = new E.CancelError "invitation request canceled"
+    cb err
+
+  #----------
+
+  ri_prompt_for_data : (cb) ->
+    seq = 
+      full_name :
+        prompt : "Your name:"
+      notes : 
+        prompt : "Any comments for the team?"
+    prompter = new Prompter seq
+    await prompter.run defer err
+    ret = null
+    ret = prompter.data() unless err?
+    cb err, ret
+
+  #----------
+
+  ri_post_request : (d2, cb) ->
+    args = dict_union d2, @data
+    opts = 
+      method : "POST"
+      endpoint : "invitation_request"
+      args : args
+    await req opts, defer err
+    log.info "Success! You're on our list. Thanks for your interest!"
+    cb err
+
+  #----------
+
   run : (cb) ->
+    await @run2 defer err
+    if err? and (err instanceof E.CleanCancelError)
+      await @request_invite defer err
+    cb err
+
+  #----------
+
+  run2 : (cb) ->
     esc = make_esc cb, "Join::run"
     retry = true
     await @check_registered esc defer()
@@ -170,4 +226,3 @@ exports.Command = class Command extends Base
     cb null
 
 ##=======================================================================
-
