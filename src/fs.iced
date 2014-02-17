@@ -5,7 +5,7 @@ C = require 'constants'
 {base58} = require './basex'
 crypto = require 'crypto'
 path = require 'path'
-mkdirp = require 'mkdirp'
+{mkdir_p} = require('iced-utils').fs
 {constants} = require './constants'
 
 ##======================================================================
@@ -119,7 +119,7 @@ exports.mkdirp = (fn, cb) ->
   err = null
   await fs.exists d, defer found
   unless found
-    await mkdirp d, constants.permissions.dir, defer err, n
+    await mkdir_p d, constants.permissions.dir, defer err, n
     if not err? and n > 0
       log.info "Made directory '#{d}'"
   cb err, d, n

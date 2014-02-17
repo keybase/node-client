@@ -1,15 +1,23 @@
 
 {env} = require './env'
-sqlite3 = require 'sqlite3'
 {Database} = sqlite3
 fs = require 'fs'
 path = require 'path'
-{make_esc} = require 'iced-error'
+{chain,make_esc} = require 'iced-error'
 {mkdirp} = require './fs'
 {Lock} = require('iced-utils').lock
 {util} = require 'pgp-utils'
 log = require './log'
 {constants} = require './constants'
+Datastore = require 'nedb'
+
+##=======================================================================
+
+pair2str = (type, name) -> (type + ":" + name)
+str2pair = (s) -> if (m = s.match /^([^:]+):(.*)?/)? then [ m[0], m[1] ] else s
+dict2str = ({type,name}) ->
+  type or= key[-2...]
+  pair2str(type,key)
 
 ##=======================================================================
 
@@ -43,126 +51,74 @@ class DB
     esc = make_esc cb, "DB::open"
     err = null
     fn = @get_filename()
-    log.debug "+ opening sqlite3 database file: #{fn}"
+    log.debug "+ opening NEDB database file: #{fn}"
     await mkdirp fn, esc defer()
-
-    db = null
-    await
-      db = new Database @get_filename(), sqlite3.OPEN_READWRITE|sqlite3.OPEN_CREATE, esc defer()
-    @db = db
-
+    @db = new Datastore { filename : @get_filename () }
+    await @db.loadDatabase esc defer()
     await @_init_db esc defer()
     log.debug "- DB opened"
     cb null
 
   #-----
 
-  get_import_state : ({uid, fingerprint}, cb) ->
-    q = "SELECT state FROM key_import_log WHERE uid=$uid AND fingerprint=$fingerprint"
-    await @db.get q, { $uid: uid, $fingerprint : fingerprint }, defer err, row
-    ret = if row? then row.state else constants.import_state.NONE
-    cb err, ret
-
-  #-----
-
-  select_key_imports_by_state : (state, cb) ->
-    q = "SELECT fingerprint FROM key_import_log WHERE state=$state"
-    await @db.all q, { $state : state }, defer err, rows
-    ret = if err? then null else (o.fingerprint for o in rows)
-    cb err, ret
-
-  #-----
-
-  batch_update_key_import : ({fingerprints, state}, cb) ->
-    q = "UPDATE key_import_log SET state=? WHERE fingerprint IN (?)"
-    args = [ state, fingerprints.join(",") ]
-    await @db.run q, args, defer err
-    cb err
-
-  #-----
-
   put : ({type, key, value, name, names}, cb) ->
-    type or= key[-2...]
-    esc = make_esc cb, "DB::put"
-
-    names = [ name ] if name? and not names?
-
-    if names? and names.length
-      await @lock.acquire defer()
-      await @db.run "BEGIN", esc defer()
-
-    q = "REPLACE INTO kvstore(type,key,value) VALUES(?,?,?)"
-    args = [ type, key, JSON.stringify(value) ]
-    await @db.run q, args, esc defer()
+    docs = [ { key : dict2str({type, key}), value : value } ]
 
     if names and names.length
       for name in names
-        q = "REPLACE INTO lookup(name_type,name,key_type,key) VALUES(?,?,?,?)"
-        args = [ name.type, name.name, type, key ]
-        await @db.run q, args, esc defer()
-      await @db.run "COMMIT", esc defer()
-      @lock.release()
+        docs.push { name : pair2str(name.type, name.name), name_to_key : pair2str(type,key) }
 
-    cb null
+    await @db.insert docs, defer err
+    cb err
 
   #-----
 
   remove : ({type, key}, cb) ->
-    esc = make_esc cb, "Db::remove"
-    await @lock.acquire defer()
-    await @db.run "BEGIN", esc defer()
-    q = "DELETE FROM kvstore WHERE type=? AND key=?"
-    await @db.run q, [ type, key ], defer err
-    q = "DELETE FROM lookup WHERE key_type=? AND key=?"
-    await @db.run q, [ type, key ], defer e2
-    await @db.run "COMMIT", esc defer()
-    @lock.release()
-    cb err
+    k = pair2str(type,key)
+    log.debug "+ DB remove #{k}"
+    esc = make_esc cb, "DB::remove"
+    await @db.delete { key : k }, { mutli : true }, esc defer()
+    await @db.delete { name_to_key : k }, { multi : true }, esc defer()
+    log.debug "- DB remove #{k} -> ok"
+    cb null
+
+  #-----
+
+  find1 : (q, cb) ->
+    await @db.find q, defer err, docs
+    err = value = null
+    if err? then # noop
+    else if (l = docs.length) is 0 then value = null
+    else if l > 1 then err = new E.CorruptionError "Got #{s} docs back; only wanted 1"
+    else value = docs[0].value
+    cb err, value
 
   #-----
 
   get : ({type, key}, cb) ->
-    type or= key[-2...]
-    q = "SELECT value FROM kvstore WHERE type=? AND key=?"
-    args = [ type, key ]
-    await @db.get q, args, defer err, row
-    value = null
-    if row?
-      try
-        value = JSON.parse row.value
-      catch e
-        err = e
+    k = dict2str { type,key }
+    await @find1 { key : k }, defer err, value
     cb err, value
 
   #-----
 
   lookup : ({type, name}, cb) ->
-    q = """SELECT k.type AS type, k.key AS k, k.value AS value
-           FROM lookup AS l
-           INNER JOIN kvstore AS k ON (l.key_type = k.type AND l.key = k.key)
-           WHERE l.name_type = ?
-           AND l.name = ?"""
-    args = [ type, name ]
-    await @db.get q, args, defer err, row
-    value = null
-    if row?
-      try
-        row.value = JSON.parse row.value
-      catch e
-        err = e
-    cb err, row
+    k = dict2str { type, key : name }
+    err = value = null
+    await @find1 { name : k }, defer err, value
+    if value? and not err?
+      await @find1 { key : value }, defer err, value
+    cb err, value
 
   #-----
 
   _init_db : (cb) ->
+    log.debug "+ DB::_init_db"
     esc = make_esc cb, "DB::_init_db"
-    sql_file = path.join __dirname, "..", "sql", "schema.sql"
-    log.debug "+ run sql setup file: #{sql_file}"
-    await fs.readFile sql_file, esc defer data
-    commands = data.toString('utf8').split(/\s*;\s*/)
-    for c in commands when c.match /\S+/
-      await @db.run (c + ";"), esc defer()
-    log.debug "- database initialized"
+    await @db.ensureIndex { fieldName : "key" , unique : true }, esc defer()
+    await @db.ensureIndex { fieldName : "name", unique : true  }, esc defer()
+    await @db.ensureIndex { fieldName : "name_to_key" }, esc defer()
+    log.debug "- DB::_init_db"
     cb null
 
 ##=======================================================================
