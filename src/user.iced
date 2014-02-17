@@ -260,7 +260,7 @@ exports.User = class User
       await ret.load_sig_chain_from_storage defer err
       if err?
         ret = null
-    log.debug "- #{name}: loaded user from local storage"
+    log.debug "- #{name}: loaded user from local storage -> #{err} / #{ret}"
     cb err, ret
 
   #--------------

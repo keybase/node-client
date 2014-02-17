@@ -95,14 +95,15 @@ class DB
     if err? then # noop
     else if (l = docs.length) is 0 then value = null
     else if l > 1 then err = new E.CorruptionError "Got #{s} docs back; only wanted 1"
-    else value = docs[0].value
+    else value = docs[0]
     cb err, value
 
   #-----
 
   get : ({type, key}, cb) ->
-    k = make_kvstore_key { type, type }
+    k = make_kvstore_key { type, key }
     await @find1 { key : k }, defer err, value
+    value = value?.value
     cb err, value
 
   #-----
@@ -110,9 +111,9 @@ class DB
   lookup : ({type, name}, cb) ->
     k = make_lookup_key { type, name }
     err = value = null
-    await @find1 { name : k }, defer err, value
-    if value? and not err?
-      await @find1 { key : value }, defer err, value
+    await @find1 { key : k }, defer err, value
+    if not err? and (k = value?.name_to_key)?
+      await @find1 { key : k }, defer err, value
     cb err, value
 
   #-----
