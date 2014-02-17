@@ -2,7 +2,12 @@
 
 Bugfixes:
 
- 	- Upgrade to gpg-wrapper v0.0.30, to fix bug in gpg.set_log (which wasn't there)
+	- Upgrade to gpg-wrapper v0.0.30, to fix bug in gpg.set_log (which wasn't there)
+
+Features:
+	
+	- You can now join the waitlist from the command-line client; sorry, this might be 
+	considered a bug....
 
 ## 0.0.11 (2014-02-17)
 
