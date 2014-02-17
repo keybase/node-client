@@ -1,6 +1,5 @@
 
 {env} = require './env'
-{Database} = sqlite3
 fs = require 'fs'
 path = require 'path'
 {chain,make_esc} = require 'iced-error'
@@ -13,11 +12,9 @@ Datastore = require 'nedb'
 
 ##=======================================================================
 
-pair2str = (type, name) -> (type + ":" + name)
-str2pair = (s) -> if (m = s.match /^([^:]+):(.*)?/)? then [ m[0], m[1] ] else s
-dict2str = ({type,name}) ->
-  type or= key[-2...]
-  pair2str(type,key)
+make_key = ({ table, type, id }) -> [ table, type, id].join(":")
+make_kvstore_key = ( {type, key } ) -> make_key { table : "kv", type, id : key }
+make_lookup_key = ( {type, name} ) -> make_key { table : "lo", type, id : name }
 
 ##=======================================================================
 
@@ -53,7 +50,7 @@ class DB
     fn = @get_filename()
     log.debug "+ opening NEDB database file: #{fn}"
     await mkdirp fn, esc defer()
-    @db = new Datastore { filename : @get_filename () }
+    @db = new Datastore { filename : @get_filename() }
     await @db.loadDatabase esc defer()
     await @_init_db esc defer()
     log.debug "- DB opened"
@@ -62,19 +59,22 @@ class DB
   #-----
 
   put : ({type, key, value, name, names}, cb) ->
-    docs = [ { key : dict2str({type, key}), value : value } ]
+    k = make_kvstore_key {type,key}
+    docs = [ { key : k, value : value } ]
 
+    names  = [ name ] if name? and not names?
     if names and names.length
       for name in names
-        docs.push { name : pair2str(name.type, name.name), name_to_key : pair2str(type,key) }
+        docs.push { key : make_lookup_key(name), name_to_key : k }
 
+    log.debug "| insert: #{JSON.stringify docs}"
     await @db.insert docs, defer err
     cb err
 
   #-----
 
   remove : ({type, key}, cb) ->
-    k = pair2str(type,key)
+    k = make_kvstore_key { type, key }
     log.debug "+ DB remove #{k}"
     esc = make_esc cb, "DB::remove"
     await @db.delete { key : k }, { mutli : true }, esc defer()
@@ -96,14 +96,14 @@ class DB
   #-----
 
   get : ({type, key}, cb) ->
-    k = dict2str { type,key }
+    k = make_kvstore_key { type, type }
     await @find1 { key : k }, defer err, value
     cb err, value
 
   #-----
 
   lookup : ({type, name}, cb) ->
-    k = dict2str { type, key : name }
+    k = make_lookup_key { type, name }
     err = value = null
     await @find1 { name : k }, defer err, value
     if value? and not err?
@@ -116,8 +116,6 @@ class DB
     log.debug "+ DB::_init_db"
     esc = make_esc cb, "DB::_init_db"
     await @db.ensureIndex { fieldName : "key" , unique : true }, esc defer()
-    await @db.ensureIndex { fieldName : "name", unique : true  }, esc defer()
-    await @db.ensureIndex { fieldName : "name_to_key" }, esc defer()
     log.debug "- DB::_init_db"
     cb null
 

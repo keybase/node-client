@@ -12,7 +12,7 @@ exports.constants = constants =
     config_dir : ".keybase"
     config_file : "config.json"
     session_file : "session.json"
-    db_file : "keybase.sqlite3"
+    db_file : "keybase.nedb"
     tmp_keyring_dir : "tmp_keyrings"
     tmp_gpg :
       sec_keyring : "tmp_gpg.sec.keyring"
