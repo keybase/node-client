@@ -25,7 +25,7 @@
     "colors": "~0.6.2",
     "deep-equal": "~0.1.2",
     "framed-msgpack-rpc": "~1.1.1",
-    "gpg-wrapper": ">=0.0.25",
+    "gpg-wrapper": ">=0.0.30",
     "iced-coffee-script": "~1.7.1",
     "iced-data-structures": "~0.0.5",
     "iced-error": ">=0.0.8",
