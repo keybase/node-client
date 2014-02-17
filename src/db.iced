@@ -82,8 +82,8 @@ class DB
     k = make_kvstore_key { type, key }
     log.debug "+ DB remove #{k}"
     esc = make_esc cb, "DB::remove"
-    await @db.delete { key : k }, { mutli : true }, esc defer()
-    await @db.delete { name_to_key : k }, { multi : true }, esc defer()
+    await @db.remove { key : k }, { mutli : true }, esc defer()
+    await @db.remove { name_to_key : k }, { multi : true }, esc defer()
     log.debug "- DB remove #{k} -> ok"
     cb null
 
