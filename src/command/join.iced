@@ -49,13 +49,13 @@ exports.Command = class Command extends Base
 
   prompt : (cb) ->
     seq =
-       email :
+      email :
         prompt : "Your email"
         checker : checkers.email
       invite:
         prompt : "Invitation code (leave blank if you don't have one)"
         checker : checkers.invite_code
-        thrower : (k,s) -> if (s.match /^\s+$/)? then (new E.CleanCancelError(k)) else null
+        thrower : (k,s) -> if (s.match /^\s*$/)? then (new E.CleanCancelError(k)) else null
       username : 
         prompt : "Your desired username"
         checker : checkers.username
@@ -164,16 +164,16 @@ exports.Command = class Command extends Base
     await @ri_prompt_for_ok esc defer()
     await @ri_prompt_for_data esc defer d2
     await @ri_post_request d2, esc defer()
-    cb err
+    cb null
 
   #----------
 
   ri_prompt_for_ok : (cb) ->
     opts = 
-      prompt : "Would you like to be added to the invite list? "
+      prompt : "Would you like to be added to the invite list?"
       defval : true
     await prompt_yn opts, defer err, go
-    if not err? and go
+    if not err? and not go
       err = new E.CancelError "invitation request canceled"
     cb err
 
@@ -182,9 +182,9 @@ exports.Command = class Command extends Base
   ri_prompt_for_data : (cb) ->
     seq = 
       full_name :
-        prompt : "Your name:"
+        prompt : "Your name"
       notes : 
-        prompt : "Any comments for the team?"
+        prompt : "Any comments for the team"
     prompter = new Prompter seq
     await prompter.run defer err
     ret = null
@@ -194,13 +194,10 @@ exports.Command = class Command extends Base
   #----------
 
   ri_post_request : (d2, cb) ->
-    args = dict_union d2, @data
-    opts = 
-      method : "POST"
-      endpoint : "invitation_request"
-      args : args
-    await req opts, defer err
-    log.info "Success! You're on our list. Thanks for your interest!"
+    args = dict_union d2, @prompter.data()
+    await req.post {endpoint : "invitation_request", args }, defer err
+    unless err?
+      log.info "Success! You're on our list. Thanks for your interest!"
     cb err
 
   #----------

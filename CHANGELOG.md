@@ -1,3 +1,9 @@
+## 0.0.12
+
+Bugfixes:
+
+ 	- Upgrade to gpg-wrapper v0.0.30, to fix bug in gpg.set_log (which wasn't there)
+
 ## 0.0.11 (2014-02-17)
 
 Bugfixes:

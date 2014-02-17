@@ -42,7 +42,7 @@ exports.Prompter = class Prompter
       await read obj, defer err, res, isDefault
       break if err?
 
-      if thrower? and (err = thrower(k, res))? then # noop
+      if thrower? and (err = thrower(k, res))? then ok = true
       else if checker?.f? and not checker.f res then ok = false
       else if not confirm? or isDefault then ok = true
       else
