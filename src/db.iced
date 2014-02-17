@@ -13,7 +13,9 @@ Datastore = require 'nedb'
 ##=======================================================================
 
 make_key = ({ table, type, id }) -> [ table, type, id].join(":")
-make_kvstore_key = ( {type, key } ) -> make_key { table : "kv", type, id : key }
+make_kvstore_key = ( {type, key } ) -> 
+  type or= key[-2...]
+  make_key { table : "kv", type, id : key }
 make_lookup_key = ( {type, name} ) -> make_key { table : "lo", type, id : name }
 
 ##=======================================================================
@@ -67,8 +69,11 @@ class DB
       for name in names
         docs.push { key : make_lookup_key(name), name_to_key : k }
 
-    log.debug "| insert: #{JSON.stringify docs}"
-    await @db.insert docs, defer err
+    err = null
+    for doc in docs
+      await @db.update { key : doc.key }, doc, { upsert : true }, defer tmp
+      if tmp? and not err? then err = tmp
+
     cb err
 
   #-----
