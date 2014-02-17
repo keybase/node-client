@@ -4,7 +4,7 @@
 {PackageJson} = require './package'
 {init,master_ring} = require './keyring'
 {env,init_env} = require './env'
-{BufferOutStream} = require 'gpg-wrapper'
+{BufferOutStream} = require 'iced-spawn'
 
 #=====================================================
 

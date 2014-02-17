@@ -1,4 +1,11 @@
-## 0.0.12
+
+## 0.0.13 (2014-02-17)
+
+Bugfixes:
+
+	- Some remaining references to the streams in gpg-wrapper were around, clean them out.
+
+## 0.0.12 (2014-02-17)
 
 Bugfixes:
 

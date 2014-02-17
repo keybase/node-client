@@ -30,6 +30,7 @@
     "iced-data-structures": "~0.0.5",
     "iced-error": ">=0.0.8",
     "iced-logger": "~0.0.1",
+    "iced-spawn": "0.0.4",
     "iced-utils": ">=0.1.8",
     "kbpgp": "~0.0.1",
     "keybase-proofs": ">=0.0.1",
@@ -44,9 +45,9 @@
   },
   "devDependencies": {
     "iced-coffee-script": "~1.7.1",
+    "iced-expect": ">=0.0.3",
     "iced-test": ">=0.0.10",
-    "optimist": "~0.6.0",
-    "iced-expect": ">=0.0.3"
+    "optimist": "~0.6.0"
   },
   "bundleDependencies": [
     "argparse",
@@ -60,6 +61,7 @@
     "iced-data-structures",
     "iced-error",
     "iced-logger",
+    "iced-spawn",
     "iced-utils",
     "kbpgp",
     "keybase-proofs",

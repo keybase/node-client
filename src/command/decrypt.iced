@@ -1,7 +1,7 @@
 dv = require './decrypt_and_verify'
 {add_option_dict} = require './argparse'
 {env} = require '../env'
-{BufferOutStream,BufferInStream} = require('gpg-wrapper')
+{BufferOutStream,BufferInStream} = require('iced-spawn')
 {TrackSubSubCommand} = require '../tracksubsub'
 log = require '../log'
 

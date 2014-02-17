@@ -17,7 +17,7 @@ iutils = require 'iced-utils'
 log = require '../../lib/log'
 gpgw = require 'gpg-wrapper'
 {AltKeyRing} = gpgw.keyring
-{run} = gpgw
+{run} = require 'iced-spawn'
 keypool = require './keypool'
 {Engine} = require 'iced-expect'
 {tweet_api} = require './twitter'
@@ -165,16 +165,16 @@ exports.User = class User
   signup : (cb) ->
     eng = @keybase_expect [ "signup" ]
     await eng.conversation [
+        { expect : "Your email: "}
+        { sendline : @email }
+        { expect : "Invitation code \\(leave blank if you don't have one\\): " }
+        { sendline : "202020202020202020202020" }
         { expect : "Your desired username: " }
         { sendline : @username }
         { expect : "Your passphrase: " }
         { sendline : @password }
         { expect : "confirm passphrase: " }
         { sendline : @password },
-        { expect : "Your email: "}
-        { sendline : @email }
-        { expect : "Invitation code: " }
-        { sendline : "202020202020202020202020" }
       ], defer err
     unless err?
       await eng.wait defer rc
