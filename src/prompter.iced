@@ -92,7 +92,7 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
 exports.prompt_passphrase = ({prompt,confirm}, cb) ->
   seq = 
     passphrase :
-      prompt : (prompt or "Your login passphrase")
+      prompt : (prompt or "Your keybase login passphrase")
       passphrase : true
       checker : checkers.passphrase
       confirm : confirm
@@ -117,7 +117,7 @@ exports.prompt_remote_username = (svc, cb) ->
 exports.prompt_email_or_username = (cb) ->
   seq = 
     email_or_username :
-      prompt : "Your username or email"
+      prompt : "Your keybase username or email"
       checker : checkers.email_or_username
   p = new Prompter seq
   await p.run defer err
