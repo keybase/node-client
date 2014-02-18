@@ -1,3 +1,8 @@
+## 0.0.14 (2014-02-17)
+
+Bugfixes:
+
+	- Close #88, fix the bug with encryption & signing.
 
 ## 0.0.13 (2014-02-17)
 
