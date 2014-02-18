@@ -2,8 +2,8 @@
 
 Bugfixes:
 
-  - Close #83 and #85: the experience of tracking and id'ing users who don't have any
-  proofs posted.
+  - Close #83 and #85: the experience of tracking and id'ing users who don't have any proofs posted.
+  - Close #93: We were allowing non-self-signed keys through
 
 Features:
 
