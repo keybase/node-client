@@ -27,7 +27,7 @@ exports.TrackWrapper = class TrackWrapper
   #--------
 
   last : () -> @sig_chain.last()
-  table : () -> @sig_chain.table[ST.REMOTE_PROOF]
+  table : () -> @sig_chain.table?[ST.REMOTE_PROOF] or {}
 
   #--------
 

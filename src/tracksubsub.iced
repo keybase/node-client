@@ -55,18 +55,21 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------------------
 
-  prompt_ok : (warnings, cb) ->
+  prompt_ok : (warnings, proofs, cb) ->
+    them = @args.them
     prompt = if warnings
       log.console.error colors.red "Some remote proofs failed!"
-      "Still verify this user as #{@args.them}?"
+      "Still verify this user as #{them}?"
+    else if proofs is 0
+      "We found an account for #{them}, but they haven't proved their identity. Still accept them?"
     else
-      "Is this the #{@args.them} you wanted?"
+      "Is this the #{them} you wanted?"
     await prompt_yn { prompt, defval : false }, defer err, ret
     cb err, ret
 
   #----------
 
-  prompt_track : (cb) ->
+  prompt_track : (proofs, cb) ->
     ret = err = null
     if @opts.track_remote then ret = true
     else if (@is_batch() or @opts.track_local or @track_local) and not @opts.prompt_remote 
@@ -116,11 +119,11 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     log.debug "+ TrackSubSub::check_remote_proofs"
     await @parse_assertions esc defer()
     opts = { skip, @assertions } 
-    await @them.check_remote_proofs opts, esc defer warnings
+    await @them.check_remote_proofs opts, esc defer warnings, n_proofs
     if not err? and @assertions? and not(@assertions.check())
       err = new E.BadAssertionError()
     log.debug "- TrackSubSub::check_remote_proofs -> #{err?.message}"
-    cb err, warnings
+    cb err, warnings, n_proofs
 
   #----------
 
@@ -197,7 +200,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else 
       log.info "...all remote checks are up-to-date"
       skp = true
-    await @check_remote_proofs skp, esc defer warnings
+    await @check_remote_proofs skp, esc defer warnings, n_proofs
     n_warnings = warnings.warnings().length
 
     if ((approve = @trackw.skip_approval()) isnt constants.skip.NONE)
@@ -212,7 +215,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       log.debug "| We needed approval, but we were in batch mode"
       accept = false
     else
-      await @prompt_ok n_warnings, esc defer accept
+      await @prompt_ok n_warnings, n_proofs, esc defer accept
 
     err = null
     if not accept
@@ -224,7 +227,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       if (approve is constants.skip.REMOTE)
         do_remote = false
       else
-        await @prompt_track esc defer do_remote
+        await @prompt_track n_proofs, esc defer do_remote
         if do_remote
           await session.load_and_login esc defer()
       await @trackw.store_track { do_remote }, esc defer()

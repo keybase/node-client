@@ -364,8 +364,8 @@ exports.User = class User
 
   check_remote_proofs : (opts, cb) ->
     opts.pubkey = @key
-    await @sig_chain.check_remote_proofs opts, defer err, warnings
-    cb err, warnings
+    await @sig_chain.check_remote_proofs opts, defer err, warnings, n_proofs
+    cb err, warnings, n_proofs
 
   #--------------
 
@@ -413,7 +413,7 @@ exports.User = class User
       basics : filter @basics, [ "id_version", "last_id_change", "username" ]
       id : @id
       key : filter pkp, [ "kid", "key_fingerprint" ]
-      seq_tail : @sig_chain?.last().to_track_obj()
+      seq_tail : @sig_chain?.last()?.to_track_obj()
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
       ctime : unix_time()
     out

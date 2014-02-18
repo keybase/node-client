@@ -5,7 +5,7 @@ log = require './log'
 {constants} = require './constants'
 {SHA256} = require './keyutils'
 {E} = require './err'
-{Warnings,asyncify} = require('pgp-utils').util
+{format_fingerprint,Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
 {date_to_unix,make_email} = require './util'
@@ -528,15 +528,20 @@ exports.SigChain = class SigChain
     esc = make_esc cb, "SigChain::check_remote_proofs"
     log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
+
+    msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint pubkey.fingerprint()}")
+    log.console.error msg
+    n = 0
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"
       for type,link of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
         await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
+        n++
     else
       log.debug "| No remote proofs found"
     log.debug "- #{pubkey.username()}: checked remote proofs"
-    cb null, warnings
+    cb null, warnings, n
 
 ##=======================================================================
 
