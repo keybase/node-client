@@ -1,5 +1,10 @@
 ## 0.0.15
 
+Bugfixes:
+
+  - Close #83 and #85: the experience of tracking and id'ing users who don't have any
+  proofs posted.
+
 Features:
 
   - #90: Better debug messages on startup to help debug peoples' weird problems
