@@ -24,7 +24,7 @@ exports.PackageJson = class PackageJson
   #------------
 
   identify_as : () ->
-    "#{constants.client_name} v#{@version()}"
+    "#{constants.client_name} v#{@version()} #{process.platform}"
 
 ##=======================================================================
 
