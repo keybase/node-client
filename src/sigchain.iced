@@ -401,7 +401,7 @@ exports.SigChain = class SigChain
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
 
     # Search for an explicit self-signature of this key
-    if not found and (v = @table[ST.SELF_SIG])?
+    if not found and (v = @table?[ST.SELF_SIG])?
       for link in v
         if link.self_signer() is @username 
           found = true
@@ -410,7 +410,7 @@ exports.SigChain = class SigChain
     # Search for a freeloader in an otherwise useful signature
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
-        if (d = @table[type])
+        if (d = @table?[type])
           for k,link of d 
             if link.self_signer() is @username 
               found = true
@@ -418,7 +418,7 @@ exports.SigChain = class SigChain
           break if found
 
     if not err? and not found
-      err = new E.VerifyError "could not find self signature of username '#{@username}'"
+      err = new E.VerifyError "user '#{@username}' hasn't signed their own key"
 
     log.debug "- _verify_userid for #{@username} -> #{err}"
     cb err
@@ -504,9 +504,9 @@ exports.SigChain = class SigChain
       @_limit()
       @_compress()
       await @_verify_sig esc defer()
-      await @_verify_userid esc defer()
     else
       log.debug "| Skipped since no fingerprint found in key"
+    await @_verify_userid esc defer()
     log.debug "- #{username}: verified sig"
     cb null
 
