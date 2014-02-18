@@ -70,7 +70,8 @@ $(BUILD_STAMP): \
 	lib/trackwrapper.js \
 	lib/tracksubsub.js \
 	lib/user.js \
-	lib/util.js
+	lib/util.js \
+	lib/version.js
 	date > $@
 
 clean:

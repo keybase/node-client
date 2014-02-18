@@ -2,9 +2,7 @@
 log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
-{PackageJson} = require '../package'
-{gpg} = require '../gpg'
-{TempKeyRing} = require '../keyring'
+{version_info} = require '../version'
 
 ##=======================================================================
 
@@ -23,18 +21,9 @@ exports.Command = class Command extends Base
   #----------
 
   run : (cb) ->
-    pjs = new PackageJson()
-    await gpg { args : [ "--version" ] }, defer err, dat
-    unless err?
-      gpg_v = dat.toString().split("\n")[0...2]
-      lines = [ 
-        (pjs.bin() + " (keybase.io CLI) v" + pjs.version())
-        ("- node.js " + process.version)
-      ].concat("- #{l}" for l in gpg_v).concat [
-        ("Identifies as: '" + pjs.identify_as() + "'")
-      ]
+    await version_info defer err, lines
+    if not err? and lines?
       console.log lines.join("\n")
-
     cb err
 
 ##=======================================================================

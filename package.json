@@ -29,7 +29,7 @@
     "iced-coffee-script": "~1.7.1",
     "iced-data-structures": "~0.0.5",
     "iced-error": ">=0.0.8",
-    "iced-logger": "~0.0.1",
+    "iced-logger": ">=0.0.3",
     "iced-spawn": "0.0.4",
     "iced-utils": ">=0.1.8",
     "kbpgp": "~0.0.1",

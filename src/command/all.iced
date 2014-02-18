@@ -12,6 +12,7 @@ session = require '../session'
 db = require '../db'
 gpg = require 'gpg-wrapper'
 keyring = require '../keyring'
+{platform_info,version_info} = require '../version'
 
 ##=======================================================================
 
@@ -162,12 +163,29 @@ class Main
 
   #----------------------------------
 
+  startup_message : (cb) ->
+    p = log.package()
+    log.debug "+ startup message"
+    if p.env().get_level() is p.DEBUG
+      log.debug "| CLI version: #{(new PackageJson).version()}"
+      log.debug "| Platform info: #{JSON.stringify platform_info()}"
+      await version_info defer err, info
+      if err?
+        log.error "Error fetching version info: #{err.message}"
+      else
+        log.debug "| Version info: #{JSON.stringify info}"
+    log.debug "- startup message"
+    cb null
+
+  #----------------------------------
+
   setup : (cb) ->
     esc = make_esc cb, "setup"
     init_env()
     await @parse_args  esc defer()
     env().set_argv @argv
     @config_logger()
+    await @startup_message esc defer()
     @init_keyring()
     await @load_config esc defer()
     env().set_config @config
