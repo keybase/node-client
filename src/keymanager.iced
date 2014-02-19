@@ -5,6 +5,7 @@
 {init,master_ring} = require './keyring'
 {env,init_env} = require './env'
 {BufferOutStream} = require 'iced-spawn'
+{E} = require './err'
 
 #=====================================================
 
