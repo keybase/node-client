@@ -1,4 +1,10 @@
-## 0.0.15
+## 0.0.16 (2014-02-18)
+
+Bugfixes:
+
+  - Fix bug on Windows with wrong home environment variable.
+
+## 0.0.15 (2014-02-18)
 
 Bugfixes:
 
