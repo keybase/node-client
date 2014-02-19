@@ -56,7 +56,9 @@ exports.Command = class Command extends Base
       "-r", tp,
       "--trusted-key", ti
     ]
-    args.push( "--sign", "-u", (@tssc.me.fingerprint true) ) if @argv.sign
+    if @argv.sign
+      sign_key = if @is_self then @them else @tssc.me
+      args.push( "--sign", "-u", (sign_key.fingerprint true) )
     gargs = { args }
     gargs.quiet = true
     args.push("--output", o, "--yes") if (o = @argv.output)
@@ -79,8 +81,10 @@ exports.Command = class Command extends Base
     batch = (not @argv.message and not @argv.file?)
     them_un = @argv.them[0]
     if them_un is env().get_username()
+      @is_self = true
       await User.load_me esc defer @them
     else
+      @is_self = false
       @tssc = new TrackSubSubCommand { args : { them : them_un }, opts : @argv, batch }
       await @tssc.run esc defer()
       @them = @tssc.them
