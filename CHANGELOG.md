@@ -1,3 +1,10 @@
+## 0.0.17 (2014-02-18)
+
+Bugfixes:
+
+  - Close #96: better error messaging was all that was needed to solve the pickle in which people uploaded an unsigned public key to the web site and then had commant line problems.
+  - Close #94: Signcrypting now works, even for yourself.
+
 ## 0.0.16 (2014-02-18)
 
 Bugfixes:

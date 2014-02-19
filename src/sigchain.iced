@@ -420,7 +420,7 @@ exports.SigChain = class SigChain
 
     if not err? and not found
       msg = if @username is env().get_username() 
-        "You haven't signed your own key! Try `keybase push`"
+        "You haven't signed your own key! Try `keybase revoke` and then `keybase push`"
       else "user '#{@username}' hasn't signed their own key"
       err = new E.VerifyError msg
 
