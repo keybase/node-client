@@ -90,7 +90,7 @@ exports.Client = class Client
     else if not (res.statusCode in http_status) 
       if res.statusCode is 400 and res.headers?["x-keybase-client-unsupported"]
         v = res.headers["x-keybase-client-upgrade-to"]
-        err = new E.RequiredUpgradeError "Upgrade is required! Run `keybase-install` to upgrade to v#{v}"
+        err = new E.RequiredUpgradeError "Upgrade is required! Run `keybase-installer` to upgrade to v#{v}"
         err.upgrade_to = v
       else
         err = new E.HttpError "Got reply #{res.statusCode}"
@@ -101,7 +101,7 @@ exports.Client = class Client
       log.debug "Full reply: #{JSON.stringify body}"
     else
       if (v = res.headers["x-keybase-client-upgrade-to"])?
-        log.warn "Upgrade suggested! Run `keybase-install` to upgrade to v#{v}"
+        log.warn "Upgrade suggested! Run `keybase-installer` to upgrade to v#{v}"
       @_find_cookies res
 
     # Note the swap --- we care more about the body in most cases.
