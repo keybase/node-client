@@ -15,6 +15,7 @@ request = require 'request'
 colors = require 'colors'
 deq = require 'deep-equal'
 util = require 'util'
+{env} = require './env'
 
 ##=======================================================================
 
@@ -418,7 +419,10 @@ exports.SigChain = class SigChain
           break if found
 
     if not err? and not found
-      err = new E.VerifyError "user '#{@username}' hasn't signed their own key"
+      msg = if @username is env().get_username() 
+        "You haven't signed your own key! Try `keybase push`"
+      else "user '#{@username}' hasn't signed their own key"
+      err = new E.VerifyError msg
 
     log.debug "- _verify_userid for #{@username} -> #{err}"
     cb err
