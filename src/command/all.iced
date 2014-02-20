@@ -121,7 +121,11 @@ class Main
 
   main : () ->
     await @run defer err
-    if err? then log.error err.message
+    if err?
+      msg = if (err instanceof gpg.E.GpgError) then "`gpg` exited with code #{err.rc}"
+      else err.message
+      log.error msg
+      log.warn err.stderr.toString('utf8') if err.stderr?
     process.exit if err? then -2 else 0
 
   #---------------------------------

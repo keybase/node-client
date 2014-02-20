@@ -10,7 +10,9 @@ util = require 'util'
 exports.gpg = (inargs, cb) -> 
   log.debug "| Call to gpg: #{util.inspect(inargs)}"
   inargs.quiet = false if inargs.quiet and env().get_debug()
-  (new GPG).run(inargs, cb)
+  gpg = new GPG
+  await gpg.run inargs, defer err, out
+  cb err, out
 
 #====================================================================
 

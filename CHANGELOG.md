@@ -1,3 +1,13 @@
+## 0.0.18 (2014-02-20)
+
+Features:
+ 
+  - DSA and ElGamal are now working; not as well-tested as RSA, so rocky road ahead
+
+Bugfixes:
+  
+  - Upgrade to gpg-wrapper 0.0.33; better error-reporting, rather than the abstruse "error exit 2"
+
 ## 0.0.17 (2014-02-18)
 
 Bugfixes:
