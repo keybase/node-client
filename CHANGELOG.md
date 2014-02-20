@@ -1,3 +1,9 @@
+## 0.0.19 (2014-02-20)
+
+Bugfixes:
+  
+  - Fix a crash in keybase id, which was crashing on failed key proofs.
+
 ## 0.0.18 (2014-02-20)
 
 Features:

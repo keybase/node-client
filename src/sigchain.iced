@@ -125,7 +125,7 @@ exports.Link = class Link
           proof_id : @obj.proof_id
       log.debug "| request proof refresh for id=#{@obj.proof_id}"
       await req.get arg, defer err, body
-      if not err? and (row = u.body?.row)? and (u = row.api_url)?
+      if not err? and (row = body?.row)? and (u = row.api_url)?
         log.debug "| Refreshed with api_url -> #{u}"
         @obj.api_url = u
         @obj.human_url = row.human_url
