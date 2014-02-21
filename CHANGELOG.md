@@ -1,3 +1,9 @@
+## 0.0.21 (2014-02-21)
+
+Bugfixes:
+
+  - More work on keybase/keybase-issues#19 ; case-insensitivity
+
 ## 0.0.20 (2014-02-21)
 
 Bugfixes:
