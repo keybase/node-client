@@ -3,6 +3,7 @@
 Bugfixes:
  
   - Fix keybase/node-client#106, that '\r's on windows were basing PGP block parsing
+  - Update for new github gist URLs, which now can be at githubusercontent.com
 
 ## 0.0.19 (2014-02-20)
 
