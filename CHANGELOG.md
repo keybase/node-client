@@ -1,3 +1,9 @@
+## 0.0.20 (2014-02-21)
+
+Bugfixes:
+ 
+  - Fix keybase/node-client#106, that '\r's on windows were basing PGP block parsing
+
 ## 0.0.19 (2014-02-20)
 
 Bugfixes:
