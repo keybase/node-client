@@ -7,6 +7,7 @@ Bugfixes:
 Features:
 
   - A debug feature:`keybase config --server http://localhost:3000/`
+  - Can push a secret key without pushing a public key.
 
 ## 0.0.21 (2014-02-21)
 
