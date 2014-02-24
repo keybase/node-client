@@ -1,3 +1,13 @@
+## 0.0.22 
+
+Bugfixes:
+
+  - Be a bit more clear as to how to post a gist or a tweet.
+
+Features:
+
+  - A debug feature:`keybase config --server http://localhost:3000/`
+
 ## 0.0.21 (2014-02-21)
 
 Bugfixes:
