@@ -262,7 +262,7 @@ exports.User = class User
   prove_github : (cb) ->
     opts = 
       which : "github"
-      search_regex : /Please post a Gist with the following:\s+(\S[\s\S]*?)\n\nCheck GitHub now\?/i
+      search_regex : /Please.*?post the following Gist, and name it.*?:\s+(\S[\s\S]*?)\n\nCheck GitHub now\?/i
       http_action : gist_api
     await @prove opts, defer err
     cb err
