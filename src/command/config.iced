@@ -68,14 +68,13 @@ exports.Command = class Command extends Base
       if (url = urlmod.parse(s))?
         c.set("server.no_tls", true) if url.protocol is "http:"
         c.set("server.port", parseInt(p, 10)) if (p = url.port)?
-        c.set("server.hostname", h) if (h = url.hostname)?
+        c.set("server.host", h) if (h = url.hostname)?
       else
         msg = "Couldn't parse server URL #{url}"
         log.error msg
         err = new E.ArgsError msg
     else if @argv.reset_server
       c.set("server", null)
-
     else if @argv.kvs.length > 2
       msg = "Need either 0,1 or 2 arguments for setting values in config"
       log.error "Usage: #{msg}"

@@ -102,7 +102,7 @@ exports.Command = class Command extends Base
   #----------
 
   handle_post : (cb) ->
-    log.console.log "Please #{@gen.imperative_verb()} the following:"
+    log.console.log @gen.instructions()
     log.console.log ""
     log.console.log @gen.proof_text
     log.console.log ""

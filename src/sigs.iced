@@ -7,6 +7,7 @@ session = require './session'
 log = require './log'
 {master_ring} = require './keyring'
 {decode} = require('pgp-utils').armor
+colors = require 'colors'
 
 #===========================================
 
@@ -162,12 +163,15 @@ exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
   _remote_service_name : () -> "twitter"
   imperative_verb : () -> "tweet"
   display_name : () -> "Twitter"
+  instructions : () -> "Please #{colors.bold('publicly')} tweet the following:"
 
 exports.GithubProofGen = class GithubProofGen extends RemoteServiceProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
   imperative_verb : () -> "post a Gist with"
   display_name : () -> "GitHub"
+  instructions : () ->
+    "Please #{colors.bold('publicly')} post the following Gist, and name it #{colors.bold(colors.red('keybase.md'))}:"
 
 #===========================================
 
