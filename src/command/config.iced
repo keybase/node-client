@@ -7,6 +7,7 @@ log = require '../log'
 {E} = require '../err'
 {env} = require '../env'
 {a_json_parse} = require('iced-utils').util
+urlmod = require 'url'
 
 ##=======================================================================
 
@@ -32,6 +33,13 @@ exports.Command = class Command extends Base
     pretty :
       help : "pretty-print JSON"
       action : 'storeTrue'
+    s :
+      alias : "server"
+      help : "specify which server to use"
+    S :
+      alias : "reset-server"
+      help  : "reset the server to default"
+      action : 'storeTrue'
 
   #----------
 
@@ -56,6 +64,18 @@ exports.Command = class Command extends Base
     c = env().config
     if (k = @argv.get)?
       console.log JSON.stringify(c.get(k), null, (if @argv.pretty then "    " else null))
+    else if (s = @argv.server)?
+      if (url = urlmod.parse(s))?
+        c.set("server.no_tls", true) if url.protocol is "http:"
+        c.set("server.port", parseInt(p, 10)) if (p = url.port)?
+        c.set("server.hostname", h) if (h = url.hostname)?
+      else
+        msg = "Couldn't parse server URL #{url}"
+        log.error msg
+        err = new E.ArgsError msg
+    else if @argv.reset_server
+      c.set("server", null)
+
     else if @argv.kvs.length > 2
       msg = "Need either 0,1 or 2 arguments for setting values in config"
       log.error "Usage: #{msg}"
