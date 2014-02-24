@@ -4,6 +4,7 @@ pg = require './push_and_keygen'
 {add_option_dict} = require './argparse'
 {env} = require '../env'
 {key_select} = require '../keyselector'
+{load_key} = require '../keyring'
 
 ##=======================================================================
 
@@ -14,6 +15,17 @@ exports.Command = class Command extends pg.Command
       alias : "gen"
       action : "storeTrue"
       help : "generate a new key"
+    P :
+      alias : "no-public-key"
+      action : "storeTrue"
+      help : "don't push the public key"
+    "secret-only":
+      action : "storeTrue"
+      help : "secret only; don't try to push public key"
+
+  #----------
+
+  secret_only : () -> @argv.no_public_key or @argv.secret_only
 
   #----------
 
@@ -25,7 +37,7 @@ exports.Command = class Command extends pg.Command
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
     add_option_dict sub, pg.Command.OPTS
-    sub.addArgument [ "search" ], { nargs : '?' }
+    sub.addArgument [ "search" ], { nargs : '?' , help : "search parameter to find the right key" }
     return opts.aliases.concat [ name ]
 
   #----------
@@ -34,6 +46,8 @@ exports.Command = class Command extends pg.Command
     err = null
     if @argv.search and @argv.gen
       err = new E.ArgsError "Can't both search and generate; pick one or the other!"
+    else if @argv.search and @secret_only()
+      err = new E.ArgsError "Can't specify a search with secret-only-push; has to correspond to your public"
     cb err
 
   #----------
@@ -43,8 +57,10 @@ exports.Command = class Command extends pg.Command
     if @argv.gen
       # On success, will set @key appropriately, so no need to set it ourselves.
       await @do_key_gen esc defer()
+    else if @secret_only()
+      await load_key { username : env().get_username(), fingerprint : @me.fingerprint() }, esc defer @key
     else
-      await key_select {username: env().get_username(), query : @argv.search }, esc defer @key
+      await key_select {username: env().get_username(), query : @argv.search, secret :false }, esc defer @key
     cb null
 
   #----------

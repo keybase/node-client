@@ -31,6 +31,10 @@ exports.Command = class Command extends Base
 
   #----------
 
+  secret_only : () -> false
+
+  #----------
+
   sign : (cb) ->
     log.debug "+ Command::sign"
     eng = new KeybasePushProofGen { km : @key }
@@ -46,7 +50,8 @@ exports.Command = class Command extends Base
       sig : @sig.pgp
       sig_id_base : @sig.id
       sig_id_short : @sig.short_id
-      public_key : @key.key_data().toString('utf8')
+
+    args.public_key = @key.key_data().toString('utf8') unless @secret_only()
     args.private_key = @p3skb if @p3skb
     await req.post { endpoint : "key/add", args }, defer err
     cb err
@@ -111,16 +116,19 @@ exports.Command = class Command extends Base
   #----------
 
   check_args : (cb) -> cb null
-  should_push_secret : (cb) -> cb null, @argv.secret
+  should_push_secret : (cb) -> cb null, (@argv.secret or @secret_only())
   should_push : (cb) -> cb null, true
 
   #----------
 
   check_no_key : (cb) ->
     esc = make_esc cb, "check_no_key"
-    await User.load { username : env().get_username() }, esc defer me
-    await me.has_public_key defer err, exists
-    err = if exists then new E.KeyExistsError "You already have a key registered; you must revoke first"
+    await User.load { username : env().get_username() }, esc defer @me
+    await @me.has_public_key defer err, exists
+    err = if exists and not(@secret_only())
+      new E.KeyExistsError "You already have a key registered; you must revoke first"
+    else if not(exists) and @secret_only()
+      new E.NoLocalKey "Can't push only a secret key without a public key"
     else null
     cb err
 
