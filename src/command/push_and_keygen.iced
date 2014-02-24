@@ -27,11 +27,17 @@ exports.Command = class Command extends Base
 
   #----------
 
+  constructor : (args...) ->
+    super args...
+    @_secret_only = false
+
+  #----------
+
   use_session : () -> true
 
   #----------
 
-  secret_only : () -> false
+  secret_only : () -> @_secret_only
 
   #----------
 
@@ -125,11 +131,12 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "check_no_key"
     await User.load { username : env().get_username() }, esc defer @me
     await @me.has_public_key defer err, exists
-    err = if exists and not(@secret_only())
-      new E.KeyExistsError "You already have a key registered; you must revoke first"
-    else if not(exists) and @secret_only()
-      new E.NoLocalKey "Can't push only a secret key without a public key"
-    else null
+    err = null
+    if exists and @argv.secret
+      log.info "Public key already uploaded; pushing only secret key"
+      @_secret_only = true
+    else if exists and not(@argv.secret)
+      err = new E.KeyExistsError "You already have a key registered; you must revoke first"
     cb err
 
   #----------

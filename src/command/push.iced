@@ -15,17 +15,6 @@ exports.Command = class Command extends pg.Command
       alias : "gen"
       action : "storeTrue"
       help : "generate a new key"
-    P :
-      alias : "no-public-key"
-      action : "storeTrue"
-      help : "don't push the public key"
-    "secret-only":
-      action : "storeTrue"
-      help : "secret only; don't try to push public key"
-
-  #----------
-
-  secret_only : () -> @argv.no_public_key or @argv.secret_only
 
   #----------
 
