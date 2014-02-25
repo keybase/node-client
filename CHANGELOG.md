@@ -1,3 +1,9 @@
+## 0.0.23 (2014-02-25)
+
+Bugfixes:
+
+  - Close keybase/keybase-issues#29 -- keys with null emails in their userids
+
 ## 0.0.22 (2014-02-24)
 
 Bugfixes:
