@@ -1,3 +1,9 @@
+## 0.0.24 (2014-02-25)
+
+Bugfixes:
+
+  - Workaround bug in Node v0.11.1+ in reading X509 certs
+
 ## 0.0.23 (2014-02-25)
 
 Bugfixes:
