@@ -19,7 +19,7 @@ exports.Command = class Command extends pg.Command
   add_subcommand_parser : (scp) ->
     opts = 
       aliases  : ['gen', 'generate']
-      help : "push a PGP key from the client to the server"
+      help : "generate a new PGP public key and optionally push it to the server"
     name = "keygen"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
