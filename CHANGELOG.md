@@ -1,5 +1,10 @@
+## 0.0.27 (2014-02-26)
 
-## 0.0.26 
+Bugfixes:
+
+  - Fix keybase/keybase-issues#41 --- sigchains failing to verify on an empty chain
+
+## 0.0.26 (2014-02-26)
 
 Bugfixes:
 
