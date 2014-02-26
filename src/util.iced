@@ -1,7 +1,7 @@
-
 {fork} = require 'child_process'
 path = require 'path'
 {constants} = require './constants'
+ProgressBar = require 'progress'
 
 #=========================================================================
 
@@ -33,6 +33,21 @@ exports.purge = purge = (d) ->
   for k,v of d when v?
     out[k] = if is_dict v then purge v else v
   return out
+
+#=========================================================================
+
+exports.make_scrypt_progress_hook = () ->
+  bar = null
+  prev = 0
+  progress_hook = (obj) ->
+    if obj.what isnt "scrypt" then #noop
+    else 
+      bar or= new ProgressBar "- run scrypt [:bar] :percent", { 
+        width : 35, total : obj.total 
+      }
+      bar.tick(obj.i - prev)
+      prev = obj.i
+  return progress_hook
 
 #=========================================================================
 

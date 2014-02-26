@@ -9,8 +9,8 @@ req = require './req'
 SC = constants.security
 triplesec = require 'triplesec'
 {WordArray} = triplesec
-ProgressBar = require 'progress'
 {createHmac} = require 'crypto'
+{make_scrypt_progress_hook} = require './util'
 
 #======================================================================
 
@@ -113,17 +113,7 @@ exports.Session = class Session
       version : SC.triplesec.version
     }
 
-    bar = null
-    prev = 0
-    progress_hook = (obj) ->
-      if obj.what isnt "scrypt" then #noop
-      else 
-        bar or= new ProgressBar "- run scrypt [:bar] :percent", { 
-          width : 35, total : obj.total 
-        }
-        bar.tick(obj.i - prev)
-        prev = obj.i
-
+    progress_hook = make_scrypt_progress_hook()
     extra_keymaterial = SC.pwh.derived_key_bytes + SC.openpgp.derived_key_bytes
     await @enc.resalt { salt, extra_keymaterial, progress_hook }, defer err, km
     unless err?

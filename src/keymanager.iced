@@ -5,7 +5,9 @@
 {init,master_ring} = require './keyring'
 {env,init_env} = require './env'
 {BufferOutStream} = require 'iced-spawn'
+{ASP} = require('pgp-utils').util
 {E} = require './err'
+{make_scrypt_progress_hook} = require './util'
 
 #=====================================================
 
@@ -174,7 +176,8 @@ exports.KeyManager = class KeyManager
       if not @passphrase
         err = new E.MissingPwError "No passphrase given"
       else
-        await @km.unlock_p3skb { tsenc : @get_tsenc() }, esc defer()
+        asp = new ASP { progress_hook : make_scrypt_progress_hook() }
+        await @km.unlock_p3skb { asp, tsenc : @get_tsenc() }, esc defer()
     cb err
 
 #=====================================================

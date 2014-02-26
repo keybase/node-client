@@ -1,5 +1,5 @@
 {session} = require './session'
-{make_esc} = require 'iced-error'
+{chain_err,make_esc} = require 'iced-error'
 {env} = require './env'
 log = require './log'
 {User} = require './user'
@@ -57,10 +57,10 @@ exports.KeyPull = class KeyPull
     err = null
 
     pull_needed = if not pub.remote
-      err = new E.NoRemoteKeyError "you don't have a public key; try `keybase push`"
+      err = new E.NoRemoteKeyError "you don't have a public key; try `keybase push` if you have a key; or `keybase gen` if you don't"
       PullTypes.ERROR
     else if pub.local and (not(sec.remote) or sec.local) and not(@force) then PullTypes.NONE
-    else if sec.remote and not sec.local then PullTypes.SECRET
+    else if sec.remote and (not(sec.local) or @force) then PullTypes.SECRET
     else PullTypes.PUBLIC
 
     log.debug "- KeyPull::load_user -> #{err} #{pull_needed}"
