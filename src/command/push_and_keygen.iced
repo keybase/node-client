@@ -12,6 +12,7 @@ req = require '../req'
 {athrow} = require('iced-utils').util
 {env} = require '../env'
 {User} = require '../user'
+{make_email} = require '../util'
 
 ##=======================================================================
 
@@ -43,9 +44,14 @@ exports.Command = class Command extends Base
 
   sign : (cb) ->
     log.debug "+ Command::sign"
-    console.log @key
-    eng = new KeybasePushProofGen { km : @key }
-    await eng.run defer err, @sig
+    em = make_email env().get_username()
+    all_uids = @key.all_uids()
+    if em in (e for uid in all_uids when (e = uid?.email))
+      log.debug "| We can skip the sig, since the UID #{em} is already in the key"
+      @sig = null
+    else
+      eng = new KeybasePushProofGen { km : @key }
+      await eng.run defer err, @sig
     log.debug "- Command::sign"
     cb err
 
@@ -54,9 +60,11 @@ exports.Command = class Command extends Base
   push : (cb) ->
     args = 
       is_primary : 1
-      sig : @sig.pgp
-      sig_id_base : @sig.id
-      sig_id_short : @sig.short_id
+      
+    if @sig?
+      args.sig_id_base = @sig.id
+      args.sig_id_short = @sig.short_id
+      args.sig = @sig.pgp
 
     args.public_key = @key.key_data().toString('utf8') unless @secret_only()
     args.private_key = @p3skb if @p3skb
