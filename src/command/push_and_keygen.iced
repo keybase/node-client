@@ -130,7 +130,7 @@ exports.Command = class Command extends Base
   check_no_key : (cb) ->
     esc = make_esc cb, "check_no_key"
     await User.load { username : env().get_username() }, esc defer @me
-    await @me.check_key esc defer ckres
+    await @me.check_key { secret : false }, esc defer ckres
     err = null
     if ckres.remote and @argv.secret
       log.info "Public key already uploaded; pushing only secret key"
