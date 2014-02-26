@@ -6,7 +6,7 @@ log = require './log'
 req = require './req'
 {KeyManager} = require './keymanager'
 {E} = require './err'
-{master_ring} = require './keyring'
+{TmpKeyRing,master_ring} = require './keyring'
 {prompt_yn} = require './prompter'
 
 ##=======================================================================
@@ -78,7 +78,7 @@ exports.KeyPull = class KeyPull
       "Is this you?"
     await prompt_yn { prompt, defval : false }, defer err, ret
     if not(ret) and not(err?)
-      err = new E.CanceledError "key import operation canceled"
+      err = new E.CancelError "key import operation canceled"
     cb err
 
   #---------------------
@@ -95,7 +95,7 @@ exports.KeyPull = class KeyPull
       tcb null
 
     esc = make_esc cb, "KeyPull::public_pull"
-    await @me.new_tmp_keyring { secret : false }, esc defer tmp_keyring
+    await TmpKeyRing.make esc defer tmp_keyring
     await @me.import_public_key { keyring : tmp_keyring }, esc defer()
     await @me.check_remote_proofs {}, esc defer warnings, n_proofs
     await @prompt_ok warnings.warnings().length, n_proofs, esc defer()
