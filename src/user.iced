@@ -279,29 +279,57 @@ exports.User = class User
 
   #--------------
 
-  @load_me : (cb) ->
+  #
+  # load_me
+  #
+  # Loads the me user from some combination of the server and local storage.
+  # The me user can be loaded with or without a secret key, depending on the opts,
+  # but a public key is required.
+  #
+  # @param {Object} opts the load options
+  # @option {Bool} opts.secret whether to load the secret key or not.
+  # @option {Bool} opts.install_key whether to install a key if it wasn't found
+  # @param {Callback} cb Callback with an `<Error,User>` pair, with error set
+  #   on failure, and null on success.
+  # 
+  @load_me : (opts, cb) ->
     esc = make_esc cb, "User::load_me"
     log.debug "+ User::load_me"
     unless (username = env().get_username())?
       await athrow (new E.NoUsernameError "no username for current user; try `keybase login`"), esc defer()
     await User.load { username }, esc defer me
-    await me._load_me_2 esc defer()
+    await me._load_me_2 opts, esc defer()
     log.debug "- User::load_me"
     cb null, me
 
   #--------------
 
-  _load_me_2 : (cb) ->
+  _load_me_2 : ({secret, install_key}, cb) ->
     esc = make_esc cb, "User::_load_me_2"
     @set_is_self true
-    @key = master_ring().make_key_from_user @, true 
+    @key = master_ring().make_key_from_user @, secret
     un = @username()
+
     log.debug "+ #{un}: checking public key"
-    await @key.find esc defer()
+    await @key.find defer err
     log.debug "- #{un}: checked public key"
+    console.log err
+
+
+    if err? and (err instanceof E.NoLocalKeyError) and install_key
+      do_install = true
+    else if err?
+      await athrow err, esc defer()
+    else
+      do_install = false
+
     log.debug "+ #{un}: verifying user and signatures"
     await @verify esc defer()
     log.debug "- #{un}: verified users and signatures"
+
+    if do_install
+      await @key.commit {}, esc defer()
+
     cb null
 
   #--------------

@@ -128,7 +128,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::run"
     await @parse_args esc defer()
     await session.login esc defer()
-    await User.load_me esc defer @me
+    await User.load_me { secret : true }, esc defer @me
     await @check_exists esc defer()
     await @prompt_remote_username esc defer()
     await @allocate_proof_gen esc defer()

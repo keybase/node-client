@@ -75,7 +75,7 @@ exports.Command = class Command extends Base
   #----------
 
   load_me : (cb) ->
-    await User.load_me defer err, @me
+    await User.load_me {secret : true}, defer err, @me
     cb err
 
   #----------

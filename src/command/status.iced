@@ -43,7 +43,7 @@ exports.Command = class Command extends Base
 
     if (un = env().get_username())?
       await session.check esc defer logged_in
-      await User.load_me esc defer me
+      await User.load_me {secret : false}, esc defer me
 
       obj = 
         status :

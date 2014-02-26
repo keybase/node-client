@@ -11,10 +11,19 @@ req = require '../req'
 {prompt_passphrase} = require '../prompter'
 {KeyManager} = require '../keymanager'
 {E} = require '../err'
+{KeyPull} = require '../keypull'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  OPTS :
+    f :
+      alias : "force"
+      action : "storeTrue"
+      help : "force repull from server even if it's already stored locally"
 
   #----------
 
@@ -31,45 +40,13 @@ exports.Command = class Command extends Base
     return [ name ]
 
   #----------
-
-  get_private_key : (cb) ->
-    log.debug "+ Fetching me.json from server"
-    await req.get { endpoint : "me" }, defer err, body
-    if not err? and not (@p3skb = body.me.private_keys?.primary?.bundle)?
-      err = new E.NoRemoteKeyError "no private key found on server"
-    log.debug "- fetched me"
-    cb err
-
-  #----------
-
-  prompt_passphrase : (cb) ->
-    args = 
-      prompt : "Your keybase passphrase"
-    await prompt_passphrase args, defer err, @passphrase
-    cb err, @passphrase 
-
-  #----------
-
-  unlock_key : (cb) ->
-    prompter = @prompt_passphrase.bind(@)
-    await KeyManager.import_from_p3skb { raw : @p3skb, prompter }, defer err, @km
-    cb err
-
-  #----------
-
-  save : (cb) ->  
-    await @km.save_to_ring { @passphrase }, defer err
-    cb err
-
-  #----------
   
   run : (cb) ->
-    esc = make_esc cb, "Command::run"
-    await session.login esc defer()
-    await @get_private_key esc defer()
-    await @unlock_key esc defer()
-    await @save esc defer()
-    cb null
+    await session.login defer err
+    unless err?
+      kp = new KeyPull { force : @argv.force }
+      await kp.run defer err
+    cb err
 
 ##=======================================================================
 

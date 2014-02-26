@@ -106,7 +106,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::on_decrypt" 
     await User.load { username : @args.them }, esc defer @them
     @them.reference_public_key { keyring : @tmp_keyring }
-    await User.load_me esc defer @me
+    await User.load_me {secret : true}, esc defer @me
     await @check_not_self esc defer()
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
@@ -165,7 +165,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
-    await User.load_me esc defer @me
+    await User.load_me {secret : true}, esc defer @me
     await @check_not_self esc defer()
     await User.load { username : @args.them, ki64 : @args.them_ki64, require_public_key : true }, esc defer @them
 

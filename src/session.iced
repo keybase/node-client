@@ -19,11 +19,18 @@ exports.Session = class Session
   #-----
 
   get_passphrase : (cb) ->
-    err = null
-    pp = env().get_passphrase()
-    unless pp?
-      await prompt_passphrase {}, defer err, pp
-    cb err, pp
+    unless @_passphrase?
+      err = null
+      pp = env().get_passphrase()
+      unless pp?
+        await prompt_passphrase {}, defer err, pp
+      @_passphrase = pp
+    cb err, @_passphrase
+
+  #-----
+
+  clear_passphrase : () ->
+    @_passphrase = null
 
   #-----
 
@@ -47,6 +54,7 @@ exports.Session = class Session
     @_id = null
     @_logged_in = false
     @_salt = null
+    @_passphrase = null
 
   #-----
 
@@ -186,7 +194,9 @@ exports.Session = class Session
 
   post_login : (args, cb) ->
     await req.post { endpoint : "login", args }, defer err, body
-    unless err?
+    if err?
+      @clear_passphrase()
+    else
       @set_id body.session
       @set_csrf body.csrf_token
       @uid = body.uid

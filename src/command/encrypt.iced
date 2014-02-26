@@ -82,7 +82,7 @@ exports.Command = class Command extends Base
     them_un = @argv.them[0]
     if them_un is env().get_username()
       @is_self = true
-      await User.load_me esc defer @them
+      await User.load_me { secret : true }, esc defer @them
     else
       @is_self = false
       @tssc = new TrackSubSubCommand { args : { them : them_un }, opts : @argv, batch }

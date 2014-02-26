@@ -68,7 +68,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Untrack::run"
     log.debug "+ run"
-    await User.load_me esc defer me
+    await User.load_me {secret : true }, esc defer me
     await User.load { username : @argv.them[0] }, esc defer them
     await TrackWrapper.load { tracker : me, trackee : them }, esc defer trackw
     {remote,local} = trackw.is_tracking()

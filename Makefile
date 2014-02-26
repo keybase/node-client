@@ -51,8 +51,9 @@ $(BUILD_STAMP): \
 	lib/err.js \
 	lib/file.js \
 	lib/fs.js \
-    lib/gpg.js \
-    lib/keymanager.js \
+	lib/gpg.js \
+	lib/keymanager.js \
+	lib/keypull.js \
 	lib/keyring.js \
 	lib/keyselector.js \
 	lib/keyutils.js \
