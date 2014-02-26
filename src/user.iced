@@ -29,7 +29,7 @@ exports.User = class User
 
   #--------------
 
-  @FIELDS : [ "basics", "public_keys", "id", "sigs" ]
+  @FIELDS : [ "basics", "public_keys", "id", "sigs", "private_keys" ]
 
   #--------------
 
@@ -51,6 +51,11 @@ exports.User = class User
     for k in User.FIELDS
       out[k] = @[k]
     return out
+
+  #--------------
+
+  public_key_bundle : () -> @public_keys?.primary?.bundle
+  private_key_bundle : () -> @private_keys?.primary?.bundle
 
   #--------------
 
@@ -334,29 +339,19 @@ exports.User = class User
 
   #--------------
 
-  check_public_key : (cb) ->
+  # Checks to see if the user has the key locally or remotely.
+  check_key : ({secret}, cb) ->
+    ret = {}
     log.debug "+ #{@username()}: check public key"
-    key = master_ring().make_key_from_user @, false
-    ret = false
-    await key.find defer err
-    if not err? then ret = true
-    else if (err instanceof E.NoLocalKeyError) then err = null
-    log.debug "- #{@username()}: key check: ret=#{ret}; err=#{err}"
-    cb err, ret
-
-  #--------------
-
-  has_public_key : (cb) ->
-    log.debug "+ #{@username()}: has_public_key"
-    key = master_ring().make_key_from_user @, false
-    ret = false
-    await key.find defer err
-    if not err? then ret = true
-    else if ((err instanceof E.NoLocalKeyError) or (err instanceof E.NoRemoteKeyError))
-      ret = false
-    else
-      ret = true
-    log.debug "- #{@username()}: has_public_key: ret=#{ret}; err=#{err}"
+    if @fingerprint()?
+      ret.remote = (not(secret) or @private_key_bundle()?)
+      key = master_ring().make_key_from_user @, secret
+      await key.find defer err
+      if not err? then ret.local = true
+      else if (err instanceof E.NoLocalKeyError) 
+        err = null
+        ret.local = false
+    log.debug "- #{@username()}: check_public_key: ret=#{JSON.stringify ret}; err=#{err}"
     cb err, ret
 
   #--------------

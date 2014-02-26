@@ -64,6 +64,15 @@ exports.KeyPull = class KeyPull
     cb err, found
 
   #----------
+
+  load_user : (cb) ->
+    log.debug "+ KeyPull::load_user"
+    await User.load { username : env().get_username(), require_public_key : false }, esc defer @me
+
+    log.debug "- KeyPull::load_user"
+    cb null
+
+  #----------
   
   run : (cb) ->
     esc = make_esc cb, "Command::run"

@@ -171,9 +171,11 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     # First see if we already have the key, in which case we don't
     # need to reimport it.
-    await @them.check_public_key esc defer found_them
-    if found_them
+    await @them.check_key {secret : false}, esc defer ckres
+    if (found_them = ckres.local)
       await @them.load_public_key { signer : @me.key }, esc defer()
+    else if not ckres.remote
+      await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
     else if not (@tmp_keyring = @args.tmp_keyring)?
       await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
 
