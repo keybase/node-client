@@ -3,6 +3,7 @@ log = require './log'
 {make_esc} = require 'iced-error'
 {prompt_for_int} = require './prompter'
 {master_ring,load_key} = require './keyring'
+{E} = require './err'
 
 ##=======================================================================
 
@@ -39,9 +40,16 @@ exports.KeySelector = class KeySelector
     await @query_keys esc defer keys
     if keys.length > 1
       await @select_key keys, esc defer key
-    else key = keys[0]
-    await load_key { @username, key_id_64 : key.ki64 }, esc defer km
-    cb null, km
+    else if keys.length is 1
+      key = keys[0]
+    else
+      key = null
+    err = null
+    if key?
+      await load_key { @username, key_id_64 : key.ki64 }, esc defer km
+    else
+      err = new E.NoLocalKeyError "No local keys found! Try `keybase gen` to generate one."
+    cb err, km
 
   #----------
 
