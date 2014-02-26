@@ -375,7 +375,7 @@ exports.SigChain = class SigChain
     c = []
     log.debug "| input chain with #{n = @_links.length} link#{if n isnt 1 then 's' else ''}"
     for i in [(@_links.length-1)..0]
-      if (l = @_links[i]).fingerprint() is @fingerprint then c.push l
+      if (l = @_links[i]).fingerprint()?.toLowerCase() is @fingerprint then c.push l
       else break
     c = c.reverse()
     if c.length isnt @_links.length
@@ -504,7 +504,7 @@ exports.SigChain = class SigChain
     @username = username = key.username()
     @pubkey = key
     log.debug "+ #{username}: verifying sig"
-    if (@fingerprint = @last()?.fingerprint())?
+    if (@fingerprint = key.fingerprint()?.toLowerCase())?
       @_limit()
       @_compress()
       await @_verify_sig esc defer()
