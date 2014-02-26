@@ -36,7 +36,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     await session.login defer err
-    unless err?
+    if not(err?) and not(@argv.no_key_pull)
       kp = new KeyPull { force : false }
       await kp.run defer err
     cb err

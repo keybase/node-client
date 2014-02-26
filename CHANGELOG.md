@@ -1,4 +1,13 @@
-## 0.0.25 (2015-02-26)
+
+## 0.0.26 
+
+Bugfixes:
+
+  - Fix bug in sigchain verification; only look at the tail links that also have the same 
+    fingerprint as the currenlty active key.
+  - Actually honor the --no-key-pull flag to login
+
+## 0.0.25 (2014-02-26)
 
 Bugfixes:
 
@@ -9,10 +18,13 @@ Features:
 
   - Enhance the login experience; pull keys automatically.  Not a complete fix,
     but on the way to fixing it.  See the following two issue reports:
-    
+
     - keybase/keybase-installer#34
     - keybase/node-client#111
 
+Notes:
+
+  - We never pushed this release live, we jumped to v0.0.26
 
 ## 0.0.24 (2014-02-25)
 
