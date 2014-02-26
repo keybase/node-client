@@ -1,3 +1,10 @@
+## 0.0.28
+
+Bugfixes:
+
+  - Address #112 --- make automatic secret key pulls standard in a bunch of places, like
+    decryption, signing, etc.
+  - Fix a bunch of different corner cases in key pulling
 
 ## 0.0.26 
 

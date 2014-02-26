@@ -16,7 +16,7 @@ class GpgKey extends keyring.GpgKey
     err = if not err? then null
     else if (err instanceof GE.NotFoundError)
       new E.NoLocalKeyError (
-        if @_is_self then "You don't have a local key!"
+        if @_is_self then "You don't have a local #{if @_secret then 'secret' else 'public'} key!"
         else "the user #{@username()} doesn't have a local key"
       )
     else if (err instanceof GE.NoFingerprintError)

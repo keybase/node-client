@@ -88,7 +88,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     log.debug "+ Command::run"
-    await keypull { stdin_blocked : @is_batch() }, esc defer()
+    await keypull { stdin_blocked : @is_batch(), need_secret : true }, esc defer()
     await @load_me esc defer()
     await @do_sign esc defer()
     log.debug "- Command::run"
