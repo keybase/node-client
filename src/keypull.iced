@@ -36,7 +36,7 @@ exports.KeyPull = class KeyPull
       err = null
       passphrase = null
       prompter = (cb) =>
-        await session.get_passphrase defer err, passphrase
+        await session.get_passphrase {extra : " (to pull your private key from the server)"}, defer err, passphrase
         cb err, passphrase
       await KeyManager.import_from_p3skb { raw : p3skb, prompter }, esc defer km
       await km.save_to_ring { passphrase }, esc defer()
@@ -118,6 +118,13 @@ exports.KeyPull = class KeyPull
         await @public_pull esc defer()
     log.debug "- KeyPull::run"
     cb null
+
+##=======================================================================
+
+exports.keypull = (opts, cb) ->
+  kp = new KeyPull opts
+  await kp.run defer err
+  cb err
 
 ##=======================================================================
 

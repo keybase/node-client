@@ -18,12 +18,12 @@ exports.Session = class Session
 
   #-----
 
-  get_passphrase : (cb) ->
+  get_passphrase : ({extra}, cb) ->
     unless @_passphrase?
       err = null
       pp = env().get_passphrase()
       unless pp?
-        await prompt_passphrase {}, defer err, pp
+        await prompt_passphrase {extra}, defer err, pp
       @_passphrase = pp
     cb err, @_passphrase
 
@@ -204,7 +204,7 @@ exports.Session = class Session
     await @check esc defer()
     if not @logged_in()
       await @get_email_or_username_i esc defer email_or_username
-      await @get_passphrase esc defer passphrase
+      await @get_passphrase {}, esc defer passphrase
       await @get_salt {email_or_username }, esc defer salt, login_session
       await @gen_hmac_pwh { passphrase, salt, login_session }, esc defer hmac_pwh
       args =  {
