@@ -8,10 +8,13 @@ req = require './req'
 {E} = require './err'
 {TmpKeyRing,master_ring} = require './keyring'
 {prompt_yn} = require './prompter'
+colors = require 'colors'
+{athrow} = require('pgp-utils').util
 
 ##=======================================================================
 
 PullTypes =
+  ERROR : -1
   NONE : 0
   SECRET : 1
   PUBLIC : 2
@@ -22,7 +25,7 @@ exports.KeyPull = class KeyPull
 
   #----------
 
-  constructor : ({@force, @stdin_blocked}) ->
+  constructor : ({@force, @stdin_blocked, @need_secret}) ->
 
   #----------
 
@@ -32,8 +35,6 @@ exports.KeyPull = class KeyPull
 
     if not (p3skb = @me.private_key_bundle())?
       err = new E.NoLocalKeyError "couldn't find a private key bundle for you"
-    else if @stdin_blocked
-      err = new E.NoLocalKeyError "Can't fetch your private key since you're performing a stream action; try an explicit `keybase pull`"
     else
       err = null
       passphrase = null
@@ -60,6 +61,10 @@ exports.KeyPull = class KeyPull
 
     pull_needed = if not pub.remote
       err = new E.NoRemoteKeyError "you don't have a public key; try `keybase push` if you have a key; or `keybase gen` if you don't"
+      PullTypes.ERROR
+    else if sec.remote and not(sec.local) and @need_secret then PullTypes.SECRET
+    else if @need_secret and not(sec.local)
+      err = new E.NoRemoteKeyError "can't perform secret-key action without a secret key"
       PullTypes.ERROR
     else if pub.local and (not(sec.remote) or sec.local) and not(@force) then PullTypes.NONE
     else if sec.remote and (not(sec.local) or @force) then PullTypes.SECRET
@@ -113,6 +118,9 @@ exports.KeyPull = class KeyPull
     esc = make_esc cb, "Command::run"
     log.debug "+ KeyPull::run"
     await @load_user esc defer pull_type
+    if (pull_type isnt PullTypes.NONE) and @stdin_blocked
+      err = new E.NoLocalKeyError "Can't fetch your private key since you're performing a stream action; try an explicit `keybase pull`"
+      await athrow err, esc defer()
     switch pull_type
       when PullTypes.SECRET
         await @secret_pull esc defer()

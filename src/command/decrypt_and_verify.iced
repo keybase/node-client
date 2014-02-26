@@ -15,7 +15,6 @@ colors = require 'colors'
 {constants} = require '../constants'
 {User} = require '../user'
 {dict_union} = require '../util'
-{keypull} = require '../keypull'
 
 ##=======================================================================
 
@@ -123,12 +122,14 @@ exports.Command = class Command extends Base
   #----------
 
   do_output : (o) ->
+  do_keypull : (cb) -> cb null
 
   #----------
 
   do_command : (cb) ->
-    @decrypt_stderr = @gargs.stderr
-    await @tmp_keyring.gpg @gargs, defer err, out
+    gargs = @make_gpg_args()
+    @decrypt_stderr = gargs.stderr
+    await @tmp_keyring.gpg gargs, defer err, out
     @do_output out
     if err?
       log.warn @decrypt_stderr.data().toString('utf8')
@@ -159,11 +160,8 @@ exports.Command = class Command extends Base
     cb = chain cb, @cleanup.bind(@)
     esc = make_esc cb, "Command::run"
 
-    # Do this first and store the args, to know if we're in batch mode
-    @gargs = @make_gpg_args()
-
-    # Might need to pull their private key if it's unavailable and available on the server
-    await keypull {stdin_blocked : @batch}, esc defer()
+    # Do this first and stor
+    await @do_keypull esc defer()
 
     await @setup_tmp_keyring esc defer()
     await @do_command esc defer()
