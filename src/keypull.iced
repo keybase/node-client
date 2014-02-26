@@ -22,7 +22,7 @@ exports.KeyPull = class KeyPull
 
   #----------
 
-  constructor : ({@force}) ->
+  constructor : ({@force, @stdin_blocked}) ->
 
   #----------
 
@@ -30,8 +30,10 @@ exports.KeyPull = class KeyPull
     log.debug "+ KeyPull::secret_pull"
     esc = make_esc cb, "KeyPull::secret_pull"
 
-    unless (p3skb = @me.private_key_bundle())?
+    if not (p3skb = @me.private_key_bundle())?
       err = new E.NoLocalKeyError "couldn't find a private key bundle for you"
+    else if @stdin_blocked
+      err = new E.NoLocalKeyError "Can't fetch your private key since you're performing a stream action; try an explicit `keybase pull`"
     else
       err = null
       passphrase = null

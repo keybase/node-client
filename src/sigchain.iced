@@ -504,12 +504,12 @@ exports.SigChain = class SigChain
     @username = username = key.username()
     @pubkey = key
     log.debug "+ #{username}: verifying sig"
-    if (@fingerprint = key.fingerprint()?.toLowerCase())?
+    if (@fingerprint = key.fingerprint()?.toLowerCase())? and @last()?.fingerprint()?
       @_limit()
       @_compress()
       await @_verify_sig esc defer()
     else
-      log.debug "| Skipped since no fingerprint found in key"
+      log.debug "| Skipped since no fingerprint found in key or an empty chain"
     await @_verify_userid esc defer()
     log.debug "- #{username}: verified sig"
     cb null

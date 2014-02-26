@@ -163,7 +163,7 @@ exports.Command = class Command extends Base
     @gargs = @make_gpg_args()
 
     # Might need to pull their private key if it's unavailable and available on the server
-    await keypull {}, esc defer() unless @batch
+    await keypull {stdin_blocked : @batch}, esc defer()
 
     await @setup_tmp_keyring esc defer()
     await @do_command esc defer()
