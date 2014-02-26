@@ -318,8 +318,6 @@ exports.User = class User
     log.debug "+ #{un}: checking public key"
     await @key.find defer err
     log.debug "- #{un}: checked public key"
-    console.log err
-
 
     if err? and (err instanceof E.NoLocalKeyError) and install_key
       do_install = true
