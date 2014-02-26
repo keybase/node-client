@@ -43,6 +43,7 @@ exports.Command = class Command extends Base
 
   sign : (cb) ->
     log.debug "+ Command::sign"
+    console.log @key
     eng = new KeybasePushProofGen { km : @key }
     await eng.run defer err, @sig
     log.debug "- Command::sign"
@@ -135,7 +136,7 @@ exports.Command = class Command extends Base
     if ckres.remote and @argv.secret
       log.info "Public key already uploaded; pushing only secret key"
       @_secret_only = true
-    else if exists and not(@argv.secret)
+    else if ckres.remote and not(@argv.secret)
       err = new E.KeyExistsError "You already have a key registered; you must revoke first"
     cb err
 

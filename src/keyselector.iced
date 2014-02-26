@@ -55,7 +55,6 @@ exports.KeySelector = class KeySelector
       raw = out.toString().split("\n\n")
       keys = for r in raw when (f = find_key_id_64 r)
         { lines : r.split("\n"), ki64 : f }
-      console.log raw
     cb err, keys
 
   #----------
