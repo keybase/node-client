@@ -8,6 +8,8 @@ Bugfixes:
   - We broke tracking and proof uploads in 0.0.26. After a key revocation, the end of the
     sigchain was effectively null, but the server rejects such a chain; we still need to link
     to the last link of the previous key.
+  - Redact contents of session file in -d to guard people's secrets if they post them to a 
+    discussion thread.
 
 ## 0.0.27 (2014-02-26)
 
