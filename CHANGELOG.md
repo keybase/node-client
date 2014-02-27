@@ -1,4 +1,10 @@
-## 0.0.28 (2014-02-26)
+## 0.0.29
+
+Bugfixes:
+
+  - Checks and X's on windows, since UTF8 doesn't work
+
+## 0.0.28 (2014-02-27)
 
 Bugfixes:
 
