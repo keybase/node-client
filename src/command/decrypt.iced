@@ -39,9 +39,8 @@ exports.Command = class Command extends dv.Command
   #----------
 
   do_keypull : (cb) ->
-    console.log @is_batch()
     await keypull {stdin_blocked : @is_batch(), need_secret : true }, defer err
-    console.log err
+    @_ran_keypull = true
     cb err
 
   #----------

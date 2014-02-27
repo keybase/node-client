@@ -413,7 +413,7 @@ exports.User = class User
   gen_track_proof_gen : ({uid, track_obj, untrack_obj}, cb) ->
     esc = make_esc cb, "User::gen_track_proof_gen"
     await @load_public_key {}, esc defer()
-    last_link = @sig_chain?.last()
+    last_link = @sig_chain?.true_last()
     klass = if untrack_obj? then UntrackerProofGen else TrackerProofGen
     arg = 
       km : @key
@@ -434,7 +434,7 @@ exports.User = class User
       basics : filter @basics, [ "id_version", "last_id_change", "username" ]
       id : @id
       key : filter pkp, [ "kid", "key_fingerprint" ]
-      seq_tail : @sig_chain?.last()?.to_track_obj()
+      seq_tail : @sig_chain?.true_last()?.to_track_obj()
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
       ctime : unix_time()
     out

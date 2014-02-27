@@ -91,7 +91,8 @@ exports.Command = class Command extends Base
         args : { them : @username }, 
         opts : @argv, 
         @tmp_keyring, 
-        @batch 
+        @batch,
+        ran_keypull : @_ran_keypull
       }
       await @tssc.on_decrypt esc defer()
 
@@ -122,7 +123,9 @@ exports.Command = class Command extends Base
   #----------
 
   do_output : (o) ->
-  do_keypull : (cb) -> cb null
+  do_keypull : (cb) -> 
+    @_ran_keypull = false
+    cb null
 
   #----------
 
@@ -160,7 +163,7 @@ exports.Command = class Command extends Base
     cb = chain cb, @cleanup.bind(@)
     esc = make_esc cb, "Command::run"
 
-    # Do this first and stor
+    # Do this first and store our secret key if we need it
     await @do_keypull esc defer()
 
     await @setup_tmp_keyring esc defer()

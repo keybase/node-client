@@ -19,6 +19,7 @@ util = require 'util'
 {TrackWrapper} = require './trackwrapper'
 {TmpKeyRing} = require './keyring'
 assertions = require './assertions'
+{keypull} = require './keypull'
 
 ##=======================================================================
 
@@ -46,7 +47,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------------------
 
-  constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local}) ->
+  constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local, @ran_keypull}) ->
     @opts or= {}
 
   #----------------------
@@ -104,6 +105,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   on_decrypt : (cb) ->
     esc = make_esc cb, "TrackSubSub::on_decrypt" 
+    await @keypull esc defer()
     await User.load { username : @args.them }, esc defer @them
     @them.reference_public_key { keyring : @tmp_keyring }
     await User.load_me {secret : true}, esc defer @me
@@ -158,12 +160,23 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  keypull : (cb) ->
+    unless @ran_keypull
+      await keypull { need_secret : true, stdin_blocked : @is_batch() }, defer err
+      @ran_keypull = true
+    cb err
+
+  #----------
+
   run : (cb) ->
     opts = {}
     cb = chain_err cb, @key_cleanup.bind(@, opts)
 
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
+
+    # We might need to fetch our key from the server...
+    await @keypull esc defer()
 
     await User.load_me {secret : true}, esc defer @me
     await @check_not_self esc defer()

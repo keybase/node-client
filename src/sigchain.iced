@@ -255,6 +255,7 @@ exports.SigChain = class SigChain
   constructor : (@uid, @_links = []) ->
     @_lookup = {}
     @_index_links @_links
+    @_true_last = null
 
   #-----------
 
@@ -355,6 +356,13 @@ exports.SigChain = class SigChain
 
   last : () ->
     if @_links?.length then @_links[-1...][0] else null
+
+  #-----------
+
+  # For the sake of signing a signature chain, we use the true last, and not
+  # the effective last.  The effective last is what we get after removing the
+  # links not signed by the current key.
+  true_last : () -> @_true_last
 
   #-----------
 
@@ -504,13 +512,16 @@ exports.SigChain = class SigChain
     @username = username = key.username()
     @pubkey = key
     log.debug "+ #{username}: verifying sig"
+
     if (@fingerprint = key.fingerprint()?.toLowerCase())? and @last()?.fingerprint()?
+      @_true_last = @last()
       @_limit()
       @_compress()
       await @_verify_sig esc defer()
     else
       log.debug "| Skipped since no fingerprint found in key or an empty chain"
     await @_verify_userid esc defer()
+
     log.debug "- #{username}: verified sig"
     cb null
 
