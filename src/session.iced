@@ -68,7 +68,7 @@ exports.Session = class Session
 
   load : (cb) ->
     unless @_file
-      @_file = new Config env().get_session_filename(), { quiet : true }
+      @_file = new Config env().get_session_filename(), { quiet : true, secret : true }
     await @_file.open defer err
     if not err? and @_file.found 
       @_loaded = true

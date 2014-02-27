@@ -110,7 +110,8 @@ exports.Config = class Config
           log.error "Missing JSON component '#{key}' in #{@filename}" 
           err = new E.ConfigError "missing component '#{key}'"
 
-    log.debug "- loaded config file -> #{JSON.stringify @json}"
+    msg = if @opts.secret then "<redacted>" else JSON.stringify @json
+    log.debug "- loaded config file -> #{msg}"
     cb err
 
   #-------------------
