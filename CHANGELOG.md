@@ -10,6 +10,8 @@ Bugfixes:
     to the last link of the previous key.
   - Redact contents of session file in -d to guard people's secrets if they post them to a 
     discussion thread.
+  - Fix decryption/verification of a signcrypted message, breaking on node v0.10.0 due
+    to a bug in libuv.  Plausible workaround in iced-spawn v0.0.5
 
 ## 0.0.27 (2014-02-26)
 
