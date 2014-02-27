@@ -1,3 +1,14 @@
+## 0.0.28 (2014-02-26)
+
+Bugfixes:
+
+  - Address #112 --- make automatic secret key pulls standard in a bunch of places, like
+    decryption, signing, tracking, etc.
+  - Fix a bunch of different corner cases in key pulling
+  - We broke tracking and proof uploads in 0.0.26. After a key revocation, the end of the
+    sigchain was effectively null, but the server rejects such a chain; we still need to link
+    to the last link of the previous key.
+
 ## 0.0.27 (2014-02-26)
 
 Bugfixes:

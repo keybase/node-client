@@ -4,6 +4,7 @@ dv = require './decrypt_and_verify'
 {BufferOutStream,BufferInStream} = require('iced-spawn')
 {TrackSubSubCommand} = require '../tracksubsub'
 log = require '../log'
+{keypull} = require '../keypull'
 
 ##=======================================================================
 
@@ -30,6 +31,17 @@ exports.Command = class Command extends dv.Command
 
   do_output : (out) ->
     log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
+
+  #----------
+
+  is_batch : () -> not(@argv.message?) and not(@argv.file?)
+
+  #----------
+
+  do_keypull : (cb) ->
+    await keypull {stdin_blocked : @is_batch(), need_secret : true }, defer err
+    @_ran_keypull = true
+    cb err
 
   #----------
 

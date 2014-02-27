@@ -7,6 +7,7 @@ log = require '../log'
 {gpg} = require '../gpg'
 {make_esc} = require 'iced-error'
 {User} = require '../user'
+{keypull} = require '../keypull'
 
 ##=======================================================================
 
@@ -31,6 +32,10 @@ exports.Command = class Command extends Base
     o :
       alias : 'output'
       help : 'specify an output file'
+
+  #----------
+
+  is_batch : () -> not(@argv.message?) and not(@argv.file?)
 
   #----------
 
@@ -66,7 +71,7 @@ exports.Command = class Command extends Base
     else if @argv.file?
       args.push @argv.file 
     else
-      gargs.stdin = process.stding
+      gargs.stdin = process.stdin
     await gpg gargs, defer err, out
     unless @argv.output
       log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
@@ -82,8 +87,11 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+    log.debug "+ Command::run"
+    await keypull { stdin_blocked : @is_batch(), need_secret : true }, esc defer()
     await @load_me esc defer()
     await @do_sign esc defer()
+    log.debug "- Command::run"
     cb null
 
 ##=======================================================================

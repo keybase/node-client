@@ -91,7 +91,8 @@ exports.Command = class Command extends Base
         args : { them : @username }, 
         opts : @argv, 
         @tmp_keyring, 
-        @batch 
+        @batch,
+        ran_keypull : @_ran_keypull
       }
       await @tssc.on_decrypt esc defer()
 
@@ -122,6 +123,9 @@ exports.Command = class Command extends Base
   #----------
 
   do_output : (o) ->
+  do_keypull : (cb) -> 
+    @_ran_keypull = false
+    cb null
 
   #----------
 
@@ -130,7 +134,9 @@ exports.Command = class Command extends Base
     @decrypt_stderr = gargs.stderr
     await @tmp_keyring.gpg gargs, defer err, out
     @do_output out
-    if env().get_debug()
+    if err?
+      log.warn @decrypt_stderr.data().toString('utf8')
+    else if env().get_debug() 
       log.debug @decrypt_stderr.data().toString('utf8')
     cb err 
 
@@ -145,7 +151,7 @@ exports.Command = class Command extends Base
   cleanup : (cb) ->
     if env().get_preserve_tmp_keyring()
       log.info "Preserving #{@tmp_keyring.to_string()}"
-    else
+    else if @tmp_keyring?
       await @tmp_keyring.nuke defer e2
       if e2?
         log.warn "Error cleaning up temporary keyring: #{e2.message}"
@@ -156,6 +162,10 @@ exports.Command = class Command extends Base
   run : (cb) ->
     cb = chain cb, @cleanup.bind(@)
     esc = make_esc cb, "Command::run"
+
+    # Do this first and store our secret key if we need it
+    await @do_keypull esc defer()
+
     await @setup_tmp_keyring esc defer()
     await @do_command esc defer()
     await @find_signature esc defer()
