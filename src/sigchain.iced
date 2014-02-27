@@ -21,8 +21,7 @@ util = require 'util'
 
 strip = (x) -> x.replace(/\s+/g, '')
 
-CHECK = "\u2714"
-BAD_X = "\u2716"
+[CHECK,BAD_X] = if (process.platform is 'win32') then [ "ok", "BAD" ] else ["\u2714", "\u2716" ]
 
 ##=======================================================================
 
