@@ -109,7 +109,7 @@ exports.prompt_remote_username = (svc, cb) ->
   seq = 
     username :
       prompt : "Your username on #{svc}"
-      checker : checkers.username
+      checker : checkers.remote_username
   p = new Prompter seq
   await p.run defer err
   cb err, p.data().username

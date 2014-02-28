@@ -4,6 +4,8 @@ Bugfixes:
 
   - Checks and X's on windows, since UTF8 doesn't work
   - Only warn once that an upgrade is needed
+  - Don't reject 16+ character github names (keybase/keybase-issues#64)
+  - Allow selection of DSA-keys in keyselector (keybase/keybase-issues#61)
 
 ## 0.0.28 (2014-02-27)
 

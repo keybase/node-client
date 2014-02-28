@@ -3,6 +3,9 @@ exports.checkers = checkers =
   username :
     hint : "between 2 and 16 letters long"
     f : (x) -> x.length >= 2 and x.length <= 16
+  remote_username : 
+    hint : "between 1 and 40 letters long"
+    f : (x) -> x.length >= 1 and x.length <= 40
   passphrase: 
     hint : "must be at least 12 letters long"
     f : (x) -> x.length >= 12

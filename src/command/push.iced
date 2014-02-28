@@ -15,6 +15,10 @@ exports.Command = class Command extends pg.Command
       alias : "gen"
       action : "storeTrue"
       help : "generate a new key"
+    p : 
+      alias : "show-public-only-keys"
+      action : "storeTrue"
+      help : "Allow picking of public keys for which no secret key is available (not recommended)"
 
   #----------
 
@@ -49,7 +53,8 @@ exports.Command = class Command extends pg.Command
     else if @secret_only()
       await load_key { username : env().get_username(), fingerprint : @me.fingerprint() }, esc defer @key
     else
-      await key_select {username: env().get_username(), query : @argv.search, secret :false }, esc defer @key
+      secret = true unless @argv.show_public_only_keys
+      await key_select {username: env().get_username(), query : @argv.search, secret }, esc defer @key
     cb null
 
   #----------
