@@ -3,6 +3,7 @@
 Bugfixes:
 
   - Checks and X's on windows, since UTF8 doesn't work
+  - Only warn once that an upgrade is needed
 
 ## 0.0.28 (2014-02-27)
 
