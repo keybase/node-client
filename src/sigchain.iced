@@ -56,6 +56,7 @@ exports.Link = class Link
   remote_username : () -> @payload_json()?.body?.service?.username
   sig_type : () -> @obj.sig_type
   proof_type : () -> @obj.proof_type
+  proof_state : () -> @obj.proof_state
   sig_id : () -> @obj.sig_id
   api_url : () -> @obj.api_url
   human_url : () -> @obj.human_url
@@ -454,7 +455,11 @@ exports.SigChain = class SigChain
 
       switch lt
         when ST.SELF_SIG     then MAKE(out, lt,[]).push link
-        when ST.REMOTE_PROOF then MAKE(out, lt, {})[link.proof_type()] = link
+
+        when ST.REMOTE_PROOF 
+          S = constants.proof_state 
+          if link.proof_state() in [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
+            MAKE(out, lt, {})[link.proof_type()] = link
 
         when ST.TRACK 
           if not (id = body?.track?.id)? 

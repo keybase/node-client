@@ -1,4 +1,11 @@
-## 0.0.29 (2015-02-28)
+## 0.0.30
+
+Bugfixes:
+
+  - Ignore proofs marked as "permanent failures" &c by the server
+     (see keybase/keybase-issues#69)
+
+## 0.0.29 (2014-02-28)
 
 Bugfixes:
 
