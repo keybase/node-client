@@ -20,6 +20,7 @@ exports.Client = class Client
     @_cookies = {}
     @_session = null
     @_csrf = null
+    @_warned = false
 
   #--------------
 
@@ -100,8 +101,9 @@ exports.Client = class Client
       log.debug "Full request: #{JSON.stringify opts}"
       log.debug "Full reply: #{JSON.stringify body}"
     else
-      if (v = res.headers["x-keybase-client-upgrade-to"])?
+      if (v = res.headers["x-keybase-client-upgrade-to"])? and not @_warned
         log.warn "Upgrade suggested! Run `keybase-installer` to upgrade to v#{v}"
+        @_warned = true
       @_find_cookies res
 
     # Note the swap --- we care more about the body in most cases.
