@@ -1,9 +1,11 @@
-## 0.0.30
+## 0.0.30 (2014-02-28)
 
 Bugfixes:
 
-  - Ignore proofs marked as "permanent failures" &c by the server
-     (see keybase/keybase-issues#69)
+  - Ignore proofs marked as "permanent failures" &c by the server (see keybase/keybase-issues#69)
+  - Address keybase/keybase-issues#74: don't import our own secret key into the temporary key
+    ring since we're no longer signing their key via gpg.  There is a bigger simplification
+    available, which will be open as issue #115.
 
 ## 0.0.29 (2014-02-28)
 

@@ -89,7 +89,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       if accept 
         log.debug "| commit_key"
         await @them.key.commit {}, defer err
-      else
+      else if @them.key?
         await @them.key.rollback defer err
       
     if not @tmp_keyring then #noop
@@ -190,7 +190,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if not ckres.remote
       await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
     else if not (@tmp_keyring = @args.tmp_keyring)?
-      await @me.new_tmp_keyring { secret : true }, esc defer @tmp_keyring
+      await TmpKeyRing.make esc defer @tmp_keyring
 
     unless found_them
       await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
