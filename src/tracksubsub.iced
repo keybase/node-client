@@ -20,6 +20,7 @@ util = require 'util'
 {TmpKeyRing} = require './keyring'
 assertions = require './assertions'
 {keypull} = require './keypull'
+{master_ring} = require 'gpg-wrapper'
 
 ##=======================================================================
 
@@ -82,27 +83,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  key_cleanup : ({accept}, cb) ->
-    log.debug "+ key_cleanup"
-    err = null
-    if @them and accept
-      if accept 
-        log.debug "| commit_key"
-        await @them.key.commit {}, defer err
-      else if @them.key?
-        await @them.key.rollback defer err
-      
-    if not @tmp_keyring then #noop
-    else if env().get_preserve_tmp_keyring()
-      log.info "Preserving #{@tmp_keyring.to_string()}"
-    else
-      await @tmp_keyring.nuke defer e2
-      log.warn "Problem in cleanup: #{e2.message}" if e2?
-    log.debug "- key_cleanup"
-    cb err
-
-  #----------
-
   on_decrypt : (cb) ->
     esc = make_esc cb, "TrackSubSub::on_decrypt" 
     await @keypull esc defer()
@@ -113,6 +93,15 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     cb null
+
+  #----------
+
+  save_key : (k, cb) ->
+    log.debug "+ save key #{k.key_id_64()} to master ring"
+    nk = k.copy_to_ring master_ring()
+    await nk.save defer err
+    log.debug "- save key -> #{err}"
+    cb err
 
   #----------
 
@@ -166,9 +155,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   run : (cb) ->
-    opts = {}
-    cb = chain_err cb, @key_cleanup.bind(@, opts)
-
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
@@ -187,12 +173,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if not ckres.remote
       await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
 
-    if not(found_them) and @args.tmp_keyring?
-      await @them.import_public_key { keyring: @args.tmp_keyring }, esc defer()
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
-    await @all_prompts esc defer opts.accept
+    await @all_prompts esc defer accept
 
+    await @save_key k, esc defer() if (k = @them?.key)? and accept
+    
     log.debug "- run"
 
     cb null

@@ -507,7 +507,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  get_track_obj : (uid) -> @table[ST.TRACK]?[uid]?.to_table_obj()
+  get_track_obj : (uid) -> @table?[ST.TRACK]?[uid]?.to_table_obj()
 
   #-----------
 
