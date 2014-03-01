@@ -96,15 +96,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  save_key : (k, cb) ->
-    log.debug "+ save key #{k.key_id_64()} to master ring"
-    nk = k.copy_to_ring master_ring()
-    await nk.save defer err
-    log.debug "- save key -> #{err}"
-    cb err
-
-  #----------
-
   check_remote_proofs : (skip, cb) ->
     esc = make_esc cb, "TrackSubSub::check_remote_proofs"
     log.debug "+ TrackSubSub::check_remote_proofs"
@@ -167,7 +158,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     # First see if we already have the key, in which case we don't
     # need to reimport it.
-    await @them.check_key {secret : false}, esc defer ckres
+    await @them.check_key {secret : false, store : true}, esc defer ckres
     if (found_them = ckres.local)
       await @them.load_public_key { signer : @me.key }, esc defer()
     else if not ckres.remote
@@ -177,8 +168,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer accept
 
-    await @save_key k, esc defer() if (k = @them?.key)? and accept
-    
+    await k.save esc defer() if accept and (k = @them?.key)?
+
     log.debug "- run"
 
     cb null

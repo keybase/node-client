@@ -343,7 +343,7 @@ exports.User = class User
   #--------------
 
   # Checks to see if the user has the key locally or remotely.
-  check_key : ({secret}, cb) ->
+  check_key : ({secret, store}, cb) ->
     ret = {}
     log.debug "+ #{@username()}: check public key"
     if @fingerprint()?
@@ -354,6 +354,7 @@ exports.User = class User
       else if (err instanceof E.NoLocalKeyError) 
         err = null
         ret.local = false
+    @key = key if key? and store
     log.debug "- #{@username()}: check_public_key: ret=#{JSON.stringify ret}; err=#{err}"
     cb err, ret
 
