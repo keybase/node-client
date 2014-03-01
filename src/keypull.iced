@@ -56,6 +56,8 @@ exports.KeyPull = class KeyPull
     await User.load { username : env().get_username(), require_public_key : false }, esc defer @me
     await @me.check_key { secret : true  }, esc defer sec
     await @me.check_key { secret : false }, esc defer pub
+    log.debug "Check key secret: #{JSON.stringify sec}"
+    log.debug "Check key public: #{JSON.stringify pub}"
 
     err = null
 
