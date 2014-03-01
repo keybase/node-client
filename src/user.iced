@@ -1,7 +1,7 @@
 req = require './req'
 db = require './db'
 {constants} = require './constants'
-{make_esc} = require 'iced-error'
+{chain_err,make_esc} = require 'iced-error'
 {GE,E} = require './err'
 deepeq = require 'deep-equal'
 {SigChain} = require './sigchain'
@@ -10,8 +10,8 @@ log = require './log'
 {session} = require './session'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
-{unix_time} = require('pgp-utils').util
-{TmpKeyRing,load_key,master_ring} = require './keyring'
+{fpeq,unix_time} = require('pgp-utils').util
+{QuarantinedKeyRing,TmpKeyRing,load_key,master_ring} = require './keyring'
 {athrow} = require('iced-utils').util
 IS = constants.import_state
 
@@ -350,11 +350,12 @@ exports.User = class User
       ret.remote = (not(secret) or @private_key_bundle()?)
       key = master_ring().make_key_from_user @, secret
       await key.find defer err
-      if not err? then ret.local = true
+      if not err? 
+        ret.local = true
+        @key = key if store
       else if (err instanceof E.NoLocalKeyError) 
         err = null
         ret.local = false
-    @key = key if key? and store
     log.debug "- #{@username()}: check_public_key: ret=#{JSON.stringify ret}; err=#{err}"
     cb err, ret
 
@@ -449,6 +450,40 @@ exports.User = class User
 
   remove_key : (cb) -> 
     (master_ring().make_key_from_user @, false).remove cb
+
+  #--------------
+
+  # Import this user's key into a quarantined keyring, so we can
+  # run some tests on it before we accept it into our main keyring.
+  make_quarantined_keyring : (cb) ->
+    ret = err = null
+
+    cleanup = (cb) ->
+      if err? and ret?
+        await ret.nuke defer e2
+        log.warn "Error deleting sequestered keyring: #{e2.message}"
+      cb()
+
+    cb = chain_err cb, cleanup
+    esc = make_esc cb, "make_sequestered_keyring"
+    log.debug "+ make_sequestered_keyring for #{@username()}"
+    await QuarantinedKeyRing.make esc defer tmp
+    ret = tmp
+    key = ret.make_key_from_user @, false
+    await key.save esc defer()
+    await ret.list_fingerprints esc defer fps
+
+    err = if fps.length is 0 then new E.ImportError "Import failed: no fingerprint came out!"
+    else if fps.length > 1 then new E.CorruptionError "Import failed: found >1 fingerprints!"
+    else if (a = @fingerprint())? and not fpeq(a, (b = fps[0]))
+      new E.BadFingerprintError "Bad fingerprint: #{a} != #{b}; server lying?"
+    else 
+      ret.set_fingerprint fps[0]
+      @key = key 
+      null
+
+    log.debug "- make_sequestered_keyring -> #{err}"
+    cb err, ret
 
   #--------------
 

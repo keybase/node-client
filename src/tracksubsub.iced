@@ -146,6 +146,15 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   run : (cb) ->
+    sqring = null
+
+    cleanup = (cb) ->
+      if sqring?
+        await sqring.nuke defer e2
+        log.warning "Error deleting sequestered keyring: #{e2.message}" if e2?
+      cb()
+
+    cb = chain_err(cb, cleanup)
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
@@ -158,17 +167,18 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     # First see if we already have the key, in which case we don't
     # need to reimport it.
-    await @them.check_key {secret : false, store : true}, esc defer ckres
-    if (found_them = ckres.local)
-      await @them.load_public_key { signer : @me.key }, esc defer()
-    else if not ckres.remote
+    await @them.check_key {secret : false, store : true }, esc defer ckres
+    if not ckres.remote
       await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
+    else if not ckres.local
+      await @them.make_quarantined_keyring esc defer tmp
+      sqring = tmp
 
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer accept
 
-    await k.save esc defer() if accept and (k = @them?.key)?
+    await k.save esc defer() if accept and (k = @them?.key)? and not ckres.local
 
     log.debug "- run"
 
