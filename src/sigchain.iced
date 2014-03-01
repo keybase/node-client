@@ -406,9 +406,11 @@ exports.SigChain = class SigChain
     found = false
 
     # first try to see if the username is baked into the key, and be happy with that
+    log.debug "| read username baked into key"
     await @pubkey.read_uids_from_key esc defer uids
     found = (email for {email} in uids).indexOf(make_email @username) >= 0
 
+    log.debug "| search for explicit self-signatures"
     # Search for an explicit self-signature of this key
     if not found and (v = @table?[ST.SELF_SIG])?
       for link in v
@@ -416,7 +418,8 @@ exports.SigChain = class SigChain
           found = true
           break
 
-    # Search for a freeloader in an otherwise useful signature
+    log.debug "| search for a free-rider on a track signature"
+    # Search for a freerider in an otherwise useful signature
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
         if (d = @table?[type])
