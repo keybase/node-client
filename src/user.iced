@@ -29,7 +29,7 @@ exports.User = class User
 
   #--------------
 
-  @FIELDS : [ "basics", "public_keys", "id", "sigs", "private_keys" ]
+  @FIELDS : [ "basics", "public_keys", "id", "sigs", "private_keys", "logged_in" ]
 
   #--------------
 
@@ -38,6 +38,10 @@ exports.User = class User
       @[k] = args[k]
     @_dirty = false
     @sig_chain = null
+
+  #--------------
+
+  set_logged_in : () -> @logged_in = session.logged_in()
 
   #--------------
 
@@ -145,8 +149,8 @@ exports.User = class User
 
     if not b? or a > b
       err = new E.VersionRollbackError "Server version-rollback suspected: Local #{a} > #{b}"
-    else if not a? or a < b
-      log.debug "| version update needed: #{a} vs. #{b}"
+    else if (not a?) or (a < b) or (session.logged_in() && not(@logged_in))
+      log.debug "| version update needed: #{a} vs. #{b} (logged_in=#{@logged_in})"
       @update_fields remote
     else if a isnt b
       err = new E.CorruptionError "Bad ids on user objects: #{a.id} != #{b.id}"
@@ -225,7 +229,7 @@ exports.User = class User
     
     changed = true
     force_store = false
-    if local?
+    if local? 
       await local.update_with remote, esc defer()
     else if remote?
       local = remote
@@ -250,6 +254,7 @@ exports.User = class User
     ret = null
     unless err?
       ret = new User body.them
+      ret.set_logged_in()
     log.debug "- #{username}: loaded user from server"
     cb err, ret
 
