@@ -130,6 +130,7 @@ exports.User = class User
   update_sig_chain : (remote, cb) ->
     seqno = remote?.sigs?.last?.seqno
     log.debug "+ update sig chain; seqno=#{seqno}"
+    @sigs or= {}
     await @sig_chain.update seqno, defer err, did_update
     if did_update
       @sigs.last = @sig_chain.last().export_to_user()

@@ -312,9 +312,11 @@ exports.SigChain = class SigChain
   #-----------
 
   _update : (cb) ->
+    log.debug "+ sigchain::_update"
     esc = make_esc cb, "_update"
     args = { @uid, low : (@last_seqno() + 1) }
     await req.get { endpoint : "sig/get", args }, esc defer body
+    log.debug "| found #{body.sigs.length} new signatures"
     new_links = [] 
     did_update = false
     for obj in body.sigs
@@ -327,6 +329,7 @@ exports.SigChain = class SigChain
     @_links = @_links.concat new_links
     @_new_links = new_links
     @_index_links new_links
+    log.debug "- sigchain::_update"
     cb null, did_update
 
   #-----------

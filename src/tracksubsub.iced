@@ -17,10 +17,9 @@ db = require './db'
 util = require 'util'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
-{TmpKeyRing} = require './keyring'
+{master_ring} = require './keyring'
 assertions = require './assertions'
 {keypull} = require './keypull'
-{master_ring} = require 'gpg-wrapper'
 
 ##=======================================================================
 
@@ -145,6 +144,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  save_key : (k, cb) ->
+    await k.copy_to_keyring(master_ring()).save defer err
+    cb err
+
+  #----------
+
   run : (cb) ->
     sqring = null
 
@@ -178,7 +183,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer accept
 
-    await k.save esc defer() if accept and (k = @them?.key)? and not ckres.local
+    if accept and (k = @them?.key)? and not ckres.local
+      await @save_key k, esc defer()
 
     log.debug "- run"
 
