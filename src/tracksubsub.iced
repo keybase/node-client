@@ -85,7 +85,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   key_cleanup : ({accept}, cb) ->
     log.debug "+ key_cleanup"
     err = null
-    if @them
+    if @them and accept
       if accept 
         log.debug "| commit_key"
         await @them.key.commit {}, defer err
@@ -130,13 +130,10 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   id : (cb) ->
-    cb = chain_err cb, @key_cleanup.bind(@, {})
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
     await User.load { username : @args.them, require_public_key : true }, esc defer @them
-    await TmpKeyRing.make esc defer @tmp_keyring
-    await @them.import_public_key { keyring : @tmp_keyring }, esc defer()
     await @them.verify esc defer()
     await @check_remote_proofs false, esc defer warnings # err isn't a failure here
     log.debug "- id"
@@ -189,11 +186,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await @them.load_public_key { signer : @me.key }, esc defer()
     else if not ckres.remote
       await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
-    else if not (@tmp_keyring = @args.tmp_keyring)?
-      await TmpKeyRing.make esc defer @tmp_keyring
 
-    unless found_them
-      await @them.import_public_key { keyring: @tmp_keyring }, esc defer()
+    if not(found_them) and @args.tmp_keyring?
+      await @them.import_public_key { keyring: @args.tmp_keyring }, esc defer()
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer opts.accept

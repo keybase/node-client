@@ -357,8 +357,8 @@ exports.User = class User
   load_public_key : ({signer}, cb) ->
     log.debug "+ load public key for #{@username()}"
     err = null
-    query = { username : @username(), fingerprint : @fingerprint() }
     unless @key?
+      query = { username : @username(), fingerprint : @fingerprint() }
       await load_key query, defer err, @key
     log.debug "- load public key; found=#{!!@key}; err=#{err}"
     cb err, @key
