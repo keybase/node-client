@@ -252,7 +252,7 @@ exports.User = class User
   prove_twitter : (cb) ->
     opts = 
       which : "twitter"
-      search_regex : /Please tweet the following:\s+(\S.*?)\n/
+      search_regex : /Please.*tweet.*the following:\s+(\S.*?)\n/
       http_action : tweet_api
     await @prove opts, defer err
     cb err
@@ -283,8 +283,8 @@ exports.User = class User
     await @init esc('init', defer())
     await @signup esc('signup', defer())
     await @push_key esc('push_key', defer())
-    await @prove_github esc('prove_github', defer()) if twitter
-    await @prove_twitter esc('prove_twitter', defer()) if github
+    await @prove_github esc('prove_github', defer()) if github
+    await @prove_twitter esc('prove_twitter', defer()) if twitter
     await @write_pw esc('write_pw', defer()) if save_pw
     gcb null
 
