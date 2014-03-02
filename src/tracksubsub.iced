@@ -49,6 +49,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local, @ran_keypull}) ->
     @opts or= {}
+    @qring = null
 
   #----------------------
 
@@ -108,11 +109,27 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  qring_cleanup : (cb) ->
+    if @qring?
+      await @qring.nuke defer e
+      log.warning "Error deleting quarantied keyring: #{e.message}" if e?
+    cb()
+
+  #----------
+
+  make_quarantined_keyring : (cb) ->
+    await @them.make_quarantined_keyring defer err, @qring
+    cb err
+
+  #----------
+
   id : (cb) ->
+    cb = chain_err cb, @qring_cleanup.bind(@)
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
     await User.load { username : @args.them, require_public_key : true }, esc defer @them
+    await @make_quarantined_keyring esc defer()
     await @them.verify esc defer()
     await @check_remote_proofs false, esc defer warnings # err isn't a failure here
     log.debug "- id"
@@ -153,15 +170,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   run : (cb) ->
-    sqring = null
 
-    cleanup = (cb) ->
-      if sqring?
-        await sqring.nuke defer e2
-        log.warning "Error deleting sequestered keyring: #{e2.message}" if e2?
-      cb()
-
-    cb = chain_err(cb, cleanup)
+    cb = chain_err cb, @qring_cleanup.bind(@)
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
@@ -178,8 +188,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     if not ckres.remote
       await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
     else if not ckres.local
-      await @them.make_quarantined_keyring esc defer tmp
-      sqring = tmp
+      await @make_quarantined_keyring esc defer()
 
     await @them.verify esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw

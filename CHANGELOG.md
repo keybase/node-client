@@ -1,3 +1,20 @@
+## 0.0.31
+
+Bugfixes:
+
+  - Don't print secret stdin input to GPG when using -d.  We got away with it since
+    node's buffer class only printed the first 20 or so bytes of a buffer, which were
+    luckily boilerplate header, but don't take a risk.  See #116.
+
+Cleanups:
+  
+  - Address issue #115, cleanup tracking, don't reimport the key into 1-shot rings, like
+    crazy, use a QuarantinedKeyRing instead.  Upgrade to gpg-wrapper@0.0.37 for this.
+
+Features:
+
+  - Allow assertions in `keybase id`
+
 ## 0.0.30 (2014-02-28)
 
 Bugfixes:

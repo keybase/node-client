@@ -325,6 +325,22 @@ exports.User = class User
 
   #-----------------
 
+  id : (followee, cb) ->
+    esc = make_esc cb, "User::id"
+    un = followee.username
+    eng = @keybase_expect [ "id", un ]
+    await eng.wait defer rc
+    err = assert_kb_ok rc
+    await athrow err, esc defer() if err?
+    stderr = eng.stderr().toString('utf8')
+    await followee.check_proofs stderr, defer err
+    if err?
+      log.warn "Failed to find the correct proofs; got: "
+      log.warn stderr
+    cb err
+
+  #-----------------
+
   unfollow : (followee, cb) ->
     esc = make_esc cb, "User::follow"
     eng = @keybase_expect [ "untrack", "--remove-key", followee.username ]
