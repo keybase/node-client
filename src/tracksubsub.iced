@@ -144,8 +144,10 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  save_key : (k, cb) ->
-    await k.copy_to_keyring(master_ring()).save defer err
+  save_their_key : (cb) ->
+    err = null
+    if (k = @them?.key)?
+      await k.copy_to_keyring(master_ring()).save defer err
     cb err
 
   #----------
@@ -183,8 +185,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer accept
 
-    if accept and (k = @them?.key)? and not ckres.local
-      await @save_key k, esc defer()
+    if accept and not ckres.local
+      await @save_their_key esc defer()
 
     log.debug "- run"
 

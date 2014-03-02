@@ -61,11 +61,12 @@ exports.Command = class Command extends Base
   #----------
 
   handle_track : (cb) ->
-    await @tssc.all_prompts defer err, accept
-    await @tssc.key_cleanup { accept } , defer e2
-    if e2?
-      log.warn "Error in key cleanup: #{e2.message}"
-    cb err
+    esc = make_esc cb, "handle_track"
+    log.debug "+ handle track"
+    await @tssc.all_prompts esc defer accept
+    await @tssc.save_their_key esc defer() if accept
+    log.debug "- handle track"
+    cb null
 
   #----------
 

@@ -51,6 +51,7 @@ exports.Command = class Command extends dv.Command
       "--with-colons",   
       "--keyid-format", "long", 
       "--keyserver" , env().get_key_server(),
+      "--keyserver-options", "auto-key-retrieve=1", # needed for GPG 1.4.x
       "--with-fingerprint"
       "--yes" # needed in the case of overwrite!
     ]
