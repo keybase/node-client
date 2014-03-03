@@ -82,7 +82,7 @@ exports.Command = class Command extends Base
     err = null
     if rp? and (v = rp[@service_name]) 
       await prompt_yn { 
-        prompt : "You already have a proved you are #{v} at #{@service_name}; overwrite? ", 
+        prompt : "You already have proved you are #{v} at #{@service_name}; overwrite? ", 
         defval : false }, defer err, ok
       if not err? and not ok
         err = new E.ProofExistsError "Proof already exists"
