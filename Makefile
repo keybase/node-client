@@ -20,6 +20,7 @@ $(BUILD_STAMP): \
 	lib/command/config.js \
 	lib/command/decrypt.js \
 	lib/command/decrypt_and_verify.js \
+	lib/command/email.js \
 	lib/command/encrypt.js \
 	lib/command/encrypt_and_email.js \
 	lib/command/help.js \
