@@ -50,6 +50,7 @@ class Main
       "cert"
       "config"
       "decrypt"
+      "email"
       "encrypt"
       "help"
       "id"
