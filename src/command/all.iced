@@ -46,6 +46,7 @@ class Main
     add_option_dict @ap, Base.OPTS
 
     list = [ 
+      "cert"
       "config"
       "decrypt"
       "encrypt"
