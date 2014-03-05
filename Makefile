@@ -21,6 +21,7 @@ $(BUILD_STAMP): \
 	lib/command/decrypt.js \
 	lib/command/decrypt_and_verify.js \
 	lib/command/encrypt.js \
+	lib/command/encrypt_and_email.js \
 	lib/command/help.js \
 	lib/command/id.js \
 	lib/command/join.js \
