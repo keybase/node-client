@@ -2,7 +2,9 @@
 
 Features:
 
-  - Encourage users to add a new UID into their keys.
+  - Encourage users to add a new UID into their keys (Issue #122)
+  - Key revocation
+  - Non-standard gpg-location like the installer
 
 
 ## 0.0.31 (2014-03-03)
