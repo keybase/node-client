@@ -1,8 +1,8 @@
 
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
-{master_ring} = require './keyring'
-{prompt_for_int} = require './prompter'
+{load_key,master_ring} = require './keyring'
+{prompt_passphrase,prompt_for_int} = require './prompter'
 {env} = require './env'
 log = require './log'
 {E} = require './err'
@@ -31,14 +31,31 @@ exports.KeyPatcher = class KeyPatcher
 
   #--------------
 
+  import_secret_key : (cb) ->
+    esc = make_esc cb, "KeyPatcher::import_secret_key"
+    await load_key { fingerprint : @key.fingerprint(), secret : true  }, esc defer k
+    await @lib.KeyManager.import_from_armored_pgp { raw : k.key_data() }, esc defer @skm
+    uid = @lib.UserID.make k.uid()
+    await prompt_passphrase { prompt : "Passphrase for key '#{uid.utf8()}'" } , esc defer pp
+    cb null
+
+  #--------------
+
   needs_patch : () -> not @key.has_canonical_username()
 
   #--------------
 
-  run_patch : (cb) ->
+  run_patch_sequence : (cb) ->
+    esc = make_esc cb, "KeyPatcher::run_patch_sequence"
+    await @import_secret_key esc defer()
+    await @patch_key esc defer()
+    cb null
+
+  #--------------
+
+  patch_key : (cb) ->
     esc = make_esc cb, "KeyPatcher::run_patch"
     pgp = @km.pgp
-    console.log env().make_pgp_uid()
     uid = @lib.UserID.make env().make_pgp_uid()
     pgp.userids = [ uid ]
     pgp.subkeys = []
@@ -93,10 +110,7 @@ Would you like to:
     if @needs_patch()
       @uid = @lib.UserID.make env().make_pgp_uid()
       await @prompt_patch esc defer go
-    else
-      go = false
-
-    await @run_patch esc defer() if go
+      await @run_patch_sequence esc defer() if go
 
     cb null, @did_patch
 
