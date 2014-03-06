@@ -3,7 +3,7 @@
 Features:
 
   - Encourage users to add a new UID into their keys (Issue #122)
-  - Key revocation
+  - Key revocation (Issue #67)
   - Non-standard gpg-location like the installer
 
 
