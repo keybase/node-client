@@ -98,7 +98,8 @@ exports.KeySelector = class KeySelector
     else
       console.log "Multiple keys found, please pick one:"
     @select_key_menu keys
-    await prompt_for_int 1, keys.length, defer err, sel
+    prompt = "Pick a key"
+    await prompt_for_int prompt, 1, keys.length, defer err, sel
     out = if err? then null else keys[sel-1]
     if out?
       log.info "Picked key: #{out.ki64}"

@@ -134,10 +134,10 @@ exports.prompt_email_or_username = (cb) ->
 
 #========================================================================
 
-exports.prompt_for_int = (low, hi, cb) ->
+exports.prompt_for_int = (prompt, low, hi, cb) ->
   seq =
     key :
-      prompt : "Pick a key"
+      prompt : prompt
       checker : checkers.intcheck(low, hi)
   p = new Prompter seq
   await p.run defer err
