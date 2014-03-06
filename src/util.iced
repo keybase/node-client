@@ -52,6 +52,7 @@ exports.make_scrypt_progress_hook = () ->
 #=========================================================================
 
 exports.make_email = make_email = (un) -> un + "@" + constants.canonical_host 
+exports.make_full_username = make_full_username = (un) -> constants.canonical_host + "/" + un
 
 #=========================================================================
 

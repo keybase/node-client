@@ -2,6 +2,7 @@
 {home} = require './path'
 {join} = require 'path'
 {constants} = require './constants'
+{make_full_username,make_email} = require './util'
 FN = constants.filenames
 SRV = constants.server
 
@@ -180,6 +181,21 @@ class Env
 
   get_args : () -> @argv._
   get_argv : () -> @argv
+
+  #---------------
+
+  keybase_email : () -> make_email @get_username()
+
+  #---------------
+
+  keybase_full_username : () -> make_full_username @get_username()
+
+  #---------------
+
+  make_pgp_uid : () -> {
+    username : @keybase_full_username()
+    email : @keybase_email()
+  }
 
 ##=======================================================================
 

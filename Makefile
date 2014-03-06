@@ -56,6 +56,7 @@ $(BUILD_STAMP): \
 	lib/fs.js \
 	lib/gpg.js \
 	lib/keymanager.js \
+        lib/keypatch.js \
 	lib/keypull.js \
 	lib/keyring.js \
 	lib/keyselector.js \

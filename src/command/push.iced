@@ -45,7 +45,6 @@ exports.Command = class Command extends pg.Command
     cb err
 
   #----------
-  #----------
 
   prepare_key : (cb) ->
     esc = make_esc cb, "Command::prepare_key"
@@ -58,11 +57,8 @@ exports.Command = class Command extends pg.Command
       secret = true unless @argv.show_public_only_keys
       await key_select {username: env().get_username(), query : @argv.search, secret }, esc defer @key
       kp = new KeyPatcher @key
-      await kp.patch { interactive : true }, esc defer()
+      await kp.run { interactive : true }, esc defer()
     cb null
-
-  #----------
-
 
 ##=======================================================================
 

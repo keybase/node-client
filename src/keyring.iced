@@ -30,6 +30,13 @@ class GpgKey extends keyring.GpgKey
 
   #-------------
 
+  has_canonical_username : () ->
+    em = env().keybase_email()
+    all_uids = @all_uids()
+    return (em in (e for uid in all_uids when (e = uid?.email)))
+
+  #-------------
+
   # Make a key object from a User object
   @make_from_user : ({user, secret, keyring}) ->
     new GpgKey {
