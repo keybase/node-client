@@ -156,7 +156,7 @@ exports.User = class User
   #-----------------
 
   push_key : (cb) ->
-    await @keybase { args : [ "push", @key.fingerprint() ], quiet : true }, defer err
+    await @keybase { args : [ "push", "--skip-add-email", @key.fingerprint() ], quiet : true }, defer err
     @_state.pushed = true unless err?
     cb err
 
