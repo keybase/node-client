@@ -45,7 +45,7 @@ exports.Command = class Command extends Base
   sign : (cb) ->
     log.debug "+ Command::sign"
     if @key.has_canonical_username()
-      log.debug "| We can skip the sig, since the UID #{em} is already in the key"
+      log.debug "| We can skip the sig, since the UID canonical username is already in the key"
       @sig = null
     else
       eng = new KeybasePushProofGen { km : @key }
