@@ -2,7 +2,7 @@
 {constants} = require './constants'
 {make_esc} = require 'iced-error'
 {PackageJson} = require './package'
-{init,master_ring} = require './keyring'
+{master_ring} = require './keyring'
 {env,init_env} = require './env'
 {BufferOutStream} = require 'iced-spawn'
 {ASP} = require('pgp-utils').util

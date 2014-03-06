@@ -44,9 +44,7 @@ exports.Command = class Command extends Base
 
   sign : (cb) ->
     log.debug "+ Command::sign"
-    em = make_email env().get_username()
-    all_uids = @key.all_uids()
-    if em in (e for uid in all_uids when (e = uid?.email))
+    if @key.has_canonical_username()
       log.debug "| We can skip the sig, since the UID #{em} is already in the key"
       @sig = null
     else
