@@ -46,7 +46,13 @@ exports.Command = class Command extends pg.Command
 
   #----------
 
+  load_key : (cb) ->
+    cb err
+
+  #----------
+
   prepare_key : (cb) ->
+    err = null
     esc = make_esc cb, "Command::prepare_key"
     if @argv.gen
       # On success, will set @key appropriately, so no need to set it ourselves.
@@ -57,8 +63,9 @@ exports.Command = class Command extends pg.Command
       secret = true unless @argv.show_public_only_keys
       await key_select {username: env().get_username(), query : @argv.search, secret }, esc defer @key
       kp = new KeyPatcher { @key }
-      await kp.run { interactive : true }, esc defer()
-    cb null
+      await kp.run { interactive : true }, esc defer did_patch
+      @key = kp.get_key() if did_patch
+    cb err
 
 ##=======================================================================
 

@@ -36,7 +36,11 @@ exports.KeyPatcher = class KeyPatcher
     await load_key { fingerprint : @key.fingerprint(), secret : true  }, esc defer k
     await @lib.KeyManager.import_from_armored_pgp { raw : k.key_data() }, esc defer @skm
     uid = @lib.UserID.make k.uid()
-    await prompt_passphrase { prompt : "Passphrase for key '#{uid.utf8()}'" } , esc defer pp
+    if @skm.is_pgp_locked()
+      await prompt_passphrase { prompt : "Passphrase for key '#{uid.utf8()}'", short : true } , esc defer passphrase
+      log.debug "+ unlock_pgp"
+      await @skm.unlock_pgp { passphrase }, esc defer()
+      log.debug "- unlock_pgp"
     cb null
 
   #--------------
@@ -45,31 +49,52 @@ exports.KeyPatcher = class KeyPatcher
 
   #--------------
 
+  export_patch : (cb) ->
+    log.debug "+ KeyPatcher::export_patch"
+    esc = make_esc cb, "KeyPatcher::export_patch"
+    await @skm.export_pgp_public { regen : true }, esc defer msg
+    await @ring.gpg { args : [ "--import" ], quiet : true, stdin : msg }, esc defer()
+    log.debug "- KeyPatcher::export_patch"
+    cb null
+
+  #--------------
+
+  reload_key : (cb) ->
+    await load_key { fingerprint : @key.fingerprint(), secret : false }, defer err, @key
+    cb err
+
+  #--------------
+
+  verify : (cb) ->
+    err = if @key.has_canonical_username() then null
+    else new E.PatchError "Key update filaed; please report this bug"
+    cb err
+
+  #--------------
+
   run_patch_sequence : (cb) ->
     esc = make_esc cb, "KeyPatcher::run_patch_sequence"
     await @import_secret_key esc defer()
     await @patch_key esc defer()
+    await @export_patch esc defer()
+    await @reload_key esc defer()
+    await @verify esc defer()
     cb null
+
+  #--------------
+
+  get_key : () -> @key
 
   #--------------
 
   patch_key : (cb) ->
     esc = make_esc cb, "KeyPatcher::run_patch"
-    pgp = @km.pgp
+    pgp = @skm.pgp
     uid = @lib.UserID.make env().make_pgp_uid()
     pgp.userids = [ uid ]
     pgp.subkeys = []
-    #await pgp.self_sign_primary { raw_payload : true }, esc defer raw
-    #gargs = 
-    #  args : [ "-u", @key.fingerprint(), "--detach-sign" ]
-    #  stdin : raw
-    #  quiet : true
-    #await @key.gpg gargs, esc defer out
-    #[err, packets] = @lib.parse out
-    #console.log err
-    #console.log packets
-    #console.log packets[0].hashed_subpackets
-    cb new Error "bailing out for debugging purposes"
+    await @skm.sign {}, esc defer()
+    cb null
 
   #--------------
 
@@ -109,12 +134,10 @@ Would you like to:
 
     if @needs_patch()
       @uid = @lib.UserID.make env().make_pgp_uid()
-      await @prompt_patch esc defer go
-      await @run_patch_sequence esc defer() if go
+      await @prompt_patch esc defer go_patch
+      await @run_patch_sequence esc defer() if go_patch
 
-    cb null, @did_patch
-
-  #--------------
-
+    cb null, go_patch
+    
 #=====================================================
 
