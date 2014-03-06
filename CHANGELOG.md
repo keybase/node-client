@@ -1,3 +1,10 @@
+## 0.0.32 (2014-03-06)
+
+Features:
+
+  - Encourage users to add a new UID into their keys.
+
+
 ## 0.0.31 (2014-03-03)
 
 Bugfixes:
