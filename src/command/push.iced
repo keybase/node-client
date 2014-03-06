@@ -20,6 +20,12 @@ exports.Command = class Command extends pg.Command
       alias : "show-public-only-keys"
       action : "storeTrue"
       help : "Allow picking of public keys for which no secret key is available (not recommended)"
+    "skip-add-email" :
+      action : "storeTrue"
+      help : "Skip the prompt asking if we want to store email to key; don't do it"
+    "add-email"  :
+      action : "storeTrue"
+      help : "Add email to key by default, if needed"
 
   #----------
 
@@ -62,7 +68,7 @@ exports.Command = class Command extends pg.Command
     else
       secret = true unless @argv.show_public_only_keys
       await key_select {username: env().get_username(), query : @argv.search, secret }, esc defer @key
-      kp = new KeyPatcher { @key }
+      kp = new KeyPatcher { @key, opts : @argv }
       await kp.run { interactive : true }, esc defer did_patch
       @key = kp.get_key() if did_patch
     cb err

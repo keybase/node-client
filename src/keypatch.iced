@@ -13,7 +13,7 @@ exports.KeyPatcher = class KeyPatcher
 
   #--------------
 
-  constructor : ({ @key } ) ->
+  constructor : ({ @key, @opts } ) ->
     @ring or= master_ring()
     kbpgp = require('kbpgp')
     @lib =
@@ -126,26 +126,29 @@ You have 3 options:
   (3) Don't do this at all (or do it later)
 
 """
-    log.console.log msg
-    prompt = "Your choice"
-    err = null
-    go = false
-    args = 
-      prompt : "Your choice"
-      low : 1
-      hi : 3
-      defint : 2
-      hint : "pick 1,2 or 3"
-      first_prompt : " (2)"
-    await prompt_for_int args, defer err, i
-    unless err?
-      switch i 
-        when 1
-          err = new E.CancelError "please edit your key and rerun this command"
-        when 2
-          go = true
-        when 3
-          go = false
+    if @opts.skip_add_email then go = false
+    else if @opts.add_email then go = true
+    else
+      log.console.log msg
+      prompt = "Your choice"
+      err = null
+      go = false
+      args = 
+        prompt : "Your choice"
+        low : 1
+        hi : 3
+        defint : 2
+        hint : "pick 1,2 or 3"
+        first_prompt : " (2)"
+      await prompt_for_int args, defer err, i
+      unless err?
+        switch i 
+          when 1
+            err = new E.CancelError "please edit your key and rerun this command"
+          when 2
+            go = true
+          when 3
+            go = false
     cb err, go
   
   #--------------
