@@ -100,28 +100,50 @@ exports.KeyPatcher = class KeyPatcher
 
   prompt_patch : (cb) ->
     em = @uid.get_email()
-    log.console.log  """
 
-Keybase forwards mail for its users to the email addresses of their choice.
-This feature works much better (and your email is less likely to be marked as spam)
-if you add your Keybase.io identity --- <#{em}> --- to your key.
-Would you like to:
+    width = 70
+    line = ("-" for i in [0...width]).join('')
+    msg = "Enabling #{em}"
+    diff = width - msg.length
+    spc = if diff > 0 then (' ' for i in [0...(diff >> 1)]).join('') else ''
+    msg = """
 
-    (1) Allow this program to add your keybase email to your key (we'll prompt your for your password)
-    (2) Quit out and edit your key via GPG (add email #{em})
-    (3) Skip this step
+#{line}
+#{spc}#{msg}
+#{line}
+
+All keybase users get a free @keybase.io address, which 
+forwards incoming mail and acts, for privacy, as the return
+address on outgoing mail generated via `keybase email`.
+
+This is very cool, but it requires you add #{em}
+to your public key. 
+
+You have 3 options:
+
+  (1) Exit now; I can add #{em} with GPG or my own software
+  (2) Enter my private key passphrase now, and let keybase add it for me
+  (3) Don't do this at all (or do it later)
 
 """
+    log.console.log msg
     prompt = "Your choice"
     err = null
     go = false
-    await prompt_for_int prompt, 1, 3, defer err, i
+    args = 
+      prompt : "Your choice"
+      low : 1
+      hi : 3
+      defint : 2
+      hint : "pick 1,2 or 3"
+      first_prompt : " (2)"
+    await prompt_for_int args, defer err, i
     unless err?
       switch i 
         when 1
-          go = true
-        when 2
           err = new E.CancelError "please edit your key and rerun this command"
+        when 2
+          go = true
         when 3
           go = false
     cb err, go
@@ -138,6 +160,6 @@ Would you like to:
       await @run_patch_sequence esc defer() if go_patch
 
     cb null, go_patch
-    
+
 #=====================================================
 

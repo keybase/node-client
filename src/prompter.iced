@@ -22,14 +22,14 @@ exports.Prompter = class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower}, cb) ->
+  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower,first_prompt,hint}, cb) ->
     err = null
     ok = false
     first = true
 
     until ok
-      p = if first then (prompt + ": ")
-      else (prompt + " (" + checker.hint + "): ")
+      p = if first then (prompt + (if first_prompt? then first_prompt else "") + ": ")
+      else (prompt + " (" + (hint or checker.hint) + "): ")
       first = false
 
       obj = { prompt : p } 
@@ -134,14 +134,20 @@ exports.prompt_email_or_username = (cb) ->
 
 #========================================================================
 
-exports.prompt_for_int = (prompt, low, hi, cb) ->
+exports.prompt_for_int = ({prompt, low, hi, defint, hint, first_prompt}, cb) ->
   seq =
     key :
       prompt : prompt
-      checker : checkers.intcheck(low, hi)
+      checker : checkers.intcheck(low, hi, defint)
+      hint : hint
+      first_prompt : first_prompt
   p = new Prompter seq
   await p.run defer err
-  out = if err? then null else parseInt(p.data().key)
+
+  out = if err? then null
+  else if (d = p.data().key) is '' and defint? then defint
+  else parseInt(d)
+
   cb err, out
 
 #========================================================================
