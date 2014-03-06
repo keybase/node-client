@@ -93,6 +93,10 @@ exports.KeyPatcher = class KeyPatcher
     uid = @lib.UserID.make env().make_pgp_uid()
     pgp.userids = [ uid ]
     pgp.subkeys = []
+
+    # Fix this, make it last only as long as the longest UID.
+    pgp.primary.lifespan.expire_in = 0 # never expires
+
     await @skm.sign {}, esc defer()
     cb null
 
