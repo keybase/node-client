@@ -154,6 +154,13 @@ class Main
 
   #----------------------------------
 
+  config_gpg : () ->
+    if (c = env().get_gpg_command())?
+      log.debug "Set gpg command to: #{c}"
+      gpg.set_gpg_cmd(c)
+
+  #----------------------------------
+
   load_db : (cb) ->
     err = null
     if @cmd.use_db()
@@ -187,13 +194,14 @@ class Main
   setup : (cb) ->
     esc = make_esc cb, "setup"
     init_env()
-    await @parse_args  esc defer()
+    await @parse_args esc defer()
     env().set_argv @argv
     @config_logger()
     await @startup_message esc defer()
-    @init_keyring()
     await @load_config esc defer()
     env().set_config @config
+    @config_gpg()
+    @init_keyring()
     await @load_db esc defer()
     await @cleanup_previous_crash esc defer()
     await @load_session esc defer()

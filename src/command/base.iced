@@ -80,6 +80,9 @@ exports.Base = class Base
       help : "preserve the temporary keyring; don't clean it up"
     "homedir" :
       help : "specify a non-standard home directory; look for GPG keychain there"
+    g :
+      alias : "gpg"
+      help : "specify a GPG command other than `gpg`"
 
   #-------------------
 
