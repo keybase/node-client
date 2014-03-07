@@ -4,12 +4,14 @@
 
 ##=======================================================================
 
-exports.version_info = (cb) ->
+exports.version_info = (gpg_version, cb) ->
   pjs = new PackageJson()
-  err = lines = []
-  await gpg { args : [ "--version" ] }, defer err, dat
+  err = null
+  lines = []
+  unless gpg_version?
+    await gpg { args : [ "--version" ] }, defer err, gpg_version
   unless err?
-    gpg_v = dat.toString().split("\n")[0...2]
+    gpg_v = gpg_version.toString().split("\n")[0...2]
     lines = [ 
       (pjs.bin() + " (keybase.io CLI) v" + pjs.version())
       ("- node.js " + process.version)

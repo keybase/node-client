@@ -70,6 +70,7 @@ exports.init = () ->
     get_tmp_keyring_dir : () -> env().get_tmp_keyring_dir()
     get_key_klass : () -> GpgKey
     get_home_dir : () -> env().get_home_gnupg_dir(true)
+    get_gpg_cmd : () -> env().get_gpg_cmd()
     log : log
   }
 

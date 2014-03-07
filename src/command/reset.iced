@@ -24,6 +24,7 @@ exports.Command = class Command extends Base
   #----------
 
   use_session : () -> true
+  use_gpg : () -> false
 
   #----------
 

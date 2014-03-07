@@ -10,7 +10,7 @@ log = require '../log'
 req = require '../req'
 session = require '../session'
 db = require '../db'
-gpg = require 'gpg-wrapper'
+gpgw = require 'gpg-wrapper'
 keyring = require '../keyring'
 {platform_info,version_info} = require '../version'
 
@@ -123,7 +123,7 @@ class Main
   main : () ->
     await @run defer err
     if err?
-      msg = if (err instanceof gpg.E.GpgError) then "`gpg` exited with code #{err.rc}"
+      msg = if (err instanceof gpgw.E.GpgError) then "`gpg` exited with code #{err.rc}"
       else err.message
       log.error msg
       log.warn err.stderr.toString('utf8') if err.stderr?
@@ -145,7 +145,7 @@ class Main
       p.env().set_level p.DEBUG
     if @argv.no_color
       p.env().set_use_color false
-    gpg.set_log log.warn
+    gpgw.set_log log.warn
 
   #----------------------------------
 
@@ -174,7 +174,7 @@ class Main
     if p.env().get_level() is p.DEBUG
       log.debug "| CLI version: #{(new PackageJson).version()}"
       log.debug "| Platform info: #{JSON.stringify platform_info()}"
-      await version_info defer err, info
+      await version_info @_gpg_version, defer err, info
       if err?
         log.error "Error fetching version info: #{err.message}"
       else
@@ -184,16 +184,34 @@ class Main
 
   #----------------------------------
 
+  init_gpg : (cb) ->
+    err = null
+    if @cmd.use_gpg() 
+      c = env().get_gpg_cmd()
+      log.debug "+ testing GPG command-line client #{if c? then c else '<default: gpg>'}"
+      await keyring.master_ring().test defer err, @_gpg_version
+      log.debug "- tested GPG command-line client -> #{err}"
+      if err?
+        err = new E.GpgError "Could not acces gpg cmd line client '#{c}'"
+      else if c?
+        gpgw.set_gpg_cmd c
+    cb err
+
+  #----------------------------------
+
   setup : (cb) ->
     esc = make_esc cb, "setup"
+
     init_env()
-    await @parse_args  esc defer()
+    await @parse_args esc defer()
     env().set_argv @argv
     @config_logger()
-    await @startup_message esc defer()
-    @init_keyring()
     await @load_config esc defer()
     env().set_config @config
+    @init_keyring()
+    await @init_gpg esc defer()
+
+    await @startup_message esc defer()
     await @load_db esc defer()
     await @cleanup_previous_crash esc defer()
     await @load_session esc defer()

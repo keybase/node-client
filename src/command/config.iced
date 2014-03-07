@@ -56,6 +56,7 @@ exports.Command = class Command extends Base
   #----------
 
   config_opts : () -> { quiet : true }
+  use_gpg : () -> false
 
   #----------
 

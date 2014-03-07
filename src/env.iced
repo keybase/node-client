@@ -179,6 +179,13 @@ class Env
       config : (c) -> c.key_server
       dflt   : -> "hkp://#{self.get_host()}:#{self.get_port()}"
 
+  get_gpg_cmd : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_GPG
+      arg    : (a) -> a.gpg
+      config : (c) -> c.gpg
+      dflt   : -> null
+
   get_args : () -> @argv._
   get_argv : () -> @argv
 

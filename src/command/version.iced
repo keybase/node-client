@@ -21,7 +21,7 @@ exports.Command = class Command extends Base
   #----------
 
   run : (cb) ->
-    await version_info defer err, lines
+    await version_info null, defer err, lines
     if not err? and lines?
       console.log lines.join("\n")
     cb err

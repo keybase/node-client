@@ -80,12 +80,16 @@ exports.Base = class Base
       help : "preserve the temporary keyring; don't clean it up"
     "homedir" :
       help : "specify a non-standard home directory; look for GPG keychain there"
+    g : 
+      alias : "gpg"
+      help : "specify an altnernate gpg command"
 
   #-------------------
 
   use_config : () -> true
   use_session : () -> false
   use_db : () -> true
+  use_gpg : () -> true
   config_opts : () -> {}
 
   #-------------------
