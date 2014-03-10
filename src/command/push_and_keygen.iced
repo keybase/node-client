@@ -115,11 +115,31 @@ exports.Command = class Command extends Base
 
   #----------
 
+  do_key_gen_2 : ( { passphrase}, cb) ->
+    rv = new iced.Rendezvous()
+
+    process.stderr.write("Generating keys.")
+
+    KeyManager.generate { passphrase }, rv.id(true).defer(err, @keymanager)
+
+    go = true
+    while go
+      setTimeout rv.id(false).defer(), 1000
+      await rv.wait defer done
+      if done
+        go = false
+      else
+        process.stderr.write(".")
+    process.stderr.write(" Done!\n")
+    cb err
+
+  #----------
+
   do_key_gen : (cb) ->
     esc = make_esc cb, "do_key_gen"
     await @prompt_new_passphrase esc defer passphrase 
     log.debug "+ generating public/private keypair"
-    await KeyManager.generate { passphrase }, esc defer @keymanager
+    await @do_key_gen_2 { passphrase }, esc defer()
     log.debug "- generated"
     log.debug "+ loading public key"
     await @keymanager.load_public esc defer @key

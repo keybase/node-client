@@ -121,19 +121,20 @@ All keybase users get a free @keybase.io address, which
 forwards incoming mail and acts, for privacy, as the return
 address on outgoing mail generated via `keybase email`.
 
-This is very cool, but it requires you add #{em}
-to your public key. 
+This feature works **much** better with existing GPG clients
+if you add #{em} to your public key.
 
 You have 3 options:
 
   (1) Exit now; I can add #{em} with GPG or my own software
-  (2) Enter my private key passphrase now, and let keybase add it for me
-  (3) Don't do this at all (or do it later)
+  (2) Allow keybase to add it for me
+  (3) Skip this step and do it later (not recommended)
 
 """
     if @opts.skip_add_email then go = false
     else if @opts.add_email then go = true
     else
+      do_warning = false
       log.console.log msg
       prompt = "Your choice"
       err = null
@@ -151,11 +152,26 @@ You have 3 options:
           when 1
             err = new E.CancelError "please edit your key and rerun this command"
           when 2
+            do_warning = true
             go = true
           when 3
             go = false
+      if do_warning
+        w = """
+
+#{line}
+
+OK. Keybase will now modify your public key by merging
+#{em} into its approved list of emails.  This
+operation requires temporary local access to your secret 
+key and then throws it away. The client will not write
+your decrypted secret key to disk or to the server.
+
+"""
+        log.console.log w
     cb err, go
   
+
   #--------------
 
   run : ({interactive}, cb) ->

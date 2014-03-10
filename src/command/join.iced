@@ -220,6 +220,21 @@ exports.Command = class Command extends Base
       await @post    esc defer retry
     await @write_out esc defer()
     log.info "Success! You are now signed up."
+
+    log.console.log """
+
+Welcome to keybase.io! You now need to associate a public key with your
+account.  If you have a key already then:
+
+    keybase push <key-id>  # if you know the ID of the key --- OR --- 
+    keybase push           # to select from a menu
+
+If you need a public key, we'll happily generate one for you:
+
+    keybase gen --push     # Generate a new key and push public part to server
+
+Enjoy!
+"""
     cb null
 
 ##=======================================================================
