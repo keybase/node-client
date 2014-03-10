@@ -1,11 +1,10 @@
-## 0.0.32 (2014-03-06)
+## 0.0.32
 
 Features:
 
   - Encourage users to add a new UID into their keys (Issue #122)
   - Key revocation (Issue #67)
-  - Non-standard gpg-location like the installer
-
+  - Support non-standard gpg-location like the installer
 
 ## 0.0.31 (2014-03-03)
 
