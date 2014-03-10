@@ -1,4 +1,10 @@
-## 0.0.32
+## 0.0.33
+
+Features:
+
+  - Address keybase/keybase-issues#56: Allow '@keybaseio' prefix to tweets to reduce follower-noise
+
+## 0.0.32 (2014-03-10)
 
 Features:
 
