@@ -25,6 +25,10 @@ exports.Command = class Command extends Base
       alias : "secret"
       action : "storeTrue"
       help : "push the secret key to the server"
+    u  :
+      alias : "update"
+      action : "storeTrue"
+      help : "update the public key with new key fields"
 
   #----------
 
@@ -162,8 +166,8 @@ exports.Command = class Command extends Base
     if ckres.remote and @argv.secret
       log.info "Public key already uploaded; pushing only secret key"
       @_secret_only = true
-    else if ckres.remote and not(@argv.secret)
-      err = new E.KeyExistsError "You already have a key registered; you must revoke first"
+    else if ckres.remote and not(@argv.secret) and not(@argv.update)
+      err = new E.KeyExistsError "You already have a key registered; you must revoke or specify --update"
     cb err
 
   #----------
