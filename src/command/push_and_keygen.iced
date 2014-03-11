@@ -163,10 +163,15 @@ exports.Command = class Command extends Base
     await User.load { username : env().get_username() }, esc defer @me
     await @me.check_key { secret : false }, esc defer ckres
     err = null
-    if ckres.remote and @argv.secret
+    if @argv.update and ckres.remote
+      log.info "Updating both remote key with local version"
+      @argv.search = @me.fingerprint()
+    else if @argv.update and not(ckres.remote)
+      err = new E.NoRemoteKeyError "can't update your key; you don't have one uploaded; try push without --update"
+    else if ckres.remote and @argv.secret
       log.info "Public key already uploaded; pushing only secret key"
       @_secret_only = true
-    else if ckres.remote and not(@argv.secret) and not(@argv.update)
+    else if ckres.remote and not(@argv.secret)
       err = new E.KeyExistsError "You already have a key registered; you must revoke or specify --update"
     cb err
 
