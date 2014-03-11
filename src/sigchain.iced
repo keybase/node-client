@@ -161,7 +161,11 @@ exports.Link = class Link
     if not klass
       err = new E.ScrapeError "cannot allocate scraper of type #{type}"
     else
-      scraper = new klass { libs : { cheerio, request, log }, log_level : 'debug' }
+      scraper = new klass { 
+        libs : { cheerio, request, log }, 
+        log_level : 'debug', 
+        proxy : env().get_proxy() 
+      }
     cb err, scraper
 
   #-----------
