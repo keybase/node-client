@@ -2,7 +2,7 @@
 
 Features:
 
-  - Close #30: `keybase push --update` updates the current public key with new UID, subkey and
+  - Close #130: `keybase push --update` updates the current public key with new UID, subkey and
     signature information
 
 ## 0.0.34 (2014-03-11)
