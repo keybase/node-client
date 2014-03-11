@@ -1,3 +1,9 @@
+## 0.0.34
+
+Features:
+
+  - Support for https proxy servers via command line, config or environment variable
+
 ## 0.0.33 (2014-03-10)
 
 Features:
