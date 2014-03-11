@@ -186,6 +186,13 @@ class Env
       config : (c) -> c.gpg
       dflt   : -> null
 
+  get_proxy : () ->
+    @get_opt 
+      env    : (e) -> e.http_proxy or e.https_proxy
+      arg    : (a) -> a.proxy
+      config : (c) -> c.proxy
+      dflt   : -> null
+
   get_args : () -> @argv._
   get_argv : () -> @argv
 

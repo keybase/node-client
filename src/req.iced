@@ -65,6 +65,7 @@ exports.Client = class Client
     opts = { method, json : true, jar : true }
     opts.headers = @headers or {}
     opts.headers["X-Keybase-Client"] = (new PackageJson).identify_as()
+    opts.proxy = env().get_proxy()
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]

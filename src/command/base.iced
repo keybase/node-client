@@ -83,6 +83,9 @@ exports.Base = class Base
     g : 
       alias : "gpg"
       help : "specify an altnernate gpg command"
+    x : 
+      alias : 'proxy'
+      help : 'specify a proxy server to all HTTPS requests'
 
   #-------------------
 
