@@ -149,9 +149,7 @@ exports.Command = class Command extends Base
     gargs.stderr = new BufferOutStream()
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message 
-    else if @argv.file?
-      args.push @argv.file 
-    else
+    else if not @get_files(args)
       gargs.stdin = process.stdin
       @batch = true
 

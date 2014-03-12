@@ -31,7 +31,9 @@ exports.HKPLoopback = class HKPLoopback
     cb err
 
   serve : (req, res) ->
-    inurl = urlmod.parse req.url
+    u = req.url
+    log.debug "+ Incoming HKP request on loopback :#{@_port}: #{u}"
+    inurl = urlmod.parse u
     opts = 
       json : false
       jar : false
@@ -40,6 +42,7 @@ exports.HKPLoopback = class HKPLoopback
     await reqmod.get opts, defer err, body, gres
     res.writeHead gres.statusCode, gres.headers
     res.write gres.body
+    log.debug "- Replied to loopback request w/ status=#{gres.statusCode}"
     res.end()
 
   close : (cb) ->
