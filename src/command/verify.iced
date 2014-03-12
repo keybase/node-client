@@ -30,25 +30,16 @@ exports.Command = class Command extends dv.Command
 
   #----------
 
-  make_gpg_args : () ->
-    args = [ 
-      "--verify" , 
-      "--with-colons",   
-      "--keyid-format", "long", 
-      "--keyserver" , env().get_key_server(),
-      "--with-fingerprint"
-    ]
-    args.push( "--keyserver-options", "debug=1")  if env().get_debug()
-    args.push( "--output", o ) if (o = @argv.output)?
-    gargs = { args }
-    gargs.stderr = new BufferOutStream()
-    if @argv.message
-      gargs.stdin = new BufferInStream @argv.message 
-    else if @argv.files?.length
-      args.push @argv.files...
-    else
-      gargs.stdin = process.stdin
-      @batch = true
-    return gargs
+  patch_gpg_args : (args) ->
+    args.push "--verify"
 
+  #----------
+
+  get_files : (args) ->
+    if @argv.files?.length
+      args.push @argv.files...
+      true
+    else
+      false
+      
 ##=======================================================================

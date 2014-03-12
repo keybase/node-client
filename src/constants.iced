@@ -18,6 +18,7 @@ exports.constants = constants =
       sec_keyring : "tmp_gpg.sec.keyring"
       pub_keyring : "tmp_gpg.pub.keyring"
       trustdb     : "tmp_gpg.trustdb"
+  loopback_port_range : [ 56000, 56100 ]
   security:
     pwh : derived_key_bytes : 32
     openpgp : derived_key_bytes : 12

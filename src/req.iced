@@ -61,9 +61,11 @@ exports.Client = class Client
 
   #-----------------
 
-  req : ({method, endpoint, args, http_status, kb_status}, cb) ->
+  req : ({method, endpoint, args, http_status, kb_status, pathname, search, json, jar}, cb) ->
     method or= 'GET'
-    opts = { method, json : true, jar : true }
+    jar = true unless jar?
+    json = true unless json?
+    opts = { method, json, jar }
     opts.headers = @headers or {}
     opts.headers["X-Keybase-Client"] = (new PackageJson).identify_as()
 
@@ -75,7 +77,8 @@ exports.Client = class Client
       protocol : "http#{if tls then 's' else ''}"
       hostname : env().get_host()
       port : env().get_port()
-      pathname : [ env().get_api_uri_prefix(), (endpoint + ".json") ].join("/")
+      pathname : pathname or [ env().get_api_uri_prefix(), (endpoint + ".json") ].join("/")
+      search : search
     }
     uri_fields.query = args if method in [ 'GET', 'DELETE' ]
     opts.uri = urlmod.format uri_fields
@@ -105,7 +108,7 @@ exports.Client = class Client
         err.upgrade_to = v
       else
         err = new E.HttpError "Got reply #{res.statusCode}"
-    else if not (body?.status?.name in kb_status)
+    else if json and not(body?.status?.name in kb_status)
       err = new E.KeybaseError "#{body.status.desc} (error ##{body.status.code})"
       err.fields = body.status?.fields or {}
       log.debug "Full request: #{JSON.stringify opts}"

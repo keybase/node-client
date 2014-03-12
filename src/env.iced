@@ -171,14 +171,6 @@ class Env
     ret = join(ret, ".gnupg") if ret?
     return ret
 
-  get_key_server : () ->
-    self = @
-    @get_opt
-      env    : (e) -> e.KEYBASE_KEY_SERVER
-      arg    : (a) -> a.key_server
-      config : (c) -> c.key_server
-      dflt   : -> "hkp://#{self.get_host()}:#{self.get_port()}"
-
   get_gpg_cmd : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_GPG
@@ -199,6 +191,18 @@ class Env
       arg    : (a) -> a.proxy_ca_certs
       config : (c) -> c.proxy?.ca_certs
       dflt   : -> null
+
+  get_loopback_port_range : () ->
+    parse_range = (s) ->
+      if not s? then null
+      else if not (m = s.match /^(\d+)-(\d+)$/) then (parseInt(i,10) for i in m[1...])
+      else null
+
+    @get_opt
+      env    : (e) -> parse_range e.KEYBASE_LOOPBACK_PORT_RANGE
+      arg    : (a) -> parse_range a.loopback_port_range
+      config : (c) -> c.loopback_port_range
+      dflt   : -> constants.loopback_port_range
 
   get_args : () -> @argv._
   get_argv : () -> @argv

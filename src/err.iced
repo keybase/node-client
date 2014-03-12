@@ -54,6 +54,7 @@ exports.E = E = ie.make_errors
   NO_USERNAME : "Your username isn't known"
   CLEAN_CANCEL : "Cleanly bailed out"
   PATCH : "Key patching failed"
+  LOOPBACK : "Error in HKP loopback"
 
 #================================================
 
