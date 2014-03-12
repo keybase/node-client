@@ -21,6 +21,7 @@ exports.Client = class Client
     @_session = null
     @_csrf = null
     @_warned = false
+    @_proxy_ca_certs = null
 
   #--------------
 
@@ -30,6 +31,10 @@ exports.Client = class Client
     @headers or= {}
     (@headers[k] = v for k,v of d)
     true
+
+  #-----------------
+
+  set_proxy_ca_certs : (c) -> @_proxy_ca_certs = c
 
   #-----------------
 
@@ -65,7 +70,6 @@ exports.Client = class Client
     opts = { method, json : true, jar : true }
     opts.headers = @headers or {}
     opts.headers["X-Keybase-Client"] = (new PackageJson).identify_as()
-    opts.proxy = env().get_proxy()
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]
@@ -82,11 +86,20 @@ exports.Client = class Client
     if method is 'POST'
       opts.body = args
 
-    if tls and (ca = certs[uri_fields.hostname])?
+    log.debug "+ request to #{endpoint} (#{opts.uri})"
+
+    if (prx = env().get_proxy())?
+      log.debug "| using proxy #{prx}"
+      opts.proxy = prx
+
+    if not tls then # noop
+    else if opts.proxy? and (pcc = @_proxy_ca_certs)?
+      log.debug "| Using proxy CA certs #{pcc.files().join(':')}"
+      opts.ca = pcc.data().concat [ ca ]
+    else if (ca = certs[uri_fields.hostname])?
       log.debug "| Adding a custom CA for host #{uri_fields.hostname} when tls=#{tls}"
       opts.ca = [ ca ]
 
-    log.debug "+ request to #{endpoint} (#{opts.uri})"
     await request opts, defer err, res, body
     if err? then #noop
     else if not (res.statusCode in http_status) 

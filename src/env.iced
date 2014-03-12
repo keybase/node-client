@@ -190,7 +190,14 @@ class Env
     @get_opt 
       env    : (e) -> e.http_proxy or e.https_proxy
       arg    : (a) -> a.proxy
-      config : (c) -> c.proxy
+      config : (c) -> c.proxy?.url
+      dflt   : -> null
+
+  get_proxy_ca_certs : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_PROXY_CA_CERTS
+      arg    : (a) -> a.proxy_ca_certs
+      config : (c) -> c.proxy?.ca_certs
       dflt   : -> null
 
   get_args : () -> @argv._

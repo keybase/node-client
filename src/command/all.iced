@@ -13,6 +13,7 @@ db = require '../db'
 gpgw = require 'gpg-wrapper'
 keyring = require '../keyring'
 {platform_info,version_info} = require '../version'
+{ProxyCACerts} = require '../proxyca'
 
 ##=======================================================================
 
@@ -199,6 +200,16 @@ class Main
 
   #----------------------------------
 
+  init_proxy_cas : (cb) ->
+    cas = new ProxyCACerts()
+    await cas.load defer err, found
+    if not(err?) and found
+      req.set_proxy_ca_certs cas
+      @cmd.set_proxy_ca_certs cas
+    cb err
+
+  #----------------------------------
+
   setup : (cb) ->
     esc = make_esc cb, "setup"
 
@@ -210,6 +221,7 @@ class Main
     env().set_config @config
     @init_keyring()
     await @init_gpg esc defer()
+    await @init_proxy_cas esc defer()
 
     await @startup_message esc defer()
     await @load_db esc defer()
