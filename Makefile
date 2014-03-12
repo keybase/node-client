@@ -63,6 +63,7 @@ $(BUILD_STAMP): \
 	lib/package.js \
 	lib/path.js \
 	lib/prompter.js \
+        lib/proxyca.js \
 	lib/sigs.js \
 	lib/pw.js \
 	lib/queue.js \

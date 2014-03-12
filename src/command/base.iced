@@ -86,6 +86,9 @@ exports.Base = class Base
     x : 
       alias : 'proxy'
       help : 'specify a proxy server to all HTTPS requests'
+    "proxy-ca-certs" :
+      action : "append"
+      help : "specify 1 or more CA certs (in a file)"
 
   #-------------------
 
@@ -94,6 +97,7 @@ exports.Base = class Base
   use_db : () -> true
   use_gpg : () -> true
   config_opts : () -> {}
+  set_proxy_ca_certs : (ca) -> 
 
   #-------------------
 
