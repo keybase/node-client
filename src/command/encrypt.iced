@@ -54,7 +54,7 @@ exports.Command = class Command extends Base
     args = [ 
       "--encrypt", 
       "-r", tp,
-      "--trusted-key", ti
+      "--trust-mode", "always"
     ]
     if @argv.sign
       sign_key = if @is_self then @them else @tssc.me
