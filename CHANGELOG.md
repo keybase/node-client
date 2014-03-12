@@ -1,3 +1,10 @@
+## 0.0.36 (2014-03-12)
+
+Bugfixes:
+
+  - Recompile with smaller package, against released keybase-proofs@0.0.8, and not
+    the local symlinked copy.
+
 ## 0.0.35 (2014-03-12)
 
 **SECURITY BUGFIXES**
