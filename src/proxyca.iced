@@ -2,6 +2,7 @@
 fs = require 'fs'
 {make_esc} = require 'iced-error'
 {E} = require './err'
+log = require './log'
 
 #=========================================================================
 
@@ -10,6 +11,7 @@ class ProxyCACert
   constructor : (@file) ->
 
   open : (cb) ->
+    log.debug "| Load proxy CA: #{@file}"
     await fs.readFile @file, defer err, @raw
     cb err
 
@@ -53,10 +55,12 @@ exports.ProxyCACerts = class ProxyCACerts
   #--------------------
 
   load : (cb) ->
+    log.debug "+ Load proxy CAs"
     esc = make_esc cb, "CAs::init"
     await @read_env esc defer()
     await @open_files esc defer()
     @_ca_arr = (c.to_string() for c in @_cas)
+    log.debug "- Loaded proxy CAs"
     cb null, (@_cas.length > 0)
 
   #--------------------
