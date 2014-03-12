@@ -38,7 +38,7 @@ exports.Command = class Command extends Base
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "enc" ]
-      help : "verify a user's authenticity and optionally track him"
+      help : "encrypt a message and output to stdout or a file"
     name = "encrypt"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
