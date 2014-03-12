@@ -1,8 +1,12 @@
-## 0.0.35
+## 0.0.35 (2014-03-12)
 
 **SECURITY BUGFIXES**
 
-  -  Don't mark keys as "ultimately trusted" as a consequence of encrypting
+  - Don't mark keys as "ultimately trusted" as a consequence of encrypting
+  - We effectively weren't using `hkps` before; we were sending requests for keys
+    during verification over the clear.  We still verified the keys against keybase
+    credentials, so the negative effects were limited.  However, now make `hkp` requests of
+    a local loopback server, which talks HTTPs to the server and uses proxies as instructed.
 
 Features:
 
