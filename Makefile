@@ -53,6 +53,7 @@ $(BUILD_STAMP): \
 	lib/file.js \
 	lib/fs.js \
 	lib/gpg.js \
+	lib/hkp_loopback.js \
 	lib/keymanager.js \
 	lib/keypatch.js \
 	lib/keypull.js \
@@ -60,7 +61,6 @@ $(BUILD_STAMP): \
 	lib/keyselector.js \
 	lib/keyutils.js \
 	lib/log.js \
-	lib/mainca.js \
 	lib/package.js \
 	lib/path.js \
 	lib/prompter.js \

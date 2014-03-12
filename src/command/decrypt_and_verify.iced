@@ -15,8 +15,8 @@ colors = require 'colors'
 {constants} = require '../constants'
 {User} = require '../user'
 {dict_union} = require '../util'
-mainca = require '../mainca'
 urlmod = require 'url'
+{HKPLoopback} = require '../hkp_loopback'
 
 ##=======================================================================
 
@@ -132,13 +132,11 @@ exports.Command = class Command extends Base
 
   #----------
 
-  make_gpg_args : (cb) ->
-    esc = make_esc cb, "Command::make_gpg_args"
-    ks = env().get_key_server()
+  make_gpg_args : () ->
     args = [ 
       "--with-colons",   
       "--keyid-format", "long", 
-      "--keyserver" , ks,
+      "--keyserver" , @hkpl.url()
       "--keyserver-options", "auto-key-retrieve=1", # needed for GPG 1.4.x
       "--with-fingerprint"
     ]
@@ -146,12 +144,6 @@ exports.Command = class Command extends Base
     args.push( "--output", o ) if (o = @argv.output)?
 
     @patch_gpg_args args
-
-    err = null
-    unless (u = urlmod.parse ks)? and (ks.protocol is 'hkps:')
-      await mainca.get_file u.hostname, esc defer cafile
-      args.push( "--keyserver-options", "ca-cert-file=#{cafile}") if cafile?
-      args.push( "--keyserver-options", "check-cert")
 
     gargs = { args }
     gargs.stderr = new BufferOutStream()
@@ -163,20 +155,32 @@ exports.Command = class Command extends Base
       gargs.stdin = process.stdin
       @batch = true
 
-    cb null, gargs
+    return gargs
+
+  #----------
+
+  make_hkp_loopback : (cb) ->
+    @hkpl = new HKPLoopback()
+    await @hkpl.listen defer err
+    @hkpl = null if err?
+    cb null
 
   #----------
 
   do_command : (cb) ->
-    await @make_gpg_args defer err, gargs
-    unless err?
-      @decrypt_stderr = gargs.stderr
-      await @tmp_keyring.gpg gargs, defer err, out
-      @do_output out
-      if err?
-        log.warn @decrypt_stderr.data().toString('utf8')
-      else if env().get_debug() 
-        log.debug @decrypt_stderr.data().toString('utf8')
+    esc = make_esc cb, "Command::do_command"
+    await @make_hkp_loopback esc defer()
+    gargs = @make_gpg_args()
+    @decrypt_stderr = gargs.stderr
+    await @tmp_keyring.gpg gargs, defer err, out
+    @do_output out
+    if err?
+      log.warn @decrypt_stderr.data().toString('utf8')
+    else if env().get_debug() 
+      log.debug @decrypt_stderr.data().toString('utf8')
+    await @hkpl.close defer err2 if @hkpl?
+    if err2?
+      log.warning "Error closing HKP loopback server: #{err2}"
     cb err 
 
   #----------
