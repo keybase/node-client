@@ -4,6 +4,10 @@
 
   -  Don't mark keys as "ultimately trusted" as a consequence of encrypting
 
+Bugfixes:
+
+  - Incorrect help text on keybase encrypt fixed.
+
 Features:
 
   - Close #130: `keybase push --update` updates the current public key with new UID, subkey and
