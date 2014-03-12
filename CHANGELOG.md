@@ -1,5 +1,9 @@
 ## 0.0.35
 
+**SECURITY BUGFIXES**
+
+  -  Don't mark keys as "ultimately trusted" as a consequence of encrypting
+
 Features:
 
   - Close #130: `keybase push --update` updates the current public key with new UID, subkey and

@@ -5,6 +5,7 @@ urlmod = require 'url'
 log = require './log'
 {certs} = require './ca'
 {PackageJson} = require './package'
+proxyca = require './proxyca'
 
 #=================================================
 
@@ -21,7 +22,6 @@ exports.Client = class Client
     @_session = null
     @_csrf = null
     @_warned = false
-    @_proxy_ca_certs = null
 
   #--------------
 
@@ -31,10 +31,6 @@ exports.Client = class Client
     @headers or= {}
     (@headers[k] = v for k,v of d)
     true
-
-  #-----------------
-
-  set_proxy_ca_certs : (c) -> @_proxy_ca_certs = c
 
   #-----------------
 
@@ -93,7 +89,7 @@ exports.Client = class Client
       opts.proxy = prx
 
     if not tls then # noop
-    else if opts.proxy? and (pcc = @_proxy_ca_certs)?
+    else if opts.proxy? and (pcc = proxyca.get())?
       log.debug "| Using proxy CA certs #{pcc.files().join(':')}"
       opts.ca = pcc.data().concat [ ca ]
     else if (ca = certs[uri_fields.hostname])?

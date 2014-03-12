@@ -97,7 +97,6 @@ exports.Base = class Base
   use_db : () -> true
   use_gpg : () -> true
   config_opts : () -> {}
-  set_proxy_ca_certs : (ca) -> 
 
   #-------------------
 

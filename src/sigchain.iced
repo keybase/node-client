@@ -16,6 +16,7 @@ colors = require 'colors'
 deq = require 'deep-equal'
 util = require 'util'
 {env} = require './env'
+proxyca = require './proxyca'
 
 ##=======================================================================
 
@@ -165,6 +166,7 @@ exports.Link = class Link
         libs : { cheerio, request, log }, 
         log_level : 'debug', 
         proxy : env().get_proxy() 
+        ca : proxyca.get()?.data()
       }
     cb err, scraper
 

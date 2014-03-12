@@ -13,7 +13,7 @@ db = require '../db'
 gpgw = require 'gpg-wrapper'
 keyring = require '../keyring'
 {platform_info,version_info} = require '../version'
-{ProxyCACerts} = require '../proxyca'
+proxyca = require '../proxyca'
 
 ##=======================================================================
 
@@ -201,11 +201,7 @@ class Main
   #----------------------------------
 
   init_proxy_cas : (cb) ->
-    cas = new ProxyCACerts()
-    await cas.load defer err, found
-    if not(err?) and found
-      req.set_proxy_ca_certs cas
-      @cmd.set_proxy_ca_certs cas
+    await proxyca.init defer err
     cb err
 
   #----------------------------------

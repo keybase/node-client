@@ -70,3 +70,17 @@ exports.ProxyCACerts = class ProxyCACerts
 
 #=========================================================================
 
+_pcc = null
+exports.init = (cb) ->
+  pcc = new ProxyCACerts()
+  await pcc.load defer err, found
+  if found and not err?
+    _pcc = pcc
+  cb err, _pcc
+
+#--------------
+
+exports.get = () -> _pcc
+
+#=========================================================================
+
