@@ -54,16 +54,17 @@ $(BUILD_STAMP): \
 	lib/fs.js \
 	lib/gpg.js \
 	lib/keymanager.js \
-        lib/keypatch.js \
+	lib/keypatch.js \
 	lib/keypull.js \
 	lib/keyring.js \
 	lib/keyselector.js \
 	lib/keyutils.js \
 	lib/log.js \
+	lib/mainca.js \
 	lib/package.js \
 	lib/path.js \
 	lib/prompter.js \
-        lib/proxyca.js \
+	lib/proxyca.js \
 	lib/sigs.js \
 	lib/pw.js \
 	lib/queue.js \

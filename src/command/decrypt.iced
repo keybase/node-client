@@ -45,27 +45,17 @@ exports.Command = class Command extends dv.Command
 
   #----------
 
-  make_gpg_args : () ->
-    args = [ 
-      "--decrypt" , 
-      "--with-colons",   
-      "--keyid-format", "long", 
-      "--keyserver" , env().get_key_server(),
-      "--keyserver-options", "auto-key-retrieve=1", # needed for GPG 1.4.x
-      "--with-fingerprint"
-      "--yes" # needed in the case of overwrite!
-    ]
-    args.push( "--keyserver-options", "debug=1")  if env().get_debug()
-    args.push( "--output", o ) if (o = @argv.output)?
-    gargs = { args }
-    gargs.stderr = new BufferOutStream()
-    if @argv.message
-      gargs.stdin = new BufferInStream @argv.message 
-    else if @argv.file?
-      args.push @argv.file 
+  patch_gpg_args : (args) ->
+    # 'yes' needed in the case of overwrite!
+    args.push("--decrypt", "--yes")
+
+  #----------
+
+  get_files : (args) ->
+    if (f = @argv.file)?
+      args.push f
+      true
     else
-      gargs.stdin = process.stdin
-      @batch = true
-    return gargs
+      false
 
 ##=======================================================================

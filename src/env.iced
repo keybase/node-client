@@ -81,6 +81,13 @@ class Env
       config : (c) -> c?.files?.tmp_keyring_dir
       dflt   : ( ) => join @get_home(), FN.config_dir, FN.tmp_keyring_dir
 
+  get_ca_cert_dir : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_CA_CERT_DIR
+      arg    : (a) -> a.ca_cert_dir
+      config : (c) -> c?.files?.ca_cert_dir
+      dflt   : ( ) => join @get_home(), FN.config_dir, FN.ca_cert_dir
+
   get_preserve_tmp_keyring : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_PRESERVE_TMP_KEYRING
@@ -177,7 +184,7 @@ class Env
       env    : (e) -> e.KEYBASE_KEY_SERVER
       arg    : (a) -> a.key_server
       config : (c) -> c.key_server
-      dflt   : -> "hkp://#{self.get_host()}:#{self.get_port()}"
+      dflt   : -> "hkp#{if self.get_no_tls() then '' else 's'}://#{self.get_host()}:#{self.get_port()}"
 
   get_gpg_cmd : () ->
     @get_opt

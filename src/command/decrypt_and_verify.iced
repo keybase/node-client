@@ -15,6 +15,8 @@ colors = require 'colors'
 {constants} = require '../constants'
 {User} = require '../user'
 {dict_union} = require '../util'
+mainca = require '../mainca'
+urlmod = require 'url'
 
 ##=======================================================================
 
@@ -130,15 +132,51 @@ exports.Command = class Command extends Base
 
   #----------
 
+  make_gpg_args : (cb) ->
+    esc = make_esc cb, "Command::make_gpg_args"
+    ks = env().get_key_server()
+    args = [ 
+      "--with-colons",   
+      "--keyid-format", "long", 
+      "--keyserver" , ks,
+      "--keyserver-options", "auto-key-retrieve=1", # needed for GPG 1.4.x
+      "--with-fingerprint"
+    ]
+    args.push( "--keyserver-options", "debug=1")  if env().get_debug()
+    args.push( "--output", o ) if (o = @argv.output)?
+
+    @patch_gpg_args args
+
+    err = null
+    unless (u = urlmod.parse ks)? and (ks.protocol is 'hkps:')
+      await mainca.get_file u.hostname, esc defer cafile
+      args.push( "--keyserver-options", "ca-cert-file=#{cafile}") if cafile?
+      args.push( "--keyserver-options", "check-cert")
+
+    gargs = { args }
+    gargs.stderr = new BufferOutStream()
+    if @argv.message
+      gargs.stdin = new BufferInStream @argv.message 
+    else if @argv.file?
+      args.push @argv.file 
+    else
+      gargs.stdin = process.stdin
+      @batch = true
+
+    cb null, gargs
+
+  #----------
+
   do_command : (cb) ->
-    gargs = @make_gpg_args()
-    @decrypt_stderr = gargs.stderr
-    await @tmp_keyring.gpg gargs, defer err, out
-    @do_output out
-    if err?
-      log.warn @decrypt_stderr.data().toString('utf8')
-    else if env().get_debug() 
-      log.debug @decrypt_stderr.data().toString('utf8')
+    await @make_gpg_args defer err, gargs
+    unless err?
+      @decrypt_stderr = gargs.stderr
+      await @tmp_keyring.gpg gargs, defer err, out
+      @do_output out
+      if err?
+        log.warn @decrypt_stderr.data().toString('utf8')
+      else if env().get_debug() 
+        log.debug @decrypt_stderr.data().toString('utf8')
     cb err 
 
   #----------
