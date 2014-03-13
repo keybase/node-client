@@ -1,3 +1,11 @@
+## 0.0.38 (2014-03-13)
+
+Bugfixes:
+
+  - Update to gpg-wrapper v0.0.39, for solving issues with people who have a `secret-keyring`
+    specified in their `gpg.conf` file. See keybase/keybase-issues#227.
+  
+
 ## 0.0.37 (2014-03-13)
 
 Bugfixes:
