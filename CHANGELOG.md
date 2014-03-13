@@ -6,7 +6,7 @@ Bugfixes:
 
 Misc:
 
-  - Start signing commits
+  - Start signing commits X
 
 ## 0.0.38 (2014-03-13)
 
