@@ -1,3 +1,9 @@
+## 0.0.39 (2014-03-13)
+
+Bugfixes:
+
+  - Documentation
+
 ## 0.0.38 (2014-03-13)
 
 Bugfixes:
