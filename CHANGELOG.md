@@ -6,6 +6,8 @@ Bugfixes:
     specified in their `gpg.conf` file. See keybase/keybase-issues#227.
   - Address keybase/keybase-issues#241: encryption works without meaningless error messages
     if you're not logged in.
+  - Address keybase/keybase-issues#225: Sane error messages if you haven't even configured your
+    client.
 
 ## 0.0.37 (2014-03-13)
 
