@@ -1,4 +1,3 @@
-
 log = require '../log'
 {PasswordManager} = require '../pw'
 {base58} = require '../basex'
@@ -83,7 +82,7 @@ exports.Base = class Base
       help : "specify a non-standard home directory; look for GPG keychain there"
     g : 
       alias : "gpg"
-      help : "specify an altnernate gpg command"
+      help : "specify an alternate gpg command"
     x : 
       alias : 'proxy'
       help : 'specify a proxy server to all HTTPS requests'
