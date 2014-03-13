@@ -106,16 +106,6 @@ exports.Base = class Base
 
   #-------------------
 
-  _login : (cb) ->
-    ok = false
-    err = null
-    await @_session_check defer err, ok
-    until ok
-      await @_login_iter defer err, ok
-    cb err, ok
-
-  #-------------------
-
   _init_pwmgr : () ->
     pwopts =
       password    : @password()

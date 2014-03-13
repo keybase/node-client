@@ -55,6 +55,7 @@ exports.Session = class Session
     @_logged_in = false
     @_salt = null
     @_passphrase = null
+    @_load_and_checked = false
 
   #-----
 
@@ -63,6 +64,26 @@ exports.Session = class Session
     await @load defer  err  unless @_file? and @_loaded
     await @login defer err  unless err?
     cb err
+
+  #-----
+
+  load_and_check : (cb) ->
+    esc = make_esc cb, "Session::load_and_check"
+    ret = null
+    if @_load_and_checked
+      ret = @logged_in()
+    else
+      await @load esc defer() unless @_file? and @_loaded
+      li_pre = @logged_in()
+      await @check esc defer li_post
+      @_load_and_checked = true
+      if li_pre and not li_post
+        @_file.clear()
+        req.clear_session()
+        req.clear_csrf()
+        await @_file.write esc defer()
+      ret = li_post
+    cb null, ret
 
   #-----
 

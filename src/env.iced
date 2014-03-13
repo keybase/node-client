@@ -209,6 +209,10 @@ class Env
 
   #---------------
 
+  is_configured : () -> @get_username()?
+
+  #---------------
+
   keybase_email : () -> make_email @get_username()
 
   #---------------

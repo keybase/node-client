@@ -86,7 +86,7 @@ exports.Command = class Command extends Base
     else
       @is_self = false
       @tssc = new TrackSubSubCommand { args : { them : them_un }, opts : @argv, batch }
-      await @tssc.run esc defer()
+      await @tssc.pre_encrypt esc defer()
       @them = @tssc.them
     await @do_encrypt esc defer()
     cb null

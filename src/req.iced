@@ -40,6 +40,18 @@ exports.Client = class Client
 
   #-----------------
 
+  clear_session : () ->
+    @_session = null
+    delete @headers['X-Keybase-Session'] if @headers?
+
+  #-----------------
+
+  clear_csrf : () ->
+    @_csrf = null
+    delete @headers['X-CSRF-Token'] if @headers?
+
+  #-----------------
+
   set_csrf : (c) ->
     @add_headers { "X-CSRF-Token" : c }
     @_csrf = c

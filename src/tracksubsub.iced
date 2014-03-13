@@ -73,8 +73,11 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   prompt_track : (proofs, cb) ->
     ret = err = null
-    if @opts.track_remote then ret = true
-    else if (@is_batch() or @opts.track_local or @track_local) and not @opts.prompt_remote 
+    if @opts.track_remote 
+      ret = true
+    else if @is_batch()
+      ret = false
+    else if (@opts.track_local or @track_local) and not @opts.prompt_remote
       ret = false
     else
       prompt = "Permanently track this user, and write proof to server?"
@@ -137,6 +140,19 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  pre_encrypt : (cb) ->
+    if not env().is_configured() 
+      await @id defer err
+    else
+      await session.load_and_check defer err, logged_in
+      unless err?
+        @skip_keypull = not(logged_in)
+        @track_local = not(logged_in)
+        await @run defer err
+    cb err
+
+  #----------
+
   parse_assertions : (cb) ->
     err = null
     [err, @assertions] = assertions.parse(a) if (a = @opts.assert)?
@@ -154,7 +170,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   keypull : (cb) ->
-    unless @ran_keypull
+    err = null
+    if not(@ran_keypull) and not(@skip_keypull)
       await keypull { need_secret : true, stdin_blocked : @is_batch() }, defer err
       @ran_keypull = true
     cb err
