@@ -148,8 +148,9 @@ exports.KeyManager = class KeyManager
   #--------------
 
   warn : (what, warnings) ->
-    for w in warnings.warnings()
-      log.warn "#{what}: #{w}"
+    if warnings?
+      for w in warnings.warnings()
+        log.warn "#{what}: #{w}"
 
   #--------------
 

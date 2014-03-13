@@ -1,3 +1,10 @@
+## 0.0.37 (2014-03-13)
+
+Bugfixes:
+
+  - Fix null pointer bug when warnings don't exist.
+    See keybase/keybase-issues#234
+
 ## 0.0.36 (2014-03-12)
 
 Bugfixes:
