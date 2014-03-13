@@ -55,6 +55,7 @@ exports.E = E = ie.make_errors
   CLEAN_CANCEL : "Cleanly bailed out"
   PATCH : "Key patching failed"
   LOOPBACK : "Error in HKP loopback"
+  NOT_CONFIGURED : "No user configured"
 
 #================================================
 

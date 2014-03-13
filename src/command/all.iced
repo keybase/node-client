@@ -223,6 +223,7 @@ class Main
     await @load_db esc defer()
     await @cleanup_previous_crash esc defer()
     await @load_session esc defer()
+    await @cmd.assertions esc defer()
     env().set_session @session
     cb null
 

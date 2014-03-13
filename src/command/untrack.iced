@@ -46,6 +46,10 @@ exports.Command = class Command extends Base
 
   #----------
 
+  needs_configuration : () -> true
+  
+  #----------
+
   remove_key : (them, cb) ->
     esc = make_esc cb, "Untrack::remove_key"
     go = false

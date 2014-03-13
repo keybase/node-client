@@ -14,6 +14,10 @@ exports.Command = class Command extends Base
 
   #----------
 
+  needs_configuration : () -> true
+
+  #----------
+
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "trck" ]

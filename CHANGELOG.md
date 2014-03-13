@@ -4,7 +4,8 @@ Bugfixes:
 
   - Update to gpg-wrapper v0.0.39, for solving issues with people who have a `secret-keyring`
     specified in their `gpg.conf` file. See keybase/keybase-issues#227.
-  
+  - Address keybase/keybase-issues#241: encryption works without meaningless error messages
+    if you're not logged in.
 
 ## 0.0.37 (2014-03-13)
 

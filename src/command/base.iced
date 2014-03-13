@@ -18,6 +18,7 @@ SC = constants.security
 triplesec = require 'triplesec'
 req = require '../req'
 {env} = require '../env'
+{make_esc} = require 'iced-error'
 
 #=========================================================================
 
@@ -97,6 +98,7 @@ exports.Base = class Base
   use_db : () -> true
   use_gpg : () -> true
   config_opts : () -> {}
+  needs_configuration : () -> false
 
   #-------------------
 
@@ -117,6 +119,21 @@ exports.Base = class Base
   #-------------------
 
   password : () -> pick @argv.password, @config.password()
+
+  #----------
+
+  assertions : (cb) ->
+    esc = make_esc cb, "Base::assertions"
+    await @assert_configured esc defer()
+    cb null
+
+  #----------
+
+  assert_configured : (cb) ->
+    err = null
+    if @needs_configuration() and not(env().is_configured())
+      err = new E.NotConfiguredError "you're not logged in. Please run `keybase login` or `keybase join`"
+    cb err
 
 #=========================================================================
 
