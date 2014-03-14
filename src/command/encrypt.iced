@@ -1,13 +1,6 @@
-{Base} = require './base'
 log = require '../log'
-{add_option_dict} = require './argparse'
 {E} = require '../err'
-{TrackSubSubCommand} = require '../tracksubsub'
-{BufferInStream} = require('iced-spawn')
-{master_ring} = require '../keyring'
-{make_esc} = require 'iced-error'
 {dict_union} = require '../util'
-{User} = require '../user'
 {env} = require '../env'
 ee = require './encrypt_and_email'
 

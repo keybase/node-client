@@ -32,7 +32,7 @@ exports.Command = class Command extends ee.Command
   get_cmd_desc : () ->
     return {
       opts :
-        alias :  [ "em" ]
+        aliases :  [ "em" ]
         help : "encrypt message and send an email (via keybase.io's server)"
       name : "email"
     }

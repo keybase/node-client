@@ -7,6 +7,7 @@ log = require '../log'
 {User} = require '../user'
 {env} = require '../env'
 {dict_union} = require '../util'
+{add_option_dict} = require './argparse'
 
 ##=======================================================================
 
