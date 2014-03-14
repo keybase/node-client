@@ -25,25 +25,27 @@ exports.Command = class Command extends ee.Command
     o :
       alias : 'output'
       help : 'the output file to write the encryption to'
+    s:
+      alias : "sign"
+      action : "storeTrue"
+      help : "sign in addition to encrypting"
   }
 
   #----------
 
-  add_subcommand_parser : (scp) ->
-    opts = 
-      aliases : [ "enc" ]
-      help : "encrypt a message and output to stdout or a file"
-    name = "encrypt"
-    sub = scp.addParser name, opts
-    add_option_dict sub, @OPTS
-    sub.addArgument [ "them" ], { nargs : 1 , help : "the username of the receiver" }
-    sub.addArgument [ "file" ], { nargs : '?', help : "the file to be encrypted" }
-    return opts.aliases.concat [ name ]
+  get_cmd_desc : () ->
+    return {
+      opts :
+        aliases : [ "enc" ]
+        help : "encrypt a message and output to stdout or a file"
+      name : "encrypt"
+    }
 
   #----------
 
   output_file : () -> @argv.output
   do_binary : () -> @argv.binary
+  do_sign : () -> @argv.sign
 
   #----------
 

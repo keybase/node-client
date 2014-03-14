@@ -22,20 +22,20 @@ exports.Command = class Command extends ee.Command
       alias : "no-sign"
       action : "storeTrue"
       help : "don't sign (sign by default)"
+    j :
+      alias : "subject"
+      help : "provide a **CLEARTEXT** subject for the mail"
   }
 
   #----------
 
-  add_subcommand_parser : (scp) ->
-    opts = 
-      aliases : [ "enc" ]
-      help : "verify a user's authenticity and optionally track him"
-    name = "encrypt"
-    sub = scp.addParser name, opts
-    add_option_dict sub, @OPTS
-    sub.addArgument [ "them" ], { nargs : 1 , help : "the username of the receiver" }
-    sub.addArgument [ "file" ], { nargs : '?', help : "the file to be encrypted" }
-    return opts.aliases.concat [ name ]
+  get_cmd_desc : () ->
+    return {
+      opts :
+        alias :  [ "em" ]
+        help : "encrypt message and send an email (via keybase.io's server)"
+      name : "email"
+    }
 
   #----------
 
@@ -43,9 +43,34 @@ exports.Command = class Command extends ee.Command
 
   #----------
 
+  subject : () -> 
+    j = @argv.subject 
+    j = "<An encrypted message via keybase.io>" unless j?
+    return j
+
+  #----------
+
   do_output : (out, cb) ->
-    if out? and not @argv.output? 
-      log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
+    arg =
+      endpoint : "email/proxy"
+      args : 
+        username : @argv.them
+        body : out
+        subject : @subject()
+    await req.post arg, defer err, body
+    cb err
+
+  #----------
+
+  pre_check : (cb) ->
+    esc = make_esc cb, "Command::pre_check"
+    await session.load_and_login esc defer()
+    arg =
+      endpoint : "email/check"
+      args :
+        username : @argv.them
+        notify_on_fail : 1
+    await req.get arg, esc defer body
     cb null
 
 ##=======================================================================

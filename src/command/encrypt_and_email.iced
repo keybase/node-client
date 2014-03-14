@@ -15,10 +15,6 @@ exports.Command = class Command extends Base
   #----------
 
   @OPTS : dict_union TrackSubSubCommand.OPTS, {
-    s:
-      alias : "sign"
-      action : "storeTrue"
-      help : "sign in addition to encrypting"
     m:
       alias : "message"
       help : "provide the message on the command line"   
@@ -26,9 +22,18 @@ exports.Command = class Command extends Base
 
   #----------
 
+  add_subcommand_parser : (scp) ->
+    { opts, name } = @get_cmd_desc()
+    sub = scp.addParser name, opts
+    add_option_dict sub, @OPTS
+    sub.addArgument [ "them" ], { nargs : 1 , help : "the username of the receiver" }
+    sub.addArgument [ "file" ], { nargs : '?', help : "the file to be encrypted" }
+    return opts.aliases.concat [ name ]
+
+  #----------
+
   output_file : () -> null
   do_binary : () -> false
-  do_sign : () -> @argv.sign
 
   #----------
 
@@ -59,8 +64,13 @@ exports.Command = class Command extends Base
 
   #----------
 
+  pre_check : (cb) -> cb null
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+    await @pre_check esc defer()
     batch = (not @argv.message and not @argv.file?)
     them_un = @argv.them[0]
     if them_un is env().get_username()
