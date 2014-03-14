@@ -88,6 +88,6 @@ setup:
 	npm install -d
 
 test:
-	(cd test && iced run.iced)
+	(cd test && ../$(ICED) run.iced)
 
 .PHONY: test setup
