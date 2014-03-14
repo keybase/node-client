@@ -2,13 +2,12 @@
 log = require '../log'
 {add_option_dict} = require './argparse'
 {E} = require '../err'
-{TrackSubSubCommand} = require '../tracksubsub'
-{BufferInStream} = require('iced-spawn')
-{master_ring} = require '../keyring'
 {make_esc} = require 'iced-error'
 {dict_union} = require '../util'
 {User} = require '../user'
 {env} = require '../env'
+{session} = require '../session'
+req = require '../req'
 ee = require './encrypt_and_email'
 
 ##=======================================================================
@@ -54,8 +53,8 @@ exports.Command = class Command extends ee.Command
     arg =
       endpoint : "email/proxy"
       args : 
-        username : @argv.them
-        body : out
+        username : @argv.them[0]
+        body : out.toString('utf8')
         subject : @subject()
     await req.post arg, defer err, body
     cb err
@@ -68,7 +67,7 @@ exports.Command = class Command extends ee.Command
     arg =
       endpoint : "email/check"
       args :
-        username : @argv.them
+        username : @argv.them[0]
         notify_on_fail : 1
     await req.get arg, esc defer body
     cb null
