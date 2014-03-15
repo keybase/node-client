@@ -61,7 +61,7 @@ exports.KeyManager = class KeyManager
       @key = @ring.make_key { key_id_64, secret : true }
       await @key.load esc defer()
     else
-      err = new E.GenerationError "Failed to parse output of key generation"
+      err = new E.GenerateError "Failed to parse output of key generation"
     cb err
 
   #--------------
