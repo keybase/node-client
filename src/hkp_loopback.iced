@@ -40,6 +40,7 @@ exports.HKPLoopback = class HKPLoopback
       pathname : inurl.pathname
       search : inurl.search
     await reqmod.get opts, defer err, body, gres
+    gres.headers['connection'] = 'close'
     res.writeHead gres.statusCode, gres.headers
     res.write gres.body
     log.debug "- Replied to loopback request w/ status=#{gres.statusCode}"
