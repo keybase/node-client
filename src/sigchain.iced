@@ -17,6 +17,8 @@ deq = require 'deep-equal'
 util = require 'util'
 {env} = require './env'
 proxyca = require './proxyca'
+scraper = require './scrapers'
+{CHECK,BAD_X} = require './display'
 
 ##=======================================================================
 
@@ -153,26 +155,6 @@ exports.Link = class Link
 
   #-----------
 
-  alloc_scraper : (type, cb) ->
-    PT = proofs.constants.proof_types
-    err = scraper = null
-    klass = switch type
-      when PT.twitter then proofs.TwitterScraper
-      when PT.github  then proofs.GithubScraper
-      else null
-    if not klass
-      err = new E.ScrapeError "cannot allocate scraper of type #{type}"
-    else
-      scraper = new klass { 
-        libs : { cheerio, request, log }, 
-        log_level : 'debug', 
-        proxy : env().get_proxy() 
-        ca : proxyca.get()?.data()
-      }
-    cb err, scraper
-
-  #-----------
-
   check_remote_proof : ({skip, pubkey, type, warnings, assertions}, cb) ->
 
     username = pubkey.username()
@@ -205,15 +187,16 @@ exports.Link = class Link
     else if not @api_url()
       rc = proofs.constants.v_codes.NOT_FOUND
     else
-      await @alloc_scraper type, esc defer scraper
+      await scraper.alloc type, esc defer scraper
       log.debug "+ Calling into scraper -> #{rsc}@#{type_s} -> #{@api_url()}"
       arg = 
         api_url : @api_url(),
         signature : @sig(),
         proof_text_check : @proof_text_check()
         remote_id : (""+@remote_id())
+        human_url : @human_url()
       arg = dict_union(arg, @proof_service_object())
-      await scraper.validate arg, esc defer rc, display
+      await scraper.validate arg, esc defer rc, msg
       log.debug "- Called scraper -> #{rc}"
 
     ok = false
@@ -223,6 +206,8 @@ exports.Link = class Link
     else
       ok = true
       log.debug "| proof checked out"
+
+    msg = scraper.make_message ok, @human_url()
     msg = [
        (if ok then CHECK else BAD_X) 
        ('"' + ((if ok then colors.green else colors.red) display) + '"')

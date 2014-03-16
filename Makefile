@@ -51,6 +51,7 @@ $(BUILD_STAMP): \
 	lib/config.js \
 	lib/constants.js \
 	lib/db.js \
+        lib/display.js \
 	lib/env.js \
 	lib/err.js \
 	lib/file.js \
@@ -74,6 +75,7 @@ $(BUILD_STAMP): \
 	lib/pw.js \
 	lib/queue.js \
 	lib/req.js \
+        lib/scrapers.js \
 	lib/session.js \
 	lib/setup.js \
 	lib/sigchain.js \
