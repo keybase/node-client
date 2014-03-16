@@ -54,7 +54,8 @@ exports.Link = class Link
   short_key_id : () -> @fingerprint()[-8...].toUpperCase()
   is_self_sig : () -> @sig_type() in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
   self_signer : () -> @payload_json()?.body?.key?.username
-  remote_username : () -> @payload_json()?.body?.service?.username
+  proof_service_object : () -> @payload_json()?.body?.service
+  remote_username : () -> @proof_service_object()?.username
   sig_type : () -> @obj.sig_type
   proof_type : () -> @obj.proof_type
   proof_state : () -> @obj.proof_state
@@ -187,32 +188,32 @@ exports.Link = class Link
     assert = assertions?.found type_s
 
     await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
-    if not (remote_username = @remote_username())?
-      err = new E.VerifyError "no remote username found in proof"
-      await athrow err, esc defer()
 
-    assert?.set_remote_username remote_username
+    # For Twitter and GitHub, this will set the remote username.
+    # For web services, this will set the hostname/protocol pair
+    assert?.set_proof_service_object @proof_service_object()
 
     if not skip and not @api_url()
       await @refresh defer e2
       if e2?
         log.warn "Error fetching URL for proof: #{e2.message}"
 
-    log.debug "| remote username is #{remote_username}"
+    rsc = JSON.stringify @proof_service_object()
+    log.debug "| remote service desc is #{rsc}"
     if skip
       rc = proofs.constants.v_codes.OK
     else if not @api_url()
       rc = proofs.constants.v_codes.NOT_FOUND
     else
       await @alloc_scraper type, esc defer scraper
-      log.debug "+ Calling into scraper -> #{remote_username}@#{type_s} -> #{@api_url()}"
-      await scraper.validate {
-        username : remote_username,
+      log.debug "+ Calling into scraper -> #{rsc}@#{type_s} -> #{@api_url()}"
+      arg = 
         api_url : @api_url(),
         signature : @sig(),
         proof_text_check : @proof_text_check()
         remote_id : (""+@remote_id())
-      }, esc defer rc
+      arg = dict_union(arg, @proof_service_object())
+      await scraper.validate arg, esc defer rc, display
       log.debug "- Called scraper -> #{rc}"
 
     ok = false
@@ -224,7 +225,7 @@ exports.Link = class Link
       log.debug "| proof checked out"
     msg = [
        (if ok then CHECK else BAD_X) 
-       ('"' + ((if ok then colors.green else colors.red) remote_username) + '"')
+       ('"' + ((if ok then colors.green else colors.red) display) + '"')
        "on"
        (type_s + ":")
        @human_url()

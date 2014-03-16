@@ -36,7 +36,7 @@ class Assertions
 
 #=======================================================================
 
-class Assert
+class WebServiceAssert
   constructor : (@key, @val) ->
 
   @make : (key,val) ->
@@ -68,9 +68,9 @@ class Assert
 
 #=======================================================================
 
-class TwitterAssert extends Assert
+class TwitterAssert extends WebServiceAssert
 
-class GithubAssert extends Assert
+class GithubAssert extends WebServiceAssert
 
 #=======================================================================
 
