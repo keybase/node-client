@@ -36,7 +36,7 @@ class Assertions
 
 #=======================================================================
 
-class WebServiceAssert
+class SocialNetworkAssert
   constructor : (@key, @val) ->
 
   @make : (key,val) ->
@@ -49,7 +49,7 @@ class WebServiceAssert
         null
     return [err, out]
 
-  set_remote_username : (u) -> @_username = u
+  set_proof_service_object : (o) -> @_username = o.username
   found : () -> @_found = true
 
   success : (u) ->
@@ -68,9 +68,8 @@ class WebServiceAssert
 
 #=======================================================================
 
-class TwitterAssert extends WebServiceAssert
-
-class GithubAssert extends WebServiceAssert
+class TwitterAssert extends SocialNetworkAssert
+class GithubAssert extends SocialNetworkAssert
 
 #=======================================================================
 

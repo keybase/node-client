@@ -24,7 +24,6 @@ scraper = require './scrapers'
 
 strip = (x) -> x.replace(/\s+/g, '')
 
-[CHECK,BAD_X] = if (process.platform is 'win32') then [ "ok", "BAD" ] else ["\u2714", "\u2716" ]
 
 ##=======================================================================
 
@@ -207,14 +206,6 @@ exports.Link = class Link
       ok = true
       log.debug "| proof checked out"
 
-    msg = scraper.make_message ok, @human_url()
-    msg = [
-       (if ok then CHECK else BAD_X) 
-       ('"' + ((if ok then colors.green else colors.red) display) + '"')
-       "on"
-       (type_s + ":")
-       @human_url()
-    ]
     msg.push ("(you've recently OK'ed these proofs)") if skip
     msg.push "(failed with code #{rc})" if not ok
     log.console.error msg.join(' ')
