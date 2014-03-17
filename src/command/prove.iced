@@ -41,8 +41,9 @@ exports.Command = class Command extends Base
     err = null
     unless (ret = @argv.remote_name)?
       await prompt_remote_name @stub.prompter(), defer err, ret
-    @remote_name = ret
-    @remote_name_normalized = @stub.normalize_name(ret)
+    unless err?
+      @remote_name = ret
+      @remote_name_normalized = @stub.normalize_name(ret)
     cb err, ret
 
   #----------

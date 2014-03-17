@@ -442,10 +442,6 @@ exports.SigChain = class SigChain
     MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
 
     INSERT = (d, keys, val) ->
-      console.log "insert"
-      console.log d
-      console.log keys
-      console.log val
       for k in keys[0...-1]
         d = MAKE(d,k,{})
       d[keys[-1...][0]] = val
