@@ -72,6 +72,11 @@ exports.Link = class Link
 
   #--------------------
 
+  get_sub_id : () -> 
+    scraper.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
+
+  #--------------------
+
   to_table_obj : () -> 
     ret = @body().track
     ret.ctime = @ctime()
@@ -229,7 +234,6 @@ exports.Link = class Link
       state : @obj.proof_state
       proof_type : @obj.proof_type
   }
-
 
 ##=======================================================================
 
@@ -432,6 +436,12 @@ exports.SigChain = class SigChain
 
     MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
 
+    INSERT = (d, keys, val) ->
+      for k in keys
+        d = MAKE(d,k,{})
+        lst = k
+      d[last] = val
+
     out = {}
     index = {}
 
@@ -448,7 +458,9 @@ exports.SigChain = class SigChain
         when ST.REMOTE_PROOF 
           S = constants.proof_state 
           if link.proof_state() in [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
-            MAKE(out, lt, {})[link.proof_type()] = link
+            keys = [ lt , link.proof_type() ]
+            if (sub_id = link.get_sub_id())? then keys.push sub_id
+            INSERT(out, keys, link)
 
         when ST.TRACK 
           if not (id = body?.track?.id)? 

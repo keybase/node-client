@@ -30,6 +30,10 @@ class Base
 
   #-------------------
 
+  get_sub_id : () -> null
+
+  #-------------------
+
   validate : (arg, cb) -> 
     await @_scraper.validate arg, defer rc
     ok = (rc is proofs.constants.v_codes.OK)
@@ -67,6 +71,7 @@ exports.Github = class Github extends SocialNetwork
 exports.GenericWebSite = class GenericWebSite extends Base
   constructor : () ->
   get_scraper_klass : () -> proofs.GenericWebSiteScraper
+  get_sub_id : (o) -> [ o.protocol, o.hostname ].join "://"
 
   format : ({arg, display, ok}) -> 
     color = if not(ok) then 'red'
@@ -80,7 +85,17 @@ exports.GenericWebSite = class GenericWebSite extends Base
 
 #==============================================================
 
-exports.make = (type, cb) ->
+exports.alloc = (type, cb) ->
+  o = alloc_stub type
+  if o?
+    o.make_scraper()
+  else
+    err = new E.ScrapeError "cannot allocate scraper of type #{type}"
+  cb err, o
+
+#==============================================================
+
+exports.alloc_stub = alloc_stub = (type) ->
   PT = proofs.constants.proof_types
   err = scraper = null
   klass = switch type
@@ -88,10 +103,7 @@ exports.make = (type, cb) ->
     when PT.github           then Github
     when PT.generic_web_site then GenericWebSite
     else null
-  if not klass
-    err = new E.ScrapeError "cannot allocate scraper of type #{type}"
-  else
-    w = new klass {}
-  cb err, w
+  if klass then new klass {} 
+  else null
 
 #==============================================================
