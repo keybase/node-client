@@ -5,7 +5,7 @@ log = require '../log'
 {PackageJson} = require '../package'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
-{prompt_yn,prompt_remote_username} = require '../prompter'
+{prompt_yn,prompt_remote_name} = require '../prompter'
 {TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
 {req} = require '../req'
@@ -31,16 +31,16 @@ exports.Command = class Command extends Base
     name = "prove"
     sub = scp.addParser name, opts
     sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
-    sub.addArgument [ "remote_username"], { nargs : "?", help : "username at that service" }
+    sub.addArgument [ "remote_name"], { nargs : "?", help : "username at that service" }
     return opts.aliases.concat [ name ]
 
   #----------
 
-  prompt_remote_username : (cb) ->
+  prompt_remote_name : (cb) ->
     svc = @argv.service[0]
     err = null
-    unless (ret = @argv.remote_username)?
-      await prompt_remote_username svc, defer err, ret
+    unless (ret = @argv.remote_name)?
+      await prompt_remote_name @stub.prompter(), defer err, ret
     @remote_username = ret
     cb err, ret
 
@@ -58,21 +58,39 @@ exports.Command = class Command extends Base
     err = null
     if (s = S.aliases[@argv.service[0].toLowerCase()])?
       @service_name = s
+      @klass = @TABLE[s]
+      assert.ok @klass?
+      @stub = new @klass {}
     else
       err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
     cb err
 
   #----------
 
-  check_exists : (cb) ->
-    rp = @me.list_remote_proofs() 
+  check_exists_common : (prompt, cb) ->
     err = null
-    if rp? and (v = rp[@service_name]) 
-      await prompt_yn { 
-        prompt : "You already have proved you are #{v} at #{@service_name}; overwrite? ", 
-        defval : false }, defer err, ok
-      if not err? and not ok
-        err = new E.ProofExistsError "Proof already exists"
+    await prompt_yn { prompt, defval : false }, defer err, ok
+    if not err? and not ok
+      err = new E.ProofExistsError "Proof already exists"
+    cb err
+
+  #----------
+
+  check_exists_1 : (cb) ->
+    @rp = @me.list_remote_proofs() 
+    err = null
+    if rp? and (v = @rp[@service_name]) and @stub.single_occupancy()
+      prompt = "You already have proved you are #{v} at #{@service_name}; overwrite? "
+      await @check_exists_common prompt, defer err
+    cb err
+
+  #----------
+
+  check_exists_2 : (cb) ->
+    err = null
+    if not(@stub.single_occupancy()) and (@normalized_remote_name in @rp[@service_name])
+      prompt = "You already have proved ownership of #{@remote_name}; overwrite? "
+      await @check_exists_common prompt, defer err
     cb err
 
   #----------
@@ -116,8 +134,9 @@ exports.Command = class Command extends Base
     await @parse_args esc defer()
     await session.login esc defer()
     await User.load_me { secret : true }, esc defer @me
-    await @check_exists esc defer()
-    await @prompt_remote_username esc defer()
+    await @check_exists_1 esc defer()
+    await @prompt_remote_name esc defer()
+    await @check_exists_2 esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     await @handle_post esc defer()

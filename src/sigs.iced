@@ -83,7 +83,13 @@ class BaseSigGen
     await @_do_signature esc defer()
     await @_store_signature esc defer()
     cb null, @sig
- 
+
+  #-----------------------
+
+  normalize_name : (n) -> 
+    klass = @_binding_klass()
+    klass.normalize_name(n)
+
 #===========================================
 
 exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
@@ -142,7 +148,7 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
 #===========================================
 
-class RemoteServiceProofGen extends BaseSigGen
+class SocialNetworkProofGen extends BaseSigGen
   constructor : (args) ->
     @remote_username = args.remote_username
     super args
@@ -155,6 +161,8 @@ class RemoteServiceProofGen extends BaseSigGen
   _v_modify_store_arg : (arg) ->
     arg.remote_username = @remote_username
     arg.type = "web_service_binding." + @_remote_service_name()
+
+  single_occupancy : () -> true
 
 #===========================================
 
@@ -174,7 +182,9 @@ exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
 
 #===========================================
 
-exports.GenericWebSiteProofGen = class BaseSigGen
+exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
+
+  _binding_klass : () -> proofs.GenericWebSiteBinding
 
   constructor : (args) ->
     @remote_host = args.remote_host
@@ -182,7 +192,8 @@ exports.GenericWebSiteProofGen = class BaseSigGen
 
   _make_binding_eng : (args) ->
     args.remote_host = @remote_host
-    new proofs.GenericWebSiteBinding args
+    klass = @_binding_klass()
+    new klass args
 
   _v_modify_store_arg : (arg) ->
     arg.remote_host = @remote_host
@@ -192,16 +203,18 @@ exports.GenericWebSiteProofGen = class BaseSigGen
     file = proofs.GenericWebSiteScraper.FILE
     "Please save the following file as #{colors.bold('/' + file)}: "
 
+  single_occupancy : () -> false
+
 #===========================================
 
-exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
+exports.TwitterProofGen = class TwitterProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.TwitterBinding
   _remote_service_name : () -> "twitter"
   imperative_verb : () -> "tweet"
   display_name : () -> "Twitter"
   instructions : () -> "Please #{colors.bold('publicly')} tweet the following:"
 
-exports.GithubProofGen = class GithubProofGen extends RemoteServiceProofGen
+exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
   imperative_verb : () -> "post a Gist with"

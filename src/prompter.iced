@@ -105,15 +105,11 @@ exports.prompt_passphrase = ({prompt,confirm,extra,short}, cb) ->
 
 #========================================================================
 
-exports.prompt_remote_username = (svc, cb) ->
-  seq = 
-    username :
-      prompt : "Your username on #{svc}"
-      checker : checkers.remote_username
+exports.prompt_remote_name = ({prompt, checker}, cb) ->
+  seq = { name : { prompt, checker } }
   p = new Prompter seq
   await p.run defer err
-  cb err, p.data().username
-
+  cb err, p.data().name
 
 #========================================================================
 
