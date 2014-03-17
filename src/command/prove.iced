@@ -82,7 +82,7 @@ exports.Command = class Command extends Base
     @rp = @me.list_remote_proofs() 
     err = null
     if rp? and (v = @rp[@service_name]) and @stub.single_occupancy()
-      prompt = "You already have proved you are #{v} at #{@service_name}; overwrite? "
+      prompt = "You already have proven you are #{v} at #{@service_name}; overwrite? "
       await @check_exists_common prompt, defer err
     cb err
 
@@ -92,7 +92,7 @@ exports.Command = class Command extends Base
     err = null
     if not(@stub.single_occupancy()) and (v = @rp[@service_name])? and 
          (@remote_name_normalized in v)
-      prompt = "You already have proved ownership of #{@remote_name}; overwrite? "
+      prompt = "You already have proven ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
     cb err
 

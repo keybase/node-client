@@ -72,7 +72,7 @@ exports.Github = class Github extends SocialNetwork
 exports.GenericWebSite = class GenericWebSite extends Base
   constructor : () ->
   get_scraper_klass : () -> proofs.GenericWebSiteScraper
-  get_sub_id : (o) -> [ o.protocol, o.hostname ].join "://"
+  get_sub_id : (o) -> (x.toLowerCase() for x in [ o.protocol, o.hostname ]).join "//"
   to_list_display : (o) -> @get_sub_id o
 
   format : ({arg, display, ok}) -> 

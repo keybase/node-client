@@ -210,12 +210,15 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     arg.type = "web_service_binding.generic"
 
   instructions : () -> 
-    file = proofs.GenericWebSiteScraper.FILE
-    "Please save the following file as #{colors.bold('/' + file)}: "
+    "Please save the following file as #{colors.bold @filename()}"
 
   single_occupancy : () -> false
 
-  display_name : () -> @remote_host
+  display_name : () -> @filename()
+
+  filename : () ->
+    file = proofs.GenericWebSiteScraper.FILE
+    @remote_host + "/" + file
 
   prompter : () ->
     klass = @_binding_klass()
