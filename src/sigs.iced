@@ -166,11 +166,13 @@ class SocialNetworkProofGen extends BaseSigGen
 
   prompter : () -> 
     klass = @_binding_klass()
-    return {
+    ret = {
       prompt  : "Your username on #{@display_name()}"
-      checker : () -> klass.check_name
-      hint    : () -> klass.name_hint()
+      checker : 
+        f    : klass.check_name
+        hint : klass.name_hint()
     }
+    return ret
 
 #===========================================
 

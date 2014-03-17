@@ -106,6 +106,7 @@ exports.prompt_passphrase = ({prompt,confirm,extra,short}, cb) ->
 #========================================================================
 
 exports.prompt_remote_name = ({prompt, checker, hint}, cb) ->
+  console.log checker
   seq = { name : { prompt, checker, hint } }
   p = new Prompter seq
   await p.run defer err
