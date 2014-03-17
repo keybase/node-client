@@ -148,6 +148,12 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
 #===========================================
 
+strip_at = (x) ->
+  if x? and x.length and x[0] is '@' then x[1...]
+  else x
+
+#===========================================
+
 class SocialNetworkProofGen extends BaseSigGen
   constructor : (args) ->
     @remote_username = args.remote_name_normalized
@@ -169,8 +175,9 @@ class SocialNetworkProofGen extends BaseSigGen
     ret = {
       prompt  : "Your username on #{@display_name()}"
       checker : 
-        f    : klass.check_name
-        hint : klass.name_hint()
+        f         : klass.check_name
+        hint      : klass.name_hint()
+        normalize : strip_at
     }
     return ret
 

@@ -36,15 +36,13 @@ class Base
 
   validate : (arg, cb) -> 
     await @_scraper.validate arg, defer err, rc
-    ok = not(err?) and (rc is proofs.constants.v_codes.OK)
-    msg = @format { arg, ok }
-    cb err, rc, msg
+    cb err, rc
 
 #==============================================================
 
 class SocialNetwork extends Base
 
-  format : ({arg, ok}) -> [
+  format_msg : ({arg, ok}) -> [
     (if ok then CHECK else BAD_X) 
     ('"' + ((if ok then colors.green else colors.red) arg.username) + '"')
     "on"
@@ -75,7 +73,7 @@ exports.GenericWebSite = class GenericWebSite extends Base
   get_sub_id : (o) -> (x.toLowerCase() for x in [ o.protocol, o.hostname ]).join "//"
   to_list_display : (o) -> @get_sub_id o
 
-  format : ({arg, display, ok}) -> 
+  format_msg : ({arg, display, ok}) -> 
     color = if not(ok) then 'red'
     else if arg.protocol is 'http:' then 'yellow'
     else 'green'

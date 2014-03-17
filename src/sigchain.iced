@@ -190,21 +190,23 @@ exports.Link = class Link
 
     rsc = JSON.stringify @proof_service_object()
     log.debug "| remote service desc is #{rsc}"
+
+    await scrapemod.alloc type, esc defer scraper
+    arg = 
+      api_url : @api_url(),
+      signature : @sig(),
+      proof_text_check : @proof_text_check()
+      remote_id : (""+@remote_id())
+      human_url : @human_url()
+    arg = dict_union(arg, @proof_service_object())
+
     if skip
       rc = proofs.constants.v_codes.OK
     else if not @api_url()
       rc = proofs.constants.v_codes.NOT_FOUND
     else
-      await scrapemod.alloc type, esc defer scraper
       log.debug "+ Calling into scraper -> #{rsc}@#{type_s} -> #{@api_url()}"
-      arg = 
-        api_url : @api_url(),
-        signature : @sig(),
-        proof_text_check : @proof_text_check()
-        remote_id : (""+@remote_id())
-        human_url : @human_url()
-      arg = dict_union(arg, @proof_service_object())
-      await scraper.validate arg, esc defer rc, msg
+      await scraper.validate arg, esc defer rc
       log.debug "- Called scraper -> #{rc}"
 
     ok = false
@@ -215,6 +217,7 @@ exports.Link = class Link
       ok = true
       log.debug "| proof checked out"
 
+    msg = scraper.format_msg { arg, ok }
     msg.push ("(you've recently OK'ed these proofs)") if skip
     msg.push "(failed with code #{rc})" if not ok
     log.console.error msg.join(' ')
