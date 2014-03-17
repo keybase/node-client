@@ -77,7 +77,7 @@ exports.GenericWebSite = class GenericWebSite extends Base
 
   format : ({arg, display, ok}) -> 
     color = if not(ok) then 'red'
-    else if arg.protocol is 'http' then 'yellow'
+    else if arg.protocol is 'http:' then 'yellow'
     else 'green'
     return [
       (if ok then CHECK else BAD_X),
