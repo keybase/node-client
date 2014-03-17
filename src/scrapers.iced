@@ -1,4 +1,3 @@
-
 log = require './log'
 request = require 'request'
 cheerio = require 'cheerio'
@@ -7,6 +6,7 @@ proofs = require 'keybase-proofs'
 {E} = require './err'
 {CHECK,BAD_X} = require './display'
 colors = require 'colors'
+proxyca = require './proxyca'
 
 #==============================================================
 
@@ -35,10 +35,10 @@ class Base
   #-------------------
 
   validate : (arg, cb) -> 
-    await @_scraper.validate arg, defer rc
-    ok = (rc is proofs.constants.v_codes.OK)
+    await @_scraper.validate arg, defer err, rc
+    ok = not(err?) and (rc is proofs.constants.v_codes.OK)
     msg = @format { arg, ok }
-    cb rc, msg
+    cb err, rc, msg
 
 #==============================================================
 

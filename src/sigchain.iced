@@ -8,7 +8,7 @@ log = require './log'
 {format_fingerprint,Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
-{date_to_unix,make_email} = require './util'
+{dict_union,date_to_unix,make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
 request = require 'request'
@@ -16,8 +16,7 @@ colors = require './colors'
 deq = require 'deep-equal'
 util = require 'util'
 {env} = require './env'
-proxyca = require './proxyca'
-scraper = require './scrapers'
+scrapemod = require './scrapers'
 {CHECK,BAD_X} = require './display'
 
 ##=======================================================================
@@ -73,12 +72,12 @@ exports.Link = class Link
   #--------------------
 
   get_sub_id : () -> 
-    scraper.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
+    scrapemod.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
 
   #--------------------
 
   to_list_display : () ->
-    scraper.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
+    scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
 
   #--------------------
 
@@ -196,7 +195,7 @@ exports.Link = class Link
     else if not @api_url()
       rc = proofs.constants.v_codes.NOT_FOUND
     else
-      await scraper.alloc type, esc defer scraper
+      await scrapemod.alloc type, esc defer scraper
       log.debug "+ Calling into scraper -> #{rsc}@#{type_s} -> #{@api_url()}"
       arg = 
         api_url : @api_url(),
@@ -571,10 +570,17 @@ exports.SigChain = class SigChain
     n = 0
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"
-      for type,link of tab
+      for type,v of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
-        await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
-        n++
+
+        # For single-shot proofs like Twitter and Github, this will be the proof.
+        # For multi-tenant proofs like 'generic_web_site', we have to go one level deeper
+        links = if (v instanceof Link) then [ v ]
+        else (v2 for k,v2 of v)
+
+        for link in links
+          await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
+          n++
     else
       log.debug "| No remote proofs found"
     log.debug "- #{pubkey.username()}: checked remote proofs"
