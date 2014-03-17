@@ -560,7 +560,11 @@ exports.SigChain = class SigChain
       for type,obj of tab
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
-        display_obj out, type, obj
+
+        # In the case of an end-link, just display it.  In the 
+        # case of a dictionary of more links, just list the keys
+        out[type] = if (obj instanceof Link) then obj.to_list_display()
+        else (k.toLowerCase() for k,v of obj)
 
     return out
 
