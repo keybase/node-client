@@ -150,7 +150,7 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
 class SocialNetworkProofGen extends BaseSigGen
   constructor : (args) ->
-    @remote_username = args.remote_username
+    @remote_username = args.remote_name_normalized
     super args
 
   _make_binding_eng : (args) ->
@@ -163,6 +163,14 @@ class SocialNetworkProofGen extends BaseSigGen
     arg.type = "web_service_binding." + @_remote_service_name()
 
   single_occupancy : () -> true
+
+  prompter : () -> 
+    klass = @_binding_klass()
+    return {
+      prompt  : "Your username on #{@display_name()}? "
+      checker : () -> klass.check_name
+      hint    : () -> klass.name_hint()
+    }
 
 #===========================================
 
@@ -187,7 +195,7 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
   _binding_klass : () -> proofs.GenericWebSiteBinding
 
   constructor : (args) ->
-    @remote_host = args.remote_host
+    @remote_host = args.remote_name_normalized
     super args
 
   _make_binding_eng : (args) ->
@@ -204,6 +212,8 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     "Please save the following file as #{colors.bold('/' + file)}: "
 
   single_occupancy : () -> false
+
+  display_name : () -> @remote_host
 
 #===========================================
 
