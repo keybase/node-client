@@ -51,6 +51,7 @@ class SocialNetwork extends Base
     (@which() + ":")
     arg.human_url
   ]
+  to_list_display : (arg) -> arg.username
 
 #==============================================================
 
@@ -72,6 +73,7 @@ exports.GenericWebSite = class GenericWebSite extends Base
   constructor : () ->
   get_scraper_klass : () -> proofs.GenericWebSiteScraper
   get_sub_id : (o) -> [ o.protocol, o.hostname ].join "://"
+  to_list_display : (o) -> @get_sub_id o
 
   format : ({arg, display, ok}) -> 
     color = if not(ok) then 'red'

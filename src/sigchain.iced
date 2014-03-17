@@ -77,6 +77,11 @@ exports.Link = class Link
 
   #--------------------
 
+  to_list_display : () ->
+    scraper.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
+
+  #--------------------
+
   to_table_obj : () -> 
     ret = @body().track
     ret.ctime = @ctime()
@@ -542,11 +547,20 @@ exports.SigChain = class SigChain
 
   list_remote_proofs : () ->
     out = null
+
+    display_obj = (out, k, v) ->
+      if (v instanceof Link)
+        out[k] = v.to_list_display()
+      else
+        for k2,v2 of v
+          out[k] = {} unless out[k]?
+          display_obj out[k], k2, v2
+
     if @table? and (tab = @table[ST.REMOTE_PROOF])?
-      for type,link of tab
+      for type,obj of tab
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
-        out[type] = link.remote_username()
+        display_obj out, type, obj
 
     return out
 
