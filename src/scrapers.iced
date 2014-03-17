@@ -1,6 +1,6 @@
 
 log = require './log'
-request = require './request'
+request = require 'request'
 cheerio = require 'cheerio'
 {env} = require './env'
 proofs = require 'keybase-proofs'

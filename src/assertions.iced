@@ -36,7 +36,7 @@ class Assertions
 
 #=======================================================================
 
-class SocialNetworkAssert
+class Assert
   constructor : (@key, @val) ->
 
   @make : (key,val) ->
@@ -55,6 +55,10 @@ class SocialNetworkAssert
   success : (u) ->
     @_uri = u
     @_success = true
+
+#=======================================================================
+
+class SocialNetworkAssert extends Assert
 
   check : () ->
     ret = false
