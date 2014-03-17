@@ -442,10 +442,13 @@ exports.SigChain = class SigChain
     MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
 
     INSERT = (d, keys, val) ->
-      for k in keys
+      console.log "insert"
+      console.log d
+      console.log keys
+      console.log val
+      for k in keys[0...-1]
         d = MAKE(d,k,{})
-        lst = k
-      d[last] = val
+      d[keys[-1...][0]] = val
 
     out = {}
     index = {}
@@ -547,14 +550,6 @@ exports.SigChain = class SigChain
 
   list_remote_proofs : () ->
     out = null
-
-    display_obj = (out, k, v) ->
-      if (v instanceof Link)
-        out[k] = v.to_list_display()
-      else
-        for k2,v2 of v
-          out[k] = {} unless out[k]?
-          display_obj out[k], k2, v2
 
     if @table? and (tab = @table[ST.REMOTE_PROOF])?
       for type,obj of tab
