@@ -174,6 +174,26 @@ exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
 
 #===========================================
 
+exports.GenericWebSiteProofGen = class BaseSigGen
+
+  constructor : (args) ->
+    @remote_host = args.remote_host
+    super args
+
+  _make_binding_eng : (args) ->
+    args.remote_host = @remote_host
+    new proofs.GenericWebSiteBinding args
+
+  _v_modify_store_arg : (arg) ->
+    arg.remote_host = @remote_host
+    arg.type = "web_service_binding.generic"
+
+  instructions : () -> 
+    file = proofs.GenericWebSiteScraper.FILE
+    "Please save the following file as #{colors.bold('/' + file)}: "
+
+#===========================================
+
 exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
   _binding_klass : () -> proofs.TwitterBinding
   _remote_service_name : () -> "twitter"
