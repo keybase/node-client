@@ -217,6 +217,15 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
 
   display_name : () -> @remote_host
 
+  prompter : () ->
+    klass = @_binding_klass()
+    return {
+      prompt : "URL prefix to check; HTTPS is strongly encouraged"
+      checker : 
+        f    : klass.check_name
+        hint : klass.name_hint()
+    }
+
 #===========================================
 
 exports.TwitterProofGen = class TwitterProofGen extends SocialNetworkProofGen

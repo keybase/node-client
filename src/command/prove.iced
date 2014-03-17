@@ -90,7 +90,9 @@ exports.Command = class Command extends Base
 
   check_exists_2 : (cb) ->
     err = null
-    if not(@stub.single_occupancy()) and (@remote_name_normalized in @rp[@service_name])
+    console.log @rp[@service_name]
+    if not(@stub.single_occupancy()) and (v = @rp[@service_name])? and 
+         (@remote_name_normalized in v)
       prompt = "You already have proved ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
     cb err
