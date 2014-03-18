@@ -571,7 +571,7 @@ exports.SigChain = class SigChain
     n = 0
 
     # In case there was an assertion on the public key fingerprint itself...
-    assertions?.found('key', false)?.set_payload pubkey.fingerprint() 
+    assertions?.found('key', false)?.success().set_payload pubkey.fingerprint() 
 
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"

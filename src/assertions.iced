@@ -1,7 +1,7 @@
 
 {E} = require './err'
 log = require './log'
-urlmod = reuqire 'url'
+urlmod = require 'url'
 
 #=======================================================================
 
@@ -88,6 +88,7 @@ class Assert
   success : (u) ->
     @_uri = u
     @_success = true
+    @
 
   #---------------
 
@@ -101,12 +102,11 @@ class Assert
 #=======================================================================
 
 keycmp = (k1, k2) ->
-  k1 = k1.toLowerCase()
-  k2 = k2.toLowerCase()
+  rev = (x) -> (c for c in x by -1).join('')
   if k2.length > k1.length then return false
-  for c,i in k2 by -1
-    if k1[i] isnt c then return false
-  return true
+  k1 = rev k1.toLowerCase()
+  k2 = rev k2.toLowerCase()
+  return (k1.indexOf(k2) is 0)
 
 class KeyAssert extends Assert
 
