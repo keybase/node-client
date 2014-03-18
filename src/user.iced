@@ -462,12 +462,12 @@ exports.User = class User
     cleanup = (cb) ->
       if err? and ret?
         await ret.nuke defer e2
-        log.warn "Error deleting sequestered keyring: #{e2.message}" if e2?
+        log.warn "Error in deleting quarantined keyring: #{e2.message}" if e2?
       cb()
 
     cb = chain_err cb, cleanup
-    esc = make_esc cb, "make_sequestered_keyring"
-    log.debug "+ make_sequestered_keyring for #{@username()}"
+    esc = make_esc cb, "make_quarantined_keyring"
+    log.debug "+ make_quarantined_keyring for #{@username()}"
     await QuarantinedKeyRing.make esc defer tmp
     ret = tmp
     key = ret.make_key_from_user @, false
@@ -483,7 +483,7 @@ exports.User = class User
       @key = key 
       null
 
-    log.debug "- make_sequestered_keyring -> #{err}"
+    log.debug "- make_quarantined_keyring -> #{err}"
     cb err, ret
 
   #--------------
