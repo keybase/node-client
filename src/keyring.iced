@@ -71,6 +71,7 @@ exports.init = () ->
     get_key_klass : () -> GpgKey
     get_home_dir : () -> env().get_home_gnupg_dir(true)
     get_gpg_cmd : () -> env().get_gpg_cmd()
+    get_no_options : () -> env().get_no_gpg_options()
     log : log
   }
 

@@ -204,6 +204,13 @@ class Env
       config : (c) -> c.loopback_port_range
       dflt   : -> constants.loopback_port_range
 
+  get_no_gpg_options :() ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_NO_GPG_OPTIONS
+      arg    : (a) -> a.no_gpg_options
+      config : (c) -> c.no_gpg_options
+      dflt   :     -> false
+
   get_args : () -> @argv._
   get_argv : () -> @argv
 

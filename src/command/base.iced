@@ -89,6 +89,10 @@ exports.Base = class Base
     "proxy-ca-certs" :
       action : "append"
       help : "specify 1 or more CA certs (in a file)"
+    O :
+      alias : "no-gpg-options"
+      action : "storeTrue"
+      help : "disable the GPG options file for temporary keyring operations"
 
   #-------------------
 
