@@ -90,6 +90,10 @@ class BaseSigGen
     klass = @_binding_klass()
     klass.normalize_name(n)
 
+  #-----------------------
+  
+  single_occupancy : () -> @_binding_klass().single_occupancy()
+
 #===========================================
 
 exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
@@ -168,8 +172,6 @@ class SocialNetworkProofGen extends BaseSigGen
     arg.remote_username = @remote_username
     arg.type = "web_service_binding." + @_remote_service_name()
 
-  single_occupancy : () -> true
-
   prompter : () -> 
     klass = @_binding_klass()
     ret = {
@@ -218,8 +220,6 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
 
   instructions : () -> 
     "Please save the following file as #{colors.bold @filename()}"
-
-  single_occupancy : () -> false
 
   display_name : () -> @filename()
 

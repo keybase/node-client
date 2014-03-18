@@ -81,7 +81,7 @@ exports.Command = class Command extends Base
   check_exists_1 : (cb) ->
     @rp = @me.list_remote_proofs() 
     err = null
-    if rp? and (v = @rp[@service_name]) and @stub.single_occupancy()
+    if @rp? and (v = @rp[@service_name])? and @stub.single_occupancy()
       prompt = "You already have proven you are #{v} at #{@service_name}; overwrite? "
       await @check_exists_common prompt, defer err
     cb err
