@@ -17,7 +17,7 @@ class Assertions
   push : (a) -> 
     @_list.push a
     existing = @_lookup[a.key]
-    if not existing or existing.mege(a)
+    if not existing or existing.merge(a)
       @_lookup[a.key] = a 
 
   #------------------
@@ -25,13 +25,17 @@ class Assertions
   found : (type_s, unspecified = true) ->
 
     key = switch type_s
-      when 'generic_web_service' then 'web'
+      when 'generic_web_site' then 'web'
       else type_s
 
     ret = null
     if not (ret = @_lookup[key])? and unspecified
-      ret = new UnspecifiedAssert key
-      @_unspecified.push ret
+      [err, ret] = new Assert.make key
+      if err?
+        log.error "Error unhandling unspecified assertion: #{err.messge}"
+      else
+        ret.set_unspecified true
+        @_unspecified.push ret
 
     ret?.found()
     ret
@@ -46,7 +50,7 @@ class Assertions
     for a in @_list
       ret = false unless a.check()
     for a in @_unspecified
-      a.generate_warning()
+      a.generate_unspecified_warning()
     @_met = ret
     return ret
 
@@ -57,6 +61,7 @@ class Assert
   #---------------
 
   constructor : (@key, @val) ->
+    @_unspecified = false
 
   #---------------
 
@@ -73,7 +78,7 @@ class Assert
 
     if klass?
       out = new klass key, val
-      if (err = out.parse_check())? then out = null
+      if val? and (err = out.parse_check())? then out = null
 
     return [err, out]
 
@@ -82,6 +87,7 @@ class Assert
   merge : (a) -> false
   found : () -> @_found = true
   parse_check : () -> null
+  set_unspecified : () -> @_unspecified = true
 
   #---------------
 
@@ -94,7 +100,7 @@ class Assert
 
   check : () ->
     if not @_success
-      log.error "Failed assertion : #{@key}:#{@val} wasn't found"
+      log.error "Failed assertion: #{@key}:#{@val} wasn't found"
       false
     else
       true
@@ -132,15 +138,16 @@ class WebAssert extends Assert
 
   constructor : (key, val) ->
     super key, val
-    @_seek = [ val ] 
-    @_found = {}
+    @_seek = [ val ] if val?
+    @_found_sites = {}
 
   merge : (wa2) ->
     @_seek = @_seek.concat wa2._seek
+    true
 
   set_payload : (o) -> 
     u = urlmod.format(o?.body?.service).toLowerCase()
-    @_found[u] = true
+    @_found_sites[u] = true
 
   parse_check : () ->
     u = urlmod.parse @val
@@ -154,10 +161,13 @@ class WebAssert extends Assert
 
   check : () ->
     ret = true
-    for s in @_seek when not @_found[s]
-        log.error "Web ownership assertion failed for '#{s}'"
-        ret = false
+    for s in @_seek when not @_found_sites[s]
+      log.error "Web ownership assertion failed for '#{s}'"
+      ret = false
     return ret
+
+  generate_unspecified_warning : () ->
+    log.warn "Assertion for web sites #{JSON.stringify (k for k,v of @_found_sites)} were found but not specified"
 
 #=======================================================================
 
@@ -173,18 +183,13 @@ class SocialNetworkAssert extends Assert
       ret = true
     return ret
 
+  generate_unspecified_warning : () ->
+    log.warn "Assertion #{@key}:#{@_username} was found but wasn't specified"
+
 #=======================================================================
 
 class TwitterAssert extends SocialNetworkAssert
 class GithubAssert extends SocialNetworkAssert
-
-#=======================================================================
-
-class UnspecifiedAssert extends Assert
-
-  generate_warning : () ->
-    if @_success
-      log.warn "Unspecified assertion: #{@key}:#{@_username} is also true"
 
 #=======================================================================
 
