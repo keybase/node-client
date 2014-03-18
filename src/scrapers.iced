@@ -85,7 +85,10 @@ exports.GenericWebSite = class GenericWebSite extends Base
     else 'green'
     return [
       (if ok then CHECK else BAD_X),
-      colors[color](arg.hostname + " via " + arg.protocol.toUpperCase()),
+      "admin of"
+      colors[color](arg.hostname)
+      "via"
+      colors[color](arg.protocol.toUpperCase()),
       arg.human_url
     ]
 
