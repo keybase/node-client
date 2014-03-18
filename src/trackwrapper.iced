@@ -4,6 +4,7 @@
 log = require './log'
 proofs = require 'keybase-proofs'
 {proof_type_to_string} = proofs
+PT = proofs.constants.proof_types
 ST = constants.signature_types
 deq = require 'deep-equal'
 {E} = require './err'
@@ -14,6 +15,8 @@ deq = require 'deep-equal'
 db = require './db'
 util = require 'util'
 {env} = require './env'
+scrapers = require './scrapers'
+{Link} = require './sigchain'
 
 ##=======================================================================
 
@@ -22,6 +25,7 @@ exports.TrackWrapper = class TrackWrapper
   constructor : ({@trackee, @tracker, @local, @remote}) ->
     @uid = @trackee.id
     @sig_chain = @trackee.sig_chain
+    @_ft = null
 
   #--------
 
@@ -30,11 +34,20 @@ exports.TrackWrapper = class TrackWrapper
 
   #--------
 
+  flat_table : () -> 
+    @_ft = @sig_chain.flattened_remote_proofs() if not @_ft?
+    return @_ft
+
+  #--------
+
   _check_remote_proof : (rp) ->
+    proofs_with_service_names = [ PT.twitter, PT.github ]
     if not (rkp = rp.remote_key_proof)? 
       new E.RemoteProofError "no 'remote_key_proof field'"
-    else if ((a = rkp.check_data_json?.name) isnt (b = (proof_type_to_string[rkp.proof_type])))
-      new E.RemoteProofError "name mismatch: #{a} != #{b}"
+    else if not (stub = scrapers.alloc_stub(rkp.proof_type))?
+      new E.RemoteProofError "Can't allocate a scraper stub for #{rkp.proof_type}"
+    else if not stub.check_proof(d = rkp.check_data_json)
+      new E.RemoteProofError "Bad proof found, for check data: #{JSON.stringify d}"
     else if not (link = @sig_chain.lookup rp.curr)?
       new E.RemoteProofError "Failed to find a chain link for #{rp.curr}"
     else if not deq((a = link.body()?.service), (b = rkp.check_data_json))
@@ -99,13 +112,19 @@ exports.TrackWrapper = class TrackWrapper
     prob = if not track_cert? then "no cert found"
     else if ((a = track_cert.key?.key_fingerprint) isnt (b = @trackee.fingerprint()))
       "trackee changed keys: #{a} != #{b}"
-    else if ((a = track_cert.remote_proofs.length) isnt (b = dlen(@table())))
+    else if ((a = track_cert.remote_proofs.length) isnt (b = @flat_table().length))
       "number of remote IDs changed: #{a} != #{b}"
     else
       tmp = null
       for rp in track_cert.remote_proofs
         rkp = rp.remote_key_proof
-        if not deq((a = rkp.check_data_json), (b = @table()[rkp.proof_type]?.body()?.service))
+        row = @table()[rkp.proof_type]
+        if (rkp.proof_type is PT.generic_web_site)
+          sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
+          row = row[sub_id]
+        if not (row instanceof Link)
+          tmp = "Got bad link, it wasn't a link at all"
+        else if not deq((a = rkp.check_data_json), (b = row?.body()?.service))
           tmp = "Remote ID changed: #{JSON.stringify a} != #{JSON.stringify b}"
           break
       tmp

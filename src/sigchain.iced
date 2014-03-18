@@ -505,10 +505,24 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  remote_proofs_to_track_obj : () ->
+  # list all remote proofs in a flat list, taking out the structure that
+  # the Web and DNS proofs are in a sub-dictionary
+  flattened_remote_proofs : () ->
+    links = []
     if (d = @table?[ST.REMOTE_PROOF])?
-      (link.remote_proof_to_track_obj() for key,link of d when not link.is_revoked())
-    else []
+      search = [ d ] 
+      while search.length
+        if ((front = search.pop()) instanceof Link) then links.push front
+        else 
+          for k,v of front
+            search.push v
+    return links
+
+  #-----------
+
+  remote_proofs_to_track_obj : () ->
+    links = @flattened_remote_proofs()
+    (link.remote_proof_to_track_obj() for link in links when not link.is_revoked())
 
   #-----------
 

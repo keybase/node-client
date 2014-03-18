@@ -26,6 +26,10 @@ class Base
 
   #-------------------
 
+  single_occupancy : () -> false
+
+  #-------------------
+
   scraper : () -> @_scraper
 
   #-------------------
@@ -50,6 +54,8 @@ class SocialNetwork extends Base
     arg.human_url
   ]
   to_list_display : (arg) -> arg.username
+
+  check_proof : (check_data_json) -> check_data_json?.name is @which()
 
 #==============================================================
 
@@ -82,6 +88,8 @@ exports.GenericWebSite = class GenericWebSite extends Base
       colors[color](arg.hostname + " via " + arg.protocol.toUpperCase()),
       arg.human_url
     ]
+
+  check_proof : (check_data_json) -> check_data_json.protocol? and check_data_json.hostname?
 
 #==============================================================
 
