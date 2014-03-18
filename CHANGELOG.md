@@ -1,3 +1,12 @@
+## 0.0.40 (2014-03-18)
+
+Bugfixes:
+                                                                                       
+  - We weren't hitting the cache on fingerprint_to_username lookups due to case incompatibilities.  Solve this with a sledgehammer; always convert lookups to lowercase.
+  - Close keybase/keybase-issues#278 -- a broken error case that would have crashed anyways 
+  - More debug messages                                         
+  - More fixes for people who specify `primary-kerying` or `keyring` in the gpg.conf files.  Disable a few checks for them, and also pass --no-gpp-options through to gpg-wrapper
+
 ## 0.0.39 (2014-03-15)
 
 Bugfixes:
