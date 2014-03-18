@@ -179,9 +179,7 @@ exports.Link = class Link
 
     await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
 
-    # For Twitter and GitHub, this will set the remote username.
-    # For web services, this will set the hostname/protocol pair
-    assert?.set_proof_service_object @proof_service_object()
+    assert?.set_payload @payload_json()
 
     if not skip and not @api_url()
       await @refresh defer e2
@@ -571,6 +569,10 @@ exports.SigChain = class SigChain
     msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint pubkey.fingerprint()}")
     log.console.error msg
     n = 0
+
+    # In case there was an assertion on the public key fingerprint itself...
+    assertions?.found('key', false)?.set_payload pubkey.fingerprint() 
+
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"
       for type,v of tab
