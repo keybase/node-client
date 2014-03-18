@@ -12,7 +12,7 @@ Datastore = require 'nedb'
 
 ##=======================================================================
 
-make_key = ({ table, type, id }) -> [ table, type, id].join(":")
+make_key = ({ table, type, id }) -> [ table, type, id].join(":").toLowerCase()
 make_kvstore_key = ( {type, key } ) -> 
   type or= key[-2...]
   make_key { table : "kv", type, id : key }

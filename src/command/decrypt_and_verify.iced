@@ -17,6 +17,7 @@ colors = require 'colors'
 {dict_union} = require '../util'
 urlmod = require 'url'
 {HKPLoopback} = require '../hkp_loopback'
+{fingerprint_to_key_id_64} = require('pgp-utils').util
 
 ##=======================================================================
 
@@ -53,11 +54,13 @@ exports.Command = class Command extends Base
   #----------
 
   find_signature : (cb) ->
+    log.debug "+ find_signature"
     [err, @signing_key] = parse_signature @decrypt_stderr.data().toString('utf8')
     @found_sig = not err?
     if (err instanceof E.NotFoundError) and not @argv.signed and not @argv.signed_by?
       log.debug "| No signature found; but we didn't require one"
       err = null
+    log.debug "- find_signature"
     cb err
 
   #----------
@@ -74,6 +77,7 @@ exports.Command = class Command extends Base
 
   handle_signature : (cb) ->
     esc = make_esc cb, "handle_signature"
+    log.debug "+ handle_signature"
     await @check_imports esc defer()
     arg = 
       type : constants.lookups.key_fingerprint_to_user
@@ -104,6 +108,7 @@ exports.Command = class Command extends Base
       else if local then "tracking locally only"
       else "not tracking"
       log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
+    log.debug "- handle_signature"
     cb null
 
   #----------
@@ -114,13 +119,17 @@ exports.Command = class Command extends Base
     err = null
     if ids.length is 0
       log.debug "| No new keys imported"
-    else if ids.length > 1
+    else if ids.length > 1 and not env().get_no_gpg_options()
+      # In the case in which we're ignoring the GPG configuration file
+      # (because it interferes with our command-line switches), then
+      # we are safe to ignore this exception.
       err = new E.CorruptionError "Too many imported keys: #{ids.length}"
     else
-      ki64 = ids[0]
-      log.debug "| Found new key in the keyring: #{ki64}"
-      if ki64 isnt (b = @signing_key.primary[-(ki64.length)...])
-        err = new E.VerifyError "Bad imported key; wanted #{b} but got #{ki64}"
+      b = fingerprint_to_key_id_64 @signing_key.primary
+      if not (b in ids)
+        err = new E.VerifyError "Bad imported key; wanted #{b} but couldn't find it"
+      else
+        log.debug "| Found new key in the keyring: #{b}"
     cb err
 
   #----------

@@ -166,17 +166,17 @@ exports.User = class User
   #--------------
 
   @map_key_to_user_local : (query, cb) ->
+    log.debug "+ map_key_to_user_local #{JSON.stringify query}"
     err = ret = null
-    await db.lookup query, defer err, rows
+    await db.lookup query, defer err, row
     k = JSON.stringify query
     if err? then # noop
-    else if not rows? or rows.length is 0 
+    else if not row?
       err = new E.NotFoundError "Key not found for query #{k}"
-    else if rows.length > 1
-      err = new E.CorruptionError "Too many users for key #{k}: #{rows.length}"
     else
-      b = rows[0].basics
+      b = row.value.basics
       ret = { uid : b.uid, username : b.username }
+    log.debug "- map_key_to_user_local -> #{err}"
     cb err, ret
 
   #--------------
@@ -462,7 +462,7 @@ exports.User = class User
     cleanup = (cb) ->
       if err? and ret?
         await ret.nuke defer e2
-        log.warn "Error deleting sequestered keyring: #{e2.message}"
+        log.warn "Error deleting sequestered keyring: #{e2.message}" if e2?
       cb()
 
     cb = chain_err cb, cleanup
