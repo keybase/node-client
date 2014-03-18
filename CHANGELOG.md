@@ -4,10 +4,6 @@ Bugfixes:
 
   - Documentation
 
-Misc:
-
-  - Start signing commits X
-
 ## 0.0.38 (2014-03-13)
 
 Bugfixes:
