@@ -1,8 +1,12 @@
-## 0.0.39 (2014-03-13)
+## 0.0.39 (2014-03-15)
 
 Bugfixes:
 
-  - Documentation
+  - Update to gpg-wrapper v0.0.40, to fix keybase/keybase-issues#190
+    People who had `with-fingerprints` in their `gpg.conf` files were
+    seeing broken behavior.
+  - Fix bug in HKP loopback proxy. Change to "connection: close" instead
+    of keep-alive.
 
 ## 0.0.38 (2014-03-13)
 
