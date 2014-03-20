@@ -1,3 +1,7 @@
+## 0.0.41 (2014-03-19)
+
+ - Address keybase/keybase-issues#307: Upgrade to gpg-wrapper@v0.0.42
+
 ## 0.0.40 (2014-03-18)
 
 Bugfixes:
