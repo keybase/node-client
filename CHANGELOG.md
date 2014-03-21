@@ -1,6 +1,7 @@
-## 0.0.42
+## 0.0.42 (2014-03-21)
 
   - Disable colors everywhere with the -C/--no-colors flag
+  - Address keybase/keybase-issues#315 by upgrading to keybase-proofs@v0.0.9
 
 ## 0.0.41 (2014-03-19)
 
