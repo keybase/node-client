@@ -7,7 +7,7 @@ session = require './session'
 log = require './log'
 {master_ring} = require './keyring'
 {decode} = require('pgp-utils').armor
-colors = require 'colors'
+colors = require './colors'
 
 #===========================================
 
@@ -171,7 +171,7 @@ exports.GithubProofGen = class GithubProofGen extends RemoteServiceProofGen
   imperative_verb : () -> "post a Gist with"
   display_name : () -> "GitHub"
   instructions : () ->
-    "Please #{colors.bold('publicly')} post the following Gist, and name it #{colors.bold(colors.red('keybase.md'))}:"
+    "Please #{colors.bold 'publicly'} post the following Gist, and name it #{colors.bold colors.red 'keybase.md'}:"
 
 #===========================================
 

@@ -26,20 +26,6 @@ exports.Command = class Command extends Base
 
   is_batch : () -> @opts.batch or @batch
 
-  #----------------------
-
-  prompt_ok : (warnings, proofs, cb) ->
-    them = @args.them
-    prompt = if warnings
-      log.console.error colors.red "Some remote proofs failed!"
-      "Still verify this user as #{them}?"
-    else if proofs is 0
-      "We found an account for #{them}, but they haven't proved their identity. Still accept them?"
-    else
-      "Is this the #{them} you wanted?"
-    await prompt_yn { prompt, defval : false }, defer err, ret
-    cb err, ret
-
   #----------
 
   add_subcommand_parser : (scp) ->

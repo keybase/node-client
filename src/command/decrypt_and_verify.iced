@@ -11,13 +11,13 @@ log = require '../log'
 {TrackWrapper} = require '../trackwrapper'
 {athrow} = require('pgp-utils').util
 {parse_signature} = require '../gpg'
-colors = require 'colors'
 {constants} = require '../constants'
 {User} = require '../user'
 {dict_union} = require '../util'
 urlmod = require 'url'
 {HKPLoopback} = require '../hkp_loopback'
 {fingerprint_to_key_id_64} = require('pgp-utils').util
+colors = require '../colors'
 
 ##=======================================================================
 
@@ -91,7 +91,7 @@ exports.Command = class Command extends Base
 
     if @username is env().get_username()
       @is_self = true
-      log.info "Valid signature from #{@embolden('you')}"
+      log.info "Valid signature from #{colors.bold('you')}"
     else
       @is_self = false
       @tssc = new TrackSubSubCommand { 
@@ -107,7 +107,7 @@ exports.Command = class Command extends Base
       tracks = if remote then "tracking remotely & locally"
       else if local then "tracking locally only"
       else "not tracking"
-      log.info "Valid signature from keybase user #{@embolden(basics.username)} (#{tracks})"
+      log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
     log.debug "- handle_signature"
     cb null
 
@@ -224,12 +224,6 @@ exports.Command = class Command extends Base
       if @try_track()
         await @handle_track esc defer()
     cb null
-
-  #----------
-
-  embolden : (str) ->
-    return str if @argv.no_color
-    return colors.bold str
 
 ##=======================================================================
 

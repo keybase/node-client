@@ -211,6 +211,13 @@ class Env
       config : (c) -> c.no_gpg_options
       dflt   :     -> false
 
+  get_no_color : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_NO_COLOR
+      arg    : (a) -> a.no_color
+      config : (c) -> c.no_color
+      dflt   :     -> false
+
   get_args : () -> @argv._
   get_argv : () -> @argv
 

@@ -8,7 +8,7 @@ req = require './req'
 {E} = require './err'
 {TmpKeyRing,master_ring} = require './keyring'
 {prompt_yn} = require './prompter'
-colors = require 'colors'
+colors = require './colors'
 {athrow} = require('pgp-utils').util
 
 ##=======================================================================

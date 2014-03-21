@@ -144,7 +144,7 @@ class Main
     p = log.package()
     if @argv.debug
       p.env().set_level p.DEBUG
-    if @argv.no_color
+    if env().get_no_color()
       p.env().set_use_color false
     gpgw.set_log log.warn
 

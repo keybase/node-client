@@ -61,6 +61,7 @@ $(BUILD_STAMP): \
 	lib/keyselector.js \
 	lib/keyutils.js \
 	lib/log.js \
+	lib/colors.js \
 	lib/package.js \
 	lib/path.js \
 	lib/prompter.js \

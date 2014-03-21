@@ -13,8 +13,8 @@ req = require '../req'
 {constants} = require '../constants'
 {format_fingerprint} = require('pgp-utils').util
 {env} = require '../env'
-{bold} = require 'colors'
 {master_ring} = require '../keyring'
+colors = require '../colors'
 
 ##=======================================================================
 
@@ -79,8 +79,8 @@ exports.Command = class Command extends Base
       log.warn "  Key fingerprint: #{format_fingerprint fp}"
       await master_ring().gpg { args : [ "-k", fp ] }, defer err_public
       await master_ring().gpg { args : [ "-K", fp ] }, defer err_secret
-      log.warn "  - Public key: #{if err_public? then 'unfound' else bold('found')}"
-      log.warn "  - Secret key: #{if err_secret? then 'unfound' else bold('found')}"
+      log.warn "  - Public key: #{if err_public? then 'unfound' else colors.bold('found')}"
+      log.warn "  - Secret key: #{if err_secret? then 'unfound' else colors.bold('found')}"
     else
       err = new E.NoLocalKeyError "No local key to revoke!"
     cb err

@@ -10,7 +10,6 @@ deq = require 'deep-equal'
 {unix_time} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 {prompt_yn} = require './prompter'
-colors = require 'colors'
 {session} = require './session'
 db = require './db'
 util = require 'util'
