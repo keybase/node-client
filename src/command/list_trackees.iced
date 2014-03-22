@@ -56,7 +56,7 @@ exports.Command = class Command extends Base
       if a < b then -1 
       else if a > b then 1
       else 0
-    if not v? then []
+    if not v? then {}
     else
       v = ( [ pj.body.track.basics.username, pj ] for pj in v)
       v.sort sort_fn
@@ -96,7 +96,28 @@ exports.Command = class Command extends Base
 
   display : (v) ->
     if @argv.json then @display_json v
-    else null
+    else @display_text v
+
+  #----------
+
+  display_text_line : (k,v) ->
+    fields = [ k ]
+    if @argv.verbose
+      fields.push(v.key, v.ctime)
+      proofs = []
+      for p in v.proofs
+        if p.name? and p.username?
+          proofs.push "#{p.name}:#{p.username}"
+      proofs.sort()
+      fields = fields.concat proofs
+    fields.join("\t")
+
+  #----------
+
+  display_text : (d) ->
+    d = @condense_records d
+    lines = (@display_text_line(k,v) for k,v of d)
+    lines.join("\n")
 
   #----------
 
