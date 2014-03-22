@@ -32,7 +32,7 @@
     "iced-logger": ">=0.0.3",
     "iced-spawn": ">=0.0.6",
     "iced-utils": ">=0.1.8",
-    "kbpgp": ">=0.0.15",
+    "kbpgp": ">=0.0.27",
     "keybase-proofs": "0.0.9",
     "mkdirp": "~0.3.5",
     "nedb": "~0.10.4",
