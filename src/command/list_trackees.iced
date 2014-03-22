@@ -46,6 +46,8 @@ exports.Command = class Command extends Base
       await session.check esc defer logged_in
       await User.load_me {secret : false}, esc defer me
       x = me.list_trackees()
+      names = (pj.body.track.basics.username for pj in x)
+      console.log names
     cb null
 
   #-----------------
