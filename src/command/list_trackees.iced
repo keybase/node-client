@@ -106,6 +106,11 @@ exports.Command = class Command extends Base
       for k,v of d
         if k.match(@filter_rxx)
           out[k] = v
+        else if (rps = v.body?.track?.remote_proofs)?
+          for proof in rps when (cd = proof?.remote_key_proof?.check_data_json)?
+            if cd.username?.match(@filter_rxx) or cd.hostname?.match(@filter_rxx)
+              out[k] = v
+              break
       d = out
     d
 
