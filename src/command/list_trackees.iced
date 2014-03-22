@@ -34,6 +34,7 @@ exports.Command = class Command extends Base
   #----------
 
   use_session : () -> true
+  needs_configuration : () -> true
 
   #----------
 
