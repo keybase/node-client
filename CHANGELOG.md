@@ -8,8 +8,8 @@ Bugfixes:
 
 Features:
 
-  - keybase list-trackers now works.
-
+  - keybase list-trackers
+  - keybase search
 
 ## 0.0.42 (2014-03-21)
 

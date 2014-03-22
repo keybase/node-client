@@ -73,7 +73,7 @@ exports.Command = class Command extends Base
     proofs = (v for rp in rps when (v = rp?.remote_key_proof?.check_data_json))
     out = 
       uid : o.body.track.id
-      key : o.body.track.key.key_fingerprint
+      key : o.body.track.key.key_fingerprint?.toUpperCase()
       proofs : proofs
       ctime : o.ctime
     return out

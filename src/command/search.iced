@@ -15,6 +15,7 @@ req = require '../req'
 
 ##=======================================================================
 
+SERVICES = [ "github", "twitter" ]
 
 ##=======================================================================
 
@@ -34,7 +35,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  use_session : () -> false
+  use_session : () -> true
   needs_configuration : () -> false
 
   #----------
@@ -61,10 +62,58 @@ exports.Command = class Command extends Base
 
   #----------
 
+  reformat_results : (list) ->
+    ret = []
+    for entry in list when (c = entry.components)?
+      obj = 
+        username : c.username.val
+        key : c.key_fingerprint?.val.replace(/\s+/g, "")
+      for svc in SERVICES
+        if (n = c[svc])? then obj[svc] = n.val
+      obj.score = entry.total_score
+      if @logged_in
+        obj.is_followee = entry.is_followee
+      ret.push obj
+    return ret
+
+  #-----------
+
+  display : (v) ->
+    if @argv.json then @display_json v
+    else @display_text v
+
+  #-----------
+
+  display_text : (v) ->
+    lines = []
+    for rec in v
+      fields = []
+      if @logged_in
+        fields.push(if rec.is_followee then '*' else '-')
+      fields.push(rec.username, rec.key)
+      for svc in SERVICES
+        if (n = rec[svc])
+          fields.push "#{svc}:#{n}"
+      line = fields.join("\t")
+      lines.push line
+    return lines.join("\n")
+
+  #-----------
+
+  display_json : (v) ->
+    JSON.stringify(v, null, "  ")
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     await @search esc defer list
-    console.log JSON.stringify(list, null, "  ")
+    if (v = list?.completions) and v.length
+      await session.load_and_check esc defer @logged_in
+      v = @reformat_results v
+    else
+      v = []
+    log.console.log d if (d = @display v).length
     cb null
 
   #-----------------
