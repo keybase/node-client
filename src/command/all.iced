@@ -55,6 +55,7 @@ class Main
       "id"
       "join"
       "keygen"
+      "list-trackees"
       "login"
       "logout"
       "pull"

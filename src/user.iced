@@ -406,6 +406,7 @@ exports.User = class User
   #--------------
 
   list_remote_proofs : () -> @sig_chain?.list_remote_proofs()
+  list_trackees : () -> @sig_chain?.list_trackees()
 
   #--------------
 

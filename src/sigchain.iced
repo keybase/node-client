@@ -542,6 +542,14 @@ exports.SigChain = class SigChain
 
   #-----------
 
+  list_trackees : () ->
+    out = []
+    if table? and (tab = @table[ST.TRACK])?
+      console.log tab
+    return out
+
+  #-----------
+
   list_remote_proofs : () ->
     out = null
     if @table? and (tab = @table[ST.REMOTE_PROOF])?

@@ -25,6 +25,7 @@ $(BUILD_STAMP): \
 	lib/command/id.js \
 	lib/command/join.js \
 	lib/command/keygen.js \
+	lib/command/list_trackees.js \
 	lib/command/login.js \
 	lib/command/logout.js \
 	lib/command/prove.js \
