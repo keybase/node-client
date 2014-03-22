@@ -10,6 +10,7 @@ log = require '../log'
 {User} = require '../user'
 {format_fingerprint} = require('pgp-utils').util
 util = require 'util'
+{E} = require '../err'
 
 ##=======================================================================
 
@@ -42,6 +43,7 @@ exports.Command = class Command extends Base
       aliases : [ "trackees" ]
     name = "list-trackees"
     sub = scp.addParser name, opts
+    sub.addArgument [ "filter" ], { nargs : '?', help : "a regex to filter by" }
     add_option_dict sub, @OPTS
     return [ name ].concat opts.aliases
 
@@ -98,13 +100,37 @@ exports.Command = class Command extends Base
 
   #----------
 
+  filter_list : (d) ->
+    if @filter_rxx?
+      out = {}
+      for k,v of d
+        if k.match(@filter_rxx)
+          out[k] = v
+      d = out
+    d
+
+  #----------
+
+  parse_filter : (cb) ->
+    err = null
+    if (f = @argv.filter)? and f.length
+      try
+        @filter_rxx = new RegExp(f, "i")
+      catch e
+        err = new E.ArgsError "Bad regex specified: #{e.message}"
+    cb err
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+    await @parse_filter esc defer()
 
     if (un = env().get_username())?
       await session.check esc defer logged_in
       await User.load_me {secret : false}, esc defer me
       list = @sort_list me.list_trackees()
+      list = @filter_list list
       log.console.log @display list
     else
       log.warn "Not logged in"
