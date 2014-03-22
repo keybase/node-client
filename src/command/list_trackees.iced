@@ -153,15 +153,11 @@ exports.Command = class Command extends Base
     await @parse_filter esc defer()
 
     if (un = env().get_username())?
-      console.log "A #{Date.now()}"
       await session.check esc defer logged_in
-      console.log "B #{Date.now()}"
       await User.load_me {secret : false}, esc defer me
-      console.log "C #{Date.now()}"
       list = @sort_list me.list_trackees()
       list = @filter_list list
       log.console.log @display list
-      console.log "D #{Date.now()}"
     else
       log.warn "Not logged in"
     cb null
