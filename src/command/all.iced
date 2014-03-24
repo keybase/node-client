@@ -124,21 +124,22 @@ class Main
   #---------------------------------
 
   main : () ->
-    await @run defer err
+    await @run defer err, rc
+    rc = 0 unless rc?
     if err?
       msg = if (err instanceof gpgw.E.GpgError) then "`gpg` exited with code #{err.rc}"
       else err.message
       log.error msg
       log.warn err.stderr.toString('utf8') if err.stderr?
-    process.exit if err? then -2 else 0
+    process.exit if err? then -2 else rc
 
   #---------------------------------
 
   run : (cb) ->
     esc = make_esc cb, "run"
     await @setup   esc defer()
-    await @cmd.run esc defer()
-    cb null
+    await @cmd.run esc defer rc
+    cb null, rc
 
   #----------------------------------
 

@@ -1,3 +1,9 @@
+## 0.0.44
+
+Bugfixes:
+
+  - Address keybase/keybase-issues#332 --- Exit with return code 1 for no results found
+
 ## 0.0.44 (2014-03-23)
 
 Bugfixes:

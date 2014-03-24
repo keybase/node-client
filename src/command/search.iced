@@ -114,7 +114,7 @@ exports.Command = class Command extends Base
     else
       v = []
     log.console.log d if (d = @display v).length
-    cb null
+    cb null, (if v.length is 0 then 1 else 0)
 
   #-----------------
 
