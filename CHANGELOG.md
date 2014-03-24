@@ -1,3 +1,10 @@
+## 0.0.44 (2014-03-23)
+
+Bugfixes:
+
+  - Fix previous bloated release
+  - More synonyms for list-tracking
+
 ## 0.0.43 (2014-03-22)
 
 Bugfixes:

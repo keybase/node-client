@@ -26,13 +26,13 @@
     "deep-equal": "0.1.2",
     "framed-msgpack-rpc": "1.1.1",
     "gpg-wrapper": "0.0.42",
-    "iced-coffee-script": "1.7.1",
+    "iced-coffee-script": "~1.7.1",
     "iced-data-structures": "0.0.5",
     "iced-error": "0.0.8",
     "iced-logger": "0.0.3",
     "iced-spawn": "0.0.6",
     "iced-utils": "0.1.8",
-    "kbpgp": "0.0.27",
+    "kbpgp": "0.0.28",
     "keybase-proofs": "0.0.9",
     "mkdirp": "0.3.5",
     "nedb": "0.10.4",
@@ -41,13 +41,12 @@
     "purepack": "1.0.0",
     "read": "keybase/read",
     "request": "2.30.0",
-    "triplesec": "3.0.7"
+    "triplesec": "~3.0.7"
   },
   "devDependencies": {
-    "iced-coffee-script": "~1.7.1",
-    "iced-expect": ">=0.0.3",
-    "iced-test": ">=0.0.10",
-    "optimist": "~0.6.0"
+    "iced-expect": "0.0.3",
+    "iced-test": "0.0.10",
+    "optimist": "0.6.1"
   },
   "bundleDependencies": [
     "argparse",
