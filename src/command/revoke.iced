@@ -28,7 +28,6 @@ exports.Command = class Command extends Base
       action : "storeTrue"
       help : "don't ask interactively, just do it!"
 
-
   #----------
 
   use_session : () -> true

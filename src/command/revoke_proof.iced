@@ -12,10 +12,22 @@ log = require '../log'
 assert = require 'assert'
 session = require '../session'
 S = require '../services'
+{constants} = require '../constants'
+ST = constants.signature_types
+{prompt_yn} = require '../prompter'
+proofs = require 'keybase-proofs'
 
 ##=======================================================================
 
 exports.Command = class Command extends Base
+
+  #----------
+
+  OPTS:
+    f :
+      alias : "force"
+      action : "storeTrue"
+      help : "don't ask interactively, just do it!"
 
   #----------
 
@@ -30,6 +42,7 @@ exports.Command = class Command extends Base
       help : "revoke a proof of identity"
     name = "revoke-proof"
     sub = scp.addParser name, opts
+    add_option_dict sub, @OPTS
     sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
     return opts.aliases.concat [ name ]
 
@@ -37,7 +50,11 @@ exports.Command = class Command extends Base
 
   allocate_proof_gen : (cb) ->
     klass = RevokeProofSigGen
-    await @me.gen_remote_proof_gen { klass }, defer err, @gen
+    typ = proofs.constants.proof_types[@service_name]
+    if not (sig_id = @me.sig_chain?.table?[ST.REMOTE_PROOF]?[typ]?.sig_id())?
+      err = new E.NotFoundError "signature wasn't found; no sig id!"
+    else
+      await @me.gen_remote_proof_gen { klass, sig_id }, defer err, @gen
     cb err
 
   #----------
@@ -52,15 +69,15 @@ exports.Command = class Command extends Base
 
   #----------
 
-  check_exists : (cb) ->
+  get_the_go_ahead : (cb) ->
     rp = @me.list_remote_proofs() 
     err = null
     if rp? and (v = rp[@service_name]) 
       await prompt_yn { 
-        prompt : "You already have proved you are #{v} at #{@service_name}; overwrite? ", 
+        prompt : "Cancel your proof of #{v} at #{@service_name}?", 
         defval : false }, defer err, ok
       if not err? and not ok
-        err = new E.ProofExistsError "Proof already exists"
+        err = new E.CancelError "cancelled"
     cb err
 
   #----------
@@ -70,10 +87,9 @@ exports.Command = class Command extends Base
     await @parse_args esc defer()
     await session.login esc defer()
     await User.load_me { secret : true }, esc defer @me
-    await @check_exists esc defer()
+    await @get_the_go_ahead esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
-    await @handle_post esc defer()
     log.info "Success!"
     cb null
 

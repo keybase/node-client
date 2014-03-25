@@ -63,6 +63,7 @@ class Main
       "prove"
       "reset"
       "revoke"
+      "revoke_proof"
       "search"
       "sign"
       "status"
