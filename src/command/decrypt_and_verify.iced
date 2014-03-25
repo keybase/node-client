@@ -109,10 +109,11 @@ exports.Command = class Command extends Base
       else if local then "tracking locally only"
       else "not tracking"
       log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
-    time_ago = timeago @signing_key.timestamp
-    iso_string = @signing_key.timestamp.toISOString()
-    date_signed = iso_string.replace('T', ' at ').split('.')[0]
-    log.info "Signed #{time_ago} (#{date_signed})"
+    if (ts = @signing_key.timestamp)?
+      time_ago = timeago ts
+      iso_string = ts.toISOString()
+      date_signed = iso_string.replace('T', ' at ').split('.')[0]
+      log.info "Signed #{time_ago} (#{date_signed})"
     log.debug "- handle_signature"
     cb null
 

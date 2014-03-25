@@ -1,5 +1,9 @@
 ## 0.1.1 (2014-03-25)
 
+Features:
+
+  - Decrypt and verify say when the signature was generated. Thanks to @msjoinder for the patch.
+
 Nits:
 
   - Wording changes in cancellation in revoke-proof
