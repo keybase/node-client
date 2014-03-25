@@ -34,6 +34,7 @@ $(BUILD_STAMP): \
 	lib/command/push_and_keygen.js \
 	lib/command/reset.js \
 	lib/command/revoke.js \
+	lib/command/revoke_proof.js \
 	lib/command/search.js \
 	lib/command/sign.js \
 	lib/command/status.js \
@@ -68,6 +69,7 @@ $(BUILD_STAMP): \
 	lib/path.js \
 	lib/prompter.js \
 	lib/proxyca.js \
+	lib/services.js \
 	lib/sigs.js \
 	lib/pw.js \
 	lib/queue.js \
