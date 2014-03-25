@@ -14,6 +14,7 @@ log = require '../log'
 {constants} = require '../constants'
 {User} = require '../user'
 {dict_union} = require '../util'
+timeago = require 'timeago'
 urlmod = require 'url'
 {HKPLoopback} = require '../hkp_loopback'
 {fingerprint_to_key_id_64} = require('pgp-utils').util
@@ -108,6 +109,10 @@ exports.Command = class Command extends Base
       else if local then "tracking locally only"
       else "not tracking"
       log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
+    time_ago = timeago @signing_key.timestamp
+    iso_string = @signing_key.timestamp.toISOString()
+    date_signed = iso_string.replace('T', ' at ').split('.')[0]
+    log.info "Signed #{time_ago} (#{date_signed})"
     log.debug "- handle_signature"
     cb null
 
