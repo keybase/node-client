@@ -32,9 +32,11 @@ exports.parse_signature = (lines) ->
   if not (m = lines.match rxx)? 
     err = new E.NotFoundError "no signature found"
   else
+    timestamp = m[0].toString().split("\n")[0].replace(/.*Signature\smade./, "")
     ret =
       primary : strip(m[2])
       subkey :  strip(m[3])
+      timestamp : new Date timestamp
     unless ends_in(ret.primary, m[1]) or ends_in(ret.subkey, m[1])
       err = new E.VerifyError "key ID didn't match fingerprint"
       ret = null
