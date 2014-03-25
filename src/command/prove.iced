@@ -39,11 +39,12 @@ exports.Command = class Command extends Base
   prompt_remote_name : (cb) ->
     svc = @argv.service[0]
     err = null
-    unless (ret = @argv.remote_name)?
+    ret = null
+    if not @remote_name?
       await prompt_remote_name @stub.prompter(), defer err, ret
+      @remote_name = ret unless err?
     unless err?
-      @remote_name = ret
-      @remote_name_normalized = @stub.normalize_name(ret)
+      @remote_name_normalized = @stub.normalize_name @remote_name
     cb err, ret
 
   #----------
@@ -65,6 +66,9 @@ exports.Command = class Command extends Base
       @stub = new @klass {}
     else
       err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
+
+    if not err? and (@remote_name = @argv.remote_name)? and not @stub.check_name(@remote_name)
+      err = new E.ArgsError "Bad name #{@argv.service[0]} given: #{@remote_name}"
     cb err
 
   #----------

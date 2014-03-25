@@ -91,6 +91,10 @@ class BaseSigGen
     klass.normalize_name(n)
 
   #-----------------------
+
+  check_name : (s) -> @_binding_klass().check_name(s)
+
+  #-----------------------
   
   single_occupancy : () -> @_binding_klass().single_occupancy()
 
