@@ -145,8 +145,6 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 class RemoteServiceProofGen extends BaseSigGen
   constructor : (args) ->
     @remote_username = args.remote_username
-    console.log "XX"
-    console.log args
     super args
 
   _make_binding_eng : (args) ->
@@ -163,6 +161,7 @@ class RemoteServiceProofGen extends BaseSigGen
 exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
   constructor : (args) ->
     @revoke_sig_id = args.sig_id
+    super args
     
   _make_binding_eng : (args) ->
     args.revoke = { sig_id : @revoke_sig_id }

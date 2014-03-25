@@ -52,7 +52,7 @@ exports.Command = class Command extends Base
     klass = RevokeProofSigGen
     typ = proofs.constants.proof_types[@service_name]
     if not (sig_id = @me.sig_chain?.table?[ST.REMOTE_PROOF]?[typ]?.sig_id())?
-      err = new E.NotFoundError "signature wasn't found; no sig id!"
+      err = new E.NotFoundError "Didn't find a valid signature; no sig id!"
     else
       await @me.gen_remote_proof_gen { klass, sig_id }, defer err, @gen
     cb err
@@ -78,6 +78,8 @@ exports.Command = class Command extends Base
         defval : false }, defer err, ok
       if not err? and not ok
         err = new E.CancelError "cancelled"
+    else
+      err = E.NotFoundError "No proof found for service '#{@service_name}'"
     cb err
 
   #----------
