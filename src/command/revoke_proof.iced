@@ -74,10 +74,10 @@ exports.Command = class Command extends Base
     err = null
     if rp? and (v = rp[@service_name]) 
       await prompt_yn { 
-        prompt : "Cancel your proof of #{v} at #{@service_name}?", 
+        prompt : "Revoke your proof of #{v} at #{@service_name}?", 
         defval : false }, defer err, ok
       if not err? and not ok
-        err = new E.CancelError "cancelled"
+        err = new E.CancelError "Cancellation canceled! Did nothing."
     else
       err = E.NotFoundError "No proof found for service '#{@service_name}'"
     cb err
