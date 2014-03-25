@@ -1,4 +1,14 @@
-## 0.0.44
+## 0.1.0 (2014-03-25)
+
+Features:
+
+  - Address keybase/keybase-issues#112 --- Proof revocation from the client.
+    This was a little bit of a hackjob, but we're going to change this all when
+    we merge in the issue_137 branch.
+
+Milestones:
+
+  - v0.1.0
 
 Bugfixes:
 
