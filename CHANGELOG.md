@@ -1,3 +1,9 @@
+## 0.1.1 (2014-03-25)
+
+Nits:
+
+  - Wording changes in cancellation in revoke-proof
+
 ## 0.1.0 (2014-03-25)
 
 Features:
