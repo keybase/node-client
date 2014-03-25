@@ -47,7 +47,7 @@ exports.Command = class Command extends Base
   #----------
 
   allocate_proof_gen : (cb) ->
-    klass = S.table[@service_name]
+    klass = S.classes[@service_name]
     assert.ok klass?
     await @me.gen_remote_proof_gen { klass, @remote_username }, defer err, @gen
     cb err
