@@ -60,7 +60,7 @@ exports.Command = class Command extends Base
     err = null
     if (s = S.aliases[@argv.service[0].toLowerCase()])?
       @service_name = s
-      @klass = @TABLE[s]
+      @klass = S.classes[s]
       assert.ok @klass?
       @stub = new @klass {}
     else
@@ -90,7 +90,7 @@ exports.Command = class Command extends Base
 
   check_exists_2 : (cb) ->
     err = null
-    if not(@stub.single_occupancy()) and (v = @rp[@service_name])? and 
+    if not(@stub.single_occupancy()) and (v = @rp?[@service_name])? and 
          (@remote_name_normalized in v)
       prompt = "You already have proven ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
