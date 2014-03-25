@@ -248,8 +248,14 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     ret = []
     if remote_name_normalized.indexOf("https://") >= 0
       ret = [
-        "HTTPs proofs won't work for self-signed certificates;"
+        "HTTPS proofs won't work for self-signed certificates;"
         "Only proceed if your cert is signed by a well-known CA"
+      ]
+    else
+      b = colors.bold
+      ret = [
+        "#{b('HTTPS')} websites are prefered, since they prove control of DNS records #{colors.bold("and")} SSL certs;"
+        "Proceed with proving an HTTP host if your site doesn't support HTTPS"
       ]
     return ret
 
