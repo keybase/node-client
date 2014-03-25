@@ -158,6 +158,21 @@ class RemoteServiceProofGen extends BaseSigGen
 
 #===========================================
 
+class RevokeProofSigGen extends BaseSigGen
+  constructor : (args) ->
+    @revoke_sig_id = args.revoke_sig_id
+    
+  _make_binding_eng : (args) ->
+    args.revoke = { sig_id : @revoke_sig_id }
+    new proofs.Revoke args
+
+  _v_modify_store_arg : (arg) ->
+    arg.revoke_sig_id = @revoke_sig_id
+
+  _get_api_endpoint : () -> "sig/revoke"
+
+#===========================================
+
 exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
   _binding_klass : () -> proofs.TwitterBinding
   _remote_service_name : () -> "twitter"

@@ -19,6 +19,7 @@ util = require 'util'
 {master_ring} = require './keyring'
 assertions = require './assertions'
 {keypull} = require './keypull'
+colors = require './colors'
 
 ##=======================================================================
 
@@ -59,7 +60,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   prompt_ok : (warnings, proofs, cb) ->
     them = @args.them
     prompt = if warnings
-      log.console.error env().make_red "Some remote proofs failed!"
+      log.console.error colors.red "Some remote proofs failed!"
       "Still verify this user as #{them}?"
     else if proofs is 0
       "We found an account for #{them}, but they haven't proved their identity. Still accept them?"

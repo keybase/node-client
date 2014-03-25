@@ -25,6 +25,7 @@ $(BUILD_STAMP): \
 	lib/command/id.js \
 	lib/command/join.js \
 	lib/command/keygen.js \
+	lib/command/list_tracking.js \
 	lib/command/login.js \
 	lib/command/logout.js \
 	lib/command/prove.js \
@@ -33,6 +34,7 @@ $(BUILD_STAMP): \
 	lib/command/push_and_keygen.js \
 	lib/command/reset.js \
 	lib/command/revoke.js \
+	lib/command/search.js \
 	lib/command/sign.js \
 	lib/command/status.js \
 	lib/command/switch.js \
