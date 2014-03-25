@@ -41,7 +41,8 @@
     "purepack": "1.0.0",
     "read": "keybase/read",
     "request": "2.30.0",
-    "triplesec": "~3.0.7"
+    "triplesec": "~3.0.7",
+    "timeago": "~0.1.0"
   },
   "devDependencies": {
     "iced-expect": "0.0.3",
