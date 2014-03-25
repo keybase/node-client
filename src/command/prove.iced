@@ -24,12 +24,21 @@ exports.Command = class Command extends Base
 
   #----------
 
+  OPTS :
+    f : 
+      alias : 'force'
+      action : 'storeTrue'
+      help : "don't stop for any prompts"
+
+  #----------
+
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ "proof" ]
       help : "add a proof of identity"
     name = "prove"
     sub = scp.addParser name, opts
+    add_option_dict sub, @OPTS
     sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
     sub.addArgument [ "remote_name"], { nargs : "?", help : "username at that service" }
     return opts.aliases.concat [ name ]
@@ -113,6 +122,19 @@ exports.Command = class Command extends Base
 
   #----------
 
+  do_warnings : (cb) ->
+    err = null
+    if not (@argv.force) and (warns = @stub.get_warnings { @remote_name_normalized })? and warns.length
+      for w in warns
+        log.warn w
+      prompt = "Proceed?"
+      await prompt_yn { prompt, defval : false }, defer err, ok
+      if not ok
+        err = new E.CancelError "canceled"
+    cb err
+
+  #----------
+
   handle_post : (cb) ->
     log.console.log @gen.instructions()
     log.console.log ""
@@ -144,6 +166,7 @@ exports.Command = class Command extends Base
     await @check_exists_1 esc defer()
     await @prompt_remote_name esc defer()
     await @check_exists_2 esc defer()
+    await @do_warnings esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     await @handle_post esc defer()

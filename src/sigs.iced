@@ -98,6 +98,10 @@ class BaseSigGen
   
   single_occupancy : () -> @_binding_klass().single_occupancy()
 
+  #-----------------------
+
+  get_warnings : ({}) -> []
+  
 #===========================================
 
 exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
@@ -234,11 +238,20 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
   prompter : () ->
     klass = @_binding_klass()
     return {
-      prompt : "URL prefix to check; HTTPS is strongly encouraged"
+      prompt : "URL prefix to check; root-CA-signed HTTPS is strongly encouraged"
       checker : 
         f    : klass.check_name
         hint : klass.name_hint()
     }
+
+  get_warnings : ( { remote_name_normalized } ) ->
+    ret = []
+    if remote_name_normalized.indexOf("https://") >= 0
+      ret = [
+        "HTTPs proofs won't work for self-signed certificates;"
+        "Only proceed if your cert is signed by a well-known CA"
+      ]
+    return ret
 
 #===========================================
 
