@@ -76,8 +76,11 @@ exports.Link = class Link
 
   #--------------------
 
-  to_list_display : () ->
-    scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
+  to_list_display : (opts) ->
+    name = scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
+    if opts?.with_sig_ids
+      { name, sig_id : @sig_id() }
+    else name
 
   #--------------------
 
@@ -558,9 +561,8 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  list_remote_proofs : () ->
+  list_remote_proofs : (opts = {}) ->
     out = null
-
     if @table? and (tab = @table[ST.REMOTE_PROOF])?
       for type,obj of tab
         type = proofs.proof_type_to_string[parseInt(type)]
@@ -568,8 +570,8 @@ exports.SigChain = class SigChain
 
         # In the case of an end-link, just display it.  In the 
         # case of a dictionary of more links, just list the keys
-        out[type] = if (obj instanceof Link) then obj.to_list_display()
-        else (k.toLowerCase() for k,v of obj)
+        out[type] = if (obj instanceof Link) then obj.to_list_display(opts)
+        else (v.to_list_display(opts) for k,v of obj)
 
     return out
 

@@ -70,7 +70,8 @@ exports.Command = class Command extends Base
   #----------
 
   get_the_go_ahead : (cb) ->
-    rp = @me.list_remote_proofs() 
+    rp = @me.list_remote_proofs  {with_sig_ids : true } 
+    console.log rp
     err = null
     if rp? and (v = rp[@service_name]) 
       await prompt_yn { 
