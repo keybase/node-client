@@ -1,3 +1,10 @@
+## 0.2.1 (2014-03-26)
+
+Bugfixes:
+
+ - Reduce code bloat due to certificates
+ - fix a bad athrow in sigchains due to unknown proof types
+
 ## 0.2.0 (2014-03-26)
 
 Features:
