@@ -16,7 +16,7 @@ _certs = null
 my_request = (opts, cb) ->
   if semver.lt(process.version, "0.10.25")
     _certs = (v for k,v of root_certs) if not _certs?
-    opts.ca = _certs
+    opts.ca = _certs unless opts.ca?
   request opts, cb
 
 #==============================================================

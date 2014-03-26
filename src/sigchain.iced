@@ -201,14 +201,17 @@ exports.Link = class Link
       human_url : @human_url()
     arg = dict_union(arg, @proof_service_object())
 
+    errmsg = ""
     if skip
       rc = proofs.constants.v_codes.OK
     else if not @api_url()
       rc = proofs.constants.v_codes.NOT_FOUND
     else
       log.debug "+ Calling into scraper -> #{rsc}@#{type_s} -> #{@api_url()}"
-      await scraper.validate arg, esc defer rc
+      await scraper.validate arg, defer err, rc
       log.debug "- Called scraper -> #{rc}"
+      if err?
+        errmsg = ": " + err.message
 
     ok = false
     if rc isnt proofs.constants.v_codes.OK
@@ -220,7 +223,7 @@ exports.Link = class Link
 
     msg = scraper.format_msg { arg, ok }
     msg.push ("(you've recently OK'ed this proof)") if skip
-    msg.push "(failed with code #{rc})" if not ok
+    msg.push "(failed with code #{rc}#{errmsg})" if not ok
     log.console.error msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"
 
