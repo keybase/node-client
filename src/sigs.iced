@@ -241,9 +241,9 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
 
   display_name : () -> @filename()
 
-  filename : () ->
+  filename : (h) ->
     file = proofs.GenericWebSiteScraper.FILE
-    @remote_host + "/" + file
+    (h or @remote_host) + "/" + file
 
   prompter : () ->
     klass = @_binding_klass()
@@ -264,19 +264,10 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     @_binding_klass().check_name(@rewrite_hostname(i))
 
   get_warnings : ( { remote_name_normalized } ) ->
-    ret = []
-    if remote_name_normalized.indexOf("https://") >= 0
-      ret = [
-        "HTTPS proofs won't work for self-signed certificates;"
-        "Only proceed if your cert is signed by a well-known CA"
-      ]
-    else
-      b = colors.bold
-      ret = [
-        "#{b('HTTPS')} websites are prefered, since they prove control of DNS records #{colors.bold("and")} SSL certs;"
-        "Proceed with proving an HTTP host if your site doesn't support HTTPS"
-      ]
-    return ret
+    f = @filename remote_name_normalized
+    return [
+      "You'll be asked to post a file available at #{colors.bold(f)}"
+    ]
 
   #----------------
 
@@ -290,7 +281,6 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
       hostname = u.hostname
       args = { endpoint : "remotes/check", args : { hostname } }
       await req.get args, defer err, res
-      console.log res
       if err? then # noop
       else if not (protocol = res?.results?.first)? 
         err = new E.HostError "Host #{n} is down; tried 'http' and 'https' protocols"
