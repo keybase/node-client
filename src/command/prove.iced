@@ -56,7 +56,7 @@ exports.Command = class Command extends ProofBase
     err = null
     if not(@stub.single_occupancy()) and (v = @rp?[@service_name])? and 
          (@remote_name_normalized in v)
-      prompt = "You already have proven ownership of #{@remote_name}; overwrite? "
+      prompt = "You already have claimed ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
     cb err
 
