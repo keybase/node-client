@@ -7,6 +7,16 @@ proofs = require 'keybase-proofs'
 {CHECK,BAD_X} = require './display'
 colors = require 'colors'
 proxyca = require './proxyca'
+root_certs = require '../certs/node_root_certs.json'
+semver = require 'semver'
+
+#==============================================================
+
+_certs = null
+my_request = (opts, cb) ->
+  _certs = (v for k,v of root_certs) if not _certs?
+  opts.ca = _certs
+  request opts, cb
 
 #==============================================================
 
@@ -18,7 +28,7 @@ class Base
   make_scraper : () ->
     klass = @get_scraper_klass()
     @_scraper = new klass { 
-      libs : { cheerio, request, log }, 
+      libs : { cheerio, request : my_request, log }, 
       log_level : 'debug', 
       proxy : env().get_proxy() 
       ca : proxyca.get()?.data()
