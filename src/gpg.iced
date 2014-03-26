@@ -20,13 +20,13 @@ exports.parse_signature = (lines) ->
   strip = (m) -> if m? then m.split(/\s+/).join('') else null
   ends_in = (a,b) -> a[-(b.length)...] is b
   rxx = ///
-            (?:^|\n)gpg:\sSignature\smade\s(.*?)\n
-            gpg:\s+using\s[RD]SA\skey\s([A-F0-9]{16})\n
+            (?:^|\n)gpg:\sSignature\smade\s(.*?)\r?\n
+            gpg:\s+using\s[RD]SA\skey\s([A-F0-9]{16})\r?\n
+            (?:.*r\?\n)* # Skip arbirarily many lines
+            gpg:\sGood\ssignature\sfrom.*\r?\n
             (?:.*\n)* # Skip arbirarily many lines
-            gpg:\sGood\ssignature\sfrom.*\n
-            (?:.*\n)* # Skip arbirarily many lines
-            Primary\skey\sfingerprint:\s([A-F0-9\s]+)\n
-            (?:\s+Subkey\sfingerprint:\s([A-F0-9\s]+)\n)?
+            Primary\skey\sfingerprint:\s([A-F0-9\s]+)\r?\n
+            (?:\s+Subkey\sfingerprint:\s([A-F0-9\s]+)\r?\n)?
        /// 
   err = ret = null
   if not (m = lines.match rxx)? 
