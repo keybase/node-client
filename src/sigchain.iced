@@ -1,4 +1,3 @@
-
 db = require './db'
 req = require './req'
 log = require './log'
@@ -18,6 +17,7 @@ util = require 'util'
 {env} = require './env'
 scrapemod = require './scrapers'
 {CHECK,BAD_X} = require './display'
+{athrow} = require('iced-utils').util
 
 ##=======================================================================
 
