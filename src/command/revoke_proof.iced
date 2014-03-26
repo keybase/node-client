@@ -46,21 +46,44 @@ exports.Command = class Command extends ProofBase
 
   get_the_go_ahead : (cb) ->
     rp = @me.list_remote_proofs  {with_sig_ids : true } 
-    console.log rp
     err = null
     if not rp? or not (v = rp[@service_name])?
       err = E.NotFoundError "No proof found for service '#{@service_name}'"
     else if Array.isArray(v)
-
+      d = {}
+      names = []
+      for e in v
+        names.push e.name
+        d[e.name] = v
+      if @remote_name? and not d[@remote_name]
+        err = new E.ArgsError "You don't have a proof for #{@remote_name} to revoke"
+      else if @remote_name
+        @sig_id = d[@remote_name].sig_id
+      else if not @remote_name and names.length > 1
+        log.warn "Please specify which proof to revoke; options are:"
+        for n in names
+          log.warn " * #{n}"
+        err = new E.ArgsError "need specifics"
+      else
+        to_prompt = 
+          prompt : "Revoke your proof of #{v[0].name}"
+          sig_id : v[0].sig_id
     else
       if @remote_name? and (@remote_name isnt v.name)
         err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{@service_name}"
-      else if not @remote_name?
-        await prompt_yn { 
-          prompt : "Revoke your proof of #{v} at #{@service_name}?", 
-          defval : false }, defer err, ok
-        if not err? and not ok
-          err = new E.CancelError "Cancellation canceled! Did nothing."
+      else if @remote_name?
+        @sig_id = v.sig_id
+      else 
+        to_prompt = 
+          prompt : "Revoke your proof of #{v.name} at #{@service_name}?"
+          sig_id : v.sig_id
+    if not err? and to_prompt?
+      await prompt_yn { prompt : to_prompt.prompt, defval : false }, defer err, ok
+      if err? then # noop 
+      else if not ok
+        err = new E.CancelError "Cancellation canceled! Did nothing."
+      else
+        @sig_id = to_prompt.sig_id
     cb err
 
   #----------
