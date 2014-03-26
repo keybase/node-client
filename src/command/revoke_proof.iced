@@ -35,11 +35,7 @@ exports.Command = class Command extends ProofBase
 
   allocate_proof_gen : (cb) ->
     klass = RevokeProofSigGen
-    typ = proofs.constants.proof_types[@service_name]
-    if not (sig_id = @me.sig_chain?.table?[ST.REMOTE_PROOF]?[typ]?.sig_id())?
-      err = new E.NotFoundError "Didn't find a valid signature; no sig id!"
-    else
-      await @me.gen_remote_proof_gen { klass, sig_id }, defer err, @gen
+    await @me.gen_remote_proof_gen { klass, @sig_id }, defer err, @gen
     cb err
 
   #----------
@@ -54,7 +50,7 @@ exports.Command = class Command extends ProofBase
       names = []
       for e in v
         names.push e.name
-        d[e.name] = v
+        d[e.name] = e
       if @remote_name? and not d[@remote_name]
         err = new E.ArgsError "You don't have a proof for #{@remote_name} to revoke"
       else if @remote_name
