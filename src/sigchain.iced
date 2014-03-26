@@ -8,7 +8,7 @@ log = require './log'
 {format_fingerprint,Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
-{date_to_unix,make_email} = require './util'
+{dict_union,date_to_unix,make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
 request = require 'request'
@@ -16,13 +16,13 @@ colors = require './colors'
 deq = require 'deep-equal'
 util = require 'util'
 {env} = require './env'
-proxyca = require './proxyca'
+scrapemod = require './scrapers'
+{CHECK,BAD_X} = require './display'
 
 ##=======================================================================
 
 strip = (x) -> x.replace(/\s+/g, '')
 
-[CHECK,BAD_X] = if (process.platform is 'win32') then [ "ok", "BAD" ] else ["\u2714", "\u2716" ]
 
 ##=======================================================================
 
@@ -54,7 +54,8 @@ exports.Link = class Link
   short_key_id : () -> @fingerprint()[-8...].toUpperCase()
   is_self_sig : () -> @sig_type() in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
   self_signer : () -> @payload_json()?.body?.key?.username
-  remote_username : () -> @payload_json()?.body?.service?.username
+  proof_service_object : () -> @payload_json()?.body?.service
+  remote_username : () -> @proof_service_object()?.username
   sig_type : () -> @obj.sig_type
   proof_type : () -> @obj.proof_type
   proof_state : () -> @obj.proof_state
@@ -67,6 +68,19 @@ exports.Link = class Link
   ctime : () -> date_to_unix @obj.ctime
   revoke : () -> @_revoked = true
   is_revoked : () -> @_revoked
+
+  #--------------------
+
+  get_sub_id : () -> 
+    scrapemod.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
+
+  #--------------------
+
+  to_list_display : (opts) ->
+    name = scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
+    if opts?.with_sig_ids
+      { name, sig_id : @sig_id() }
+    else name
 
   #--------------------
 
@@ -152,26 +166,6 @@ exports.Link = class Link
 
   #-----------
 
-  alloc_scraper : (type, cb) ->
-    PT = proofs.constants.proof_types
-    err = scraper = null
-    klass = switch type
-      when PT.twitter then proofs.TwitterScraper
-      when PT.github  then proofs.GithubScraper
-      else null
-    if not klass
-      err = new E.ScrapeError "cannot allocate scraper of type #{type}"
-    else
-      scraper = new klass { 
-        libs : { cheerio, request, log }, 
-        log_level : 'debug', 
-        proxy : env().get_proxy() 
-        ca : proxyca.get()?.data()
-      }
-    cb err, scraper
-
-  #-----------
-
   check_remote_proof : ({skip, pubkey, type, warnings, assertions}, cb) ->
 
     username = pubkey.username()
@@ -187,33 +181,37 @@ exports.Link = class Link
     assert = assertions?.found type_s
 
     await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
-    if not (remote_username = @remote_username())?
-      err = new E.VerifyError "no remote username found in proof"
-      await athrow err, esc defer()
 
-    assert?.set_remote_username remote_username
+    assert?.set_payload @payload_json()
 
     if not skip and not @api_url()
       await @refresh defer e2
       if e2?
         log.warn "Error fetching URL for proof: #{e2.message}"
 
-    log.debug "| remote username is #{remote_username}"
+    rsc = JSON.stringify @proof_service_object()
+    log.debug "| remote service desc is #{rsc}"
+
+    await scrapemod.alloc type, esc defer scraper
+    arg = 
+      api_url : @api_url(),
+      signature : @sig(),
+      proof_text_check : @proof_text_check()
+      remote_id : (""+@remote_id())
+      human_url : @human_url()
+    arg = dict_union(arg, @proof_service_object())
+
+    errmsg = ""
     if skip
       rc = proofs.constants.v_codes.OK
     else if not @api_url()
       rc = proofs.constants.v_codes.NOT_FOUND
     else
-      await @alloc_scraper type, esc defer scraper
-      log.debug "+ Calling into scraper -> #{remote_username}@#{type_s} -> #{@api_url()}"
-      await scraper.validate {
-        username : remote_username,
-        api_url : @api_url(),
-        signature : @sig(),
-        proof_text_check : @proof_text_check()
-        remote_id : (""+@remote_id())
-      }, esc defer rc
+      log.debug "+ Calling into scraper -> #{rsc}@#{type_s} -> #{@api_url()}"
+      await scraper.validate arg, defer err, rc
       log.debug "- Called scraper -> #{rc}"
+      if err?
+        errmsg = ": " + err.message
 
     ok = false
     if rc isnt proofs.constants.v_codes.OK
@@ -222,15 +220,10 @@ exports.Link = class Link
     else
       ok = true
       log.debug "| proof checked out"
-    msg = [
-       (if ok then CHECK else BAD_X) 
-       ('"' + ((if ok then colors.green else colors.red) remote_username) + '"')
-       "on"
-       (type_s + ":")
-       @human_url()
-    ]
-    msg.push ("(you've recently OK'ed these proofs)") if skip
-    msg.push "(failed with code #{rc})" if not ok
+
+    msg = scraper.format_msg { arg, ok }
+    msg.push ("(you've recently OK'ed this proof)") if skip
+    msg.push "(failed with code #{rc}#{errmsg})" if not ok
     log.console.error msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"
 
@@ -252,7 +245,6 @@ exports.Link = class Link
       state : @obj.proof_state
       proof_type : @obj.proof_type
   }
-
 
 ##=======================================================================
 
@@ -455,6 +447,11 @@ exports.SigChain = class SigChain
 
     MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
 
+    INSERT = (d, keys, val) ->
+      for k in keys[0...-1]
+        d = MAKE(d,k,{})
+      d[keys[-1...][0]] = val
+
     out = {}
     index = {}
 
@@ -471,7 +468,9 @@ exports.SigChain = class SigChain
         when ST.REMOTE_PROOF 
           S = constants.proof_state 
           if link.proof_state() in [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
-            MAKE(out, lt, {})[link.proof_type()] = link
+            keys = [ lt , link.proof_type() ]
+            if (sub_id = link.get_sub_id())? then keys.push sub_id
+            INSERT(out, keys, link)
 
         when ST.TRACK 
           if not (id = body?.track?.id)? 
@@ -512,10 +511,24 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  remote_proofs_to_track_obj : () ->
+  # list all remote proofs in a flat list, taking out the structure that
+  # the Web and DNS proofs are in a sub-dictionary
+  flattened_remote_proofs : () ->
+    links = []
     if (d = @table?[ST.REMOTE_PROOF])?
-      (link.remote_proof_to_track_obj() for key,link of d when not link.is_revoked())
-    else []
+      search = [ d ] 
+      while search.length
+        if ((front = search.pop()) instanceof Link) then links.push front
+        else 
+          for k,v of front
+            search.push v
+    return links
+
+  #-----------
+
+  remote_proofs_to_track_obj : () ->
+    links = @flattened_remote_proofs()
+    (link.remote_proof_to_track_obj() for link in links when not link.is_revoked())
 
   #-----------
 
@@ -551,13 +564,17 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  list_remote_proofs : () ->
+  list_remote_proofs : (opts = {}) ->
     out = null
     if @table? and (tab = @table[ST.REMOTE_PROOF])?
-      for type,link of tab
+      for type,obj of tab
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
-        out[type] = link.remote_username()
+
+        # In the case of an end-link, just display it.  In the 
+        # case of a dictionary of more links, just list the keys
+        out[type] = if (obj instanceof Link) then obj.to_list_display(opts)
+        else (v.to_list_display(opts) for k,v of obj)
 
     return out
 
@@ -571,12 +588,23 @@ exports.SigChain = class SigChain
     msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint pubkey.fingerprint()}")
     log.console.error msg
     n = 0
+
+    # In case there was an assertion on the public key fingerprint itself...
+    assertions?.found('key', false)?.success().set_payload pubkey.fingerprint() 
+
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"
-      for type,link of tab
+      for type,v of tab
         type = parseInt(type) # we expect it to be an int, not a dict key
-        await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
-        n++
+
+        # For single-shot proofs like Twitter and Github, this will be the proof.
+        # For multi-tenant proofs like 'generic_web_site', we have to go one level deeper
+        links = if (v instanceof Link) then [ v ]
+        else (v2 for k,v2 of v)
+
+        for link in links
+          await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
+          n++
     else
       log.debug "| No remote proofs found"
     log.debug "- #{pubkey.username()}: checked remote proofs"

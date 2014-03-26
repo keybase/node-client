@@ -405,15 +405,15 @@ exports.User = class User
 
   #--------------
 
-  list_remote_proofs : () -> @sig_chain?.list_remote_proofs()
+  list_remote_proofs : (opts) -> @sig_chain?.list_remote_proofs(opts)
   list_trackees : () -> @sig_chain?.list_trackees()
 
   #--------------
 
-  gen_remote_proof_gen : ({klass, remote_username, sig_id}, cb) ->
+  gen_remote_proof_gen : ({klass, remote_name_normalized, sig_id }, cb) ->
     esc = make_esc cb, "User::gen_remote_proof_gen"
     await @load_public_key {}, esc defer()
-    arg =  { km : @key, remote_username, sig_id }
+    arg =  { km : @key, remote_name_normalized, sig_id }
     g = new klass arg
     cb null, g
 

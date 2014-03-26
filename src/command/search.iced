@@ -70,6 +70,8 @@ exports.Command = class Command extends Base
         key : c.key_fingerprint?.val.replace(/\s+/g, "")
       for svc in SERVICES
         if (n = c[svc])? then obj[svc] = n.val
+      if c.websites?.length
+        obj.websites = ("#{v.protocol}//#{v.val}" for v in c.websites)
       obj.score = entry.total_score
       if @logged_in
         obj.is_followee = entry.is_followee
@@ -94,6 +96,8 @@ exports.Command = class Command extends Base
       for svc in SERVICES
         if (n = rec[svc])
           fields.push "#{svc}:#{n}"
+      if (tmp = rec.websites)?
+        fields = fields.concat tmp
       line = fields.join("\t")
       lines.push line
     return lines.join("\n")

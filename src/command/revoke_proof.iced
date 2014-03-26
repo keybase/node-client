@@ -1,4 +1,4 @@
-{Base} = require './base'
+{ProofBase} = require './proof_base'
 log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
@@ -16,70 +16,70 @@ S = require '../services'
 ST = constants.signature_types
 {prompt_yn} = require '../prompter'
 proofs = require 'keybase-proofs'
+assert = require 'assert'
 
 ##=======================================================================
 
-exports.Command = class Command extends Base
+exports.Command = class Command extends ProofBase
 
   #----------
 
-  OPTS:
-    f :
-      alias : "force"
-      action : "storeTrue"
-      help : "don't ask interactively, just do it!"
-
-  #----------
-
-  use_session : () -> true
-  needs_configuration : () -> true
-
-  #----------
-
-  add_subcommand_parser : (scp) ->
+  command_name_and_opts : () ->
     opts = 
       aliases : [  ]
       help : "revoke a proof of identity"
     name = "revoke-proof"
-    sub = scp.addParser name, opts
-    add_option_dict sub, @OPTS
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
-    return opts.aliases.concat [ name ]
+    return { name, opts }
 
   #----------
 
   allocate_proof_gen : (cb) ->
     klass = RevokeProofSigGen
-    typ = proofs.constants.proof_types[@service_name]
-    if not (sig_id = @me.sig_chain?.table?[ST.REMOTE_PROOF]?[typ]?.sig_id())?
-      err = new E.NotFoundError "Didn't find a valid signature; no sig id!"
-    else
-      await @me.gen_remote_proof_gen { klass, sig_id }, defer err, @gen
-    cb err
-
-  #----------
-
-  parse_args : (cb) ->
-    err = null
-    if (s = S.aliases[@argv.service[0].toLowerCase()])?
-      @service_name = s
-    else
-      err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
+    await @me.gen_remote_proof_gen { klass, @sig_id }, defer err, @gen
     cb err
 
   #----------
 
   get_the_go_ahead : (cb) ->
-    rp = @me.list_remote_proofs() 
+    rp = @me.list_remote_proofs  {with_sig_ids : true } 
     err = null
-    if rp? and (v = rp[@service_name]) 
-      await prompt_yn { 
-        prompt : "Revoke your proof of #{v} at #{@service_name}?", 
-        defval : false }, defer err, ok
-      if not err? and not ok
-        err = new E.CancelError "Cancellation canceled! Did nothing."
-    else
+    if not rp? or not (v = rp[@service_name])?
       err = E.NotFoundError "No proof found for service '#{@service_name}'"
+    else if Array.isArray(v)
+      d = {}
+      names = []
+      for e in v
+        names.push e.name
+        d[e.name] = e
+      if @remote_name? and not d[@remote_name]
+        err = new E.ArgsError "You don't have a proof for #{@remote_name} to revoke"
+      else if @remote_name
+        @sig_id = d[@remote_name].sig_id
+      else if not @remote_name and names.length > 1
+        log.warn "Please specify which proof to revoke; options are:"
+        for n in names
+          log.warn " * #{n}"
+        err = new E.ArgsError "need specifics"
+      else
+        to_prompt = 
+          prompt : "Revoke your proof of #{v[0].name}"
+          sig_id : v[0].sig_id
+    else
+      if @remote_name? and (@remote_name isnt v.name)
+        err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{@service_name}"
+      else if @remote_name?
+        @sig_id = v.sig_id
+      else 
+        to_prompt = 
+          prompt : "Revoke your proof of #{v.name} at #{@service_name}?"
+          sig_id : v.sig_id
+    if not err? and to_prompt?
+      await prompt_yn { prompt : to_prompt.prompt, defval : false }, defer err, ok
+      if err? then # noop 
+      else if not ok
+        err = new E.CancelError "Cancellation canceled! Did nothing."
+      else
+        @sig_id = to_prompt.sig_id
     cb err
 
   #----------

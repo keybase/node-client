@@ -8,6 +8,9 @@ log = require './log'
 {master_ring} = require './keyring'
 {decode} = require('pgp-utils').armor
 colors = require './colors'
+{E} = require './err'
+req = require './req'
+urlmod = require 'url'
 
 #===========================================
 
@@ -83,7 +86,32 @@ class BaseSigGen
     await @_do_signature esc defer()
     await @_store_signature esc defer()
     cb null, @sig
- 
+
+  #-----------------------
+
+  normalize_name : (n, cb) -> 
+    klass = @_binding_klass()
+    ret = klass.normalize_name(n)
+    cb null, ret
+
+  #-----------------------
+
+  check_name : (s) -> @_binding_klass().check_name(s)
+
+  #-----------------------
+
+  # Check the input that came in from the user, often the same as the
+  # name that's eventually used in the proof, though it could change...
+  check_name_input : (s) -> @check_name(s)
+
+  #-----------------------
+  
+  single_occupancy : () -> @_binding_klass().single_occupancy()
+
+  #-----------------------
+
+  get_warnings : ({}) -> []
+  
 #===========================================
 
 exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
@@ -142,9 +170,15 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
 #===========================================
 
-class RemoteServiceProofGen extends BaseSigGen
+strip_at = (x) ->
+  if x? and x.length and x[0] is '@' then x[1...]
+  else x
+
+#===========================================
+
+class SocialNetworkProofGen extends BaseSigGen
   constructor : (args) ->
-    @remote_username = args.remote_username
+    @remote_username = args.remote_name_normalized
     super args
 
   _make_binding_eng : (args) ->
@@ -155,6 +189,17 @@ class RemoteServiceProofGen extends BaseSigGen
   _v_modify_store_arg : (arg) ->
     arg.remote_username = @remote_username
     arg.type = "web_service_binding." + @_remote_service_name()
+
+  prompter : () -> 
+    klass = @_binding_klass()
+    ret = {
+      prompt  : "Your username on #{@display_name()}"
+      checker : 
+        f         : klass.check_name
+        hint      : klass.name_hint()
+        normalize : klass.normalize_name
+    }
+    return ret
 
 #===========================================
 
@@ -174,14 +219,87 @@ exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
 
 #===========================================
 
-exports.TwitterProofGen = class TwitterProofGen extends RemoteServiceProofGen
+exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
+
+  _binding_klass : () -> proofs.GenericWebSiteBinding
+
+  constructor : (args) ->
+    @remote_host = args.remote_name_normalized
+    super args
+
+  _make_binding_eng : (args) ->
+    args.remote_host = @remote_host
+    klass = @_binding_klass()
+    new klass args
+
+  _v_modify_store_arg : (arg) ->
+    arg.remote_host = @remote_host
+    arg.type = "web_service_binding.generic"
+
+  instructions : () -> 
+    "Please save the following file as #{colors.bold @filename()}"
+
+  display_name : () -> @filename()
+
+  filename : (h) ->
+    file = proofs.GenericWebSiteScraper.FILE
+    (h or @remote_host) + "/" + file
+
+  prompter : () ->
+    klass = @_binding_klass()
+    return {
+      prompt : "Hostname to check"
+      checker : 
+        f    : (i) => @check_name_input(i)
+        hint : klass.name_hint()
+    }
+
+  rewrite_hostname : (i) ->
+    i = "https://#{i}" unless i.match /^https?:\/\//
+    return i
+
+  # The user can enter inputs like "www.foo.com"
+  # or "https://www.foo.com" or "http://foo.com"
+  check_name_input : (i) ->
+    @_binding_klass().check_name(@rewrite_hostname(i))
+
+  get_warnings : ( { remote_name_normalized } ) ->
+    f = @filename remote_name_normalized
+    return [
+      "You'll be asked to post a file available at #{colors.bold(f)}"
+    ]
+
+  #----------------
+
+  normalize_name : (i, cb) ->
+    n = @rewrite_hostname(i)
+    u = @_binding_klass().parse(n)
+    ret = null
+    if not u?
+      err = new E.ArgsError "Failed to parse #{hostname} is a valid internet host"
+    else
+      hostname = u.hostname
+      args = { endpoint : "remotes/check", args : { hostname } }
+      await req.get args, defer err, res
+      if err? then # noop
+      else if not (protocol = res?.results?.first)? 
+        err = new E.HostError "Host #{n} is down; tried 'http' and 'https' protocols"
+      else if i.match(/^https:\/\//) and (protocol isnt 'https:')
+        err = new E.SecurityError "You specified HTTPS for #{i} but only HTTP is available"
+      else
+        ret = urlmod.format { protocol , hostname }
+    cb err, ret
+
+#===========================================
+
+exports.TwitterProofGen = class TwitterProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.TwitterBinding
   _remote_service_name : () -> "twitter"
   imperative_verb : () -> "tweet"
   display_name : () -> "Twitter"
   instructions : () -> "Please #{colors.bold('publicly')} tweet the following:"
 
-exports.GithubProofGen = class GithubProofGen extends RemoteServiceProofGen
+exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
   imperative_verb : () -> "post a Gist with"

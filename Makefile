@@ -28,6 +28,7 @@ $(BUILD_STAMP): \
 	lib/command/list_tracking.js \
 	lib/command/login.js \
 	lib/command/logout.js \
+	lib/command/proof_base.js \
 	lib/command/prove.js \
 	lib/command/pull.js \
 	lib/command/push.js \
@@ -51,6 +52,7 @@ $(BUILD_STAMP): \
 	lib/config.js \
 	lib/constants.js \
 	lib/db.js \
+	lib/display.js \
 	lib/env.js \
 	lib/err.js \
 	lib/file.js \
@@ -74,6 +76,7 @@ $(BUILD_STAMP): \
 	lib/pw.js \
 	lib/queue.js \
 	lib/req.js \
+	lib/scrapers.js \
 	lib/session.js \
 	lib/setup.js \
 	lib/sigchain.js \

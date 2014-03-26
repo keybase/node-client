@@ -22,7 +22,7 @@ exports.Prompter = class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower,first_prompt,hint}, cb) ->
+  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower,first_prompt,hint,normalizer}, cb) ->
     err = null
     ok = false
     first = true
@@ -41,6 +41,10 @@ exports.Prompter = class Prompter
         obj.edit = true
       await read obj, defer err, res, isDefault
       break if err?
+
+      # Normalize the output first, maybe by stripping off leading '@'
+      # signs
+      if normalizer? then res = normalizer(res)
 
       if thrower? and (err = thrower(k, res))? then ok = true
       else if checker?.f? and not checker.f res then ok = false
@@ -105,15 +109,11 @@ exports.prompt_passphrase = ({prompt,confirm,extra,short}, cb) ->
 
 #========================================================================
 
-exports.prompt_remote_username = (svc, cb) ->
-  seq = 
-    username :
-      prompt : "Your username on #{svc}"
-      checker : checkers.remote_username
+exports.prompt_remote_name = ({prompt, checker, hint}, cb) ->
+  seq = { name : { prompt, checker, hint } }
   p = new Prompter seq
   await p.run defer err
-  cb err, p.data().username
-
+  cb err, p.data().name
 
 #========================================================================
 

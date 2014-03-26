@@ -41,7 +41,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
 
-    if (un = env().is_configured())
+    if (un = env().get_username())?
       await session.check esc defer logged_in
       await User.load_me {secret : false}, esc defer me
 

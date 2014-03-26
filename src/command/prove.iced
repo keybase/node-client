@@ -1,12 +1,12 @@
-{Base} = require './base'
+{ProofBase} = require './proof_base'
 log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
 {PackageJson} = require '../package'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
-{prompt_yn,prompt_remote_username} = require '../prompter'
-{TwitterProofGen,GithubProofGen} = require '../sigs'
+{prompt_yn,prompt_remote_name} = require '../prompter'
+{GenericWebSiteProofGen,TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
 {req} = require '../req'
 assert = require 'assert'
@@ -15,7 +15,7 @@ S = require '../services'
 
 ##=======================================================================
 
-exports.Command = class Command extends Base
+exports.Command = class Command extends ProofBase
 
   #----------
 
@@ -24,55 +24,40 @@ exports.Command = class Command extends Base
 
   #----------
 
-  add_subcommand_parser : (scp) ->
+  command_name_and_opts : () ->
     opts = 
       aliases : [ "proof" ]
       help : "add a proof of identity"
     name = "prove"
-    sub = scp.addParser name, opts
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
-    sub.addArgument [ "remote_username"], { nargs : "?", help : "username at that service" }
-    return opts.aliases.concat [ name ]
+    return {name, opts}
 
   #----------
 
-  prompt_remote_username : (cb) ->
-    svc = @argv.service[0]
+  check_exists_common : (prompt, cb) ->
     err = null
-    unless (ret = @argv.remote_username)?
-      await prompt_remote_username svc, defer err, ret
-    @remote_username = ret
-    cb err, ret
-
-  #----------
-
-  allocate_proof_gen : (cb) ->
-    klass = S.classes[@service_name]
-    assert.ok klass?
-    await @me.gen_remote_proof_gen { klass, @remote_username }, defer err, @gen
+    await prompt_yn { prompt, defval : false }, defer err, ok
+    if not err? and not ok
+      err = new E.ProofExistsError "Proof already exists"
     cb err
 
   #----------
 
-  parse_args : (cb) ->
+  check_exists_1 : (cb) ->
+    @rp = @me.list_remote_proofs() 
     err = null
-    if (s = S.aliases[@argv.service[0].toLowerCase()])?
-      @service_name = s
-    else
-      err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
+    if @rp? and (v = @rp[@service_name])? and @stub.single_occupancy()
+      prompt = "You already have proven you are #{v} at #{@service_name}; overwrite? "
+      await @check_exists_common prompt, defer err
     cb err
 
   #----------
 
-  check_exists : (cb) ->
-    rp = @me.list_remote_proofs() 
+  check_exists_2 : (cb) ->
     err = null
-    if rp? and (v = rp[@service_name]) 
-      await prompt_yn { 
-        prompt : "You already have proved you are #{v} at #{@service_name}; overwrite? ", 
-        defval : false }, defer err, ok
-      if not err? and not ok
-        err = new E.ProofExistsError "Proof already exists"
+    if not(@stub.single_occupancy()) and (v = @rp?[@service_name])? and 
+         (@remote_name_normalized in v)
+      prompt = "You already have claimed ownership of #{@remote_name}; overwrite? "
+      await @check_exists_common prompt, defer err
     cb err
 
   #----------
@@ -85,6 +70,19 @@ exports.Command = class Command extends Base
     await req arg, defer err, body
     res = if err? then false else body.proof_ok
     cb err, res
+
+  #----------
+
+  do_warnings : (cb) ->
+    err = null
+    if not (@argv.force) and (warns = @stub.get_warnings { @remote_name_normalized })? and warns.length
+      for w in warns
+        log.warn w
+      prompt = "Proceed?"
+      await prompt_yn { prompt, defval : false }, defer err, ok
+      if not ok
+        err = new E.CancelError "canceled"
+    cb err
 
   #----------
 
@@ -116,8 +114,11 @@ exports.Command = class Command extends Base
     await @parse_args esc defer()
     await session.login esc defer()
     await User.load_me { secret : true }, esc defer @me
-    await @check_exists esc defer()
-    await @prompt_remote_username esc defer()
+    await @check_exists_1 esc defer()
+    await @prompt_remote_name esc defer()
+    await @normalize_remote_name esc defer()
+    await @check_exists_2 esc defer()
+    await @do_warnings esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     await @handle_post esc defer()
