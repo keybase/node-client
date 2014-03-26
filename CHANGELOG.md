@@ -1,3 +1,9 @@
+## 0.2.0 (2014-03-26)
+
+Features:
+
+ - Generic website proofs
+
 ## 0.1.2 (2014-03-26)
 
 Bugfixes:
