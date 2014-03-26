@@ -244,6 +244,8 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
         hint : klass.name_hint()
     }
 
+  check_name : (n) ->
+
   get_warnings : ( { remote_name_normalized } ) ->
     ret = []
     if remote_name_normalized.indexOf("https://") >= 0
