@@ -7,6 +7,7 @@ Features:
 Nits:
 
   - Wording changes in cancellation in revoke-proof
+  - Remove dependency on mkdirp
 
 ## 0.1.0 (2014-03-25)
 
