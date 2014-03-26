@@ -7,7 +7,7 @@ proofs = require 'keybase-proofs'
 {CHECK,BAD_X} = require './display'
 colors = require 'colors'
 proxyca = require './proxyca'
-root_certs = require '../certs/node_root_certs.json'
+root_certs = require '../json/node_root_certs.json'
 semver = require 'semver'
 
 #==============================================================

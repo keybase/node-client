@@ -10,5 +10,5 @@ style proofs, and *not* for communicating with `api.keybase.io`.
 
 ```
 ./c_to_js.pl < node_root_certs.h > node_root_certs.js
-node node_root_certs.js > node_root_certs.json
+node node_root_certs.js > ../json/node_root_certs.json
 ```
