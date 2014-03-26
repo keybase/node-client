@@ -44,34 +44,23 @@ exports.Command = class Command extends ProofBase
 
   #----------
 
-  parse_args : (cb) ->
-    err = null
-    if (s = S.aliases[@argv.service[0].toLowerCase()])?
-      @service_name = s
-      @klass = S.classes[s]
-      assert.ok @klass?
-      @sub = new @klass {}
-    else
-      err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
-    if not err? and (@remote_name = @argv.remote)? and not @stub.check_name(@remote_name)
-      err = new E.ArgsError "Bad #{@argv.service[0]} name given: #{@remote_name}"
-
-    cb err
-
-  #----------
-
   get_the_go_ahead : (cb) ->
     rp = @me.list_remote_proofs  {with_sig_ids : true } 
     console.log rp
     err = null
-    if rp? and (v = rp[@service_name]) 
-      await prompt_yn { 
-        prompt : "Revoke your proof of #{v} at #{@service_name}?", 
-        defval : false }, defer err, ok
-      if not err? and not ok
-        err = new E.CancelError "Cancellation canceled! Did nothing."
-    else
+    if not rp? or not (v = rp[@service_name])?
       err = E.NotFoundError "No proof found for service '#{@service_name}'"
+    else if Array.isArray(v)
+
+    else
+      if @remote_name? and (@remote_name isnt v.name)
+        err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{@service_name}"
+      else if not @remote_name?
+        await prompt_yn { 
+          prompt : "Revoke your proof of #{v} at #{@service_name}?", 
+          defval : false }, defer err, ok
+        if not err? and not ok
+          err = new E.CancelError "Cancellation canceled! Did nothing."
     cb err
 
   #----------
