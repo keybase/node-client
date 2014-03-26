@@ -52,9 +52,13 @@ exports.Command = class Command extends Base
     if not @remote_name?
       await prompt_remote_name @stub.prompter(), defer err, ret
       @remote_name = ret unless err?
-    unless err?
-      @remote_name_normalized = @stub.normalize_name @remote_name
     cb err, ret
+
+  #----------
+
+  normalize_remote_name : (cb) -> 
+    await @stub.normalize_name @remote_name, defer err, @remote_name_normalized
+    cb err
 
   #----------
 
@@ -76,7 +80,7 @@ exports.Command = class Command extends Base
     else
       err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
 
-    if not err? and (@remote_name = @argv.remote_name)? and not @stub.check_name(@remote_name)
+    if not err? and (@remote_name = @argv.remote_name)? and not @stub.check_name_input(@remote_name)
       err = new E.ArgsError "Bad name #{@argv.service[0]} given: #{@remote_name}"
     cb err
 
@@ -165,6 +169,7 @@ exports.Command = class Command extends Base
     await User.load_me { secret : true }, esc defer @me
     await @check_exists_1 esc defer()
     await @prompt_remote_name esc defer()
+    await @normalize_remote_name esc defer()
     await @check_exists_2 esc defer()
     await @do_warnings esc defer()
     await @allocate_proof_gen esc defer()

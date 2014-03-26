@@ -8,6 +8,9 @@ log = require './log'
 {master_ring} = require './keyring'
 {decode} = require('pgp-utils').armor
 colors = require './colors'
+{E} = require './err'
+req = require './req'
+urlmod = require 'url'
 
 #===========================================
 
@@ -86,13 +89,20 @@ class BaseSigGen
 
   #-----------------------
 
-  normalize_name : (n) -> 
+  normalize_name : (n, cb) -> 
     klass = @_binding_klass()
-    klass.normalize_name(n)
+    ret = klass.normalize_name(n)
+    cb null, ret
 
   #-----------------------
 
   check_name : (s) -> @_binding_klass().check_name(s)
+
+  #-----------------------
+
+  # Check the input that came in from the user, often the same as the
+  # name that's eventually used in the proof, though it could change...
+  check_name_input : (s) -> @check_name(s)
 
   #-----------------------
   
@@ -187,7 +197,7 @@ class SocialNetworkProofGen extends BaseSigGen
       checker : 
         f         : klass.check_name
         hint      : klass.name_hint()
-        normalize : strip_at
+        normalize : klass.normalize_name
     }
     return ret
 
@@ -238,13 +248,20 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
   prompter : () ->
     klass = @_binding_klass()
     return {
-      prompt : "URL prefix to check; root-CA-signed HTTPS is strongly encouraged"
+      prompt : "Hostname to check"
       checker : 
-        f    : klass.check_name
+        f    : (i) => @check_name_input(i)
         hint : klass.name_hint()
     }
 
-  check_name : (n) ->
+  rewrite_hostname : (i) ->
+    i = "https://#{i}" unless i.match /^https?:\/\//
+    return i
+
+  # The user can enter inputs like "www.foo.com"
+  # or "https://www.foo.com" or "http://foo.com"
+  check_name_input : (i) ->
+    @_binding_klass().check_name(@rewrite_hostname(i))
 
   get_warnings : ( { remote_name_normalized } ) ->
     ret = []
@@ -260,6 +277,28 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
         "Proceed with proving an HTTP host if your site doesn't support HTTPS"
       ]
     return ret
+
+  #----------------
+
+  normalize_name : (i, cb) ->
+    n = @rewrite_hostname(i)
+    u = @_binding_klass().parse(n)
+    ret = null
+    if not u?
+      err = new E.ArgsError "Failed to parse #{hostname} is a valid internet host"
+    else
+      hostname = u.hostname
+      args = { endpoint : "remotes/check", args : { hostname } }
+      await req.get args, defer err, res
+      console.log res
+      if err? then # noop
+      else if not (protocol = res?.results?.first)? 
+        err = new E.HostError "Host #{n} is down; tried 'http' and 'https' protocols"
+      else if i.match(/^https:\/\//) and (protocol isnt 'https:')
+        err = new E.SecurityError "You specified HTTPS for #{i} but only HTTP is available"
+      else
+        ret = urlmod.format { protocol , hostname }
+    cb err, ret
 
 #===========================================
 

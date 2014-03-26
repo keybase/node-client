@@ -56,6 +56,8 @@ exports.E = E = ie.make_errors
   PATCH : "Key patching failed"
   LOOPBACK : "Error in HKP loopback"
   NOT_CONFIGURED : "No user configured"
+  HOST : "Host is down"
+  SECURITY : "Security error"
 
 #================================================
 
