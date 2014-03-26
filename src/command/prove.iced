@@ -1,4 +1,4 @@
-{Base} = require './base'
+{ProofBase} = require './proof_base'
 log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
@@ -15,7 +15,7 @@ S = require '../services'
 
 ##=======================================================================
 
-exports.Command = class Command extends Base
+exports.Command = class Command extends ProofBase
 
   #----------
 
@@ -24,65 +24,12 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS :
-    f : 
-      alias : 'force'
-      action : 'storeTrue'
-      help : "don't stop for any prompts"
-
-  #----------
-
-  add_subcommand_parser : (scp) ->
+  command_name_and_opts : () ->
     opts = 
       aliases : [ "proof" ]
       help : "add a proof of identity"
     name = "prove"
-    sub = scp.addParser name, opts
-    add_option_dict sub, @OPTS
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
-    sub.addArgument [ "remote_name"], { nargs : "?", help : "username at that service" }
-    return opts.aliases.concat [ name ]
-
-  #----------
-
-  prompt_remote_name : (cb) ->
-    svc = @argv.service[0]
-    err = null
-    ret = null
-    if not @remote_name?
-      await prompt_remote_name @stub.prompter(), defer err, ret
-      @remote_name = ret unless err?
-    cb err, ret
-
-  #----------
-
-  normalize_remote_name : (cb) -> 
-    await @stub.normalize_name @remote_name, defer err, @remote_name_normalized
-    cb err
-
-  #----------
-
-  allocate_proof_gen : (cb) ->
-    klass = S.classes[@service_name]
-    assert.ok klass?
-    await @me.gen_remote_proof_gen { @klass, @remote_name_normalized }, defer err, @gen
-    cb err
-
-  #----------
-
-  parse_args : (cb) ->
-    err = null
-    if (s = S.aliases[@argv.service[0].toLowerCase()])?
-      @service_name = s
-      @klass = S.classes[s]
-      assert.ok @klass?
-      @stub = new @klass {}
-    else
-      err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
-
-    if not err? and (@remote_name = @argv.remote_name)? and not @stub.check_name_input(@remote_name)
-      err = new E.ArgsError "Bad name #{@argv.service[0]} given: #{@remote_name}"
-    cb err
+    return {name, opts}
 
   #----------
 

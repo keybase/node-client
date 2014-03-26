@@ -1,4 +1,4 @@
-{Base} = require './base'
+{ProofBase} = require './proof_base'
 log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
@@ -16,35 +16,20 @@ S = require '../services'
 ST = constants.signature_types
 {prompt_yn} = require '../prompter'
 proofs = require 'keybase-proofs'
+assert = require 'assert'
 
 ##=======================================================================
 
-exports.Command = class Command extends Base
+exports.Command = class Command extends ProofBase
 
   #----------
 
-  OPTS:
-    f :
-      alias : "force"
-      action : "storeTrue"
-      help : "don't ask interactively, just do it!"
-
-  #----------
-
-  use_session : () -> true
-  needs_configuration : () -> true
-
-  #----------
-
-  add_subcommand_parser : (scp) ->
+  command_name_and_opts : () ->
     opts = 
       aliases : [  ]
       help : "revoke a proof of identity"
     name = "revoke-proof"
-    sub = scp.addParser name, opts
-    add_option_dict sub, @OPTS
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
-    return opts.aliases.concat [ name ]
+    return { name, opts }
 
   #----------
 
@@ -63,8 +48,14 @@ exports.Command = class Command extends Base
     err = null
     if (s = S.aliases[@argv.service[0].toLowerCase()])?
       @service_name = s
+      @klass = S.classes[s]
+      assert.ok @klass?
+      @sub = new @klass {}
     else
       err = new E.UnknownServiceError "Unknown service: #{@argv.service[0]}"
+    if not err? and (@remote_name = @argv.remote)? and not @stub.check_name(@remote_name)
+      err = new E.ArgsError "Bad #{@argv.service[0]} name given: #{@remote_name}"
+
     cb err
 
   #----------
