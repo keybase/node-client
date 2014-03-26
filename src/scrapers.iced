@@ -14,8 +14,9 @@ semver = require 'semver'
 
 _certs = null
 my_request = (opts, cb) ->
-  _certs = (v for k,v of root_certs) if not _certs?
-  opts.ca = _certs
+  if semver.lt(process.version, "0.10.25")
+    _certs = (v for k,v of root_certs) if not _certs?
+    opts.ca = _certs
   request opts, cb
 
 #==============================================================
