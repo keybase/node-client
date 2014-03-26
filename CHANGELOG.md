@@ -1,3 +1,9 @@
+## 0.1.2 (2014-03-26)
+
+Bugfixes:
+
+  - add mkdirp back in :( nedb needs it
+
 ## 0.1.1 (2014-03-25)
 
 Features:

@@ -41,7 +41,8 @@
     "read": "keybase/read",
     "request": "2.30.0",
     "timeago": "0.1.0",
-    "triplesec": "~3.0.7"
+    "triplesec": "~3.0.7",
+    "mkdirp": "0.3.5"
   },
   "devDependencies": {
     "iced-expect": "0.0.3",
@@ -64,6 +65,7 @@
     "iced-utils",
     "kbpgp",
     "keybase-proofs",
+    "mkdirp",
     "nedb",
     "pgp-utils",
     "progress",
