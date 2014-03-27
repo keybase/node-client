@@ -25,11 +25,11 @@ exports.Command = class Command extends ProofBase
   #----------
 
   command_name_and_opts : () ->
-    opts = 
+    config = 
       aliases : [  ]
       help : "revoke a proof of identity"
     name = "revoke-proof"
-    return { name, opts }
+    return { name, config , OPTS : ProofBase.OPTS }
 
   #----------
 

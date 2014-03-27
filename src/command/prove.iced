@@ -12,10 +12,21 @@ log = require '../log'
 assert = require 'assert'
 session = require '../session'
 S = require '../services'
+{dict_union} = require '../util'
+util = require 'util'
+fs = require 'fs'
 
 ##=======================================================================
 
 exports.Command = class Command extends ProofBase
+
+  #----------
+
+  OPTS : dict_union ProofBase.OPTS, {
+    o : 
+      alias : "output"
+      help : "output proove text to file (rather than standard out)"
+  }
 
   #----------
 
@@ -25,11 +36,11 @@ exports.Command = class Command extends ProofBase
   #----------
 
   command_name_and_opts : () ->
-    opts = 
+    config = 
       aliases : [ "proof" ]
       help : "add a proof of identity"
     name = "prove"
-    return {name, opts}
+    return {name, config, @OPTS }
 
   #----------
 
@@ -43,7 +54,7 @@ exports.Command = class Command extends ProofBase
   #----------
 
   check_exists_1 : (cb) ->
-    @rp = @me.list_remote_proofs() 
+    @rp = @me.list_remote_proofs()
     err = null
     if @rp? and (v = @rp[@service_name])? and @stub.single_occupancy()
       prompt = "You already have proven you are #{v} at #{@service_name}; overwrite? "
@@ -87,9 +98,15 @@ exports.Command = class Command extends ProofBase
   #----------
 
   handle_post : (cb) ->
+    esc = make_esc cb, "handle_post"
     log.console.log @gen.instructions()
     log.console.log ""
-    log.console.log @gen.proof_text
+    if (f = @argv.output)?
+      log.info "Writing proof to file '#{f}'..."
+      await fs.writeFile f, @gen.proof_text, esc defer()
+      log.info "Wrote proof to '#{f}'"
+    else
+      log.console.log @gen.proof_text
     log.console.log ""
     prompt = true
     esc = make_esc cb, "Command::prompt"

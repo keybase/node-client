@@ -24,7 +24,7 @@ exports.ProofBase = class Command extends Base
 
   #----------
 
-  OPTS :
+  @OPTS :
     f : 
       alias : 'force'
       action : 'storeTrue'
@@ -33,12 +33,12 @@ exports.ProofBase = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    {name,opts} = @command_name_and_opts()
-    sub = scp.addParser name, opts
-    add_option_dict sub, @OPTS
+    {name,config,OPTS} = @command_name_and_opts()
+    sub = scp.addParser name, config
+    add_option_dict sub, OPTS
     sub.addArgument [ "service" ], { nargs : 1, help: "the name of service" }
     sub.addArgument [ "remote_name"], { nargs : "?", help : "username at that service" }
-    return opts.aliases.concat [ name ]
+    return config.aliases.concat [ name ]
 
   #----------
 

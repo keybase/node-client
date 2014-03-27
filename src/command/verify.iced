@@ -20,7 +20,7 @@ exports.Command = class Command extends dv.Command
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases : [ "vrfy" ]
+      aliases : [ ]
       help : "verify a file"
     name = "verify"
     sub = scp.addParser name, opts

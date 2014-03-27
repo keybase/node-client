@@ -41,7 +41,7 @@ exports.Command = class Command extends Base
   add_subcommand_parser : (scp) ->
     opts = 
       help : "list people you are tracking"
-      aliases : [ "list-trackees", "list-following" ]
+      aliases : [ ]
     name = "list-tracking"
     sub = scp.addParser name, opts
     sub.addArgument [ "filter" ], { nargs : '?', help : "a regex to filter by" }

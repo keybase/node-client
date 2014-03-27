@@ -45,7 +45,7 @@ exports.Command = class Command extends Base
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases : ["conf"]
+      aliases : [ ]
       help : "make an initial configuration file"
     name = "config"
     sub = scp.addParser name, opts

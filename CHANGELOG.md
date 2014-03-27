@@ -1,3 +1,10 @@
+## 0.2.2 
+
+Features
+ 
+ - `keybase help <cmd>` now works
+ - `keybase prove` has a new -o option, for writing a proof out to a file
+
 ## 0.2.1 (2014-03-26)
 
 Bugfixes:

@@ -78,8 +78,8 @@ exports.Link = class Link
 
   to_list_display : (opts) ->
     name = scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
-    if opts?.with_sig_ids
-      { name, sig_id : @sig_id() }
+    if opts?.with_sig_ids or opts?.with_proof_states?
+      { name, sig_id : @sig_id(), proof_state : @proof_state() }
     else name
 
   #--------------------
