@@ -2,21 +2,25 @@
 
 Features
  
- - `keybase help <cmd>` now works
- - `keybase prove` has a new -o option, for writing a proof out to a file
+  - `keybase help <cmd>` now works
+  - `keybase prove` has a new -o option, for writing a proof out to a file
+
+Bugfixes:
+
+  - no-colors Better UI and documentation for `keybase revoke-proof`
 
 ## 0.2.1 (2014-03-26)
 
 Bugfixes:
 
- - Reduce code bloat due to certificates
- - fix a bad athrow in sigchains due to unknown proof types
+  - Reduce code bloat due to certificates
+  - fix a bad athrow in sigchains due to unknown proof types
 
 ## 0.2.0 (2014-03-26)
 
 Features:
 
- - Generic website proofs
+  - Generic website proofs
 
 ## 0.1.2 (2014-03-26)
 

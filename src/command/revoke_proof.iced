@@ -48,22 +48,30 @@ exports.Command = class Command extends ProofBase
     else if Array.isArray(v)
       d = {}
       names = []
+      do_msg = false
       for e in v
         names.push e.name
         d[e.name] = e
-      if @remote_name? and not d[@remote_name]
-        err = new E.ArgsError "You don't have a proof for #{@remote_name} to revoke"
+      if names.length is 0
+        err = new E.ArgsError "You don't have any #{@argv.service} proofs to revoke!"
+      else if @remote_name? and not d[@remote_name]
+        do_msg = true
+        err = new E.ArgsError "You don't have a proof for '#{@remote_name}' to revoke"
       else if @remote_name
         @sig_id = d[@remote_name].sig_id
       else if not @remote_name and names.length > 1
-        log.warn "Please specify which proof to revoke; options are:"
-        for n in names
-          log.warn " * #{n}"
+        do_msg = true
         err = new E.ArgsError "need specifics"
       else
         to_prompt = 
           prompt : "Revoke your proof of #{v[0].name}"
           sig_id : v[0].sig_id
+      if do_msg
+        log.console.log "Please specify which proof to revoke; try one of:"
+        log.console.log ""
+        for n in names
+          log.console.log "  keybase revoke-proof web #{n}"
+        log.console.log ""
     else
       if @remote_name? and (@remote_name isnt v.name)
         err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{@service_name}"
