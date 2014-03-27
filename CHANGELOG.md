@@ -1,3 +1,10 @@
+## 0.2.2 (2014-03-27)
+
+Bugfixes:
+
+  - Case-insensitive comparisons in proof checking
+  - Remove some command aliases
+
 ## 0.2.1 (2014-03-27)
 
 Features
