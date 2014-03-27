@@ -17,6 +17,26 @@ proxyca = require '../proxyca'
 
 ##=======================================================================
 
+# This is somewhat of a hack.  Keep track of all of the parsers on our own
+# that way we can reference them later for the purposes of helping the user
+# with `keybase help id` or something.
+class SubParserWrapper
+
+  constructor : (@subparsers) ->
+    @_lookup = {}
+
+  addParser : (args...) ->
+    @_last_sub = sub = @subparsers.addParser args...
+
+  add_lookup : (names) ->
+    for n in names
+      @_lookup[n] = @_last_sub
+    @_last_sub = null
+
+  lookup : (n) -> @_lookup[n]
+
+##=======================================================================
+
 class Main
 
   #---------------------------------
@@ -38,6 +58,10 @@ class Main
     if not @add_subcommands()
       err = new E.InitError "cannot initialize subcommands" 
     return err
+
+  #---------------------------------
+
+  lookup_parser : (n) -> @_spw.lookup(n)
 
   #---------------------------------
 
@@ -79,15 +103,19 @@ class Main
       dest : 'subcommand_name'
     }
 
+    # A hack for interposing on ArgParser. See above
+    # for more details.
+    @_spw = new SubParserWrapper subparsers
+
     @commands = {}
 
     for m in list
       mod = require "./#{m}"
       obj = new mod.Command @
-      names = obj.add_subcommand_parser subparsers
+      names = obj.add_subcommand_parser @_spw
+      @_spw.add_lookup names
       for n in names
         @commands[n] = obj
-
     true
 
   #---------------------------------
