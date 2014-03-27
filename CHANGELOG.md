@@ -1,4 +1,4 @@
-## 0.2.2 
+## 0.2.1 (2014-03-27)
 
 Features
  
@@ -7,12 +7,7 @@ Features
 
 Bugfixes:
 
-  - no-colors Better UI and documentation for `keybase revoke-proof`
-
-## 0.2.1 (2014-03-26)
-
-Bugfixes:
-
+  - Better UI and documentation for `keybase revoke-proof` and `keybase prove`
   - Reduce code bloat due to certificates
   - fix a bad athrow in sigchains due to unknown proof types
 
