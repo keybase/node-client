@@ -1,3 +1,10 @@
+## 0.2.4 (2014-03-29)
+
+Bugfixes:
+
+  - Vastly improved key-selection menu feature, which should be more resilient to weird
+    GPG outputs that we weren't parsing properly.
+
 ## 0.2.3 (2014-03-28)
 
 Bugfixes:
