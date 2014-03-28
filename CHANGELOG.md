@@ -1,3 +1,10 @@
+## 0.2.5 (2014-03-29)
+
+Bugfixes:
+
+  - Fix bugs in Github and Website proofs with MS-Dos encoding
+    (via upgrade to Proofs v0.0.14).
+
 ## 0.2.4 (2014-03-29)
 
 Bugfixes:
