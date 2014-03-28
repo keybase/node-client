@@ -1,3 +1,9 @@
+## 0.2.6 (2014-03-29)
+
+Bugfixes:
+
+  - Rerelease with slimmed-down package list
+
 ## 0.2.5 (2014-03-29)
 
 Bugfixes:
@@ -6,6 +12,10 @@ Bugfixes:
     (via upgrade to Proofs v0.0.14).
 
 ## 0.2.4 (2014-03-29)
+
+**SECURITY NOTICE**
+
+  - This release was flawed since it did not pull it dependencies with it.
 
 Bugfixes:
 
