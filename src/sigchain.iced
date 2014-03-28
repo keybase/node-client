@@ -405,34 +405,34 @@ exports.SigChain = class SigChain
 
     log.debug "+ _verify_userid for #{@username}"
     found = false
+    kbem = make_email @username
 
     # first try to see if the username is baked into the key, and be happy with that
-    log.debug "| read username baked into key"
+    log.debug "+ read username baked into key"
     await @pubkey.read_uids_from_key esc defer uids
-    found = (email for {email} in uids).indexOf(make_email @username) >= 0
+    found = (email for {email} in uids).indexOf(kbem) >= 0
+    log.debug "- found -> #{found}"
 
-    log.debug "| search for explicit self-signatures"
+    log.debug "+ search for explicit self-signatures (found=#{found})"
     # Search for an explicit self-signature of this key
-    if not found and (v = @table?[ST.SELF_SIG])?
-      for link in v
-        if link.self_signer() is @username 
-          found = true
-          break
+    if not found and (link = @table?[ST.SELF_SIG])? and (link.self_signer() is @username)
+      found = true
+    log.debug "- found -> #{found}"
 
-    log.debug "| search for a free-rider on a track signature"
+    log.debug "+ search for a free-rider on a track signature (found=#{found})"
     # Search for a freerider in an otherwise useful signature
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
-        if (d = @table?[type])
-          for k,link of d 
-            if link.self_signer() is @username 
-              found = true
-              break
-          break if found
+        for link in @flatten(@table?[type])
+          if link.self_signer() is @username 
+            found = true
+            break
+        break if found
+    log.debug "- found -> #{found}"
 
     if not err? and not found
       msg = if @username is env().get_username() 
-        "You haven't signed your own key! Try `keybase revoke` and then `keybase push`"
+        "You haven't signed your own key! Add '#{kbem}' to your key with GPG and then `keybase push --update`"
       else "user '#{@username}' hasn't signed their own key"
       err = new E.VerifyError msg
 
@@ -463,7 +463,7 @@ exports.SigChain = class SigChain
       index[link.sig_id()] = link
 
       switch lt
-        when ST.SELF_SIG     then MAKE(out, lt,[]).push link
+        when ST.SELF_SIG     then out[lt] = link
 
         when ST.REMOTE_PROOF 
           S = constants.proof_state 
@@ -511,18 +511,23 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  # list all remote proofs in a flat list, taking out the structure that
-  # the Web and DNS proofs are in a sub-dictionary
-  flattened_remote_proofs : () ->
+  flatten : (d) ->
     links = []
-    if (d = @table?[ST.REMOTE_PROOF])?
-      search = [ d ] 
+    if d?
+      search = [ d ]
       while search.length
         if ((front = search.pop()) instanceof Link) then links.push front
-        else 
+        else
           for k,v of front
             search.push v
     return links
+
+  #-----------
+
+  # list all remote proofs in a flat list, taking out the structure that
+  # the Web and DNS proofs are in a sub-dictionary
+  flattened_remote_proofs : () ->
+    @flatten @table?[ST.REMOTE_PROOF]
 
   #-----------
 

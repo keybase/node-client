@@ -1,3 +1,9 @@
+## 0.2.3 (2014-03-28)
+
+Bugfixes:
+
+  - keybase/keybase-issues#407: Fix crashers with verifying userids on Website proofs
+
 ## 0.2.2 (2014-03-27)
 
 Bugfixes:
