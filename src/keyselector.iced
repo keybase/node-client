@@ -4,6 +4,8 @@ log = require './log'
 {prompt_for_int} = require './prompter'
 {master_ring,load_key} = require './keyring'
 {E} = require './err'
+{format} = require('pgp-utils').userid
+{tablify} = require 'tablify'
 
 ##=======================================================================
 
@@ -46,7 +48,7 @@ exports.KeySelector = class KeySelector
       key = null
     err = null
     if key?
-      await load_key { @username, key_id_64 : key.ki64 }, esc defer km
+      await load_key { @username, fingerprint : key.fingerprint() }, esc defer km
     else
       err = new E.NoLocalKeyError "No local keys found! Try `keybase gen` to generate one."
     cb err, km
@@ -54,15 +56,9 @@ exports.KeySelector = class KeySelector
   #----------
 
   query_keys : (cb) ->
-    @keys = null
-    k = if @secret then "-K" else "-k"
-    args = [ k, "--keyid-format", "long" ] 
-    args.push @query if @query
-    await master_ring().gpg { args }, defer err, out
-    unless err?
-      raw = out.toString().split("\n\n")
-      keys = for r in raw when (f = find_key_id_64 r)
-        { lines : r.split("\n"), ki64 : f }
+    opts = { @secret, @query }
+    await master_ring().index2 opts, defer err, index, warnings
+    keys = if err? then null else index.keys()
     cb err, keys
 
   #----------
@@ -76,33 +72,49 @@ exports.KeySelector = class KeySelector
 
   #----------
 
+  format_ts : (t) ->
+    d = new Date (t*1000)
+    ((""+ s) for s in [ (d.getFullYear()), (d.getMonth()+1), d.getDate() ]).join('-')
+
+  #----------
+
+  key_to_array : (key) ->
+    args = [ 
+      (key._n_bits + (if key._type is 1 then 'R' else 'D')),
+      key.key_id_64(),
+      "exp: #{@format_ts(key._expires)}"
+    ].concat key.emails()
+    return args
+
+  #----------
+
   select_key_menu : (keys) ->
-    width = log_10(keys.length + 1)
-    longest = @longest_line(keys) + width + 3
-    sep = () ->
-      console.log "\n" + (repeat '~', longest) + "\n"
-    sep()
-    for k,i in keys
-      lines = k.lines
-      j = i + 1
-      console.log "(#{pad(j,width)}) " + lines[0]
-      for line in lines[1...]
-        console.log spc(width+3) + line
-      sep()
+    list = []
+    for key,i in keys
+      list.push( [ "(#{i+1})" ].concat @key_to_array(key) )
+    log.console.log tablify list, {
+      row_start : ' '
+      row_end : ''
+      spacer : '  '
+      row_sep_char : ''
+    }
 
   #----------
 
   select_key : (keys, cb) ->
     if @query
-      console.log "Multiple keys were found that matched '#{@query}':"
+      log.console.log "Multiple keys were found that matched '#{@query}':"
     else
-      console.log "Multiple keys found, please pick one:"
+      log.console.log "Multiple keys found, please pick one:"
+    for key in keys
+      key.s = [ key.emails().length, key._expires ]
+    keys.sort (a,b) -> (if (a.s < b.s) then 1 else if (a.s > b.s) then -1 else 0)
     @select_key_menu keys
     prompt = "Pick a key"
     await prompt_for_int { prompt, low : 1, hi : keys.length}, defer err, sel
     out = if err? then null else keys[sel-1]
     if out?
-      log.info "Picked key: #{out.ki64}"
+      log.info "Picked key: #{out.key_id_64()}"
     cb err, out
 
 ##=======================================================================
