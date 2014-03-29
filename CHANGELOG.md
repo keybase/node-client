@@ -1,3 +1,9 @@
+## 0.2.8
+
+Bugfixes:
+
+  - Address keybase/keybase-issues#417 via upgrade to pgp-utils@v0.0.19
+
 ## 0.2.7 (2014-03-29)
 
 **SECURITY BUGFIX**
