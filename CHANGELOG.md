@@ -1,3 +1,9 @@
+## 0.2.9
+
+Bugfixes:
+
+  - Broken previous package didn't have gpg-wrapper
+
 ## 0.2.8
 
 Bugfixes:
