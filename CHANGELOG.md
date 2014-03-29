@@ -1,3 +1,10 @@
+## 0.2.7 (2014-03-29)
+
+**SECURITY BUGFIX**
+
+  - The previous releases, v0.2.5 and v0.2.6, had broken verification for website proofs.
+    Fixed with an upgrade to proofs v0.0.15
+
 ## 0.2.6 (2014-03-29)
 
 Bugfixes:
