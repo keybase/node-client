@@ -84,6 +84,22 @@ exports.Github = class Github extends SocialNetwork
 
 #==============================================================
 
+exports.Dns = class Dns extends Base
+  constructor : () ->
+  get_scraper_klass : () -> proofs.DnsScraper
+  get_sub_id : (o) -> o.domain.toLowerCase()
+  to_list_display : (o) -> @get_sub_id(o)
+  format_msg : ({arg, display, ok}) ->
+    color = if ok then 'green' else 'red'
+    return [
+      (if ok then CHECK else BAD_X),
+      "admin of the DNS zone for"
+      colors[color](arg.domain)
+    ]
+  check_proof : (check_data_json) -> check_data_json.domain?
+
+#==============================================================
+
 exports.GenericWebSite = class GenericWebSite extends Base
   constructor : () ->
   get_scraper_klass : () -> proofs.GenericWebSiteScraper
@@ -124,6 +140,7 @@ exports.alloc_stub = alloc_stub = (type) ->
     when PT.twitter          then Twitter
     when PT.github           then Github
     when PT.generic_web_site then GenericWebSite
+    when PT.dns              then Dns
     else null
   if klass then new klass {} 
   else null
