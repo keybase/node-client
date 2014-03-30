@@ -1,5 +1,5 @@
 
-{TwitterProofGen,GithubProofGen,GenericWebSiteProofGen} = require './sigs'
+{DnsProofGen,TwitterProofGen,GithubProofGen,GenericWebSiteProofGen} = require './sigs'
 
 #=======================================================
 
@@ -12,6 +12,7 @@ exports.aliases =
   https   : "generic_web_site"
   http    : "generic_web_site"
   web     : "generic_web_site"
+  dns     : "dns"
 
 #=======================================================
 
@@ -19,6 +20,7 @@ exports.classes =
   twitter : TwitterProofGen
   github  : GithubProofGen
   generic_web_site : GenericWebSiteProofGen
+  dns : DnsProofGen
 
 #=======================================================
 

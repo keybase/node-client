@@ -237,6 +237,44 @@ exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
 
 #===========================================
 
+exports.DnsProofGen = class DnsProofGen extends BaseSigGen
+
+  _binding_klass : () -> proofs.DnsBinding
+  constructor : (args) -> 
+    @remote_host = args.remote_name_normalized
+    super args
+
+  _make_binding_eng : (args) ->
+    args.remote_host = @remote_host
+    klass = @_binding_klass()
+    new klass args
+
+  _v_modify_store_arg : (arg) ->
+    arg.remote_host = @remote_host
+    arg.type = "web_service_binding.dns"
+
+  instructions : () ->
+    "Please save the follows as a DNS TXT entry for #{colors.bold(@remote_host)}"
+
+  display_name : () -> @remote_host
+  prompter : () ->
+    klass = @_binding_klass()
+    return {
+      prompt : "DNS Domain to check"
+      checker : 
+        f     : (i) => @check_name_input(i)
+        hint  : klass.name_hint()
+    }
+  check_name_input : (i) -> @_binding_klass.check_name(i)
+
+  normalize_name : (i, cb) ->
+    u = @_binding_klass().parse(i)
+    if not u?
+      err = new E.ArgsError "Failed to parse #{i} as a DNS domain"
+    cb err, u
+
+#===========================================
+
 exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
 
   _binding_klass : () -> proofs.GenericWebSiteBinding
@@ -294,7 +332,7 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     u = @_binding_klass().parse(n)
     ret = null
     if not u?
-      err = new E.ArgsError "Failed to parse #{hostname} is a valid internet host"
+      err = new E.ArgsError "Failed to parse #{i} is a valid internet host"
     else
       hostname = u.hostname
       args = { endpoint : "remotes/check", args : { hostname } }
