@@ -247,7 +247,7 @@ exports.DnsProofGen = class DnsProofGen extends BaseSigGen
         f     : (i) => @check_name_input(i)
         hint  : klass.name_hint()
     }
-  check_name_input : (i) -> @_binding_klass.check_name(i)
+  check_name_input : (i) -> @_binding_klass().check_name(i)
 
   normalize_name : (i, cb) ->
     u = @_binding_klass().parse(i)
