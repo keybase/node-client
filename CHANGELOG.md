@@ -1,3 +1,9 @@
+## 0.2.10
+
+Bugfixes:
+
+  - Republish with node-v0.10.26 and npm-v1.4.3
+
 ## 0.2.9
 
 Bugfixes:
