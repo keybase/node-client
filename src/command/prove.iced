@@ -25,7 +25,7 @@ exports.Command = class Command extends ProofBase
   OPTS : dict_union ProofBase.OPTS, {
     o : 
       alias : "output"
-      help : "output proove text to file (rather than standard out)"
+      help : "output proof text to file (rather than standard out)"
   }
 
   #----------
