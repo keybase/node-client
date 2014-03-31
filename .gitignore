@@ -13,7 +13,6 @@ logs
 results
 
 npm-debug.log
-node_modules
 build-stamp
 test/scratch
 test/conf/client_test.json
