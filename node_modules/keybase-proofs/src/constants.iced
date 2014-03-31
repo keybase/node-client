@@ -5,6 +5,7 @@ exports.constants = constants =
   versions :
     sig : 1
   sig_types :
+    generic_binding : "generic_binding"
     web_service_binding : "web_service_binding"
     track : "track"
     auth : "auth"

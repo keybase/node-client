@@ -14,6 +14,7 @@ log = require './log'
 {QuarantinedKeyRing,TmpKeyRing,load_key,master_ring} = require './keyring'
 {athrow} = require('iced-utils').util
 IS = constants.import_state
+{PackageJson} = require('./package')
 
 ##=======================================================================
 
@@ -429,6 +430,7 @@ exports.User = class User
       seqno : (if last_link? then (last_link.seqno() + 1) else 1)
       prev : (if last_link? then last_link.id else null)
       uid : uid
+      client : (new PackageJson()).track_obj()
     arg.track = track_obj if track_obj?
     arg.untrack = untrack_obj if untrack_obj?
     g = new klass arg

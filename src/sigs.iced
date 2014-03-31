@@ -16,7 +16,7 @@ urlmod = require 'url'
 
 class BaseSigGen
 
-  constructor : ({@km}) ->
+  constructor : ({@km, @client}) ->
 
   #---------
 
@@ -44,6 +44,7 @@ class BaseSigGen
         local :
           uid : session.get_uid()
           username : env().get_username()
+      @client
     }
 
   #---------
@@ -136,8 +137,8 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
 
 exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
-  constructor : ({km,@prev,@seqno,@uid,@track}) ->
-    super { km }
+  constructor : ({km,@prev,@seqno,@uid,@track, client}) ->
+    super { km, client }
 
   _get_announce_number : (cb) -> cb null
 
@@ -154,8 +155,8 @@ exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
 exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
-  constructor : ({km,@uid,@untrack,@seqno,@prev}) ->
-    super { km }
+  constructor : ({km,@uid,@untrack,@seqno,@prev,client}) ->
+    super { km, client }
 
   _get_announce_number : (cb) -> cb null
 

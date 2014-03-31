@@ -4,9 +4,6 @@ urlmod = require 'url'
 
 #==========================================================================
 
-
-#==========================================================================
-
 class WebServiceBinding extends Base
 
   #------
@@ -35,9 +32,8 @@ class WebServiceBinding extends Base
 
   _v_check : ({json}, cb) -> 
     await super { json }, defer err
-    unless err?
-      err = if not @_service_obj_check json?.body?.service 
-        new Error "Bad service object found"
+    if not(err?) and not(@_service_obj_check(json?.body?.service))
+      err = new Error "Bad service object found"
     cb err
 
 #==========================================================================

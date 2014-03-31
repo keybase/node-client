@@ -23,6 +23,14 @@ exports.PackageJson = class PackageJson
 
   #------------
 
+  track_obj : () ->
+    {
+      name : constants.client_name
+      version : @version()
+    }
+
+  #------------
+
   identify_as : () ->
     "#{constants.client_name} v#{@version()} #{process.platform}"
 

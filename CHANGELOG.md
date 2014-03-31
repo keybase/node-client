@@ -4,6 +4,10 @@ Bugfixes:
 
   - Simplified error message for those who haven't signed their key
 
+Features:
+
+  - include client information in a tracking proof, so you can tell if you did it via CLI or Web site
+
 ## 0.2.10 (2014-03-30)
 
 Bugfixes:

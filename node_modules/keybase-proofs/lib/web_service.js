@@ -61,15 +61,15 @@
                 return err = arguments[0];
               };
             })(),
-            lineno: 36
+            lineno: 33
           }));
           __iced_deferrals._fulfill();
         });
       })(this)((function(_this) {
         return function() {
           var _ref1;
-          if (typeof err === "undefined" || err === null) {
-            err = !_this._service_obj_check(json != null ? (_ref1 = json.body) != null ? _ref1.service : void 0 : void 0) ? new Error("Bad service object found") : void 0;
+          if (!(typeof err !== "undefined" && err !== null) && !(_this._service_obj_check(json != null ? (_ref1 = json.body) != null ? _ref1.service : void 0 : void 0))) {
+            err = new Error("Bad service object found");
           }
           return cb(err);
         };
