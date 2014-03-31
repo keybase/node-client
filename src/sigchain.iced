@@ -432,7 +432,7 @@ exports.SigChain = class SigChain
 
     if not err? and not found
       msg = if @username is env().get_username() 
-        "You haven't signed your own key! Add '#{kbem}' to your key with GPG and then `keybase push --update`"
+        "You haven't signed your own key! Try `keybase push --update`"
       else "user '#{@username}' hasn't signed their own key"
       err = new E.VerifyError msg
 
