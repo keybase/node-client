@@ -1,16 +1,22 @@
-## 0.2.10
+## 0.2.11
+
+Bugfixes:
+
+  - Simplified error message for those who haven't signed their key
+
+## 0.2.10 (2014-03-30)
 
 Bugfixes:
 
   - Republish with node-v0.10.26 and npm-v1.4.3
 
-## 0.2.9
+## 0.2.9 (2014-03-29)
 
 Bugfixes:
 
   - Broken previous package didn't have gpg-wrapper
 
-## 0.2.8
+## 0.2.8 (2014-03-29)
 
 Bugfixes:
 
