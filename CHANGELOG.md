@@ -1,4 +1,10 @@
-## 0.2.11
+## 0.2.12 (2014-04-01)
+
+Bugfixes:
+
+  - Allow "short" passwords on login
+
+## 0.2.11 (2014-03-31)
 
 Bugfixes:
 

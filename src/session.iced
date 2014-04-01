@@ -23,7 +23,7 @@ exports.Session = class Session
       err = null
       pp = env().get_passphrase()
       unless pp?
-        await prompt_passphrase {extra}, defer err, pp
+        await prompt_passphrase {extra, short : true }, defer err, pp
       @_passphrase = pp
     cb err, @_passphrase
 
