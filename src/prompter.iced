@@ -93,15 +93,20 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
 
 #========================================================================
 
-exports.prompt_passphrase = ({prompt,confirm,extra,short}, cb) ->
+exports.prompt_passphrase = ({prompt,confirm,extra,short,no_leading_space}, cb) ->
   unless prompt?
     prompt = "Your keybase login passphrase"
     prompt += extra if extra?
+
+  checker = if short then null
+  else if no_leading_space then checkers.passphrase_nls 
+  else checkers.passphrase
+
   seq = 
     passphrase :
       prompt : prompt
       passphrase : true
-      checker : (if short then null else checkers.passphrase)
+      checker : checker
       confirm : confirm
   p = new Prompter seq
   await p.run defer err

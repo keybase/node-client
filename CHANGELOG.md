@@ -1,3 +1,13 @@
+## 0.2.13 (2014-04-01)
+
+Bugfixes:
+
+  - Don't allow GPG passphrases with leading spaces, since gpg --gen-key in batch mode strips them :(
+
+**SECURITY BUGFIX**
+
+  - Don't show the GPG script used to generated keys when specifying `-d`, since it contains the users's password
+
 ## 0.2.12 (2014-04-01)
 
 Bugfixes:

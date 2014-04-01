@@ -9,6 +9,9 @@ exports.checkers = checkers =
   passphrase: 
     hint : "must be at least 12 letters long"
     f : (x) -> x.length >= 12
+  passphrase_nls: 
+    hint : "must be at least 12 letters long and can't have a leading space"
+    f : (x) -> x.length >= 12 and not (x.match /^\s/)
   email : 
     hint : "must be a valid email address"
     f : (x) -> (x.length > 3) and x.match /^\S+@\S+\.\S+$/ 

@@ -115,6 +115,7 @@ exports.Command = class Command extends Base
     args = 
       prompt : "Your key passphrase (can be the same as your login passphrase)"
       confirm : prompt: "Repeat to confirm"
+      no_leading_space : true
     await prompt_passphrase args, defer err, pp
     cb err, pp
 
@@ -124,7 +125,6 @@ exports.Command = class Command extends Base
     rv = new iced.Rendezvous()
 
     process.stderr.write("Generating keys.")
-
     KeyManager.generate { passphrase }, rv.id(true).defer(err, @keymanager)
 
     go = true

@@ -54,7 +54,7 @@ exports.KeyManager = class KeyManager
     stdin = script.join("\n")
     args = [ "--batch", "--gen-key", "--keyid-format", "long" ]
     stderr = new BufferOutStream()
-    await @ring.gpg { args, stdin, stderr }, esc defer out
+    await @ring.gpg { args, stdin, stderr, secret : true }, esc defer out
     err = null
     if (m = stderr.data().toString('utf8').match /key ([A-F0-9]{16}) marked as/) 
       key_id_64 = m[1]
