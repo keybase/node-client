@@ -19,6 +19,7 @@ exports.constants = constants =
     generic_web_site : 1000
   expire_in : 60*60*24*365*5 # 5 years....
   short_id_bytes : 27
+  shortest_pgp_signature : 100 # can't have a PGP signature shorter than this...
   
   v_codes : # verification codes for hosted proofs
     NONE:              0

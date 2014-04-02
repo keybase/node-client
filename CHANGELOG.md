@@ -1,3 +1,10 @@
+## 0.2.14 (2014-04-02)
+
+**SECURITY BUGFIX**
+
+  - Sanity-check the server's proof text, in case it's cheating.  Check to make sure that the only 
+    plausible proof is the one that we made, and that others aren't coming along for the ride.
+
 ## 0.2.13 (2014-04-01)
 
 Bugfixes:

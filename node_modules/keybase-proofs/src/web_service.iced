@@ -65,9 +65,6 @@ class SocialNetworkBinding extends WebServiceBinding
 
 #==========================================================================
 
-
-#----------
-
 # A last-minute sanity check of the URL module
 has_non_ascii = (s) ->
   buf = new Buffer s, 'utf8'
@@ -121,7 +118,7 @@ class GenericWebSiteBinding extends WebServiceBinding
   service_obj     : () -> @remote_host
   is_remote_proof : () -> true
   proof_type      : () -> constants.proof_types.generic_web_site
-  @name_hint       : () -> "a valid hostname, like `my.site.com`"
+  @name_hint      : () -> "a valid hostname, like `my.site.com`"
 
   check_inputs : () ->
     if @remote_host? then null
@@ -140,6 +137,7 @@ class TwitterBinding extends SocialNetworkBinding
 
   service_name : -> "twitter"
   proof_type   : -> constants.proof_types.twitter
+  is_short     : -> true
 
   @check_name : (n) ->
     ret = if not n? or not (n = n.toLowerCase())? then false

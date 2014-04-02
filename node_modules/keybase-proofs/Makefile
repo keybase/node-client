@@ -21,6 +21,7 @@ $(BUILD_STAMP): \
 	lib/track.js \
 	lib/auth.js \
 	lib/revoke.js \
+	lib/b64extract.js \
 	lib/scrapers/base.js \
 	lib/scrapers/generic_web_site.js \
 	lib/scrapers/github.js \
