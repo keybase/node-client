@@ -29,8 +29,12 @@ exports.Command = class Command extends dv.Command
 
   #----------
 
-  do_output : (out) ->
-    log.console.log out.toString( if @argv.base64 then 'base64' else 'binary' )
+  do_output : (out, cb) ->
+    if @argv.base64
+      log.console.log out.toString('base64')
+    else
+      await process.stdout.write out, defer()
+    cb()
 
   #----------
 

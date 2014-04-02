@@ -1,3 +1,12 @@
+## 0.2.15 (2014-04-02)
+
+Bugfixes 
+
+  - Fix bugs in binary output, which was being Utf8-mangled and also supplemented with a newline.
+     - Address keybase/keybase-issues#463
+     - Address keybaes/keybase-issues#187
+  - Fix broken regression tests that worked around this problem
+
 ## 0.2.14 (2014-04-02)
 
 **SECURITY BUGFIX**

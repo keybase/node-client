@@ -71,7 +71,10 @@ exports.Command = class Command extends Base
       gargs.stdin = process.stdin
     await master_ring().gpg gargs, defer err, out
     unless @argv.output?
-      log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
+      if @argv.binary
+        await process.stdout.write out, defer()
+      else
+        log.console.log out.toString('utf8')
     cb err 
 
   #----------

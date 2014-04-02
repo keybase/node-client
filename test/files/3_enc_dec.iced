@@ -24,7 +24,7 @@ decrypt = (T,who,cb) ->
   args = [ "decrypt" ]
   await who.keybase { args, stdin : ctext, quiet : true }, defer err, out
   T.no_error err
-  T.equal out.toString('utf8'), (msg+"\n"), "Got back original message"
+  T.equal out.toString('utf8'), msg, "Got back original message"
   cb()
 
 exports.alice_follow_bob = (T,cb) ->
@@ -68,7 +68,7 @@ exports.charlie_decrypt_from_alice_with_sig = (T,cb) ->
   args = [ "decrypt" , "--batch", "--signed" ].concat(alice.assertions())
   await charlie.keybase { args, stdin : ctext, quiet : true }, defer err, out
   T.no_error err
-  T.equal out.toString('utf8'), (msg+"\n"), "Got back original message"
+  T.equal out.toString('utf8'), msg, "Got back original message"
   cb()
 
 exports.cleanup = (T,cb) ->

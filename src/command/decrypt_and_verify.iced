@@ -140,7 +140,10 @@ exports.Command = class Command extends Base
 
   #----------
 
-  do_output : (o) ->
+  do_output : (o, cb) -> cb()
+
+  #----------
+
   do_keypull : (cb) -> 
     @_ran_keypull = false
     cb null
@@ -186,7 +189,7 @@ exports.Command = class Command extends Base
     gargs = @make_gpg_args()
     @decrypt_stderr = gargs.stderr
     await @tmp_keyring.gpg gargs, defer err, out
-    @do_output out
+    await @do_output out, defer()
     if err?
       log.warn @decrypt_stderr.data().toString('utf8')
     else if env().get_debug() 
