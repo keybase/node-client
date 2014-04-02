@@ -1,3 +1,10 @@
+## 0.2.16 (2014-04-02)
+
+Bugfixes:
+
+  - Address bug introduced in 0.2.14, see keybase/keybase-issues#475
+      - Upgrade to keybase-proofs@v0.0.21
+
 ## 0.2.15 (2014-04-02)
 
 Bugfixes 
@@ -5,7 +12,7 @@ Bugfixes
   - Fix bugs in binary output, which was being Utf8-mangled and also supplemented with a newline.
      - Address keybase/keybase-issues#463
      - Address keybaes/keybase-issues#187
-  - Fix broken regression tests that worked around this problem
+  - Fix broken regression tests that worked around this problemsm
 
 ## 0.2.14 (2014-04-02)
 

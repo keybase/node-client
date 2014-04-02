@@ -244,19 +244,21 @@ class Base
   sanity_check_proof_text : ({ args, proof_text}, cb) ->
     if @is_short()
       check_for = args.sig_id_short
-      lim = constants.short_id_bytes
+      len_floor = constants.short_id_bytes
+      slack = 3
     else
       [ err, msg ] = decode args.sig
       if not err? and (msg.type isnt "MESSAGE")
         err = new Error "wrong message type; expected a generic message; got #{msg.type}"
       if not err?
         check_for = msg.body.toString('base64')
-        lim = constants.shortest_pgp_signature
+        len_floor = constants.shortest_pgp_signature
+        slack = 30 # 30 bytes of prefix/suffix data available
     unless err?
       b64s = base64_extract proof_text
-      for b in b64s when (b.length >= lim)
-        if b.indexOf(check_for) isnt 0
-          err = new Error "Found a bad signature in proof text: #{b[0...40]} != #{check_for[0...40]}"
+      for b in b64s when (b.length >= len_floor)
+        if b.indexOf(check_for) < 0 or (s = (b.length - check_for.length)) > slack
+          err = new Error "Found a bad signature in proof text: #{b[0...60]} != #{check_for[0...60]} (slack=#{s})"
           break
     cb err
   

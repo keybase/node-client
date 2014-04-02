@@ -1,3 +1,10 @@
+## 0.0.21 (2014-04-02)
+
+Bugfix:
+
+  - Error in the previous release, we need to allow some slack before the proof due to GPG
+    client comments that might appear part of the signature block.
+
 ## 0.0.20 (2014-04-02)
 
 Features:

@@ -417,11 +417,12 @@
     };
 
     Base.prototype.sanity_check_proof_text = function(_arg, cb) {
-      var args, b, b64s, check_for, err, lim, msg, proof_text, _i, _len, _ref2;
+      var args, b, b64s, check_for, err, len_floor, msg, proof_text, s, slack, _i, _len, _ref2;
       args = _arg.args, proof_text = _arg.proof_text;
       if (this.is_short()) {
         check_for = args.sig_id_short;
-        lim = constants.short_id_bytes;
+        len_floor = constants.short_id_bytes;
+        slack = 3;
       } else {
         _ref2 = decode(args.sig), err = _ref2[0], msg = _ref2[1];
         if ((err == null) && (msg.type !== "MESSAGE")) {
@@ -429,16 +430,17 @@
         }
         if (err == null) {
           check_for = msg.body.toString('base64');
-          lim = constants.shortest_pgp_signature;
+          len_floor = constants.shortest_pgp_signature;
+          slack = 30;
         }
       }
       if (err == null) {
         b64s = base64_extract(proof_text);
         for (_i = 0, _len = b64s.length; _i < _len; _i++) {
           b = b64s[_i];
-          if (b.length >= lim) {
-            if (b.indexOf(check_for) !== 0) {
-              err = new Error("Found a bad signature in proof text: " + b.slice(0, 40) + " != " + check_for.slice(0, 40));
+          if (b.length >= len_floor) {
+            if (b.indexOf(check_for) < 0 || (s = b.length - check_for.length) > slack) {
+              err = new Error("Found a bad signature in proof text: " + b.slice(0, 60) + " != " + check_for.slice(0, 60) + " (slack=" + s + ")");
               break;
             }
           }
