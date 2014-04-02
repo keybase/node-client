@@ -50,14 +50,18 @@ class BaseSigGen
   #---------
 
   _do_signature : (cb) -> 
-    eng = @_get_binding_eng()
-    await eng.generate defer err, @sig
+    @eng = @_get_binding_eng()
+    await @eng.generate defer err, @sig
     cb err
 
   #---------
 
   _v_modify_store_arg : (arg) ->
   _get_api_endpoint : () -> "sig/post"
+
+  #---------
+
+  expect_proof_text : () -> false
 
   #---------
 
@@ -72,10 +76,21 @@ class BaseSigGen
     log.debug "+ storing signature:"
     log.debug "| writing to #{endpoint}"
     log.debug "| with args #{JSON.stringify args}"
+
     await req.post { endpoint, args }, defer err, body
+
     unless err?
       { @proof_text, @proof_id, @sig_id } = body
       log.debug "| reply with value: #{JSON.stringify body}"
+
+    if not(err?) and @expect_proof_text()
+      if not @proof_text?
+        err = new Error "Server didn't reply with proof text"
+      else
+        await @eng.sanity_check_proof_text { args, @proof_text }, defer err
+        if err?
+          log.warn "Server replied with a suspect proof text"
+
     log.debug "- stored signature (err = #{err?.message})"
     cb err
 
@@ -202,6 +217,8 @@ class SocialNetworkProofGen extends BaseSigGen
     }
     return ret
 
+  expect_proof_text : () -> true
+
 #===========================================
 
 exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
@@ -290,6 +307,10 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
       else
         ret = urlmod.format { protocol , hostname }
     cb err, ret
+
+  #----------------
+
+  expect_proof_text : () -> true
 
 #===========================================
 
