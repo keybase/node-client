@@ -42,6 +42,7 @@ $(BUILD_STAMP): \
 	lib/command/switch.js \
 	lib/command/track.js \
 	lib/command/untrack.js \
+	lib/command/update.js \
 	lib/command/verify.js \
 	lib/command/version.js \
 	lib/assertions.js \

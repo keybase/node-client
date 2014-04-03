@@ -94,6 +94,7 @@ class Main
       "switch"
       "track"
       "untrack"
+      "update"
       "verify"
       "version"
     ]

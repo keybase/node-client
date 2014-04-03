@@ -1,3 +1,10 @@
+## 0.2.17 
+
+Features:
+
+  - keybase update now runs `keybase-installer` with a pretty reasonable set of opts, though not perfect.
+      - Addresses keybase/keybase-issues#329
+
 ## 0.2.16 (2014-04-02)
 
 Bugfixes:
