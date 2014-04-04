@@ -1,5 +1,9 @@
 ## 0.2.17 
 
+Bugfixes:
+
+  - Support spaces in windows usernames (and therefore homedirs)
+
 Features:
 
   - keybase update now runs `keybase-installer` with a pretty reasonable set of opts, though not perfect.

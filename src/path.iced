@@ -1,9 +1,9 @@
 
+kbpath = require 'keybase-path'
+
 #================================================================
 
-exports.home = home = () ->
-  # Portable...
-  process.env.HOME or process.env.USERPROFILE
+exports.home = () -> kbpath.home()
 
 #================================================================
 

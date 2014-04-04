@@ -44,7 +44,8 @@
     "request": "2.30.0",
     "tablify": "0.1.5",
     "timeago": "0.1.0",
-    "triplesec": "~3.0.7"
+    "triplesec": "~3.0.7",
+    "keybase-path": "0.0.9"
   },
   "devDependencies": {
     "iced-expect": "0.0.3",
@@ -66,6 +67,7 @@
     "iced-spawn",
     "iced-utils",
     "kbpgp",
+    "keybase-path",
     "keybase-proofs",
     "mkdirp",
     "nedb",
