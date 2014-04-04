@@ -171,9 +171,9 @@ exports.User = class User
         { sendline : "202020202020202020202020" }
         { expect : "Your desired username: " }
         { sendline : @username }
-        { expect : "Your passphrase: " }
+        { expect : "Your login passphrase: " }
         { sendline : @password }
-        { expect : "confirm passphrase: " }
+        { expect : "Repeat to confirm: " }
         { sendline : @password },
       ], defer err
     unless err?
