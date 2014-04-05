@@ -98,7 +98,7 @@ exports.prompt_passphrase = ({prompt,confirm,extra,short,no_leading_space}, cb) 
     prompt = "Your keybase login passphrase"
     prompt += extra if extra?
 
-  checker = if short then null
+  checker = if short then checkers.passphrase_short
   else if no_leading_space then checkers.passphrase_nls 
   else checkers.passphrase
 

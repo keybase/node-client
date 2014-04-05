@@ -1,3 +1,9 @@
+## 0.2.18 (2014-04-04)
+
+Bugfixes:
+
+  - Workaround double-CR-problem in windows
+
 ## 0.2.17 (2014-04-04)
 
 Bugfixes:

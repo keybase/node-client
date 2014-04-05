@@ -9,6 +9,9 @@ exports.checkers = checkers =
   passphrase: 
     hint : "must be at least 12 letters long"
     f : (x) -> x.length >= 12
+  passphrase_short: 
+    hint : "password cannot be empty"
+    f : (x) -> x.length >= 1
   passphrase_nls: 
     hint : "must be at least 12 letters long and can't have a leading space"
     f : (x) -> x.length >= 12 and not (x.match /^\s/)
