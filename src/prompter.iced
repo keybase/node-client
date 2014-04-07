@@ -74,7 +74,8 @@ strip = (s) ->
 #--------
 
 exports.prompt_yn = ({prompt,defval}, cb) ->
-  ch = "[#{if defval then 'Y' else 'y'}/#{if not(defval) then 'N' else 'n' }]"
+  win = (process.platform is 'win32')
+  ch = if win then '[y/n]' else "[#{if defval then 'Y' else 'y'}/#{if not(defval) then 'N' else 'n' }]" 
   prompt += " #{ch} "
   obj = { prompt }
   ret = null
@@ -83,7 +84,7 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
     await read obj, defer err, res
     if not err?
       res = strip res
-      if res.length is 0
+      if (res.length is 0) and defval?
         ret = defval
       else if "yes".indexOf(res.toLowerCase()) >= 0 
         ret = true
