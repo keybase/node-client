@@ -16,7 +16,7 @@ urlmod = require 'url'
 
 class BaseSigGen
 
-  constructor : ({@km, @client}) ->
+  constructor : ({@km, @client, @supersede}) ->
 
   #---------
 
@@ -71,6 +71,7 @@ class BaseSigGen
       sig_id_base : @sig.id
       sig_id_short : @sig.short_id
       is_remote_proof : true
+      supersede : @supersede
     @_v_modify_store_arg args
     endpoint = @_get_api_endpoint()
     log.debug "+ storing signature:"
@@ -292,14 +293,18 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     arg.remote_host = @remote_host
     arg.type = "web_service_binding.generic"
 
+  styled_filenames : (h) ->
+    files = @filenames h
+    (colors.bold(f) for f in files).join("\n  or ")
+
   instructions : () -> 
-    "Please save the following file as #{colors.bold @filename()}"
+    "Please save the following file as #{@styled_filenames()}"
 
-  display_name : () -> @filename()
+  display_name : () -> @filenames().join(' OR ' )
 
-  filename : (h) ->
-    file = proofs.GenericWebSiteScraper.FILE
-    (h or @remote_host) + "/" + file
+  filenames : (h) ->
+    files = proofs.GenericWebSiteScraper.FILES
+    ((h or @remote_host) + "/" + f) for f in files
 
   prompter : () ->
     klass = @_binding_klass()
@@ -320,9 +325,9 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     @_binding_klass().check_name(@rewrite_hostname(i))
 
   get_warnings : ( { remote_name_normalized } ) ->
-    f = @filename remote_name_normalized
     return [
-      "You'll be asked to post a file available at #{colors.bold(f)}"
+      "You'll be asked to post a file available at",
+      "     " + @styled_filenames(remote_name_normalized)
     ]
 
   #----------------

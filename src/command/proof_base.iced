@@ -19,6 +19,12 @@ exports.ProofBase = class Command extends Base
 
   #----------
 
+  constructor : (args...) ->
+    super args...
+    @supersede = false
+
+  #----------
+
   use_session : () -> true
   needs_configuration : () -> true
 
@@ -62,7 +68,9 @@ exports.ProofBase = class Command extends Base
   allocate_proof_gen : (cb) ->
     klass = S.classes[@service_name]
     assert.ok klass?
-    await @me.gen_remote_proof_gen { @klass, @remote_name_normalized }, defer err, @gen
+    console.log "fuuuuck"
+    console.log @supersede
+    await @me.gen_remote_proof_gen { @klass, @remote_name_normalized, @supersede }, defer err, @gen
     cb err
 
   #----------

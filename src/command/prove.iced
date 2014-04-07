@@ -59,6 +59,7 @@ exports.Command = class Command extends ProofBase
     if @rp? and (v = @rp[@service_name])? and @stub.single_occupancy()
       prompt = "You already have proven you are #{v} at #{@service_name}; overwrite? "
       await @check_exists_common prompt, defer err
+      @supersede = true
     cb err
 
   #----------
@@ -69,6 +70,7 @@ exports.Command = class Command extends ProofBase
          (@remote_name_normalized in v)
       prompt = "You already have claimed ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
+      @supersede = true
     cb err
 
   #----------

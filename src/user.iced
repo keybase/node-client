@@ -411,10 +411,10 @@ exports.User = class User
 
   #--------------
 
-  gen_remote_proof_gen : ({klass, remote_name_normalized, sig_id }, cb) ->
+  gen_remote_proof_gen : ({klass, remote_name_normalized, sig_id, supersede }, cb) ->
     esc = make_esc cb, "User::gen_remote_proof_gen"
     await @load_public_key {}, esc defer()
-    arg =  { km : @key, remote_name_normalized, sig_id }
+    arg =  { km : @key, remote_name_normalized, sig_id, supersede }
     g = new klass arg
     cb null, g
 
