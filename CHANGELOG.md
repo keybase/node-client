@@ -1,3 +1,9 @@
+## 0.2.19 (2014-04-07)
+
+Bugfixes:
+
+  - More workaround of double-CR-problem in windows.  Don't allow default y/n entry
+
 ## 0.2.18 (2014-04-04)
 
 Bugfixes:
