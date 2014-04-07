@@ -85,8 +85,8 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
     await read obj, defer err, res
     if not err?
       res = strip res
-      if (res.length is 0) and defval?
-        ret = defval
+      if (res.length is 0) 
+        if defval? then ret = defval
       else if "yes".indexOf(res.toLowerCase()) >= 0 
         ret = true
       else if "no".indexOf(res.toLowerCase()) >= 0
