@@ -75,7 +75,8 @@ strip = (s) ->
 
 exports.prompt_yn = ({prompt,defval}, cb) ->
   win = (process.platform is 'win32')
-  ch = if win then '[y/n]' else "[#{if defval then 'Y' else 'y'}/#{if not(defval) then 'N' else 'n' }]" 
+  if win then defval = null
+  ch = if defval? then "[#{if defval then 'Y' else 'y'}/#{if not(defval) then 'N' else 'n' }]" else '[y/n]'
   prompt += " #{ch} "
   obj = { prompt }
   ret = null
