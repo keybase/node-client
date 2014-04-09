@@ -17,6 +17,7 @@ exports.constants = constants =
     twitter : 2
     github : 3
     generic_web_site : 1000
+    dns              : 1001
   expire_in : 60*60*24*365*5 # 5 years....
   http_timeout : 15*1000 # give up after 15 seconds....
   short_id_bytes : 27
@@ -33,9 +34,10 @@ exports.constants = constants =
     HOST_UNREACHABLE:  101
     PERMISSION_DENIED: 103 # Since the user might fix it
     FAILED_PARSE:      106
+    DNS_ERROR :        107
+    AUTH_FAILED:       108
     HTTP_500:          150
     TIMEOUT:           160
-    AUTH_FAILED:       170
 
     # Likely will result in a hard error, if repeated enough
     BASE_HARD_ERROR:   200

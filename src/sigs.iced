@@ -128,7 +128,8 @@ class BaseSigGen
   #-----------------------
 
   get_warnings : ({}) -> []
-  
+  do_recheck : (i) -> true
+
 #===========================================
 
 exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
@@ -273,6 +274,11 @@ exports.DnsProofGen = class DnsProofGen extends BaseSigGen
     if not u?
       err = new E.ArgsError "Failed to parse #{i} as a DNS domain"
     cb err, u
+
+  do_recheck : (i) ->
+    log.info "We couldn't find a DNS proof for #{@remote_host}.....#{colors.bold('yet')}"
+    log.info "DNS progogation can be slow; we'll keep trying and email you the result."
+    false
 
 #===========================================
 

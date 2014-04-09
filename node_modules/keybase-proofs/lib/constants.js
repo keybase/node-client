@@ -22,7 +22,8 @@
       keybase: 1,
       twitter: 2,
       github: 3,
-      generic_web_site: 1000
+      generic_web_site: 1000,
+      dns: 1001
     },
     expire_in: 60 * 60 * 24 * 365 * 5,
     http_timeout: 15 * 1000,
@@ -37,9 +38,10 @@
       HOST_UNREACHABLE: 101,
       PERMISSION_DENIED: 103,
       FAILED_PARSE: 106,
+      DNS_ERROR: 107,
+      AUTH_FAILED: 108,
       HTTP_500: 150,
       TIMEOUT: 160,
-      AUTH_FAILED: 170,
       BASE_HARD_ERROR: 200,
       NOT_FOUND: 201,
       CONTENT_FAILURE: 202,

@@ -11,6 +11,7 @@ mods = [
   require('./scrapers/twitter')
   require('./scrapers/github')
   require('./scrapers/generic_web_site')
+  require('./scrapers/dns')
 ]
 
 for m in mods

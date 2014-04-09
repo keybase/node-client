@@ -6,13 +6,10 @@ urlmod = require 'url'
 
 #================================================================================
 
-
-#================================================================================
-
 exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
 
-  @FILE : ".well-known/keybase.txt"
-  FILE : GenericWebSiteScraper.FILE
+  @FILES : [ ".well-known/keybase.txt", "keybase.txt" ]
+  FILES : GenericWebSiteScraper.FILES
 
   constructor: (opts) ->
     super opts
@@ -30,32 +27,57 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
       null
   # ---------------------------------------------------------------------------
 
-  make_url : ({protocol, hostname}) ->
+  make_url : ({protocol, hostname, pathname}) ->
     urlmod.format {
       hostname, 
       protocol,
-      pathname : @FILE
+      pathname
     }
 
   # ---------------------------------------------------------------------------
 
-  hunt2 : ({hostname, protocol}, cb) ->
+  _check_url : ( { url, proof_text_check }, cb) ->
+    # calls back with a v_code or null if it was ok
+    await @_get_url_body {url }, defer err, rc, raw
+    rc = if rc isnt v_codes.OK                             then rc
+    else if (@_stripr(raw).indexOf(proof_text_check)) >= 0 then v_codes.OK
+    else                                                        v_codes.NOT_FOUND
+    cb err, rc
+
+  # ---------------------------------------------------------------------------
+
+  hunt2 : ({hostname, protocol, proof_text_check}, cb) ->
     err = null
+    out = {}
+    err = null
+    rc = v_codes.OK
     if not hostname? or not protocol? 
       err = new Error "invalid arguments: expected a hostname and protocol"
     else 
-      url = @make_url { hostname, protocol }
-      out =
-        api_url : url
-        human_url : url
-        remote_id : url
-        rc : v_codes.OK
+      for f in @FILES
+        url = @make_url { hostname, protocol , pathname : f }
+        await @_check_url { url , proof_text_check }, defer err, rc
+        @log "| hunt #{url} -> #{rc}"
+        if rc is v_codes.OK
+          out =
+            api_url : url
+            human_url : url
+            remote_id : url
+          break
+        else if rc in [ v_codes.HTTP_400, v_codes.HTTP_500, v_codes.NOT_FOUND ]
+          continue
+        else
+          break
+    out.rc = rc
     cb err, out
 
   # ---------------------------------------------------------------------------
 
   _check_api_url : ({api_url,hostname,protocol}) ->
-    return (api_url.toLowerCase().indexOf(@make_url {hostname, protocol}) >= 0)
+    for f in @FILES
+      if (api_url.toLowerCase().indexOf(@make_url {hostname, protocol, pathname : f}) >= 0) 
+        return true
+    return false
 
   # ---------------------------------------------------------------------------
 
@@ -69,11 +91,7 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
   # ---------------------------------------------------------------------------
 
   check_status: ({protocol, hostname, api_url, proof_text_check}, cb) ->
-    # calls back with a v_code or null if it was ok
-    await @_get_url_body {url : api_url}, defer err, rc, raw
-    rc = if rc isnt v_codes.OK                             then rc
-    else if (@_stripr(raw).indexOf(proof_text_check)) >= 0 then v_codes.OK
-    else                                                        v_codes.NOT_FOUND
+    await @_check_url { url : api_url, proof_text_check }, defer err, rc
     cb err, rc
 
 #================================================================================

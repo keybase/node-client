@@ -70,7 +70,7 @@ exports.Command = class Command extends ProofBase
         log.console.log "Please specify which proof to revoke; try one of:"
         log.console.log ""
         for n in names
-          log.console.log "  keybase revoke-proof web #{n}"
+          log.console.log "  keybase revoke-proof #{@service_name} #{n}"
         log.console.log ""
     else
       if @remote_name? and (@remote_name isnt v.name)

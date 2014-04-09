@@ -15,6 +15,7 @@ get_klass = (type) ->
     when "web_service_binding.keybase" then web_service.KeybaseBinding
     when "web_service_binding.generic" then web_service.GenericWebSiteBinding
     when "generic_binding"             then base.GenericBinding
+    when "web_service_binding.dns"     then web_service.DnsBinding
     when "track"                       then Track
     when "untrack"                     then Untrack
     when "auth"                        then Auth

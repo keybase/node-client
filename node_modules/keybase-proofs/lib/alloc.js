@@ -27,6 +27,8 @@
           return web_service.GenericWebSiteBinding;
         case "generic_binding":
           return base.GenericBinding;
+        case "web_service_binding.dns":
+          return web_service.DnsBinding;
         case "track":
           return Track;
         case "untrack":

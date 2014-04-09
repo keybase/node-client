@@ -21,6 +21,7 @@ add_ids = (sig_body, out) ->
   id = hash.toString('hex')
   short_id = sig_id_to_short_id hash
   out.id = id
+  out.med_id = sig_id_to_med_id hash
   out.short_id = short_id
 
 #------
@@ -29,6 +30,10 @@ make_ids = (sig_body) ->
   out = {}
   add_ids sig_body, out
   return out
+
+#------
+
+sig_id_to_med_id = (sig_id) -> base64u.encode sig_id
 
 #------
 
@@ -276,6 +281,7 @@ class GenericBinding extends Base
 exports.Base = Base
 exports.GenericBinding = GenericBinding
 exports.sig_id_to_short_id = sig_id_to_short_id
+exports.sig_id_to_med_id = sig_id_to_med_id
 exports.make_ids = make_ids
 exports.add_ids = add_ids
 

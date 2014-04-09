@@ -114,16 +114,31 @@ exports.Command = class Command extends ProofBase
     esc = make_esc cb, "Command::prompt"
     found = false
     first = true
+    fail = true
+    err = null
 
+    i = 0
     while prompt
       await prompt_yn { prompt : "Check #{@gen.display_name()} #{if first then '' else 'again '}now?", defval : true }, esc defer prompt
       first = false
       if prompt
         await @poll_server esc defer found
+        i++
         prompt = not found
-        if not found
-          log.warn "Didn't find the posted proof."
-    err = if found then null else E.ProofNotAvailableError "Proof wasn't available; we'll keeping trying"
+        if found 
+          fail = false
+          log.info "Success!"
+        else
+          retry = @gen.do_recheck(i)
+          if retry
+            log.warn "Didn't find the posted proof."
+          else
+            prompt = false
+            fail = false
+
+    if not found and fail
+      err = new E.ProofNotAvailableError "Proof wasn't available; we'll keeping trying"
+
     cb err
 
   #----------
@@ -141,7 +156,6 @@ exports.Command = class Command extends ProofBase
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     await @handle_post esc defer()
-    log.info "Success!"
     cb null
 
 ##=======================================================================

@@ -69,7 +69,7 @@ class SocialNetworkBinding extends WebServiceBinding
 has_non_ascii = (s) ->
   buf = new Buffer s, 'utf8'
   for i in [0...buf.length]
-    if buf.readUint8(i) >= 128
+    if buf.readUInt8(i) >= 128
       return true
   return false
 
@@ -89,10 +89,12 @@ class GenericWebSiteBinding extends WebServiceBinding
       if protocol?
         ret = { protocol, hostname : o.hostname }
         n = GenericWebSiteBinding.to_string(ret)
-        if has_non_ascii(ret)
-          console.error "Bug in urlmod found: found non-ascii in URL: #{ret}"
+        if has_non_ascii(n)
+          console.error "Bug in urlmod found: found non-ascii in URL: #{n}"
           ret = null
     return ret
+
+  parse : (h) -> GenericWebSiteBinding.parse h
 
   @to_string : (o) ->
     ([ o.protocol, o.hostname ].join '//').toLowerCase()
@@ -108,7 +110,6 @@ class GenericWebSiteBinding extends WebServiceBinding
 
   resource_id : () -> @to_string()
 
-  parse : (h) -> GenericWebSiteBinding.parse h
   to_string : () -> GenericWebSiteBinding.to_string @remote_host
 
   _service_obj_check : (x) ->
@@ -126,6 +127,52 @@ class GenericWebSiteBinding extends WebServiceBinding
 
   check_existing : (proofs) ->
     if (v = proofs.generic_web_site)?
+      for {check_data_json} in v
+        if cieq(GenericWebSiteBinding.to_string(check_data_json), @to_string())
+          return new Error "A live proof for #{@to_string()} already exists"
+    return null
+
+#==========================================================================
+
+class DnsBinding extends WebServiceBinding
+
+  constructor : (args) ->
+    @domain = @parse args.remote_host
+    super args
+
+  @parse : (h, opts = {}) ->
+    ret = null
+    if h?
+      h = "dns://#{h}" if h.indexOf("dns://") isnt 0
+      if h? and (h = h.toLowerCase())? and (o = urlmod.parse(h))? and
+          o.hostname? and (not(o.path?) or (o.path is '/')) and not(o.port?)
+        ret = o.hostname
+        if has_non_ascii(ret)
+          console.error "Bug in urlmod found: non-ASCII in done name: #{ret}"
+          ret = null
+    return ret
+
+  parse : (h) -> DnsBinding.parse(h)
+  @to_string : (o) -> o.domain
+  to_string : () -> @domain
+  normalize_name : (s) -> DnsBinding.parse(s)
+  @single_occupancy : () -> false
+  single_occupancy : () -> DnsBinding.single_occupancy()
+  resource_id : () -> @to_string()
+  _service_obj_check : (x) ->
+    so = @service_obj()
+    return x? and so? and cieq(so.protocol, x.protocol) and cieq(so.domain, x.domain)
+  service_name : -> "dns"
+  proof_type : -> constants.proof_types.dns
+  @check_name : (n) -> DnsBinding.parse(n)?
+  check_name : (n) -> DnsBinding.check_name(n)
+  service_obj : () -> { protocol : "dns", @domain }
+  is_remote_proof : () -> true
+  check_inputs : () -> if @domain then null else new Error "Bad domain given"
+  @name_hint : () -> "A DNS domain name, like maxk.org"
+
+  check_existing : (proofs) ->
+    if (v = proofs.dns?)
       for {check_data_json} in v
         if cieq(GenericWebSiteBinding.to_string(check_data_json), @to_string())
           return new Error "A live proof for #{@to_string()} already exists"
@@ -178,5 +225,6 @@ exports.TwitterBinding = TwitterBinding
 exports.KeybaseBinding = KeybaseBinding
 exports.GithubBinding = GithubBinding
 exports.GenericWebSiteBinding = GenericWebSiteBinding
+exports.DnsBinding = DnsBinding
 
 #==========================================================================

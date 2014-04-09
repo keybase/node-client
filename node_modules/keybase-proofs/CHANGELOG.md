@@ -1,4 +1,11 @@
-## 0.0.23
+## 0.0.24 (2014-04-09)
+
+Features:
+
+  - Support for DNS proofs
+  - Support for foo.com/keybase.txt
+
+## 0.0.23 (2014-04-05)
 
 Bugfix:
 
