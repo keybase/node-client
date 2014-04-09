@@ -1,8 +1,9 @@
-## 0.2.19 (2014-04-07)
+## 0.2.19
 
 Bugfixes:
 
   - More workaround of double-CR-problem in windows.  Don't allow default y/n entry
+  - Address keybase/keybase-issues#544, a bug in the key selector for keys that don't expire
 
 ## 0.2.18 (2014-04-04)
 
