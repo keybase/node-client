@@ -72,10 +72,12 @@ class Verifier
   #---------------
 
   _check_expired : (cb) ->
+    err = null
     now = unix_time()
-    expired = (now - @json.ctime - @json.expire_in)
-    err = if expired > 0 then new Error "Expired #{expired}s ago"
-    else null
+    if not @json.ctime? then err = new Error "No `ctime` in signature"
+    else if not @json.expire_in? then err = new Error "No `expire_in` in signature"
+    else if (expired = (now - @json.ctime - @json.expire_in)) > 0
+      err = new Error "Expired #{expired}s ago"
     cb err
 
   #---------------

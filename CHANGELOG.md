@@ -1,4 +1,9 @@
-## 0.2.19
+## 0.2.19 (2014-04-09)
+
+Features:
+
+  - Support for DNS proofs 
+  - Support for Web proofs at foo.com/keybase.txt
 
 Bugfixes:
 

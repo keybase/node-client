@@ -129,9 +129,15 @@
 
     Verifier.prototype._check_expired = function(cb) {
       var err, expired, now;
+      err = null;
       now = unix_time();
-      expired = now - this.json.ctime - this.json.expire_in;
-      err = expired > 0 ? new Error("Expired " + expired + "s ago") : null;
+      if (this.json.ctime == null) {
+        err = new Error("No `ctime` in signature");
+      } else if (this.json.expire_in == null) {
+        err = new Error("No `expire_in` in signature");
+      } else if ((expired = now - this.json.ctime - this.json.expire_in) > 0) {
+        err = new Error("Expired " + expired + "s ago");
+      }
       return cb(err);
     };
 
@@ -159,7 +165,7 @@
                     return err = arguments[0];
                   };
                 })(),
-                lineno: 88
+                lineno: 90
               }));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -188,7 +194,7 @@
                       return __slot_1.literals = arguments[1];
                     };
                   })(_this),
-                  lineno: 92
+                  lineno: 94
                 }));
                 __iced_deferrals._fulfill();
               })(__iced_k);
@@ -237,7 +243,7 @@
                     return err = arguments[0];
                   };
                 })(),
-                lineno: 108
+                lineno: 110
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -336,7 +342,7 @@
                 return raw = arguments[1].raw;
               };
             })(),
-            lineno: 195
+            lineno: 197
           }));
           __iced_deferrals._fulfill();
         });
@@ -378,7 +384,7 @@
                 return json_str = arguments[2];
               };
             })(),
-            lineno: 211
+            lineno: 213
           }));
           __iced_deferrals._fulfill();
         });
