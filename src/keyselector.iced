@@ -6,6 +6,7 @@ log = require './log'
 {E} = require './err'
 {format} = require('pgp-utils').userid
 {tablify} = require 'tablify'
+{unix_time} = require('iced-utils').util
 
 ##=======================================================================
 
@@ -72,9 +73,12 @@ exports.KeySelector = class KeySelector
 
   #----------
 
-  format_ts : (t) ->
-    d = new Date (t*1000)
-    ((""+ s) for s in [ (d.getFullYear()), (d.getMonth()+1), d.getDate() ]).join('-')
+  format_ts : (t, zero_val = "n/a") ->
+    if t? and t
+      d = new Date (t*1000)
+      ((""+ s) for s in [ (d.getFullYear()), (d.getMonth()+1), d.getDate() ]).join('-')
+    else
+      zero_val
 
   #----------
 
@@ -82,7 +86,7 @@ exports.KeySelector = class KeySelector
     args = [ 
       (key._n_bits + (if key._type is 1 then 'R' else 'D')),
       key.key_id_64(),
-      "exp: #{@format_ts(key._expires)}"
+      "exp: #{@format_ts(key._expires, 'never')}"
     ].concat key.emails()
     return args
 
@@ -107,8 +111,17 @@ exports.KeySelector = class KeySelector
     else
       log.console.log "Multiple keys found, please pick one:"
     for key in keys
-      key.s = [ key.emails().length, key._expires ]
-    keys.sort (a,b) -> (if (a.s < b.s) then 1 else if (a.s > b.s) then -1 else 0)
+      key.s = [ key.emails().length, (key._expires or 10e11) ]
+
+    pcmp = (a,b) ->
+      ret = if a[0] < b[0] then 1
+      else if a[0] > b[0] then -1
+      else if a[1] < b[1] then 1
+      else if a[1] > b[1] then -1
+      else 0
+      ret
+
+    keys.sort (a,b) -> pcmp a.s, b.s
     @select_key_menu keys
     prompt = "Pick a key"
     await prompt_for_int { prompt, low : 1, hi : keys.length}, defer err, sel
