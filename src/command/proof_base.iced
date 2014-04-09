@@ -42,7 +42,7 @@ exports.ProofBase = class Command extends Base
     {name,config,OPTS} = @command_name_and_opts()
     sub = scp.addParser name, config
     add_option_dict sub, OPTS
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service; can be one of: {twitter,github,web}" }
+    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service; can be one of: {twitter,github,web,dns}" }
     sub.addArgument [ "remote_name"], { nargs : "?", help : "username or hostname at that service" }
     return config.aliases.concat [ name ]
 
