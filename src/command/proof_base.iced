@@ -68,8 +68,6 @@ exports.ProofBase = class Command extends Base
   allocate_proof_gen : (cb) ->
     klass = S.classes[@service_name]
     assert.ok klass?
-    console.log "fuuuuck"
-    console.log @supersede
     await @me.gen_remote_proof_gen { @klass, @remote_name_normalized, @supersede }, defer err, @gen
     cb err
 
