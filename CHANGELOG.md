@@ -1,3 +1,16 @@
+## 0.2.20 (2014-04-11)
+
+Features:
+  - Remove nedb dependency.  Replace it with our new iced-db, which is simply
+    an FS-based key-value store. 
+
+Bugfixes:
+  - Address keybase/keybase-issues#540 -- you couldn't open two instances of NEDB
+    at once.  Our new iced-db is safe in this regard.
+  - We weren't handling DNS proofs properly in checking tracks, so it was saying
+    that users weren't tracked when they were. This isn't a security vul'n, it just
+    made for a lot of extra prompting.
+
 ## 0.2.19 (2014-04-09)
 
 Features:
