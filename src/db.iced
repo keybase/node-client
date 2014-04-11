@@ -4,11 +4,14 @@ fs = require 'fs'
 path = require 'path'
 {chain,make_esc} = require 'iced-error'
 {mkdirp} = require './fs'
-{Lock} = require('iced-utils').lock
+iutils = require 'iced-utils'
+{Lock} = iutils.lock
+{Lockfile} = iutils.lockfile
 {util} = require 'pgp-utils'
 log = require './log'
 {constants} = require './constants'
 Datastore = require 'nedb'
+lockfile = require 'lockfile'
 
 ##=======================================================================
 
@@ -24,10 +27,18 @@ class DB
 
   constructor : ({@filename}) ->
     @lock = new Lock
+    @lockfile = null
+
+  #----
 
   get_filename : () ->
     @filename or= env().get_db_filename()
     return @filename
+
+  #----
+
+  get_lockfile_name : () ->
+    @get_filename() + ".lock"
 
   #----
 
@@ -46,6 +57,40 @@ class DB
 
   #----
 
+  _get_lockfile : (cb) ->
+    @lockfile or= new Lockfile { filename : @get_lockfile_name() }
+    nm = @lockfile.filename
+    log.debug "+ acquire lockfile #{nm}"
+    await @lockfile.acquire defer err
+    if err?
+      log.warn "Could not acquire lockfile #{nm}"
+    log.debug "- acquire lockfile #{nm} -> #{err}"
+    cb err
+
+  #----
+
+  compact : (cb) ->
+    esc = make_esc cb, "DB::compact"
+    err = null
+    log.debug "+ compact"
+    await @_get_lockfile esc defer()
+    await @db.persistence.persistCachedDatabase defer err
+    await @lockfile.release esc defer()
+    log.debug "- compact"
+    cb err
+
+  #----
+
+  close : (cb) ->
+    err = null
+    if @db 
+      await @lock.acquire defer()
+      await @compact defer err
+      @lock.release()
+    cb err
+
+  #----
+
   _open : (cb) ->
     esc = make_esc cb, "DB::open"
     err = null
@@ -53,6 +98,7 @@ class DB
     log.debug "+ opening NEDB database file: #{fn}"
     await mkdirp fn, esc defer()
     @db = new Datastore { filename : @get_filename() }
+    @db.persistence.stopAutocompaction()
     await @db.loadDatabase esc defer()
     await @_init_db esc defer()
     log.debug "- DB opened"

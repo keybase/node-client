@@ -4,7 +4,7 @@ log = require '../log'
 {add_option_dict} = require './argparse'
 {PackageJson} = require '../package'
 {E} = require '../err'
-{make_esc} = require 'iced-error'
+{chain_err,make_esc} = require 'iced-error'
 {env,init_env} = require '../env'
 {Config} = require '../config'
 req = require '../req'
@@ -166,6 +166,7 @@ class Main
   #---------------------------------
 
   run : (cb) ->
+    cb = chain_err cb, @cleanup.bind(@)
     esc = make_esc cb, "run"
     await @setup   esc defer()
     await @cmd.run esc defer rc
@@ -197,7 +198,14 @@ class Main
   #----------------------------------
 
   cleanup_previous_crash : (cb) ->
-    err = null
+    cb null
+
+  #----------------------------------
+
+  cleanup : (cb) ->
+    log.debug "+ cleanup"
+    await db.close defer err
+    log.debug "- cleanup"
     cb err
 
   #----------------------------------
@@ -246,6 +254,7 @@ class Main
     await @parse_args esc defer()
     env().set_argv @argv
     @config_logger()
+    log.debug "+ setup"
     await @load_config esc defer()
     env().set_config @config
     @init_keyring()
@@ -258,6 +267,7 @@ class Main
     await @load_session esc defer()
     await @cmd.assertions esc defer()
     env().set_session @session
+    log.debug "- setup"
     cb null
 
 ##=======================================================================

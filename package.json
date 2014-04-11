@@ -31,7 +31,7 @@
     "iced-error": "0.0.8",
     "iced-logger": "0.0.3",
     "iced-spawn": "0.0.6",
-    "iced-utils": ">=0.1.9",
+    "iced-utils": ">=0.1.11",
     "kbpgp": "~0.1.1",
     "keybase-proofs": "0.0.24",
     "mkdirp": "0.3.5",
@@ -45,7 +45,8 @@
     "tablify": "0.1.5",
     "timeago": "0.1.0",
     "triplesec": "~3.0.7",
-    "keybase-path": "0.0.9"
+    "keybase-path": "0.0.9",
+    "lockfile": "0.4.2"
   },
   "devDependencies": {
     "iced-expect": "0.0.3",
@@ -69,6 +70,7 @@
     "kbpgp",
     "keybase-path",
     "keybase-proofs",
+    "lockfile",
     "mkdirp",
     "nedb",
     "pgp-utils",
