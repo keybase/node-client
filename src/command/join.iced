@@ -60,11 +60,11 @@ exports.Command = class Command extends Base
         prompt : "Your desired username"
         checker : checkers.username
       passphrase: 
-        prompt : "Your passphrase"
+        prompt: "Your login passphrase"
         passphrase: true
         checker: checkers.passphrase
         confirm : 
-          prompt : "confirm passphrase"
+          prompt: "Repeat to confirm"
 
     if not @prompter
       if (u = env().get_username())?   then seq.username.defval   = u
@@ -116,6 +116,11 @@ exports.Command = class Command extends Base
             retry = true
             @prompter.clear 'username'
             err = null
+        when 'BAD_INVITATION_CODE'
+          log.error "Bad invitation code '#{@data.invite}' given"
+          retry = true
+          @prompter.clear 'invite'
+          err = null
 
     if not err?       
       @uid = body.uid
