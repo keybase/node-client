@@ -184,6 +184,7 @@ exports.TrackWrapper = class TrackWrapper
     await db.remove { 
       type : constants.ids.local_track
       key : uid
+      optional : true
     }, defer err
     log.debug "- removed local track object -> #{err}"
     cb err

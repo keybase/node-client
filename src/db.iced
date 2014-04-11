@@ -76,7 +76,6 @@ class DB
   put : ({type, key, value, name, names}, cb) ->
     kvsk = make_kvstore_key {type,key}
     await @db.put { key : kvsk, value }, defer err, obj
-    console.log "put val #{kvsk}"
     unless err?
       {hkey} = obj
       names  = [ name ] if name? and not names?
@@ -84,22 +83,25 @@ class DB
         for name in names
           lk = make_lookup_key(name)
           await @db.put { key : lk, value : hkey }, defer tmp
-          console.log "put lookup #{lk} -> #{hkey}"
           if tmp? and not err? then err = tmp
     cb err
 
   #-----
 
-  remove : ({type, key}, cb) ->
+  remove : ({type, key, optional}, cb) ->
     k = make_kvstore_key { type, key }
+    err = null
     log.debug "+ DB remove #{k}"
-    esc = make_esc cb, "DB::remove"
 
     # XXX error -- we're leaking all of the pointer that pointed to this object.
     # I think it's OK since we're not ever calling remove.
-    await @db.del { key : k }, esc defer()
+    await @db.del { key : k }, defer err
 
-    log.debug "- DB remove #{k} -> ok"
+    if err? and (err instanceof idb.E.NotFoundError) and optional
+      log.debug "| No object found for #{k}"
+      err = null
+
+    log.debug "- DB remove #{k} -> #{err}"
     cb null
 
   #-----
