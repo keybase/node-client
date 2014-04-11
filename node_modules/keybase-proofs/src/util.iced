@@ -9,5 +9,26 @@ exports.json_secure_compare = json_secure_compare = (a,b) ->
   else new Error "Json objects differed: #{o1} != #{o2}"
   return err
 
-#----------
+##-----------------------------------------------------------------------
 
+# Copied from iced-utils, so as not to introduce a dependency
+# on a library that's used mainly in node. 
+exports.Lock = class Lock
+  constructor : ->
+    @_open = true
+    @_waiters = []
+  acquire : (cb) ->
+    if @_open
+      @_open = false
+      cb()
+    else
+      @_waiters.push cb
+  release : ->
+    if @_waiters.length
+      w = @_waiters.shift()
+      w()
+    else
+      @_open = true
+  open : -> @_open
+
+##-----------------------------------------------------------------------

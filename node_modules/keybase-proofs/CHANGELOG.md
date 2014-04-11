@@ -1,3 +1,9 @@
+## 0.0.25 (2014-04-10)
+
+Bugfixes:
+
+  - Remove iced-utils dependency
+
 ## 0.0.24 (2014-04-09)
 
 Features:

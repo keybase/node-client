@@ -1,11 +1,9 @@
 {BaseScraper} = require './base'
 {make_ids} = require '../base'
 {constants} = require '../constants'
+{Lock} = require '../util'
 {v_codes} = constants
 {decode} = require('pgp-utils').armor
-iutils = require 'iced-utils'
-{unix_time} = iutils.util
-{Lock} = iutils.lock
 urlmod = require 'url'
 
 #================================================================================
