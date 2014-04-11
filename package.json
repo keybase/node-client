@@ -1,6 +1,6 @@
 {
   "name": "keybase",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "rdescription": "CLI interface to keybase.io",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "gpg-wrapper": "0.0.44",
     "iced-coffee-script": "~1.7.1",
     "iced-data-structures": "0.0.5",
-    "iced-db" : ">=0.0.2",
+    "iced-db": ">=0.0.2",
     "iced-error": "0.0.8",
     "iced-logger": "0.0.3",
     "iced-spawn": "0.0.6",
