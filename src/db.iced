@@ -27,6 +27,12 @@ class DB
   constructor : ({@filename}) ->
     @lock = new Lock
 
+
+  #-----
+
+  get_db : () ->
+    db = new idb.DB { root : @get_filename(), json : true }
+
   #----
 
   get_filename : () ->
@@ -43,9 +49,9 @@ class DB
   #----
 
   unlink : (cb) ->
-    fn = @get_filename()
-    log.info "Purging local cache: #{fn}"
-    await fs.unlink fn, defer err
+    db = @get_db()
+    log.info "Purging local cache: #{db.root}"
+    await db.drop defer err
     cb err
 
   #----
@@ -60,7 +66,7 @@ class DB
     err = null
     fn = @get_filename()
     log.debug "+ opening NEDB database file: #{fn}"
-    @db = new idb.DB { root : @get_filename(), json : true }
+    @db = @get_db()
     await @_init_db esc defer()
     log.debug "- DB opened"
     cb null
