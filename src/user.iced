@@ -175,7 +175,7 @@ exports.User = class User
     else if not row?
       err = new E.NotFoundError "Key not found for query #{k}"
     else
-      b = row.value.basics
+      b = row.basics
       ret = { uid : b.uid, username : b.username }
     log.debug "- map_key_to_user_local -> #{err}"
     cb err, ret
@@ -268,7 +268,7 @@ exports.User = class User
     type = if username? then constants.lookups.username else constants.lookups.key_id_64_to_user
     await db.lookup { type, name }, defer err, row
     if not err? and row?
-      ret = new User row.value
+      ret = new User row
       await ret.load_sig_chain_from_storage defer err
       if err?
         ret = null

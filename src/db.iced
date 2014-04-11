@@ -4,11 +4,13 @@ fs = require 'fs'
 path = require 'path'
 {chain,make_esc} = require 'iced-error'
 {mkdirp} = require './fs'
-{Lock} = require('iced-utils').lock
+iutils = require 'iced-utils'
+{Lock} = iutils.lock
 {util} = require 'pgp-utils'
 log = require './log'
 {constants} = require './constants'
 Datastore = require 'nedb'
+idb = require 'iced-db'
 
 ##=======================================================================
 
@@ -24,6 +26,8 @@ class DB
 
   constructor : ({@filename}) ->
     @lock = new Lock
+
+  #----
 
   get_filename : () ->
     @filename or= env().get_db_filename()
@@ -46,14 +50,17 @@ class DB
 
   #----
 
+  close : (cb) ->
+    cb null
+
+  #----
+
   _open : (cb) ->
     esc = make_esc cb, "DB::open"
     err = null
     fn = @get_filename()
     log.debug "+ opening NEDB database file: #{fn}"
-    await mkdirp fn, esc defer()
-    @db = new Datastore { filename : @get_filename() }
-    await @db.loadDatabase esc defer()
+    @db = new idb.DB { root : @get_filename(), json : true }
     await @_init_db esc defer()
     log.debug "- DB opened"
     cb null
@@ -61,19 +68,18 @@ class DB
   #-----
 
   put : ({type, key, value, name, names}, cb) ->
-    k = make_kvstore_key {type,key}
-    docs = [ { key : k, value : value } ]
-
-    names  = [ name ] if name? and not names?
-    if names and names.length
-      for name in names
-        docs.push { key : make_lookup_key(name), name_to_key : k }
-
-    err = null
-    for doc in docs
-      await @db.update { key : doc.key }, doc, { upsert : true }, defer tmp
-      if tmp? and not err? then err = tmp
-
+    kvsk = make_kvstore_key {type,key}
+    await @db.put { key : kvsk, value }, defer err, obj
+    console.log "put val #{kvsk}"
+    unless err?
+      {hkey} = obj
+      names  = [ name ] if name? and not names?
+      if names and names.length
+        for name in names
+          lk = make_lookup_key(name)
+          await @db.put { key : lk, value : hkey }, defer tmp
+          console.log "put lookup #{lk} -> #{hkey}"
+          if tmp? and not err? then err = tmp
     cb err
 
   #-----
@@ -82,20 +88,21 @@ class DB
     k = make_kvstore_key { type, key }
     log.debug "+ DB remove #{k}"
     esc = make_esc cb, "DB::remove"
-    await @db.remove { key : k }, { mutli : true }, esc defer()
-    await @db.remove { name_to_key : k }, { multi : true }, esc defer()
+
+    # XXX error -- we're leaking all of the pointer that pointed to this object.
+    # I think it's OK since we're not ever calling remove.
+    await @db.del { key : k }, esc defer()
+
     log.debug "- DB remove #{k} -> ok"
     cb null
 
   #-----
 
   find1 : (q, cb) ->
-    await @db.find q, defer err, docs
     err = value = null
-    if err? then # noop
-    else if (l = docs.length) is 0 then value = null
-    else if l > 1 then err = new E.CorruptionError "Got #{s} docs back; only wanted 1"
-    else value = docs[0]
+    await @db.get q, defer err, value
+    if err? and (err instanceof idb.E.NotFoundError) then err = null
+    else if err? then # noop
     cb err, value
 
   #-----
@@ -103,7 +110,6 @@ class DB
   get : ({type, key}, cb) ->
     k = make_kvstore_key { type, key }
     await @find1 { key : k }, defer err, value
-    value = value?.value
     cb err, value
 
   #-----
@@ -112,8 +118,8 @@ class DB
     k = make_lookup_key { type, name }
     err = value = null
     await @find1 { key : k }, defer err, value
-    if not err? and (k = value?.name_to_key)?
-      await @find1 { key : k }, defer err, value
+    if not err? and value?
+      await @find1 { hkey : value }, defer err, value
     cb err, value
 
   #-----
@@ -121,8 +127,8 @@ class DB
   _init_db : (cb) ->
     log.debug "+ DB::_init_db"
     esc = make_esc cb, "DB::_init_db"
-    await @db.ensureIndex { fieldName : "key" , unique : true }, esc defer()
-    log.debug "- DB::_init_db"
+    await @db.create esc defer made
+    log.debug "- DB::_init_db -> #{made}"
     cb null
 
 ##=======================================================================
