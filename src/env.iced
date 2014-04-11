@@ -74,6 +74,11 @@ class Env
       config : (c) -> c?.files?.db
       dflt   : ( ) => join @get_home(), FN.config_dir, FN.db_file
 
+  get_nedb_filename : () ->
+    @get_opt
+      config : (c) -> c?.files?.nedb
+      dflt   : ( ) => join @get_home(), FN.config_dir, FN.nedb_file
+
   get_tmp_keyring_dir : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR

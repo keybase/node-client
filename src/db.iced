@@ -41,8 +41,22 @@ class DB
 
   #----
 
+  _upgrade : (cb) ->
+    f = env().get_nedb_filename()
+    await fs.stat f, defer err, so
+    unless err?
+      await fs.unlink f, defer err
+      if err?
+        log.warn "Error deleting old DB file #{f}: #{err}"  
+      else
+        log.info "Deleting old DB #{f}"
+    cb err
+    
+  #----
+
   open : (cb) ->
     err = null
+    await @_upgrade defer err
     await @_open defer err unless @db?
     cb err
 
