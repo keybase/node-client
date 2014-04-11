@@ -1,3 +1,9 @@
+## 0.2.21 
+
+Bugfixes:
+
+  - Address keybase/keybase-issues#568 -- better message for a needed update
+
 ## 0.2.20 (2014-04-11)
 
 Features:

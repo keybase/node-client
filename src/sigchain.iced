@@ -173,7 +173,7 @@ exports.Link = class Link
     esc = make_esc cb, "SigChain::Link::check_remote_proof'"
 
     if not (type_s = proofs.proof_type_to_string[type])?
-      err = new E.VerifyError "No remote proof type for #{type}"
+      err = new E.VerifyError "Unknown proof type (#{type}) found; consider a `keybase --update`"
       await athrow err, esc defer()
 
     log.debug "+ #{username}: checking remote #{type_s} proof"
