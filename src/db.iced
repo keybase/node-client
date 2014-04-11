@@ -9,7 +9,6 @@ iutils = require 'iced-utils'
 {util} = require 'pgp-utils'
 log = require './log'
 {constants} = require './constants'
-Datastore = require 'nedb'
 idb = require 'iced-db'
 
 ##=======================================================================

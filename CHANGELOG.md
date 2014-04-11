@@ -3,6 +3,7 @@
 Bugfixes:
 
   - Address keybase/keybase-issues#568 -- better message for a needed update
+  - Remove lingering nedb dependency
 
 ## 0.2.20 (2014-04-11)
 
