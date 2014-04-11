@@ -119,7 +119,7 @@ exports.TrackWrapper = class TrackWrapper
       for rp in track_cert.remote_proofs
         rkp = rp.remote_key_proof
         row = @table()[rkp.proof_type]
-        if (rkp.proof_type is PT.generic_web_site)
+        if (rkp.proof_type in [ PT.generic_web_site, PT.dns ])
           sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
           row = row[sub_id]
         if not (row instanceof Link)
