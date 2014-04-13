@@ -277,7 +277,7 @@ exports.DnsProofGen = class DnsProofGen extends BaseSigGen
 
   do_recheck : (i) ->
     log.info "We couldn't find a DNS proof for #{@remote_host}.....#{colors.bold('yet')}"
-    log.info "DNS progogation can be slow; we'll keep trying and email you the result."
+    log.info "DNS propagation can be slow; we'll keep trying and email you the result."
     false
 
 #===========================================
