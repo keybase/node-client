@@ -32,14 +32,10 @@ exports.parse_signature = (lines) ->
   if not (m = lines.match rxx)? 
     err = new E.NotFoundError "no signature found"
   else
-    timestamp = new Date m[1]
-    if isNaN(timestamp.getTime())
-      log.info "Invalid date in signature: #{m[1]}"
-      timestamp = null
     ret =
       primary : strip(m[3])
       subkey :  strip(m[4])
-      timestamp : timestamp
+      timestamp : m[1]
     unless ends_in(ret.primary, m[2]) or ends_in(ret.subkey, m[2])
       err = new E.VerifyError "key ID didn't match fingerprint"
       ret = null
