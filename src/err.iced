@@ -58,6 +58,9 @@ exports.E = E = ie.make_errors
   NOT_CONFIGURED : "No user configured"
   HOST : "Host is down"
   SECURITY : "Security error"
+  REQ_NOT_FOUND : "host not found"
+  REQ_CONN_REFUSED : "connection refused"
+  REQ_GENERIC : "generic error"
 
 #================================================
 

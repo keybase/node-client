@@ -1,3 +1,9 @@
+## 0.2.22 (2014-04-22)
+
+Bugfixes:
+ 
+  - Better error messages when network problems are encountered.
+
 ## 0.2.21 (2014-04-11)
 
 Bugfixes:

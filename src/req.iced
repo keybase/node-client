@@ -73,6 +73,19 @@ exports.Client = class Client
 
   #-----------------
 
+  error_for_humans : ({err, uri, uri_fields}) ->
+    host = uri_fields.hostname
+    port = uri_fields.port
+    switch err.code
+      when 'ENOTFOUND'
+        new E.ReqNotFoundError "Host '#{host}' wasn't found in DNS; check your network"
+      when 'ECONNREFUSED'
+        new E.ReqConnRefusedError "Host '#{host}:#{port}' refused connection; maybe the server is down"
+      else
+        new E.ReqGenericError "Could not access URL: #{uri}"
+
+  #-----------------
+
   req : ({method, endpoint, args, http_status, kb_status, pathname, search, json, jar}, cb) ->
     method or= 'GET'
     jar = true unless jar?
@@ -112,7 +125,7 @@ exports.Client = class Client
       opts.ca = [ ca ]
 
     await request opts, defer err, res, body
-    if err? then #noop
+    if err? then err = @error_for_humans {err, uri : opts.uri, uri_fields }
     else if not (res.statusCode in http_status) 
       if res.statusCode is 400 and res.headers?["x-keybase-client-unsupported"]
         v = res.headers["x-keybase-client-upgrade-to"]
