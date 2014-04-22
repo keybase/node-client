@@ -3,6 +3,7 @@
 Bugfixes:
  
   - Better error messages when network problems are encountered.
+  - Fix bug with signatures dates not working in different locales
 
 ## 0.2.21 (2014-04-11)
 
