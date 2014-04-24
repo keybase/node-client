@@ -8,6 +8,11 @@ Bugfixes:
   - Address keybase/keybase-issues#649 -- mixed success/failure 
     messges in the case of failed tracking.
 
+Cleanups:
+
+  - Don't parse the direct output of GPG, rather, use the status FD mechanism.
+    It would be nice to send status to Fd=3, but that won't work on windows.
+
 ## 0.2.21 (2014-04-11)
 
 Bugfixes:

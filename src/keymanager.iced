@@ -8,6 +8,7 @@
 {ASP} = require('pgp-utils').util
 {E} = require './err'
 {make_scrypt_progress_hook} = require './util'
+{StatusParser} = require './gpg'
 
 #=====================================================
 
@@ -52,13 +53,14 @@ exports.KeyManager = class KeyManager
       "%commit"
     ]
     stdin = script.join("\n")
-    args = [ "--batch", "--gen-key", "--keyid-format", "long" ]
+    args = [ "--batch", "--gen-key", "--keyid-format", "long", "--status-fd", 2 ]
     stderr = new BufferOutStream()
     await @ring.gpg { args, stdin, stderr, secret : true }, esc defer out
     err = null
-    if (m = stderr.data().toString('utf8').match /([A-F0-9]{16})/)
-      key_id_64 = m[1]
-      @key = @ring.make_key { key_id_64, secret : true }
+    status_parser = (new StatusParser).parse { buf : stderr.data() }
+    if (kc = status_parser.lookup('KEY_CREATED'))? and kc.length >= 2
+      fingerprint = kc[1]
+      @key = @ring.make_key { fingerprint, secret : true }
       await @key.load esc defer()
     else
       err = new E.GenerateError "Failed to parse output of key generation"

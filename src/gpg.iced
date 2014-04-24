@@ -16,29 +16,41 @@ exports.gpg = (inargs, cb) ->
 
 #====================================================================
 
-exports.parse_signature = (lines) -> 
-  strip = (m) -> if m? then m.split(/\s+/).join('') else null
-  ends_in = (a,b) -> a[-(b.length)...] is b
-  rxx = ///
-            (?:^|\n)gpg:\sSignature\smade\s(.*?)\r?\n
-            gpg:\s+using\s[RD]SA\skey\s([A-F0-9]{16})\r?\n
-            (?:.*\r?\n)* # Skip arbirarily many lines
-            gpg:\sGood\ssignature\sfrom.*\r?\n
-            (?:.*\r?\n)* # Skip arbirarily many lines
-            Primary\skey\sfingerprint:\s([A-F0-9\s]+)\r?\n
-            (?:\s+Subkey\sfingerprint:\s([A-F0-9\s]+)\r?\n)?
-       /// 
-  err = ret = null
-  if not (m = lines.match rxx)? 
-    err = new E.NotFoundError "no signature found"
+exports.StatusParser = class StatusParser
+
+  constructor : () ->
+    @_all = []
+    @_table = []
+
+  parse : ({buf}) ->
+    lines = buf.toString('utf8').split /\r?\n/
+    for line in lines
+      words = line.split /\s+/
+      if words[0] is '[GNUPG:]'
+        @_all.push words[1...]
+        @_table[words[1]] = words[2...]
+    @
+
+  lookup : (key) -> @_table[key]
+
+#====================================================================
+
+exports.parse_signature = (buf) ->
+  status_parser = (new StatusParser()).parse {buf}
+  err = key = timestamp = null
+  d = null
+  if not (validsig = status_parser.lookup "VALIDSIG")? 
+    err = new E.NotFoundError "no valid signature found"
+  else if validsig.length < 9 or isNaN(d = parseInt(validsig[2]))
+    err = new E.VerifyError "didn't find a valid signature"
   else
-    ret =
-      primary : strip(m[3])
-      subkey :  strip(m[4])
-      timestamp : m[1]
-    unless ends_in(ret.primary, m[2]) or ends_in(ret.subkey, m[2])
-      err = new E.VerifyError "key ID didn't match fingerprint"
-      ret = null
-  [err, ret]
+    if validsig.length is 10
+      key = 
+        primary : validsig[9]
+        subkey  : validsig[0]
+    else
+      key = { primary : validsig[0] }
+    timestamp = new Date d*1000
+  [err, key, timestamp]
 
 #====================================================================

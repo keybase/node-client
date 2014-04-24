@@ -56,7 +56,7 @@ exports.Command = class Command extends Base
 
   find_signature : (cb) ->
     log.debug "+ find_signature"
-    [err, @signing_key] = parse_signature @decrypt_stderr.data().toString('utf8')
+    [err, @signing_key, @sig_date] = parse_signature @decrypt_stderr.data()
     @found_sig = not err?
     if (err instanceof E.NotFoundError) and not @argv.signed and not @argv.signed_by?
       log.debug "| No signature found; but we didn't require one"
@@ -110,15 +110,10 @@ exports.Command = class Command extends Base
       else "not tracking"
       log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
 
-    if (ts = @signing_key.timestamp)?
-      d = new Date ts
-      if isNaN(d.getTime())
-        log.info "Time of signature: #{ts}"
-      else
-        time_ago = timeago d
-        iso_string = d.toISOString()
-        date_signed = iso_string.replace('T', ' at ').split('.')[0]
-        log.info "Signed #{time_ago} (#{date_signed})"
+    d = @sig_date
+    time_ago = timeago d
+    date_signed = d.toLocaleString()
+    log.info "Signed #{time_ago} (#{date_signed})"
 
     log.debug "- handle_signature"
     cb null
@@ -158,6 +153,7 @@ exports.Command = class Command extends Base
 
   make_gpg_args : () ->
     args = [ 
+      "--status-fd", 2,
       "--with-colons",   
       "--keyid-format", "long", 
       "--keyserver" , @hkpl.url()
