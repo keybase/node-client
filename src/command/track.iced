@@ -33,7 +33,7 @@ exports.Command = class Command extends Base
   run : (cb) ->
     tssc = new TrackSubSubCommand { args : { them : @argv.them[0]}, opts : @argv }
     await tssc.run defer err
-    log.info 'Success!'
+    log.info 'Success!' unless err?
     cb err
 
 ##=======================================================================

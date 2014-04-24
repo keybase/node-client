@@ -4,6 +4,9 @@ Bugfixes:
  
   - Better error messages when network problems are encountered.
   - Fix bug with signatures dates not working in different locales
+  - Address #157 -- Don't look for English GPG output in key generation
+  - Address keybase/keybase-issues#649 -- mixed success/failure 
+    messges in the case of failed tracking.
 
 ## 0.2.21 (2014-04-11)
 
