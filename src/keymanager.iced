@@ -53,7 +53,7 @@ exports.KeyManager = class KeyManager
       "%commit"
     ]
     stdin = script.join("\n")
-    args = [ "--batch", "--gen-key", "--keyid-format", "long", "--status-fd", 2 ]
+    args = [ "--batch", "--gen-key", "--keyid-format", "long", "--status-fd", '2' ]
     stderr = new BufferOutStream()
     await @ring.gpg { args, stdin, stderr, secret : true }, esc defer out
     err = null

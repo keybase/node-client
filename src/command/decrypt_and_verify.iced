@@ -153,7 +153,7 @@ exports.Command = class Command extends Base
 
   make_gpg_args : () ->
     args = [ 
-      "--status-fd", 2,
+      "--status-fd", '2',
       "--with-colons",   
       "--keyid-format", "long", 
       "--keyserver" , @hkpl.url()
