@@ -19,6 +19,7 @@ class MerkleClient extends merkle.Base
     @_root = null
     @_nodes = {}
     @_keys = {}
+    @_verified = {}
 
   #------
 
@@ -91,31 +92,44 @@ class MerkleClient extends merkle.Base
     ring = master_ring()
     esc = make_esc cb, "MerkleCleint::get_merkle_key"
     err = ret = null
+    log.debug "+ merkle get_merkle_key"
     unless (ret = @_keys[fingerprint])?
       await ring.index2 { query : fingerprint }, esc defer index
       [err, obj] = index.lookup().fingerprint.get_0_or_1 fingerprint
       if err? then # noop
       else if obj? 
+        log.debug "| merkle key already found in keyring"
         ret = ring.make_key { fingerprint }
       else if not (key_data = keys.lookup[fingerprint])?
         err = new E.KeyNotFoundError "have no key for #{fingerprint}"
       else
+        log.debug "| doing a merkle key import for #{fingerprint}"
         ret = ring.make_key { fingerprint, key_data } 
         await ret.save esc defer()
       @_keys[fingerprint] = ret if ret?
+    log.debug "- merkle get_merkle_key"
     cb err, ret
 
   #------
 
   verify_root : ({root}, cb) ->
     root or= @_root
-    esc = make_esc cb, "MerkleClient::verify_root"
-    fingerprint = root.key_fingerprint
-    await @check_key_fingerprint { fingerprint }, esc defer()
-    await @get_merkle_key { fingerprint }, esc defer key
-    await @verify_root_json { root }, esc defer()
-    await key.verify_sig { which : "merkle root", sig : root.sig, payload : root.payload_json  }, esc defer()
-    cb null
+    log.debug "+ merkle verify_root"
+    err = null
+    if not root?
+      err = new E.NotFoundError 'no root found'
+    else if @_verified[(rh = root.hash)]
+      log.debug "| no need to verified root #{rh}; already verified"
+    else
+      fingerprint = root.key_fingerprint
+      esc = make_esc cb, "Merkle::verify_root"
+      await @check_key_fingerprint { fingerprint }, esc defer()
+      await @get_merkle_key { fingerprint }, esc defer key
+      await @verify_root_json { root }, esc defer()
+      await key.verify_sig { which : "merkle root", sig : root.sig, payload : root.payload_json  }, esc defer()
+      @_verified[rh] = true
+    log.debug "- merkle verify_root"
+    cb err
 
   #------
 
