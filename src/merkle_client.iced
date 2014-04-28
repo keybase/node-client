@@ -6,8 +6,9 @@ log = require './log'
 {make_esc} = require 'iced-error'
 {a_json_parse,athrow} = require('iced-utils').util
 {createHash} = require 'crypto'
-{master_ring} = require './kerying'
+{master_ring} = require './keyring'
 keys = require './keys'
+{env} = require './env'
 
 #===========================================================
 
@@ -30,11 +31,13 @@ class MerkleClient extends merkle.Base
   #------
 
   lookup_root : (cb) ->
-    err = null
+    err = hash = null
     unless @_root
       await req.get { endpoint : "merkle/root" }, defer err, body
-      @_root = body unless err?
-    cb err , @_root.hash
+      unless err?
+        @_root = body
+        hash = body.hash
+    cb err, hash
 
   #------
 
@@ -62,11 +65,12 @@ class MerkleClient extends merkle.Base
   verify_root_json : ({root}, cb) ->
     esc = make_esc cb, "MerkleClient::verify_root"
     await a_json_parse root.payload_json, esc defer json
-    err = if (a = root.hash) isnt (b = json.hash)
+    console.log json
+    err = if (a = root.hash) isnt (b = json.body?.root)
       new E.VerifyError "Root hash mismatch: #{a} != #{b}"
-    else if (a = root.seqno) isnt (b = json.seqno)
+    else if (a = root.seqno) isnt (b = json.body?.seqno)
       new E.VerifyError "Sequence # mismatch: #{a} != #{b}"
-    else if (a = root.key_fingerprint) isnt (b = json.key?.fingerprint)
+    else if (a = root.key_fingerprint?.toLowerCase()) isnt (b = json.body?.key?.fingerprint?.toLowerCase())
       new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
     else 
       null
@@ -116,13 +120,16 @@ class MerkleClient extends merkle.Base
   #------
 
   find_and_verify : ( { key }, cb) ->
+    log.debug "+ merkle find_and_verify: #{key}"
     await @find { key }, defer err, val, root
+    log.debug "| find -> #{JSON.stringify val}"
     if err? then # noop
-    if not val? then err = new E.NotFoundError "No value #{@uid} found in merkle tree"
+    if not val? then err = new E.NotFoundError "No value #{key} found in merkle tree"
     else if not Array.isArray(val) or val.length < 2 
       err = new E.BadValueError "expected an array of length 2 or more"
     else 
-      await @verify_root root, defer err
+      await @verify_root {root}, defer err
+    log.debug "- merkle find_and_verify -> #{err}"
 
     cb err, val, root
 
