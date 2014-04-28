@@ -78,7 +78,7 @@ class DB
     esc = make_esc cb, "DB::open"
     err = null
     fn = @get_filename()
-    log.debug "+ opening NEDB database file: #{fn}"
+    log.debug "+ opening database file: #{fn}"
     @db = @get_db()
     await @_init_db esc defer()
     log.debug "- DB opened"
