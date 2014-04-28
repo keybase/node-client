@@ -615,7 +615,7 @@ exports.SigChain = class SigChain
         else
           @_merkle_root = merkle_root
     else
-      log.debug "| no signaturs for #{@uid}, so won't find in merkle tree..."
+      log.debug "| no signatures for #{@uid}, so won't find in merkle tree; skipping check"
     log.debug "- sigchain check_merkle_tree"
     cb err
 

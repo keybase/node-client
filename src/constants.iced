@@ -23,6 +23,11 @@ exports.constants = constants =
     merkle : [
       "03E146CDAF8136680AD566912A32340CEC8C9492"
     ]
+  testing_keys :
+    # for testing purposes, not needed in production
+    merkle : [
+      "A05161510EE696601BA0EC7B3FD53B4871528CEF"
+    ]
   loopback_port_range : [ 56000, 56100 ]
   security:
     pwh : derived_key_bytes : 32

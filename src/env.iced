@@ -30,6 +30,29 @@ class RunMode
 
 ##=======================================================================
 
+class Strictness
+
+  NONE : 0
+  SOFT : 1
+  STRICT : 2
+
+  constructor : (s, def = "soft") ->
+    t =
+      none : @NONE
+      soft : @SOFT
+      strict : @STRICT
+
+    [ @_v, @_name, _chosen ] = if (s? and (m = t[s])?) then [ m, s, true ]
+    else [ t[def], def, false ]
+
+  is_soft : () -> (@_v is @SOFT)
+  is_none : () -> (@_v is @NONE)
+  is_strict : () -> (@_v is @STRICT)
+  toString : () -> @_name
+  chosen : () -> @_chosen
+
+##=======================================================================
+
 class Env
 
   # Load in all viable command line switching opts
@@ -216,12 +239,15 @@ class Env
       config : (c) -> c.no_gpg_options
       dflt   :     -> false
 
-  get_no_merkle_checks : () ->
-    @get_opt
-      env    : (e) -> e.KEYBASE_NO_MERKLE_CHECKS
-      arg    : (a) -> a.no_merkle_checks
-      config : (c) -> c.no_merkle_checks
-      dflt   :     -> false
+  get_merkle_checks : () ->
+    unless @_merkle_mode 
+      raw = @get_opt
+        env    : (e) -> e.KEYBASE_MERKLE_CHECKS
+        arg    : (a) -> a.merkle_checks
+        config : (c) -> c.merkle_checks
+        dflt   :     -> false
+      @_merkle_mode = new Strictness raw, (if @is_test() then 'strict' else 'soft')
+    return @_merkle_mode
 
   get_merkle_key_fingerprints : () ->
     split = (x) -> if x? then x.split(/:,/) else null
@@ -229,7 +255,7 @@ class Env
       env    : (e) -> split e.KEYBASE_MERKLE_KEY_FINGERPRINTS
       arg    : (a) -> split a.merkle_key_fingerprint
       config : (c) -> c?.keys?.merkle
-      dflt   :     -> constants.keys.merkle
+      dflt   :     -> if @is_test() then constants.testing_keys.merkle else constants.keys.merkle
 
   get_no_color : () ->
     @get_opt
@@ -244,6 +270,10 @@ class Env
   #---------------
 
   is_configured : () -> @get_username()?
+
+  #---------------
+
+  is_test : () -> (@get_run_mode().is_devel()) or (@get_host() in [ 'localhost', '127.0.0.1' ])
 
   #---------------
 

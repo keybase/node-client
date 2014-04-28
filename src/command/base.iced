@@ -94,9 +94,8 @@ exports.Base = class Base
       action : "storeTrue"
       help : "disable the GPG options file for temporary keyring operations"
     M :
-      alias : "no-merkle-checks"
-      action : "storeTrue"
-      help : "disable checking that users' chains are reflected in the sitewide state"
+      alias : "merkle-checks"
+      help : "check that users' chains are reflected in sitewide state, one of {none,soft,strict}; soft by default"
 
   #-------------------
 

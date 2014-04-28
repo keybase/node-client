@@ -53,7 +53,7 @@ exports.KeyPull = class KeyPull
     log.debug "+ KeyPull::load_user"
     esc = make_esc cb, "KeyPull::load_user"
 
-    await User.load { username : env().get_username(), require_public_key : false }, esc defer @me
+    await User.load { username : env().get_username(), require_public_key : false, cache : true }, esc defer @me
     await @me.check_key { secret : true  }, esc defer sec
     await @me.check_key { secret : false }, esc defer pub
     log.debug "Check key secret: #{JSON.stringify sec}"

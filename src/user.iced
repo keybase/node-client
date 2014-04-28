@@ -30,6 +30,8 @@ exports.User = class User
 
   #--------------
 
+  @cache : {}
+
   @FIELDS : [ "basics", "public_keys", "id", "sigs", "private_keys", "logged_in" ]
 
   #--------------
@@ -215,7 +217,17 @@ exports.User = class User
 
   #--------------
 
-  @load : ({username,ki64,require_public_key}, cb) ->
+  @load : ({username,ki64,require_public_key, cache}, cb) ->
+    err = null
+    if username? and (ret = User.cache[username])?
+      log.debug "| hit user cache for #{username}"
+    else
+      await User._load2 { username, ki64, require_public_key, cache}, defer err, ret
+    cb err, ret
+
+  #--------------
+
+  @_load2 : ({username,ki64,require_public_key, cache}, cb) ->
     esc = make_esc cb, "User::load"
     k = if username? then username else "Key: #{ki64}"
     log.debug "+ #{username}: load user"
@@ -240,16 +252,18 @@ exports.User = class User
       force_store = true
     else
       err = new E.UserNotFoundError "User #{username} wasn't found"
+      await athrow err, esc defer()
 
-    if not err?
-      # Checking the Merkle tree for this user means getting the current
-      # root, descending the tree for the user, and then ensuring that the
-      # root points to the end of the user's chain tail.
-      unless env().get_no_merkle_checks()
-        await user.check_merkle_tree esc defer()
-      await user.store force_store, esc defer()
+    # This might noop or just warn depending on the user's preferences
+    await user.check_merkle_tree esc defer()
+
+    # Finally we can store...
+    await user.store force_store, esc defer()
 
     log.debug "- #{username}: loaded user"
+
+    # Cache in some cases... 
+    User.cache[username] = user if cache? and not err? and user?
     cb err, user
 
   #--------------
@@ -325,7 +339,26 @@ exports.User = class User
 
   # Check that the end of this user's sig chain shows up in the current merkle
   # root (as it should!)
-  check_merkle_tree : (cb) -> @sig_chain.check_merkle_tree cb
+  check_merkle_tree : (cb) -> 
+
+    # Checking the Merkle tree for this user means getting the current
+    # root, descending the tree for the user, and then ensuring that the
+    # root points to the end of the user's chain tail.
+    err = null
+    mode = env().get_merkle_checks()
+    explain = "Likely this is a bug or transient error; but the server could be compromised"
+
+    if not mode.is_none()
+      await @sig_chain.check_merkle_tree defer err
+      if not err? then # noop
+      else if mode.is_strict()
+        log.error "Failed to match user's signature with sitewide state"
+        log.error explain
+      else
+        log.warn "When checking #{@username()}: #{err}"
+        log.warn explain
+        err = null
+    cb err
 
   #--------------
 
