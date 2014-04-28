@@ -50,6 +50,7 @@ $(BUILD_STAMP): \
 	lib/bn.js \
 	lib/ca.js \
 	lib/checkers.js \
+	lib/colors.js \
 	lib/config.js \
 	lib/constants.js \
 	lib/db.js \
@@ -65,9 +66,10 @@ $(BUILD_STAMP): \
 	lib/keypull.js \
 	lib/keyring.js \
 	lib/keyselector.js \
+	lib/keys.js \
 	lib/keyutils.js \
 	lib/log.js \
-	lib/colors.js \
+	lib/merkle_client.js \
 	lib/package.js \
 	lib/path.js \
 	lib/prompter.js \

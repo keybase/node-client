@@ -232,18 +232,24 @@ exports.User = class User
     changed = true
     force_store = false
     if local? 
-      await local.update_with remote, esc defer()
+      user = local
+      await user.update_with remote, esc defer()
     else if remote?
-      local = remote
-      await local.load_full_sig_chain esc defer()
+      user = remote
+      await user.load_full_sig_chain esc defer()
       force_store = true
     else
       err = new E.UserNotFoundError "User #{username} wasn't found"
+
     if not err?
-      await local.store force_store, esc defer()
+      # Checking the Merkle tree for this user means getting the current
+      # root, descending the tree for the user, and then ensuring that the
+      # root points to the end of the user's chain tail.
+      await user.check_merkle_tree esc defer()
+      await user.store force_store, esc defer()
 
     log.debug "- #{username}: loaded user"
-    cb err, local
+    cb err, user
 
   #--------------
 
@@ -313,6 +319,12 @@ exports.User = class User
     await me._load_me_2 opts, esc defer()
     log.debug "- User::load_me"
     cb null, me
+
+  #--------------
+
+  # Check that the end of this user's sig chain shows up in the current merkle
+  # root (as it should!)
+  check_merkle_tree : (cb) -> @sig_chain.check_merkle_tree cb
 
   #--------------
 

@@ -18,11 +18,11 @@ util = require 'util'
 scrapemod = require './scrapers'
 {CHECK,BAD_X} = require './display'
 {athrow} = require('iced-utils').util
+{merkle_client} = require './merkle_client'
 
 ##=======================================================================
 
 strip = (x) -> x.replace(/\s+/g, '')
-
 
 ##=======================================================================
 
@@ -362,8 +362,10 @@ exports.SigChain = class SigChain
 
   # For the sake of signing a signature chain, we use the true last, and not
   # the effective last.  The effective last is what we get after removing the
-  # links not signed by the current key.
-  true_last : () -> @_true_last
+  # links not signed by the current key. 
+  #
+  # IF we haven't compressed yet, then the true last is simply the last
+  true_last : () -> @_true_last or @last()
 
   #-----------
 
@@ -582,6 +584,26 @@ exports.SigChain = class SigChain
         else (v.to_list_display(opts) for k,v of obj)
 
     return out
+
+  #-----------
+
+  check_merkle_tree : (cb) ->
+    await merkle_client().find { key : @uid }, defer err, val, merkle_root
+    err = if err? then err
+    else if not val? then new E.NotFoundError "No value #{@uid} found in merkle tree"
+    else if not Array.isArray(val) or val.length < 2 
+      new E.BadValueError "expected an array of length 2 or more"
+    else 
+      [seqno, payload_hash] = val
+      console.log @true_last()
+      if (a = seqno) isnt (b = @true_last().seqno())
+        new E.BadSeqnoError "bad sequence in root: #{a} != #{b}"
+      else if (a = payload_hash) isnt (b = @true_last().id)
+        new E.BadPayloadHash "bad payload hash in root: #{a} != #{b}"
+      else
+        @_merkle_root = merkle_root
+        null
+    cb err
 
   #-----------
 
