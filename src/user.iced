@@ -245,7 +245,8 @@ exports.User = class User
       # Checking the Merkle tree for this user means getting the current
       # root, descending the tree for the user, and then ensuring that the
       # root points to the end of the user's chain tail.
-      await user.check_merkle_tree esc defer()
+      unless env().get_no_merkle_checks()
+        await user.check_merkle_tree esc defer()
       await user.store force_store, esc defer()
 
     log.debug "- #{username}: loaded user"

@@ -216,6 +216,13 @@ class Env
       config : (c) -> c.no_gpg_options
       dflt   :     -> false
 
+  get_no_merkle_checks : () ->
+    @get_opt
+      env    : (e) -> e.KEYBASE_NO_MERKLE_CHECKS
+      arg    : (a) -> a.no_merkle_checks
+      config : (c) -> c.no_merkle_checks
+      dflt   :     -> false
+
   get_merkle_key_fingerprints : () ->
     split = (x) -> if x? then x.split(/:,/) else null
     @get_opt

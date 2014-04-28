@@ -34,9 +34,8 @@ class MerkleClient extends merkle.Base
     err = hash = null
     unless @_root
       await req.get { endpoint : "merkle/root" }, defer err, body
-      unless err?
-        @_root = body
-        hash = body.hash
+      @_root = body unless err?
+    hash = @_root.hash if @_root?
     cb err, hash
 
   #------
@@ -65,7 +64,6 @@ class MerkleClient extends merkle.Base
   verify_root_json : ({root}, cb) ->
     esc = make_esc cb, "MerkleClient::verify_root"
     await a_json_parse root.payload_json, esc defer json
-    console.log json
     err = if (a = root.hash) isnt (b = json.body?.root)
       new E.VerifyError "Root hash mismatch: #{a} != #{b}"
     else if (a = root.seqno) isnt (b = json.body?.seqno)
