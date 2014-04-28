@@ -1,4 +1,10 @@
-## 0.2.22
+## 0.3.0 (2014-04-28)
+
+Features:
+
+  - The client now checks the server's merkle tree, and verifies that the user's signature chain
+    show up in the tree as expected.  If so, this state is signed along with tracking statements,
+    so this way users are checking the server as they go.
 
 Bugfixes:
  
@@ -7,6 +13,8 @@ Bugfixes:
   - Address #157 -- Don't look for English GPG output in key generation
   - Address keybase/keybase-issues#649 -- mixed success/failure 
     messges in the case of failed tracking.
+  - Don't load the user's me object twice --- put it in a cache the 
+    first time, and fetch it out the second.
 
 Cleanups:
 
