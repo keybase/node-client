@@ -64,6 +64,8 @@ exports.E = E = ie.make_errors
   REQ_NOT_FOUND : "host not found"
   REQ_CONN_REFUSED : "connection refused"
   REQ_GENERIC : "generic error"
+  KEY_NOT_TRUSTED : "key not trusted"
+  KEY_NOT_FOUND : "key not found"
 
 #================================================
 

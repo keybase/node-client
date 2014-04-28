@@ -19,6 +19,10 @@ exports.constants = constants =
       sec_keyring : "tmp_gpg.sec.keyring"
       pub_keyring : "tmp_gpg.pub.keyring"
       trustdb     : "tmp_gpg.trustdb"
+  keys :
+    merkle : [
+      "03E146CDAF8136680AD566912A32340CEC8C9492"
+    ]
   loopback_port_range : [ 56000, 56100 ]
   security:
     pwh : derived_key_bytes : 32

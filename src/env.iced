@@ -216,6 +216,14 @@ class Env
       config : (c) -> c.no_gpg_options
       dflt   :     -> false
 
+  get_merkle_key_fingerprints : () ->
+    split = (x) -> if x? then x.split(/:,/) else null
+    @get_opt
+      env    : (e) -> split e.KEYBASE_MERKLE_KEY_FINGERPRINT
+      arg    : (a) -> split a.merkle_key_fingerprint
+      config : (c) -> c?.keys?.merkle
+      dflt   :     -> constants.keys.merkle
+
   get_no_color : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_NO_COLOR

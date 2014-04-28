@@ -1,8 +1,9 @@
 
-exports.config = 
-  merkle :
-   fingerprint : "03E146CDAF8136680AD566912A32340CEC8C9492"
-   public : """
+exports.lookup = 
+  
+  # The Merkle Signing key that's in use by default by the server.
+  # Include the key in case the user doesn't have it.
+  "03E146CDAF8136680AD566912A32340CEC8C9492" :  """
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
