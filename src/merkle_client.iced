@@ -36,7 +36,7 @@ class MerkleClient extends merkle.Base
       await req.get { endpoint : "merkle/root" }, defer err, body
       @_root = body unless err?
     hash = @_root.hash if @_root?
-    cb err, hash
+    cb err, hash, @_root
 
   #------
 
@@ -70,6 +70,8 @@ class MerkleClient extends merkle.Base
       new E.VerifyError "Sequence # mismatch: #{a} != #{b}"
     else if (a = root.key_fingerprint?.toLowerCase()) isnt (b = json.body?.key?.fingerprint?.toLowerCase())
       new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
+    else if (a = root.ctime) isnt (b = json.ctime)
+      new E.VerifyError "Ctime mismatch: #{a} != #{b}"
     else 
       null
     cb err

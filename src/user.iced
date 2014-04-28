@@ -461,6 +461,7 @@ exports.User = class User
       seq_tail : @sig_chain?.true_last()?.to_track_obj()
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
       ctime : unix_time()
+      merkle_root : @sig_chain?.merkle_root_to_track_obj()
     out
 
   #--------------

@@ -539,6 +539,19 @@ exports.SigChain = class SigChain
 
   #-----------
 
+  merkle_root_to_track_obj : () ->
+    if @_merkle_root?
+      ret = 
+        hash : @_merkle_root.hash
+        seqno : @_merkle_root.seqno
+        ctime : @_merkle_root.ctime
+    else
+      ret = null
+    return ret
+
+  #-----------
+
+
   get_track_obj : (uid) -> @table?[ST.TRACK]?[uid]?.to_table_obj()
 
   #-----------
@@ -595,7 +608,7 @@ exports.SigChain = class SigChain
       if (a = seqno) isnt (b = @true_last().seqno())
         err = new E.BadSeqnoError "bad sequence in root: #{a} != #{b}"
       else if (a = payload_hash) isnt (b = @true_last().id)
-        err= new E.BadPayloadHash "bad payload hash in root: #{a} != #{b}"
+        err = new E.BadPayloadHash "bad payload hash in root: #{a} != #{b}"
       else
         @_merkle_root = merkle_root
     cb err
