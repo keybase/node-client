@@ -602,15 +602,21 @@ exports.SigChain = class SigChain
 
   check_merkle_tree : (cb) ->
     err = null
-    await merkle_client().find_and_verify { key : @uid }, defer err, val, merkle_root
-    unless err?
-      [seqno, payload_hash] = val
-      if (a = seqno) isnt (b = @true_last().seqno())
-        err = new E.BadSeqnoError "bad sequence in root: #{a} != #{b}"
-      else if (a = payload_hash) isnt (b = @true_last().id)
-        err = new E.BadPayloadHash "bad payload hash in root: #{a} != #{b}"
-      else
-        @_merkle_root = merkle_root
+    lst = @true_last()
+    log.debug "+ sigchain check_merkle_tree"
+    if lst?
+      await merkle_client().find_and_verify { key : @uid }, defer err, val, merkle_root
+      unless err?
+        [seqno, payload_hash] = val
+        if (a = seqno) isnt (b = lst.seqno())
+          err = new E.BadSeqnoError "bad sequence in root: #{a} != #{b}"
+        else if (a = payload_hash) isnt (b = lst.id)
+          err = new E.BadPayloadHash "bad payload hash in root: #{a} != #{b}"
+        else
+          @_merkle_root = merkle_root
+    else
+      log.debug "| no signaturs for #{@uid}, so won't find in merkle tree..."
+    log.debug "- sigchain check_merkle_tree"
     cb err
 
   #-----------
