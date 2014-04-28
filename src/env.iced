@@ -226,7 +226,7 @@ class Env
   get_merkle_key_fingerprints : () ->
     split = (x) -> if x? then x.split(/:,/) else null
     @get_opt
-      env    : (e) -> split e.KEYBASE_MERKLE_KEY_FINGERPRINT
+      env    : (e) -> split e.KEYBASE_MERKLE_KEY_FINGERPRINTS
       arg    : (a) -> split a.merkle_key_fingerprint
       config : (c) -> c?.keys?.merkle
       dflt   :     -> constants.keys.merkle

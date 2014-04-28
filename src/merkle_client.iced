@@ -88,24 +88,37 @@ class MerkleClient extends merkle.Base
 
   #------
 
+  find_key_data : ({fingerprint}, cb) ->
+    err = key_data = null
+    if not (key_data = keys.lookup[fingerprint])?
+      await req.get { endpoint : "key/special", args : { fingerprint } }, defer err, json
+      if err? then # noop
+      else if not (key_data = json.bundle)?
+        err = new E.KeyNotFoundError "have no key for #{fingerprint}"
+    cb err, key_data
+
+  #------
+
   get_merkle_key : ({fingerprint}, cb) ->
     ring = master_ring()
     esc = make_esc cb, "MerkleCleint::get_merkle_key"
     err = ret = null
     log.debug "+ merkle get_merkle_key"
     unless (ret = @_keys[fingerprint])?
-      await ring.index2 { query : fingerprint }, esc defer index
+      await ring.index2 {}, esc defer index
       [err, obj] = index.lookup().fingerprint.get_0_or_1 fingerprint
       if err? then # noop
       else if obj? 
         log.debug "| merkle key already found in keyring"
         ret = ring.make_key { fingerprint }
-      else if not (key_data = keys.lookup[fingerprint])?
-        err = new E.KeyNotFoundError "have no key for #{fingerprint}"
       else
+        await @find_key_data { fingerprint }, esc defer key_data
         log.debug "| doing a merkle key import for #{fingerprint}"
         ret = ring.make_key { fingerprint, key_data } 
         await ret.save esc defer()
+        # Reset ret so that we need to reload the key by fingerprint. We 
+        # don't want to trust that the key and fingerprint actually correspond.
+        ret = ring.make_key { fingerprint }
       @_keys[fingerprint] = ret if ret?
     log.debug "- merkle get_merkle_key"
     cb err, ret
