@@ -255,7 +255,7 @@ class Env
       env    : (e) -> split e.KEYBASE_MERKLE_KEY_FINGERPRINTS
       arg    : (a) -> split a.merkle_key_fingerprint
       config : (c) -> c?.keys?.merkle
-      dflt   :     -> if @is_test() then constants.testing_keys.merkle else constants.keys.merkle
+      dflt   :     => if @is_test() then constants.testing_keys.merkle else constants.keys.merkle
 
   get_no_color : () ->
     @get_opt
