@@ -15,6 +15,7 @@ S = require '../services'
 {dict_union} = require '../util'
 util = require 'util'
 fs = require 'fs'
+proofs = require 'keybase-proofs'
 
 ##=======================================================================
 
@@ -82,7 +83,8 @@ exports.Command = class Command extends ProofBase
         proof_id : @gen.proof_id
     await req arg, defer err, body
     res = if err? then false else body.proof_ok
-    cb err, res
+    status = if err? then null else body.proof_res?.status
+    cb err, res, status
 
   #----------
 
@@ -122,7 +124,7 @@ exports.Command = class Command extends ProofBase
       await prompt_yn { prompt : "Check #{@gen.display_name()} #{if first then '' else 'again '}now?", defval : true }, esc defer prompt
       first = false
       if prompt
-        await @poll_server esc defer found
+        await @poll_server esc defer found, status
         i++
         prompt = not found
         if found 
@@ -130,11 +132,11 @@ exports.Command = class Command extends ProofBase
           log.info "Success!"
         else
           retry = @gen.do_recheck(i)
-          if retry
-            log.warn "Didn't find the posted proof."
-          else
+          if not retry
             prompt = false
             fail = false
+          else
+            log.warn @gen.make_retry_msg status
 
     if not found and fail
       err = new E.ProofNotAvailableError "Proof wasn't available; we'll keeping trying"

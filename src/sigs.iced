@@ -131,6 +131,11 @@ class BaseSigGen
   get_warnings : ({}) -> []
   do_recheck : (i) -> true
 
+  #-----------------------
+
+  make_retry_msg : (code) ->
+    "Didn't find the posted proof."
+
 #===========================================
 
 exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
@@ -371,6 +376,16 @@ exports.TwitterProofGen = class TwitterProofGen extends SocialNetworkProofGen
   display_name : () -> "Twitter"
   instructions : () -> "Please #{colors.bold('publicly')} tweet the following:"
 
+  make_retry_msg : (status) ->
+    switch status
+      when proofs.constants.v_codes.PERMISSION_DENIED
+        "Permission denied! We can't support private feeds."
+      else
+        super()
+
+#===========================================
+
+
 exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
@@ -378,6 +393,13 @@ exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   display_name : () -> "GitHub"
   instructions : () ->
     "Please #{colors.bold 'publicly'} post the following Gist, and name it #{colors.bold colors.red 'keybase.md'}:"
+
+  make_retry_msg : (status) ->
+    switch status
+      when proofs.constants.v_codes.PERMISSION_DENIED
+        "Permission denied! Make sure your Gist is public"
+      else
+        super()
 
 #===========================================
 
