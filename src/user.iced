@@ -454,13 +454,21 @@ exports.User = class User
 
   list_remote_proofs : (opts) -> @sig_chain?.list_remote_proofs(opts)
   list_trackees : () -> @sig_chain?.list_trackees()
+  merkle_root : () -> @sig_chain?.merkle_root_to_track_obj()
 
   #--------------
 
   gen_remote_proof_gen : ({klass, remote_name_normalized, sig_id, supersede }, cb) ->
     esc = make_esc cb, "User::gen_remote_proof_gen"
     await @load_public_key {}, esc defer()
-    arg =  { km : @key, remote_name_normalized, sig_id, supersede }
+    arg = {
+      km : @key, 
+      remote_name_normalized, 
+      sig_id, 
+      supersede, 
+      merkle_root : @merkle_root(),
+      client : (new PackageJson()).track_obj()
+    }
     g = new klass arg
     cb null, g
 
@@ -477,6 +485,7 @@ exports.User = class User
       prev : (if last_link? then last_link.id else null)
       uid : uid
       client : (new PackageJson()).track_obj()
+      merkle_root : @merkle_root()
     arg.track = track_obj if track_obj?
     arg.untrack = untrack_obj if untrack_obj?
     g = new klass arg
@@ -494,7 +503,6 @@ exports.User = class User
       seq_tail : @sig_chain?.true_last()?.to_track_obj()
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
       ctime : unix_time()
-      merkle_root : @sig_chain?.merkle_root_to_track_obj()
     out
 
   #--------------

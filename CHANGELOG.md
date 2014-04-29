@@ -1,3 +1,10 @@
+## 0.3.1
+
+Bugfixes:
+
+  - Upgrade to proofs@v0.0.26, for a more consistent merkle_root object in all signatures.
+    Also fix the location for tracking signatures.  Also, include Client ID in all signatures.
+
 ## 0.3.0 (2014-04-28)
 
 Features:

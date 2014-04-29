@@ -1,3 +1,9 @@
+## 0.0.26 (2014-04-28)
+
+Features:
+
+  - Add merkle_root for all signatures
+
 ## 0.0.25 (2014-04-10)
 
 Bugfixes:

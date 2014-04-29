@@ -272,7 +272,7 @@
 
   Base = (function() {
     function Base(_arg) {
-      this.sig_eng = _arg.sig_eng, this.seqno = _arg.seqno, this.user = _arg.user, this.host = _arg.host, this.prev = _arg.prev, this.client = _arg.client;
+      this.sig_eng = _arg.sig_eng, this.seqno = _arg.seqno, this.user = _arg.user, this.host = _arg.host, this.prev = _arg.prev, this.client = _arg.client, this.merkle_root = _arg.merkle_root;
     }
 
     Base.prototype.proof_type_str = function() {
@@ -319,6 +319,9 @@
       if (this.client != null) {
         ret.body.client = this.client;
       }
+      if (this.merkle_root != null) {
+        ret.body.merkle_root = this.merkle_root;
+      }
       return ret;
     };
 
@@ -347,7 +350,7 @@
                 return raw = arguments[1].raw;
               };
             })(),
-            lineno: 202
+            lineno: 203
           }));
           __iced_deferrals._fulfill();
         });
@@ -389,7 +392,7 @@
                 return json_str = arguments[2];
               };
             })(),
-            lineno: 218
+            lineno: 219
           }));
           __iced_deferrals._fulfill();
         });

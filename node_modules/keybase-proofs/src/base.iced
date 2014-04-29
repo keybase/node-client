@@ -127,7 +127,7 @@ class Base
 
   #------
 
-  constructor : ({@sig_eng, @seqno, @user, @host, @prev, @client}) ->
+  constructor : ({@sig_eng, @seqno, @user, @host, @prev, @client, @merkle_root}) ->
 
   #------
 
@@ -189,6 +189,7 @@ class Base
           fingerprint : @km().get_pgp_fingerprint().toString('hex')
     }
     ret.body.client = @client if @client?
+    ret.body.merkle_root = @merkle_root if @merkle_root?
     return ret
 
   #------
