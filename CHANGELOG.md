@@ -1,4 +1,11 @@
-## 0.3.1
+## 0.3.2 (2014-04-29)
+
+Features:
+
+  - Report Twitter Permission denied errors back to the client.
+    Address keybase/keybase-issues#661
+
+## 0.3.1 (2014-04-29)
 
 Bugfixes:
 
