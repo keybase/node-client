@@ -1,3 +1,10 @@
+## 0.3.3
+
+Bugfixes:
+
+  - Allow use of more features if no secret key is found.
+    Addresses keybase/keybase-issues#693
+
 ## 0.3.2 (2014-04-29)
 
 Features:

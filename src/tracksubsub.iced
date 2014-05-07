@@ -77,6 +77,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       ret = true
     else if @is_batch()
       ret = false
+    else if not @me.have_secret_key()
+      ret = false
     else if (@opts.track_local or @track_local) and not @opts.prompt_remote
       ret = false
     else
@@ -172,7 +174,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   keypull : (cb) ->
     err = null
     if not(@ran_keypull) and not(@skip_keypull)
-      await keypull { need_secret : true, stdin_blocked : @is_batch() }, defer err
+      await keypull { need_secret : false, stdin_blocked : @is_batch() }, defer err
       @ran_keypull = true
     cb err
 
@@ -195,7 +197,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     # We might need to fetch our key from the server...
     await @keypull esc defer()
 
-    await User.load_me {secret : true}, esc defer @me
+    await User.load_me {maybe_secret : true}, esc defer @me
     await @check_not_self esc defer()
     await User.load { username : @args.them, ki64 : @args.them_ki64, require_public_key : true }, esc defer @them
 
