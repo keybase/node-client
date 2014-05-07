@@ -20,7 +20,7 @@ proxyca = require '../proxyca'
 # This is somewhat of a hack.  Keep track of all of the parsers on our own
 # that way we can reference them later for the purposes of helping the user
 # with `keybase help id` or something.
-class SubParserWrapper
+exports.SubParserWrapper = class SubParserWrapper
 
   constructor : (@subparsers) ->
     @_lookup = {}
@@ -72,6 +72,7 @@ class Main
 
     list = [ 
       "cert"
+      "codesign"
       "config"
       "decrypt"
       "encrypt"

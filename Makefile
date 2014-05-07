@@ -17,6 +17,7 @@ $(BUILD_STAMP): \
 	lib/command/all.js \
 	lib/command/base.js \
 	lib/command/cert.js \
+	lib/command/codesign.js \
 	lib/command/config.js \
 	lib/command/decrypt.js \
 	lib/command/decrypt_and_verify.js \
