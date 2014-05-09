@@ -166,6 +166,15 @@ exports.Command = class Command extends Base
 
   #----------
 
+  verify: (cb) ->
+    log.debug "+ Command::verify"
+    esc = make_esc cb, "Command::verify"
+    log.debug "- Command::verify"
+    cb()
+
+
+  #----------
+
   sign: (cb) ->
     log.debug "+ Command::sign"
     esc = make_esc cb, "Command::sign"
@@ -189,7 +198,7 @@ exports.Command = class Command extends Base
     # see if there's already a signed file and if it still
     # matches, we can pull any existing signers into our new one
     #
-    await @target_file_to_json @argv.output, esc defer old_obj
+    await @target_file_to_json @argv.output, defer old_err, old_obj
     if old_obj?
       log.info "Found existing #{@argv.output}"
       await cs.compare_to_json_obj old_obj, defer probs
