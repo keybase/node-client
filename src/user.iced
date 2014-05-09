@@ -41,6 +41,8 @@ exports.User = class User
       @[k] = args[k]
     @_dirty = false
     @sig_chain = null
+    @_is_self = false
+    @_have_secret_key = false
 
   #--------------
 
@@ -50,6 +52,8 @@ exports.User = class User
 
   set_is_self : (b) -> @_is_self = b
   is_self : () -> @_is_self
+  set_have_secret_key : (b) -> @_have_secret_key = b
+  have_secret_key : -> @_have_secret_key
 
   #--------------
 
@@ -362,15 +366,24 @@ exports.User = class User
 
   #--------------
 
-  _load_me_2 : ({secret, install_key}, cb) ->
+  _load_me_2 : ({secret, maybe_secret, install_key}, cb) ->
     esc = make_esc cb, "User::_load_me_2"
     @set_is_self true
-    @key = master_ring().make_key_from_user @, secret
+    load_secret = secret or maybe_secret
+    @key = master_ring().make_key_from_user @, load_secret
     un = @username()
 
-    log.debug "+ #{un}: checking public key"
+    log.debug "+ #{un}: checking #{if load_secret then 'secret' else 'public'} key"
     await @key.find defer err
-    log.debug "- #{un}: checked public key"
+    log.debug "- #{un}: checked #{if load_secret then 'secret' else 'public'} key"
+
+    if not err? and maybe_secret
+      @set_have_secret_key true
+    else if err? and (err instanceof E.NoLocalKeyError) and maybe_secret
+      @key = master_ring().make_key_from_user @, false
+      log.debug "+ #{un}: check try 2, fallback to public"
+      await @key.find defer err
+      log.debug "- #{un}: check try 2, fallback to public"
 
     if err? and (err instanceof E.NoLocalKeyError) and install_key
       do_install = true
