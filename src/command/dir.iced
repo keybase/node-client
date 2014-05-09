@@ -89,12 +89,12 @@ exports.Command = class Command extends Base
     opts = 
       aliases : [ "code-sign" ]
       help : "sign or verify a directory's contents"
-    name = "codesign"
+    name = "dir"
     sub = scp.addParser name, opts
 
     sub2 = sub.addSubparsers {
-      title: "codesign subcommand"
-      dest:  "codesign_subcommand"
+      title: "dir subcommand"
+      dest:  "dir_subcommand"
     }
     # add the three subcommands
     ss1 = sub2.addParser "sign", {help: "sign a directory's contents"}
@@ -169,6 +169,8 @@ exports.Command = class Command extends Base
   verify: (cb) ->
     log.debug "+ Command::verify"
     esc = make_esc cb, "Command::verify"
+
+
     log.debug "- Command::verify"
     cb()
 
@@ -228,7 +230,7 @@ exports.Command = class Command extends Base
     #console.log @argv
     esc = make_esc cb, "Command::run"
     log.debug "+ Command::run"
-    switch @argv.codesign_subcommand
+    switch @argv.dir_subcommand
       when 'sign'   then await @sign   esc defer()
       when 'verify' then await @verify esc defer()
       when 'tojson' then await @tojson esc defer()

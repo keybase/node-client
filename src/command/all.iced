@@ -72,7 +72,7 @@ class Main
 
     list = [ 
       "cert"
-      "codesign"
+      "dir"
       "config"
       "decrypt"
       "encrypt"
