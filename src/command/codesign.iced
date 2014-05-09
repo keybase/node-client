@@ -1,5 +1,6 @@
 codesign              = require 'codesign'
 path                  = require 'path'
+fs                    = require 'fs'
 {Base}                = require './base'
 log                   = require '../log'
 {add_option_dict}     = require './argparse'
@@ -9,6 +10,7 @@ log                   = require '../log'
 {make_esc}            = require 'iced-error'
 {User}                = require '../user'
 {keypull}             = require '../keypull'
+{BufferInStream}      = require 'iced-spawn'
 
 ##=======================================================================
 
@@ -108,23 +110,13 @@ exports.Command = class Command extends Base
 
   #----------
 
-  do_sign : (cb) ->
-    args = [ "--sign", "-u", (@me.fingerprint true) ]
-    gargs = { args }
-    args.push "-a"  unless @argv.binary
-    args.push "--clearsign" if @argv.clearsign
-    args.push "--detach-sign" if @argv.detach_sign
-    args.push("--output", o ) if (o = @argv.output)?
-    if @argv.message
-      gargs.stdin = new BufferInStream @argv.message 
-    else if @argv.file?
-      args.push @argv.file 
-    else
-      gargs.stdin = process.stdin
-    await gpg gargs, defer err, out
-    unless @argv.output
-      log.console.log out.toString( if @argv.binary then 'utf8' else 'binary' )
-    cb err 
+  do_sign : (payload, cb) ->
+    esc = make_esc cb, "Command::do_sign"
+    gargs =
+      args:  [ "--sign", "--detach-sign", "-a", "-u", (@me.fingerprint true) ]
+      stdin: new BufferInStream(new Buffer(payload, 'utf8'))
+    await gpg gargs, esc defer out
+    cb null, out.toString 'utf8'
 
   #----------
 
@@ -151,29 +143,80 @@ exports.Command = class Command extends Base
     # if the output file is inside the analyzed directory, add
     # it to the ignore array. Otherwise don't worry about it.
     rel_ignore = path.relative(@argv.dir, @argv.output).split(path.sep).join('/')
-    ignore = if rel_ignore[...2] isnt '..' then ["/#{rel_ignore}"] else []
+    ignore     = if rel_ignore[...2] isnt '..' then ["/#{rel_ignore}"] else []
     return ignore
 
   #----------
 
+  target_file_to_json: (fname, cb) ->
+    ###
+    returns     null, null  # if there is no target file,
+    otherwise:  err, obj
+    ###
+    log.debug "+ Command::target_file_to_json"
+    obj = null
+    err = null
+    await fs.readFile fname, 'utf8', defer f_err, body
+    if body?
+      obj = codesign.markdown_to_obj body
+      if not obj?
+        err = new E.CorruptionError "Could not parse file #{fname}"
+    log.debug "- Command::target_file_to_json"
+    cb err, obj
+
+  #----------
+
   sign: (cb) ->
-    # await keypull { stdin_blocked : @is_batch(), need_secret : true }, esc defer()
-    # await @load_me esc defer()
-    # await @do_sign esc defer()
     log.debug "+ Command::sign"
     esc = make_esc cb, "Command::sign"
+
+    #
+    # make sure we're logged in, have key
+    #
+    await keypull { stdin_blocked : @is_batch(), need_secret : true }, esc defer()
+    await @load_me esc defer()
+
+    my_username = "https://keybase.io/#{@me.username()}"
+
+    #
+    # let's walk the code
+    #
     await @get_preset_list esc defer preset_list
     cs = new codesign.CodeSign @argv.dir, {ignore: @get_ignore_list(), presets: preset_list}
-    log.debug "walking"
     await cs.walk esc defer()
-    log.debug "walked"
+
+    #
+    # see if there's already a signed file and if it still
+    # matches, we can pull any existing signers into our new one
+    #
+    await @target_file_to_json @argv.output, esc defer old_obj
+    if old_obj?
+      log.info "Found existing #{@argv.output}"
+      await cs.compare_to_json_obj old_obj, defer probs
+      if not probs.length
+        for {signer, signature} in old_obj.signatures when signer isnt my_username
+          cs.attach_sig signer, signature
+          log.info "Re-attaching still-valid signature from #{signer}"
+
+    #
+    # attach our own signature
+    #
+    await @do_sign cs.signable_payload(), esc defer sig
+    cs.attach_sig my_username, sig
+
+    #
+    # output
+    #
+    md = codesign.obj_to_markdown cs.to_json_obj()
+    await fs.writeFile @argv.output, md, {encoding: 'utf8'}, esc defer()
+
     log.debug "- Command::sign"
     cb()
 
   #----------
 
   run : (cb) ->
-    console.log @argv
+    #console.log @argv
     esc = make_esc cb, "Command::run"
     log.debug "+ Command::run"
     switch @argv.codesign_subcommand
