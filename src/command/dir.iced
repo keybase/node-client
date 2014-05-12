@@ -1,18 +1,20 @@
-codesign              = require 'codesign'
-path                  = require 'path'
-fs                    = require 'fs'
-{Base}                = require './base'
-log                   = require '../log'
-{add_option_dict}     = require './argparse'
-{E}                   = require '../err'
-{TrackSubSubCommand}  = require '../tracksubsub'
-{gpg}                 = require '../gpg'
-{make_esc,chain}      = require 'iced-error'
-{User}                = require '../user'
-{keypull}             = require '../keypull'
-{BufferInStream}      = require 'iced-spawn'
-{master_ring}         = require '../keyring'
-{write_tmp_file}      = require('iced-utils').fs
+codesign                  = require 'codesign'
+path                      = require 'path'
+fs                        = require 'fs'
+{Base}                    = require './base'
+log                       = require '../log'
+{add_option_dict}         = require './argparse'
+{E}                       = require '../err'
+{TrackSubSubCommand}      = require '../tracksubsub'
+{gpg}                     = require '../gpg'
+{make_esc,chain}          = require 'iced-error'
+{athrow}                  = require('iced-utils').util
+{User}                    = require '../user'
+{keypull}                 = require '../keypull'
+{BufferInStream}          = require 'iced-spawn'
+{master_ring}             = require '../keyring'
+{write_tmp_file}          = require('iced-utils').fs
+{DecryptAndVerifyEngine}  = require '../dve'
 
 ##=======================================================================
 
@@ -20,6 +22,7 @@ class MyEngine extends DecryptAndVerifyEngine
 
   constructor : ({argv}) ->
     @_tmp_files = {}
+    super {argv}
 
   #---------------
 
@@ -58,7 +61,7 @@ class MyEngine extends DecryptAndVerifyEngine
     esc = make_esc cb, "MyEngine::run_one"
     await @write_tmp { file : "payload", data : payload }, esc defer()
     await @write_tmp { file : "sig", data : signature }, esc defer()
-    await run esc defer()
+    await @run esc defer()
     err = null
     if @username isnt username
       err = E.UsernameMismatchError "bad username: wanted #{username} but got #{@username}"
@@ -263,6 +266,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::verify"
 
     eng = new MyEngine { @argv }
+    await eng.init esc defer()
 
     # 1. load signed file
     await @target_file_to_json @signed_file(), esc defer json_obj
