@@ -265,9 +265,7 @@ exports.Command = class Command extends Base
     payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
     for {signature, signer} in json_obj.signatures
       await @keybase_username_from_signer signer, esc defer username
-
       await eng.run1 { payload, username, signature }, esc defer()
-
       #
       # at this point we have three vars:
       #   payload:   the signed text
@@ -333,6 +331,7 @@ exports.Command = class Command extends Base
     #
     # attach our own signature
     #
+    # console.log "-------\n#{cs.signable_payload()}\n-------------"
     await @do_sign cs.signable_payload(), esc defer sig
     cs.attach_sig my_username, sig
 
