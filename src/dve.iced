@@ -200,7 +200,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   init : (cb) ->
     await @make_hkp_loopback defer err
-    cb null
+    cb err
 
   #----------
 

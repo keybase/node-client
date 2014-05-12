@@ -7,11 +7,60 @@ log                   = require '../log'
 {E}                   = require '../err'
 {TrackSubSubCommand}  = require '../tracksubsub'
 {gpg}                 = require '../gpg'
-{make_esc}            = require 'iced-error'
+{make_esc,chain}      = require 'iced-error'
 {User}                = require '../user'
 {keypull}             = require '../keypull'
 {BufferInStream}      = require 'iced-spawn'
 {master_ring}         = require '../keyring'
+{write_tmp_file}      = require('iced-utils').fs
+
+##=======================================================================
+
+class MyEngine extends DecryptAndVerifyEngine
+
+  constructor : ({argv}) ->
+    @_tmp_files = {}
+
+  #---------------
+
+  write_tmp : ( {file, data}, cb) ->
+    await write_tmp_file { data, base : file, mode : 0o600 }, defer err, nm
+    unless err?
+      @_tmp_files[file] = nm
+    cb err
+
+  #---------------
+
+  cleanup_run1 : (cb) ->
+    for k,v of @_tmp_files
+      await fs.unlink v, defer err
+      if err?
+        log.warn "Could not remove tmp file #{v}: #{err.message}"
+    cb()
+
+  #---------------
+
+  patch_gpg_args : (args) ->
+    args.push "--verify"
+
+  #---------------
+
+  get_files : (args) ->
+    args.push @_tmp_files.sig
+    args.push @_tmp_files.payload
+
+  #---------------
+
+  run1 : ({username, payload, signature}, cb) ->
+    cb = chain cb, @cleanup_run1.bind(@)
+    esc = make_esc cb, "MyEngine::run_one"
+    await @write_tmp { file : "payload", data : payload }, esc defer()
+    await @write_tmp { file : "sig", data : signature }, esc defer()
+    await run esc defer()
+    err = null
+    if @username isnt username
+      err = E.UsernameMismatchError "bad username: wanted #{username} but got #{@username}"
+    cb err
 
 ##=======================================================================
 
@@ -207,6 +256,8 @@ exports.Command = class Command extends Base
     log.debug "+ Command::verify"
     esc = make_esc cb, "Command::verify"
 
+    eng = new MyEngine { @argv }
+
     # 1. load signed file
     await @target_file_to_json @signed_file(), esc defer json_obj
 
@@ -214,6 +265,8 @@ exports.Command = class Command extends Base
     payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
     for {signature, signer} in json_obj.signatures
       await @keybase_username_from_signer signer, esc defer username
+
+      await eng.run1 { payload, username, signature }, esc defer()
 
       #
       # at this point we have three vars:
