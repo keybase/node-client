@@ -27,15 +27,17 @@ class MyEngine extends DecryptAndVerifyEngine
     await write_tmp_file { data, base : file, mode : 0o600 }, defer err, nm
     unless err?
       @_tmp_files[file] = nm
+      log.debug "| tmpfile #{nm}"
     cb err
 
   #---------------
 
   cleanup_run1 : (cb) ->
-    for k,v of @_tmp_files
-      await fs.unlink v, defer err
-      if err?
-        log.warn "Could not remove tmp file #{v}: #{err.message}"
+    unless @argv.preserve_tmp_files
+      for k,v of @_tmp_files
+        await fs.unlink v, defer err
+        if err?
+          log.warn "Could not remove tmp file #{v}: #{err.message}"
     cb()
 
   #---------------
@@ -109,6 +111,10 @@ exports.Command = class Command extends Base
       alias:        'strict'
       action:       'storeTrue'
       help:         'fail on warnings (typically cross-platform problems)'
+    P : 
+      alias:        'preserve-tmp-files'
+      action:       'storeTrue'
+      help:         'preserve temp files for debugging and inspection'
     # dir: this is added below, since the nargs format doesn't work
     #   with the add_option_dict function
 
