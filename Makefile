@@ -56,6 +56,7 @@ $(BUILD_STAMP): \
 	lib/constants.js \
 	lib/db.js \
 	lib/display.js \
+	lib/dve.js \
 	lib/env.js \
 	lib/err.js \
 	lib/file.js \
