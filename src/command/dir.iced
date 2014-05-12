@@ -11,6 +11,7 @@ log                   = require '../log'
 {User}                = require '../user'
 {keypull}             = require '../keypull'
 {BufferInStream}      = require 'iced-spawn'
+{master_ring}         = require '../keyring'
 
 ##=======================================================================
 
@@ -115,7 +116,7 @@ exports.Command = class Command extends Base
     gargs =
       args:  [ "--sign", "--detach-sign", "-a", "-u", (@me.fingerprint true) ]
       stdin: new BufferInStream(new Buffer(payload, 'utf8'))
-    await gpg gargs, esc defer out
+    await master_ring().gpg gargs, esc defer out
     cb null, out.toString 'utf8'
 
   #----------
