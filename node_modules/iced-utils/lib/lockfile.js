@@ -91,6 +91,7 @@
       this.id = get_id();
       this._locked = false;
       this._maintain_cb = null;
+      this._release_cb = null;
     }
 
     Lockfile.prototype._log = function(level, s) {
@@ -100,11 +101,11 @@
       }
     };
 
-    Lockfile.warn = function(s) {
+    Lockfile.prototype.warn = function(s) {
       return this._log('warn', s);
     };
 
-    Lockfile.info = function(s) {
+    Lockfile.prototype.info = function(s) {
       return this._log('info', s);
     };
 
@@ -128,7 +129,7 @@
                 return __slot_1.fd = arguments[1];
               };
             })(_this),
-            lineno: 65
+            lineno: 66
           }));
           __iced_deferrals._fulfill();
         });
@@ -151,7 +152,7 @@
                       return unlinked = arguments[1];
                     };
                   })(),
-                  lineno: 68
+                  lineno: 69
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -191,7 +192,7 @@
                 return rfd = arguments[0];
               };
             })(),
-            lineno: 92
+            lineno: 93
           })));
           __iced_deferrals._fulfill();
         });
@@ -209,7 +210,7 @@
                   return buf = arguments[0];
                 };
               })(),
-              lineno: 93
+              lineno: 94
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -225,7 +226,7 @@
                     return jso = arguments[0];
                   };
                 })(),
-                lineno: 94
+                lineno: 95
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -243,7 +244,7 @@
                           funcname: "Lockfile._acquire_1_fallback"
                         });
                         fs.unlink(_this.filename, esc(__iced_deferrals.defer({
-                          lineno: 99
+                          lineno: 100
                         })));
                         __iced_deferrals._fulfill();
                       })(function() {
@@ -263,7 +264,7 @@
                               encoding: 'utf8',
                               mode: _this.mode
                             }, esc(__iced_deferrals.defer({
-                              lineno: 103
+                              lineno: 104
                             })));
                             __iced_deferrals._fulfill();
                           })(__iced_k);
@@ -324,7 +325,7 @@
                       return unlinked = arguments[1];
                     };
                   })(),
-                  lineno: 113
+                  lineno: 114
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -355,7 +356,7 @@ _break()
                             funcname: "Lockfile.acquire"
                           });
                           setTimeout(__iced_deferrals.defer({
-                            lineno: 116
+                            lineno: 117
                           }), _this.retry_interval);
                           __iced_deferrals._fulfill();
                         })(__iced_k);
@@ -383,12 +384,13 @@ _break()
       })(this));
     };
 
-    Lockfile.prototype.release = function() {
+    Lockfile.prototype.release = function(cb) {
       if (this._locked) {
+        this._release_cb = cb;
         this._locked = false;
         return typeof this._maintain_cb === "function" ? this._maintain_cb() : void 0;
-      } else {
-        return this.warn("tried to unlock file that wasn't locked");
+      } else if (cb != null) {
+        return cb(new Error("tried to unlock file that wasn't locked"));
       }
     };
 
@@ -398,11 +400,11 @@ _break()
       ___iced_passed_deferral = iced.findDeferral(arguments);
       rv = new iced.Rendezvous();
       this._maintain_cb = rv.id(true).defer({
-        lineno: 136,
+        lineno: 138,
         context: __iced_deferrals
       });
       setTimeout(rv.id(false).defer({
-        lineno: 137,
+        lineno: 139,
         context: __iced_deferrals
       }), this.poke_interval);
       (function(_this) {
@@ -418,7 +420,7 @@ _break()
                 return which = arguments[0];
               };
             })(),
-            lineno: 138
+            lineno: 140
           }));
           __iced_deferrals._fulfill();
         });
@@ -468,7 +470,7 @@ _break()
                       return err = arguments[0];
                     };
                   })(),
-                  lineno: 147
+                  lineno: 149
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -476,15 +478,21 @@ _break()
                   _this.warn("error in maintain_lock_loop: " + err);
                 }
                 (function(__iced_k) {
-                  __iced_deferrals = new iced.Deferrals(__iced_k, {
-                    parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/iced/iced-utils/src/lockfile.iced",
-                    funcname: "Lockfile.maintain_lock_loop"
-                  });
-                  _this.maintain_wait(__iced_deferrals.defer({
-                    lineno: 150
-                  }));
-                  __iced_deferrals._fulfill();
+                  if (_this._locked) {
+                    (function(__iced_k) {
+                      __iced_deferrals = new iced.Deferrals(__iced_k, {
+                        parent: ___iced_passed_deferral,
+                        filename: "/Users/max/src/iced/iced-utils/src/lockfile.iced",
+                        funcname: "Lockfile.maintain_lock_loop"
+                      });
+                      _this.maintain_wait(__iced_deferrals.defer({
+                        lineno: 153
+                      }));
+                      __iced_deferrals._fulfill();
+                    })(__iced_k);
+                  } else {
+                    return __iced_k();
+                  }
                 })(_next);
               });
             }
@@ -505,13 +513,14 @@ _break()
                   return err = arguments[0];
                 };
               })(),
-              lineno: 151
+              lineno: 154
             }));
             __iced_deferrals._fulfill();
           })(function() {
             if (typeof err !== "undefined" && err !== null) {
-              return _this.warn("error deleting lock file: " + err);
+              _this.warn("error deleting lock file: " + err);
             }
+            return typeof _this._release_cb === "function" ? _this._release_cb(err) : void 0;
           });
         };
       })(this));
