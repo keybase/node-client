@@ -166,14 +166,68 @@ exports.Command = class Command extends Base
 
   #----------
 
+  process_probs: (probs, cb) ->
+    ###
+    outputs warning and errors based on strict/quiet settings,
+    and calls back with error if appropriate
+    ###
+    err_table  = (p for p in probs when (p[0] >= 100) or @argv.strict)
+    warn_table = (p for p in probs when (p[0] <  100) and (not @argv.strict) and (not @argv.quiet))
+    err        = null
+    if warn_table.length
+      log.warn "#{p[0]}\t#{p[1].expected?.path or p[1].got.path}:  #{p[1].msg}" for p in warn_table
+    if err_table.length
+      log.error "#{p[0]}\t#{p[1].expected?.path or p[1].got.path}:  #{p[1].msg}" for p in err_table
+      err = new Error "Exited after #{err_table.length} error(s)"
+    cb err, {warnings: warn_table.length, errors: err_table.length}
+
+  #----------
+
+  keybase_username_from_signer: (s, cb) ->
+    rxx = /^https:\/\/keybase.io\/([^\s\n]+)$/g
+    if (m = rxx.exec s)?
+      cb null, m[1]
+    else
+      cb new Error 'Could not extract a keybase username from signer'
+
+  #----------
+
   verify: (cb) ->
     log.debug "+ Command::verify"
     esc = make_esc cb, "Command::verify"
 
+    # 1. load signed file
+    await @target_file_to_json @argv.input, esc defer json_obj
+
+    # 2. make sure signature matches
+    payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
+    for {signature, signer} in json_obj.signatures
+      await @keybase_username_from_signer signer, esc defer username
+      #
+      # at this point we have three vars:
+      #   payload:   the signed text
+      #   username:  the keybase username
+      #   signature: the detached sig
+      #
+      # we need to:
+      #   1. make sure sig matches payload
+      #   2. make sure username matches sig
+      #   3. do keybase style tracking/verification
+
+
+    # 3. walk and handle
+    summ = new codesign.CodeSign @argv.dir, {ignore: json_obj.ignore, presets: json_obj.presets}
+    await summ.walk esc defer()
+    await summ.compare_to_json_obj json_obj, defer probs
+    await @process_probs probs, esc defer {warnings}
+    if not @argv.quiet
+      log.info  "Success! " +
+        json_obj.signatures.length + " signature(s) verified;" +
+        " #{json_obj.found.length} items checked" +
+        if warnings then " with #{warnings} warning(s); pass --strict to prevent success on warnings; --quiet to hide warnings" else ''
 
     log.debug "- Command::verify"
     cb()
-
 
   #----------
 
@@ -202,13 +256,15 @@ exports.Command = class Command extends Base
     #
     await @target_file_to_json @argv.output, defer old_err, old_obj
     if old_obj?
-      log.info "Found existing #{@argv.output}"
       await cs.compare_to_json_obj old_obj, defer probs
       if not probs.length
+        log.info "Found existing #{@argv.output}" unless @argv.quiet
         for {signer, signature} in old_obj.signatures when signer isnt my_username
           cs.attach_sig signer, signature
           log.info "Re-attaching still-valid signature from #{signer}"
-
+      else
+        log.info "Will replace existing/obsolete #{@argv.output}" unless @argv.quiet
+ 
     #
     # attach our own signature
     #
