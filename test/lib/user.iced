@@ -421,6 +421,11 @@ class Users
   
   lookup : (u) -> @_lookup[u]
 
+  lookup_or_gen : (u) ->
+    unless (ret = @_lookup[u])?
+      @_lookup[u] = ret = User.generate u
+    return ret
+
   get : (i) -> @_list[i]
 
   cleanup : (cb) ->
