@@ -277,20 +277,10 @@ exports.Command = class Command extends Base
 
     # 2. make sure signature matches
     payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
+    #console.log "VERIFY PAYLOAD:\n-----\n#{payload}"
     for {signature, signer} in json_obj.signatures
       await @keybase_username_from_signer signer, esc defer username
       await eng.run1 { payload, username, signature }, esc defer()
-      #
-      # at this point we have three vars:
-      #   payload:   the signed text
-      #   username:  the keybase username
-      #   signature: the detached sig
-      #
-      # we need to:
-      #   1. make sure sig matches payload
-      #   2. make sure username matches sig
-      #   3. do keybase style tracking/verification
-
 
     # 3. walk and handle
     summ = new codesign.CodeSign @argv.dir, {ignore: json_obj.ignore, presets: json_obj.presets}
@@ -345,6 +335,7 @@ exports.Command = class Command extends Base
     #
     # attach our own signature
     #
+    #console.log "SIGNED PAYLOAD:\n-----\n#{cs.signable_payload()}"
     await @do_sign cs.signable_payload(), esc defer sig
     cs.attach_sig my_username, sig
 
