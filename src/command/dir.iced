@@ -210,6 +210,10 @@ exports.Command = class Command extends Base
     # 1. load signed file
     await @target_file_to_json @signed_file(), esc defer json_obj
 
+    if not json_obj?
+      err = new E.NotFoundError "Could not open #{@signed_file()}"
+      await athrow err, esc defer()
+
     # 2. make sure signature matches
     payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
     for {signature, signer} in json_obj.signatures
@@ -280,7 +284,6 @@ exports.Command = class Command extends Base
     #
     # attach our own signature
     #
-    # console.log "-------\n#{cs.signable_payload()}\n-------------"
     await @do_sign cs.signable_payload(), esc defer sig
     cs.attach_sig my_username, sig
 
