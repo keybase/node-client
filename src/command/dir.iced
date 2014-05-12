@@ -16,6 +16,13 @@ log                   = require '../log'
 
 exports.Command = class Command extends Base
 
+  DIR_OPT:
+    nargs:          '?'
+    action:         'store'
+    type:           'string'
+    help:           'the directory to sign/verify'
+    defaultValue:   '.'
+
   #----------
 
   SIGN_OPTS:
@@ -23,23 +30,19 @@ exports.Command = class Command extends Base
       alias:        'output'
       type:         'string'
       help:         'the output file'
-      defaultValue: codesign.constants.defaults.FILENAME
     p:
       alias:        'presets'
       action:       'store'
       type:         'string'
       help:         'specify ignore presets, comma-separated'
       defaultValue: 'git,dropbox,kb'
-    d:
-      alias:        'dir'
-      action:       'store'
-      type:         'string'
-      help:         'the directory to sign'
-      defaultValue: '.'
     q:
       alias:        'quiet'
       action:       'storeTrue'
       help:         'withhold output unless an error'
+
+    # dir: this is added below, since the nargs format doesn't work
+    #   with the add_option_dict function
 
   #----------
 
@@ -48,13 +51,6 @@ exports.Command = class Command extends Base
       alias:        'input'
       type:         'string'
       help:         'the input file'
-      defaultValue: codesign.constants.defaults.FILENAME
-    d:
-      alias:        'dir'
-      action:       'store'
-      type:         'string'
-      help:         'the directory to sign'
-      defaultValue: '.'
     q:
       alias:        'quiet'
       action:       'storeTrue'
@@ -63,6 +59,8 @@ exports.Command = class Command extends Base
       alias:        'strict'
       action:       'storeTrue'
       help:         'fail on warnings (typically cross-platform problems)'
+    # dir: this is added below, since the nargs format doesn't work
+    #   with the add_option_dict function
 
   #----------
 
@@ -84,6 +82,12 @@ exports.Command = class Command extends Base
     super a
 
   #----------
+  copy: (d) ->
+    x    = {}
+    x[k] = v for k,v of d
+    x
+  #----------
+
 
   add_subcommand_parser : (scp) ->
     opts = 
@@ -99,9 +103,11 @@ exports.Command = class Command extends Base
     # add the three subcommands
     ss1 = sub2.addParser "sign", {help: "sign a directory's contents"}
     add_option_dict ss1, @SIGN_OPTS
+    ss1.addArgument ['dir'], @copy(@DIR_OPT)
 
     ss2 = sub2.addParser "verify", {help: "verify a directory's contents"}
     add_option_dict ss2, @VERIFY_OPTS
+    ss2.addArgument ['dir'], @copy(@DIR_OPT)
 
     ss3 = sub2.addParser "tojson", {help: "convert a signed manifest to JSON"}
     add_option_dict ss3, @TOJSON_OPTS
@@ -142,9 +148,13 @@ exports.Command = class Command extends Base
   get_ignore_list: ->
     # if the output file is inside the analyzed directory, add
     # it to the ignore array. Otherwise don't worry about it.
-    rel_ignore = path.relative(@argv.dir, @argv.output).split(path.sep).join('/')
+    rel_ignore = path.relative(@argv.dir, @signed_file()).split(path.sep).join('/')
     ignore     = if rel_ignore[...2] isnt '..' then ["/#{rel_ignore}"] else []
     return ignore
+
+  #----------
+
+  signed_file: -> @argv.input or @argv.output or path.join(@argv.dir, codesign.constants.defaults.FILENAME)
 
   #----------
 
@@ -197,12 +207,13 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::verify"
 
     # 1. load signed file
-    await @target_file_to_json @argv.input, esc defer json_obj
+    await @target_file_to_json @signed_file(), esc defer json_obj
 
     # 2. make sure signature matches
     payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
     for {signature, signer} in json_obj.signatures
       await @keybase_username_from_signer signer, esc defer username
+
       #
       # at this point we have three vars:
       #   payload:   the signed text
@@ -228,7 +239,7 @@ exports.Command = class Command extends Base
 
     log.debug "- Command::verify"
     cb()
-
+  
   #----------
 
   sign: (cb) ->
@@ -254,16 +265,16 @@ exports.Command = class Command extends Base
     # see if there's already a signed file and if it still
     # matches, we can pull any existing signers into our new one
     #
-    await @target_file_to_json @argv.output, defer old_err, old_obj
+    await @target_file_to_json @signed_file(), defer old_err, old_obj
     if old_obj?
       await cs.compare_to_json_obj old_obj, defer probs
       if not probs.length
-        log.info "Found existing #{@argv.output}" unless @argv.quiet
+        log.info "Found existing #{@signed_file()}" unless @argv.quiet
         for {signer, signature} in old_obj.signatures when signer isnt my_username
           cs.attach_sig signer, signature
           log.info "Re-attaching still-valid signature from #{signer}"
       else
-        log.info "Will replace existing/obsolete #{@argv.output}" unless @argv.quiet
+        log.info "Will replace existing/obsolete #{@signed_file()}" unless @argv.quiet
  
     #
     # attach our own signature
@@ -275,8 +286,9 @@ exports.Command = class Command extends Base
     # output
     #
     md = codesign.obj_to_markdown cs.to_json_obj()
-    await fs.writeFile @argv.output, md, {encoding: 'utf8'}, esc defer()
+    await fs.writeFile @signed_file(), md, {encoding: 'utf8'}, esc defer()
 
+    log.info  "Success! Wrote #{@signed_file()}" unless @argv.quiet
     log.debug "- Command::sign"
     cb()
 
