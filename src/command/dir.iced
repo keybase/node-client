@@ -30,14 +30,17 @@ class MyEngine extends DecryptAndVerifyEngine
     await write_tmp_file { data, base : file, mode : 0o600 }, defer err, nm
     unless err?
       @_tmp_files[file] = nm
-      log.debug "| tmpfile #{nm}"
+      log.debug "| writing #{file} tmpfile #{nm}"
     cb err
 
   #---------------
 
   cleanup_run1 : (cb) ->
-    unless @argv.preserve_tmp_files
+    if @argv.preserve_tmp_files
+      log.debug "| preserving temporary files by command-line flag"
+    else
       for k,v of @_tmp_files
+        log.debug "| unlink #{v}"
         await fs.unlink v, defer err
         if err?
           log.warn "Could not remove tmp file #{v}: #{err.message}"
