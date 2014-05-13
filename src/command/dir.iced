@@ -283,6 +283,7 @@ exports.Command = class Command extends Base
     #console.log "VERIFY PAYLOAD:\n-----\n#{payload}"
     for {signature, signer} in json_obj.signatures
       await @keybase_username_from_signer signer, esc defer username
+      console.log signature
       await eng.run1 { payload, username, signature }, esc defer()
 
     # 3. walk and handle
