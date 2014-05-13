@@ -218,9 +218,9 @@
     rxx = /^\s*\#\#\#\#\sVerify\s*```([^`]*)```\s*\#\#\#\#\sPresets\s*```([^`]*)```\s*\#\#\#\#\sIgnore\s*```([^`]*)```\s*\<\!--[\s]*summarize[\s]*version[\s]*=[\s]*([0-9a-z\.]*)[\s]*-->\s*\<\!--\sBEGIN\sSIGNATURES\s--\>\s*([^\<]*)\s*\<\!--\sEND\sSIGNATURES\s--\>\s*[\s\S]*\s*$/;
     match = rxx.exec(str);
     if (match != null) {
-      file_rows = match[1].split('\n').slice(1, -1);
-      preset_rows = match[2].split('\n').slice(1, -1);
-      ignore_rows = match[3].split('\n').slice(1, -1);
+      file_rows = match[1].split(/\r?\n/).slice(1, -1);
+      preset_rows = match[2].split(/\r?\n/).slice(1, -1);
+      ignore_rows = match[3].split(/\r?\n/).slice(1, -1);
       version = match[4];
       signatures = match[5];
       preset_rows = (function() {

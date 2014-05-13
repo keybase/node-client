@@ -20,7 +20,7 @@ kb       # ignore anything as described by .kbignore files
 
 ```
 
-<!-- summarize version = 0.0.4 -->
+<!-- summarize version = 0.0.5 -->
 
 <!-- BEGIN SIGNATURES -->
 #### Signed by https://keybase.io/chris
@@ -29,19 +29,19 @@ kb       # ignore anything as described by .kbignore files
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQIcBAABCgAGBQJTcjMwAAoJENIkQTsc+mSQCmQQAJ3AvMhxBG6X6qbsCTRQ7b7J
-HJWyC+B2e/4h/XQMbxL3bSQTqL0qZwA5lsVrST+6MDIzIpS2LDRtNwNvWxapQ+YH
-eHS1sCsIVrGhKnkbvBMDUUsmiGjtR9kF/J5yrR4mPuUitAebYfs0rH32JpKiK0sk
-HzAnFEJyU6gFViB729E4wbaB6v52nNZGHyppbP1/Z6Nyi9eFzVzcsd3dndcjutxr
-djCwsCv3Tbm0zP35nq8/FH08TD3uTR7inqfBtP//n9aP9kJksgU3ucdSTqvr4WDk
-3e70KeC8GzlT9tZlq7f6u415rvCOfLC0VAVJV/cxudro48+ed6BzhSHMH/2LOUa3
-e8OHyQdyJ9O01SaJrgdbVUQt/In9Y4g2Ms8sbRnTDyEzlQt5lzeNRaHxK0hwNj6v
-HaDL9l0WYk3HG3tQd1wyPEZDMP1e9pu0XFl7KNmvmaDmmp74nooBuZm9Yudg/Cld
-L+hhRnOMXuAb+6GXyaUthlrO6v2CPN6d0e1KGRTiTFjJHMFKkWSRgxuNunTroV1X
-UpWDMQOXp+EZM9U1qCsv4aidgrk0k7ES1QoBccptw8aFdBxpSrRrey2DsLiaShPS
-JxruSirDbG77TjozHNhVBWnKtKxA64rW2HUrKeLlkhzTQtzzmz2ls0kqnzctbGO0
-9R7ANwQYVjSWpPgNDjbO
-=ouu7
+iQIcBAABCgAGBQJTcjNYAAoJENIkQTsc+mSQ5ngP/iy1KV3STUJo6D3B8wnoW03u
+AdpsTAooO7xREoEIv1LutuhZBAzWSKmgOmWEHVa6R7CLarDmz5NImVODkqrBwhCm
+jV+mGKz3EfTGdfpCzOzhwiWV6y9ooPapadgRPKGjyyA8sRqpZd/jU3yvZ/oOi0XZ
+/7tYPHKYSSVFnDtRHki4lkqVniSJ4H16lC7p3A7aYRbNJQ9NZRpgYlYf9hwQINzf
+1BlPO/IIPbxlI0/QPu4UKrtlN1wsOG04UNeLa8DHJdIAXUhwu3ES8BwlQeI5Pj7h
+OPgxODCeN06NUrjZssM9NrckwtB6uTy8NuDaxzI7QhLNrwuZSnU5OauTEzupMKL5
+XmAzuNGXt3bhfdOCuS4PB4gJc1GLXSwPTwfAKYhT/JhI/8Owh6rQ+ZBu6sCj/AiR
+RVDIdtpn8faxbNhtZrKDJoxXDzvdWKjaSf6O/BKWz4q5gbHIQp97/zOyVyJsH2ut
+r3ABOhWmjajNqy2LlcVjQuAGjhlBGQaV3+wJlO9P3I+FXAOo/CRSOJtF2C9AEAAz
+PS8B8fDn0f6or6pHFW+wBDuqC6p2ZEliPmu/c3s1HaJdVtmK4nslTnEY0fLTUMuZ
+mRaZ8DGSj+QKUCigi+LDqKSqtrnNZ3lK2iWqscawAXh4pvJbsfmdSXJ3yJWnYkF0
+DtJoNM+1Q6K5UrCWsE62
+=EzNx
 -----END PGP SIGNATURE-----
 ```
 <!-- END SIGNATURES -->

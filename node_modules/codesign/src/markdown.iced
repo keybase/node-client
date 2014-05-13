@@ -221,9 +221,9 @@ exports.from_md = (str) ->
   ///
   match  = rxx.exec str
   if match?
-    file_rows   = match[1].split('\n')[1...-1] # formatting correction
-    preset_rows = match[2].split('\n')[1...-1] # formatting correction
-    ignore_rows = match[3].split('\n')[1...-1] # formatting correction
+    file_rows   = match[1].split(/\r?\n/)[1...-1] # formatting correction
+    preset_rows = match[2].split(/\r?\n/)[1...-1] # formatting correction
+    ignore_rows = match[3].split(/\r?\n/)[1...-1] # formatting correction
     version     = match[4]
     signatures  = match[5]
     preset_rows = (f.replace /\s*(\#.*)?\s*$/g , '' for f in preset_rows)
