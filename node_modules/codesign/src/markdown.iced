@@ -113,8 +113,8 @@ parse_signatures = (sig_region) ->
   ///g
   while (match = rxx.exec sig_region)
     res.push {
-      signer:    match[1].replace /(^[\s]*)|([\s]*$)/g, ''
-      signature: match[2].replace /(^[\s]*)|([\s]*$)/g, ''
+      signer:    match[1].replace(/(^[\s]*)|([\s]*$)|(\r)/g, '')
+      signature: match[2].replace(/(^[\s]*)|([\s]*$)|(\r)/g, '')
     }
   return res
 
