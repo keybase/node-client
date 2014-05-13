@@ -22,7 +22,7 @@
     "argparse": "0.1.15",
     "bn": "0.0.1",
     "cheerio": "0.13.0",
-    "codesign": "0.0.1",
+    "codesign": ">=0.0.2",
     "colors": "0.6.2",
     "deep-equal": "0.2.1",
     "framed-msgpack-rpc": "1.1.1",
