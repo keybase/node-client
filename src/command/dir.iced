@@ -280,10 +280,9 @@ exports.Command = class Command extends Base
 
     # 2. make sure signature matches
     payload = codesign.CodeSign.json_obj_to_signable_payload json_obj
-    #console.log "VERIFY PAYLOAD:\n-----\n#{payload}"
     for {signature, signer} in json_obj.signatures
       await @keybase_username_from_signer signer, esc defer username
-      console.log [payload,signature].join "\n-----------\n"
+      # console.log [payload,signature].join "\n-----------\n"
       await eng.run1 { payload, username, signature }, esc defer()
 
     # 3. walk and handle
@@ -339,8 +338,7 @@ exports.Command = class Command extends Base
     #
     # attach our own signature
     #
-    console.log "SIGNED PAYLOAD:\n-----\n#{cs.signable_payload()}\n---------"
-    #console.log [payload,signature].join "\n-----------\n"
+    # console.log "SIGNED PAYLOAD:\n-----\n#{cs.signable_payload()}\n---------"
     await @do_sign cs.signable_payload(), esc defer sig
     cs.attach_sig my_username, sig
 
