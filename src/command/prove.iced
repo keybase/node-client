@@ -139,7 +139,7 @@ exports.Command = class Command extends ProofBase
             log.warn @gen.make_retry_msg status
 
     if not found and fail
-      err = new E.ProofNotAvailableError "Proof wasn't available; we'll keeping trying"
+      err = new E.ProofNotAvailableError "Proof wasn't available; we'll keep trying"
 
     cb err
 
