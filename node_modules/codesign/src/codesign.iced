@@ -10,6 +10,7 @@ DropboxPreset           = require './preset/dropbox'
 GlobberPreset           = require './preset/globber'
 {json_stringify_sorted} = require('iced-utils').util
 vc                      = constants.verify_codes
+utils                   = require './utils'
 
 # =====================================================================================================================
 #
