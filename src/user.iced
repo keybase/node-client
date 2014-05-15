@@ -244,7 +244,6 @@ exports.User = class User
     if self?
       log.debug "| Checking session since we're loading User as self"
       await session.load_and_check esc defer()
-      await session.load_and_check esc defer()
 
     await User.load_from_server {username}, esc defer remote
 
