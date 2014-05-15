@@ -5,6 +5,7 @@ Bugfixes:
   - Allow use of more features if no secret key is found.
     Addresses keybase/keybase-issues#693
   - Small grammar typo fixed (keybase/keybase-issues#703)
+  - Establish a session before we load ourself, in all cases
 
 ## 0.3.2 (2014-04-29)
 
