@@ -30,6 +30,11 @@ exports.Command = class Command extends dv.Command
 
   #----------
 
+  do_keypull : (cb) -> cb null
+  do_output : (out, cb) -> cb null
+
+  #----------
+
   patch_gpg_args : (args) ->
     args.push "--verify"
 
