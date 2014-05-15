@@ -174,9 +174,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       log.warn @decrypt_stderr.data().toString('utf8')
     else if env().get_debug() 
       log.debug @decrypt_stderr.data().toString('utf8')
-    await @hkpl.close defer err2 if @hkpl?
-    if err2?
-      log.warning "Error closing HKP loopback server: #{err2}"
+
     cb err 
 
   #----------
@@ -187,7 +185,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   #----------
 
-  cleanup : (cb) ->
+  run_cleanup : (cb) ->
     if env().get_preserve_tmp_keyring()
       log.info "Preserving #{@tmp_keyring.to_string()}"
     else if @tmp_keyring?
@@ -198,7 +196,16 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   #----------
 
-  init : (cb) ->
+  global_cleanup : (cb) ->
+    if @hkpl
+      await @hkpl.close defer err
+      if err?
+        log.warning "Error closing HKP loopback server: #{err}"
+    cb err
+
+  #----------
+
+  global_init : (cb) ->
     await @make_hkp_loopback defer err
     cb err
 
@@ -206,7 +213,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   run : (cb) ->
 
-    cb = chain cb, @cleanup.bind(@)
+    cb = chain cb, @run_cleanup.bind(@)
     esc = make_esc cb, "DecryptAndVerifyEngine::run"
 
     # Do this first and store our secret key if we need it

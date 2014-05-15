@@ -53,8 +53,9 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     eng = new MyEngine { @argv, cmd : @ }
-    await eng.init esc defer()
+    await eng.global_init esc defer()
     await eng.run esc defer()
+    await eng.global_cleanup defer err_dummy
     cb null
 
 ##=======================================================================

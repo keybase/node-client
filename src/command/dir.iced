@@ -268,8 +268,9 @@ exports.Command = class Command extends Base
     log.debug "+ Command::verify"
     esc = make_esc cb, "Command::verify"
 
+    # 0. Init the verification engine
     eng = new MyEngine { @argv }
-    await eng.init esc defer()
+    await eng.global_init esc defer()
 
     # 1. load signed file
     await @target_file_to_json @signed_file(), esc defer json_obj
@@ -284,6 +285,9 @@ exports.Command = class Command extends Base
       await @keybase_username_from_signer signer, esc defer username
       # console.log [payload,signature].join "\n-----------\n"
       await eng.run1 { payload, username, signature }, esc defer()
+
+    # 2b --- cleanup the verification engine
+    await eng.global_cleanup defer err_dummy
 
     # 3. walk and handle
     summ = new codesign.CodeSign @argv.dir, {ignore: json_obj.ignore, presets: json_obj.presets}
