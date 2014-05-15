@@ -11,6 +11,7 @@ triplesec = require 'triplesec'
 {WordArray} = triplesec
 {createHmac} = require 'crypto'
 {make_scrypt_progress_hook} = require './util'
+log = require './log'
 
 #======================================================================
 
@@ -69,8 +70,10 @@ exports.Session = class Session
 
   load_and_check : (cb) ->
     esc = make_esc cb, "Session::load_and_check"
+    log.debug "+ session::load_and_check"
     ret = null
     if @_load_and_checked
+      log.debug "| already loaded and checked"
       ret = @logged_in()
     else
       await @load esc defer() unless @_file? and @_loaded
@@ -83,11 +86,13 @@ exports.Session = class Session
         req.clear_csrf()
         await @_file.write esc defer()
       ret = li_post
+    log.debug "- session::load_and_check -> #{ret}"
     cb null, ret
 
   #-----
 
   load : (cb) ->
+    log.debug "+ session::load"
     unless @_file
       @_file = new Config env().get_session_filename(), { quiet : true, secret : true }
     await @_file.open defer err
@@ -100,6 +105,7 @@ exports.Session = class Session
         if (c = o.csrf)?
           req.set_csrf c
           @_csrf = c
+    log.debug "- session::load"
     cb err
 
   #-----
@@ -161,7 +167,9 @@ exports.Session = class Session
   #-----
 
   check : (cb) ->
+    log.debug "+ session::check"
     if req.get_session() 
+      log.debug "| calling to sesscheck"
       await req.get { endpoint : "sesscheck" }, defer err, body
       if not err? 
         @_logged_in = true
@@ -172,6 +180,7 @@ exports.Session = class Session
         @set_csrf t if (t = body.csrf_token)?
       else if err and (err instanceof E.KeybaseError) and (body?.status?.name is "BAD_SESSION")
         err = null
+    log.debug "- session::check"
     cb err, @_logged_in
 
   #-----

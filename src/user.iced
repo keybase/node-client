@@ -221,17 +221,17 @@ exports.User = class User
 
   #--------------
 
-  @load : ({username,ki64,require_public_key, cache}, cb) ->
+  @load : ({username,ki64,require_public_key, cache, self}, cb) ->
     err = null
     if username? and (ret = User.cache[username])?
       log.debug "| hit user cache for #{username}"
     else
-      await User._load2 { username, ki64, require_public_key, cache}, defer err, ret
+      await User._load2 { username, ki64, require_public_key, cache, self}, defer err, ret
     cb err, ret
 
   #--------------
 
-  @_load2 : ({username,ki64,require_public_key, cache}, cb) ->
+  @_load2 : ({username,ki64,require_public_key, cache, self}, cb) ->
     esc = make_esc cb, "User::load"
     k = if username? then username else "Key: #{ki64}"
     log.debug "+ #{username}: load user"
@@ -240,6 +240,12 @@ exports.User = class User
 
     # If we need to, get the new username
     if not username? then username = local?.basics?.username
+
+    if self?
+      log.debug "| Checking session since we're loading User as self"
+      await session.load_and_check esc defer()
+      await session.load_and_check esc defer()
+
     await User.load_from_server {username}, esc defer remote
 
     if require_public_key and not remote.public_keys?.primary?
@@ -334,7 +340,7 @@ exports.User = class User
     log.debug "+ User::load_me"
     unless (username = env().get_username())?
       await athrow (new E.NoUsernameError "no username for current user; try `keybase login`"), esc defer()
-    await User.load { username }, esc defer me
+    await User.load { username, self : true }, esc defer me
     await me._load_me_2 opts, esc defer()
     log.debug "- User::load_me"
     cb null, me
