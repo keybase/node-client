@@ -138,7 +138,7 @@ class Key extends BaseKey
         when 'fpr' then @_top.add_fingerprint line
         when 'uid' then @add_uid line
         when 'uat' then # skip user attributes
-        when 'sub' then @add_subkey line
+        when 'sub', 'ssb' then @add_subkey line
         else
           line.warn "unexpected subfield: #{f}"
 

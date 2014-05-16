@@ -294,6 +294,7 @@
           case 'uat':
             break;
           case 'sub':
+          case 'ssb':
             return this.add_subkey(line);
           default:
             return line.warn("unexpected subfield: " + f);

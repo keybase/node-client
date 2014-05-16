@@ -6,6 +6,8 @@ Bugfixes:
     Addresses keybase/keybase-issues#693
   - Small grammar typo fixed (keybase/keybase-issues#703)
   - Establish a session before we load ourself, in all cases
+  - Parse `-K --with-colons` better, look out for `ssb` (via gpg-wrapper@0.0.45)
+    Address keybase/keybase-issues#689
 
 ## 0.3.2 (2014-04-29)
 
