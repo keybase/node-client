@@ -86,7 +86,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       {remote,local} = @tssc.trackw.is_tracking()
       tracks = if remote then "tracking remotely & locally"
       else if local then "tracking locally only"
-      else "not tracking; consider `keybase track #{@username}`"
+      else "not tracking"
       log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
 
     d = @sig_date
