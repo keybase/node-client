@@ -121,6 +121,10 @@ exports.Command = class Command extends Base
       alias:        'preserve-tmp-files'
       action:       'storeTrue'
       help:         'preserve temp files for debugging and inspection'
+    t :
+      alias:        'track'
+      action:       'storeTrue'
+      help:         'attempt a track if needed'
     # dir: this is added below, since the nargs format doesn't work
     #   with the add_option_dict function
 
@@ -169,6 +173,7 @@ exports.Command = class Command extends Base
 
     ss2 = sub2.addParser "verify", {help: "verify a directory's contents"}
     add_option_dict ss2, @VERIFY_OPTS
+    add_option_dict ss2, TrackSubSubCommand.OPTS
     ss2.addArgument ['dir'], @copy(@DIR_OPT)
 
     ss3 = sub2.addParser "tojson", {help: "convert a signed manifest to JSON"}
