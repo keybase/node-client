@@ -81,7 +81,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       ret = false
     else if (@opts.track_local or @track_local) and not @opts.prompt_remote
       ret = false
-    else
+     else
       prompt = "Permanently track this user, and write proof to server?"
       await prompt_yn { prompt, defval : true }, defer err, ret
     cb err, ret
@@ -107,7 +107,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @parse_assertions esc defer()
     opts = { skip, @assertions } 
     await @them.check_remote_proofs opts, esc defer warnings, n_proofs
-    if not err? and @assertions? and not(@assertions.check())
+    err = null
+    if @assertions? and not(@assertions.check())
       err = new E.BadAssertionError()
     log.debug "- TrackSubSub::check_remote_proofs -> #{err?.message}"
     cb err, warnings, n_proofs

@@ -128,6 +128,7 @@ class KeyAssert extends Assert
     if not ret then #noop
     else if not keycmp(@_fingerprint, @val)
       log.error "Key mismatch: #{@val} doesn't match #{@_fingerprint}"
+      ret = false
     else
       ret = true
     return ret
@@ -179,6 +180,7 @@ class SocialNetworkAssert extends Assert
     if not ret then #noop
     else if @_username isnt @val
       log.error "Failed assertion for '#{@key}': #{@val} expected, but found #{@_username}"
+      ret = false
     else
       ret = true
     return ret
