@@ -58,6 +58,10 @@ exports.Base = class Base
       alias: "debug"
       action : "storeTrue"
       help : "debug mode"
+    q:
+      alias : "quiet"
+      action : "storeTrue"
+      help : "quiet mode; only show errors, suppress info and warnings"
     C:
       alias : "no-color"
       action : "storeTrue"

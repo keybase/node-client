@@ -12,6 +12,9 @@ class Env
   set_use_color : (c) -> @use_color = c
   get_level : () -> @level
 
+  make_lconsole : (console) => (method, level, args...) =>
+    if @get_level() <= level then console[method] args...
+
 #=========================================================================
 
 repeat = (c, n) -> (c for [0...n]).join('')
@@ -80,6 +83,7 @@ class Package
       exports[k] = @[k]
     exports.package = () => @
     exports.console = @_console
+    exports.lconsole = @_env.make_lconsole @_console
 
 #=========================================================================
 
