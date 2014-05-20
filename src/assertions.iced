@@ -2,6 +2,7 @@
 {E} = require './err'
 log = require './log'
 urlmod = require 'url'
+{checkers} = require './checkers'
 
 #=======================================================================
 
@@ -32,7 +33,7 @@ class Assertions
     if not (ret = @_lookup[key])? and unspecified
       [err, ret] = new Assert.make key
       if err?
-        log.error "Error unhandling unspecified assertion: #{err.messge}"
+        log.error "Error in handling unspecified assertion: #{err.message}"
       else
         ret.set_unspecified true
         @_unspecified.push ret
@@ -72,6 +73,8 @@ class Assert
       when 'twitter' then TwitterAssert 
       when 'web' then WebAssert
       when 'key' then KeyAssert
+      when 'keybase' then KeybaseAssert
+      when 'dns' then DnsAssert
       else 
         err = new E.BadAssertionError "unknown assertion type: #{key}"
         null
@@ -107,6 +110,26 @@ class Assert
 
 #=======================================================================
 
+class KeybaseAssert extends Assert
+
+  parse_check : () ->
+    if not checkers.username.f(@val) then new Error "expected a keybase username"
+    else null
+
+  set_payload : (u) -> @_username = u
+
+  check : () ->
+    ret = super()
+    if not ret then #noop
+    else if @_username.toLowerCase() isnt @val.toLowerCase()
+      log.error "Username mismiatch: #{@_username} isn't #{@val}"
+      ret = false
+    else
+      ret = true
+    return ret
+
+#=======================================================================
+
 keycmp = (k1, k2) ->
   rev = (x) -> (c for c in x by -1).join('')
   if k2.length > k1.length then return false
@@ -132,6 +155,37 @@ class KeyAssert extends Assert
     else
       ret = true
     return ret
+
+#=======================================================================
+
+class DnsAssert extends Assert
+
+  constructor : (key, val) ->
+    super key, val
+    @_seek = [ val ] if val?
+    @_found_domains = {}
+
+  merge : (wa2) ->
+    @_seek = @_seek.concat wa2._seek
+    true
+
+  set_payload : (o) -> 
+    d = o.body?.service?.domain
+    @_found_domains[d] = true if d?
+
+  parse_check : () ->
+    if not(@val.match /[a-zA-Z]\.[a-zA-Z]/ ) then new Error "no domain given"
+    else null
+
+  check : () ->
+    ret = true
+    for s in @_seek when not @_found_domains[s]
+      log.error "DNS ownership assertion failed for '#{s}'"
+      ret = false
+    return ret
+
+  generate_unspecified_warning : () ->
+    log.warn "Assertion for DNS zones #{JSON.stringify (k for k,v of @_found_domains)} were found but not specified"
 
 #=======================================================================
 

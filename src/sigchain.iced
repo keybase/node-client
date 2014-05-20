@@ -621,7 +621,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_remote_proofs : ({skip, pubkey, assertions}, cb) ->
+  check_remote_proofs : ({username, skip, pubkey, assertions}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
     log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
@@ -632,6 +632,7 @@ exports.SigChain = class SigChain
 
     # In case there was an assertion on the public key fingerprint itself...
     assertions?.found('key', false)?.success().set_payload pubkey.fingerprint() 
+    assertions?.found('keybase', false)?.success().set_payload username
 
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"

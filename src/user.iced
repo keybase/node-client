@@ -453,6 +453,7 @@ exports.User = class User
 
   check_remote_proofs : (opts, cb) ->
     opts.pubkey = @key
+    opts.username = @username()
     await @sig_chain.check_remote_proofs opts, defer err, warnings, n_proofs
     cb err, warnings, n_proofs
 

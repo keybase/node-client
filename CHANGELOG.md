@@ -1,3 +1,16 @@
+## 0.4.0
+
+Features:
+
+  - Code & directory signing
+
+Bugfixes:
+
+  - Multiple fixes in assertions
+     - sometimes they weren't raising errors if they failed
+     - DNS assertions didn't work
+     - `--assert keybase:foobob` now works too
+
 ## 0.3.3
 
 Bugfixes:
