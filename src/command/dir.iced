@@ -350,10 +350,11 @@ exports.Command = class Command extends Base
     #
     # output
     #
-    md = codesign.obj_to_markdown cs.to_json_obj()
+    json_obj = cs.to_json_obj()
+    md = codesign.obj_to_markdown json_obj
     await fs.writeFile @signed_file(), md, {encoding: 'utf8'}, esc defer()
 
-    log.info  "Success! Wrote #{@signed_file()}" unless @argv.quiet
+    log.info  "Success! Wrote #{@signed_file()} from #{json_obj.found.length} found items" unless @argv.quiet
     log.debug "- Command::sign"
     cb()
 
