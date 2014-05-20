@@ -43,7 +43,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
   #----------
 
   try_track : () -> 
-    (@argv.track or @argv.track_remote or @argv.track_local or @argv.assert?.length) and not @is_self
+    (@argv.track or @argv.track_remote or @argv.track_local) and not @is_self
 
   #----------
 
@@ -253,8 +253,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       if @try_track()
         await @handle_track esc defer()
       else if @try_id()
-        # Don't error out for now.
-        await @handle_id defer dummy
+        await @handle_id esc defer()
     cb null
 
 ##=======================================================================

@@ -121,6 +121,9 @@ exports.Command = class Command extends Base
       alias:        'preserve-tmp-files'
       action:       'storeTrue'
       help:         'preserve temp files for debugging and inspection'
+    "ignore-verify-errors":
+      action :      'storeTrue'
+      help   :      'ignore verify errors and continue to tracking'
     # dir: this is added below, since the nargs format doesn't work
     #   with the add_option_dict function
 
@@ -251,6 +254,7 @@ exports.Command = class Command extends Base
       log.warn "#{p[0]}\t#{p[1].expected?.path or p[1].got.path}:  #{p[1].msg}" for p in warn_table
     if err_table.length
       log.error "#{p[0]}\t#{p[1].expected?.path or p[1].got.path}:  #{p[1].msg}" for p in err_table
+    unless @argv.ignore_verify_errors
       err = new Error "Exited after #{err_table.length} error(s)"
     cb err, {warnings: warn_table.length, errors: err_table.length}
 
