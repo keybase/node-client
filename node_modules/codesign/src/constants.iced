@@ -10,7 +10,7 @@ exp =
     SYMLINK:                2
   item_type_names:          {} # filled programmatically below
   presets:
-    git:                    'ignore anything as described by .gitignore files'
+    git:                    'ignore .git and anything as described by .gitignore files'
     kb:                     'ignore anything as described by .kbignore files'
     dropbox:                'ignore .dropbox-cache and other Dropbox-related files'
     none:                   'don\'t ignore anything'

@@ -175,8 +175,9 @@ exports.Command = class Command extends Base
     add_option_dict ss2, DecryptAndVerifyEngine.OPTS
     ss2.addArgument ['dir'], @copy(@DIR_OPT)
 
-    ss3 = sub2.addParser "tojson", {help: "convert a signed manifest to JSON"}
-    add_option_dict ss3, @TOJSON_OPTS
+    # COMING SOON
+    # ss3 = sub2.addParser "tojson", {help: "convert a signed manifest to JSON"}
+    # add_option_dict ss3, @TOJSON_OPTS
 
     return opts.aliases.concat [ name ]
 
