@@ -82,7 +82,7 @@ keybase code-sign verify
 If you are expecting a certain author to have signed this folder, much can be asserted and automated, with no server-side trust.
 
 ```bash
-keybase code-sign verify \
+keybase dir verify \
   --assert keybase:chris \
   --assert twitter:malgorithms \
   --assert fingerprint:b5bb9d8014a0f9b1d61e21e79

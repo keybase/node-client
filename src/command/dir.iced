@@ -175,8 +175,9 @@ exports.Command = class Command extends Base
     add_option_dict ss2, DecryptAndVerifyEngine.OPTS
     ss2.addArgument ['dir'], @copy(@DIR_OPT)
 
-    ss3 = sub2.addParser "tojson", {help: "convert a signed manifest to JSON"}
-    add_option_dict ss3, @TOJSON_OPTS
+    # COMING SOON
+    # ss3 = sub2.addParser "tojson", {help: "convert a signed manifest to JSON"}
+    # add_option_dict ss3, @TOJSON_OPTS
 
     return opts.aliases.concat [ name ]
 
@@ -368,6 +369,8 @@ exports.Command = class Command extends Base
     #console.log @argv
     esc = make_esc cb, "Command::run"
     log.debug "+ Command::run"
+    log.warn "keybase dir <sign|verify> is experimental."
+    log.warn "Help us try to break it! Feedback: https://github.com/keybase/keybase-issues/issues"
     switch @argv.dir_subcommand
       when 'sign'   then await @sign   esc defer()
       when 'verify' then await @verify esc defer()
