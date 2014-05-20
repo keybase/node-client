@@ -15,6 +15,7 @@ exports.alice_sign_homedir = (T, cb) ->
   args = ["dir", "sign", alice.homedir]
   await alice.keybase {args, quiet: true}, defer err, out
   T.no_error err
-  T.assert out, 'Success'
+  console.log out
+  T.assert out, ''
   ctext = out
   cb()
