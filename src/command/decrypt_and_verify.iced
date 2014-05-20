@@ -27,7 +27,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  @OPTS : dict_union TrackSubSubCommand.OPTS, {
+  @OPTS : dict_union DecryptAndVerifyEngine.OPTS, {
     s : 
       alias : 'signed'
       action : 'storeTrue'
@@ -35,10 +35,6 @@ exports.Command = class Command extends Base
     S :
       alias : 'signed-by'
       help : "assert signed by the given user"
-    t :
-      alias : "track"
-      action : "storeTrue"
-      help : "prompt for tracking if necessary"
     '6' :
       alias : "base64"
       action : "storeTrue"

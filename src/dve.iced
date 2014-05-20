@@ -24,12 +24,30 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   #----------
 
+
+  @OPTS : dict_union TrackSubSubCommand.OPTS, {
+    t :
+      alias : "track"
+      action : "storeTrue"
+      help : "prompt for tracking if necessary"
+    I:
+      alias: 'no-id'
+      action : 'storeTrue'
+      help : "don't try to ID the user"
+  }
+
+  #----------
+
   constructor : ({@argv}) ->
 
   #----------
 
   try_track : () -> 
     (@argv.track or @argv.track_remote or @argv.track_local or @argv.assert?.length) and not @is_self
+
+  #----------
+
+  try_id : () -> (not @is_self and not @argv.no_id)
 
   #----------
 
@@ -41,6 +59,14 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       log.debug "| No signature found; but we didn't require one"
       err = null
     log.debug "- find_signature"
+    cb err
+
+  #----------
+
+  handle_id : (cb) ->
+    log.debug "+ handle_id"
+    await @tssc.check_remote_proofs false, defer err, warnings 
+    log.debug "- handle_id"
     cb err
 
   #----------
@@ -226,6 +252,9 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       await @handle_signature esc defer()
       if @try_track()
         await @handle_track esc defer()
+      else if @try_id()
+        # Don't error out for now.
+        await @handle_id defer dummy
     cb null
 
 ##=======================================================================
