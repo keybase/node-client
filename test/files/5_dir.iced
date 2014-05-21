@@ -49,17 +49,16 @@ act =
       T.assert err?, "expected an error in home dir signature"
     cb()
 
-  proof_ids: (T, who, whom, cb) ->
-    await who.keybase {args: ['id', whom]}, defer err, out
-    T.no_error err, "failed to id"
-    T.assert out, "failed to id"
-    github  = /// \"([^\s\n]+)\"\son\sgithub ///
-    twitter = /// \"([^\s\n]+)\"\son\stwitter ///
-    res = { }
-    if (gh = github.exec s)?
-      res.github = gh[1]
-    if (tw = twitter.exec s)?
-      res.twitter = tw[1]
+  proof_ids: (T, who, cb) ->
+
+    args = ["status"]
+    await who.keybase {args}, defer err, out
+    T.no_error err, "failed to status"
+    T.assert out,   "failed to status"
+
+    res = null
+    if (not err) and out?.toString()
+      res = JSON.parse(out.toString()).user.proofs
     cb res
 
   verify_home_dir: (T, who, expect_success, cb) -> act.__verify_home_dir T, who, expect_success, false, cb
@@ -119,8 +118,9 @@ exports.alice_sign_and_verify_homedir = (T, cb) ->
 
 exports.assertions = (T, cb) ->
   await act.sign_home_dir          T, charlie,        defer()
-  await act.verify_with_assertions T, alice, charlie, ["twitter:tacovontaco", "github:tacoplusplus"],   true, defer()
-  await act.verify_with_assertions T, alice, charlie, ["twitter:tacovontaco", "github:evil_wrongdoer"], false, defer()
+  await act.proof_ids              T, charlie,        defer proof_ids
+  await act.verify_with_assertions T, alice, charlie, ["twitter:#{proof_ids.twitter}", "github:#{proof_ids.github}"],   true, defer()
+  await act.verify_with_assertions T, alice, charlie, ["twitter:evil_wrongdoer", "github:wrong_evildoer"],             false, defer()
   cb()
 
 exports.alice_wrong_item_types = (T, cb) ->
