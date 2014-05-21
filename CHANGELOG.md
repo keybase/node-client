@@ -2,7 +2,7 @@
 
 Features:
 
-  - Code & directory signing
+  - Code & directory signing; try `keybase dir sign` or `keybase dir verify`
 
 Bugfixes:
 
