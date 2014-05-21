@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTfO3/AAoJEJgKPw0B/gTfpaAH/jQPs0SERQfw/5kp/HongG44
-3lZyBVeN3NC9KRKowvOQKhcLZux7VvQ1CQBttKLfiadQv4bo18mnDdMcmjW27E2L
-G6YdaUkCw6/sRdCEHeUQiluQMAhXZ9K8TgfVxFl0LaR4AIDCTYKfjaqxDOnf7Jyc
-lrIGye7b3WCiCaRJ8YulTzBtXq+wJ/NzsBBrllxV5zMrZqfcb0x7P+5arJmCs1tI
-4WiVl3bwfcGMOhwmBBLsH/gLNeMlWxwqGGNM6tBJbf7Ob2KekBt0UPiWCcyXDwj3
-FReJmEVVAB/WirTg1VAYI+ZY0lT59+bj2j2LZ5AFxRAPOHz3uUzy93UjSoC8dqQ=
-=8Ujb
+iQEcBAABCgAGBQJTfO6eAAoJEJgKPw0B/gTffWAIAJKriusHj47a8WdrRFb/b050
+zPNSJeIATrlhSLQc2Kry+ih6WiM5y3rLUv2EYbc+If42TxMsNvParSGSTKMIZLxI
+UDESdfnh3bOfBZ8tt1clWAiQVaZVtYmRSvp6Nw9CteqhE3EL74Y15MKaEiyt0Lp1
+7JYc0P6GdtIcSjM4Kh5pMqNVhm14cuSD4XUsZK0DbFtX/CvWP/z9k1mVIsxfRKQe
+1nZCQiqG+SkLqE3Giazpst5vZJ4oj/jh2Jo9Hbb+VmVb1k7TeOLWnOpMmJg637vP
+VGNKC1aaIJg1Lz59q/RD+15tixFVGVoaP9coynDAU5InKIG4AtdAXDFyaj0PxPw=
+=b7hF
 -----END PGP SIGNATURE-----
 
 ```
@@ -26,7 +26,7 @@ size    exec  file                                                              
               ./                                                                                                                                                                                                  
 146             .gitignore                                                       9eeecc0d4d0e4b9f44fb6f9afeda6360e768024dd0950c6c2f6f7d7561f78ee3                                                                 
 21              .npmignore                                                       88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-17233           CHANGELOG.md                                                     faf50417df370a8de69d103d191aa4e851b21037b555bf540bf06ff48d38aa94                                                                 
+17294           CHANGELOG.md                                                     79122bafd531f728aa653920dd703ed0ba4df670816d694b30fd45958864f01b                                                                 
 1483            LICENSE                                                          333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 1977            Makefile                                                         af715c922be1007c0e4aec42eb0ff1781e388183da5835384914ac804d67e41d                                                                 
 298             README.md                                                        72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 

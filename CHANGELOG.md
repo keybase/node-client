@@ -3,6 +3,7 @@
 Features:
 
   - Code & directory signing; try `keybase dir sign` or `keybase dir verify`
+  - First self-signed dog-food, via `SIGNED.md` at top level
 
 Bugfixes:
 
