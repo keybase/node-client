@@ -45,6 +45,7 @@ class Lockfile
     @id              = get_id()
     @_locked         = false
     @_maintain_cb    = null
+    @_release_cb     = null
 
   #--------------------
 
@@ -55,8 +56,8 @@ class Lockfile
 
   #--------------------
 
-  @warn : (s) -> @_log 'warn', s
-  @info : (s) -> @_log 'info', s
+  warn : (s) -> @_log 'warn', s
+  info : (s) -> @_log 'info', s
 
   #--------------------
 
@@ -123,12 +124,13 @@ class Lockfile
 
   #--------------------
 
-  release : () ->
+  release : (cb) ->
     if @_locked
+      @_release_cb = cb
       @_locked = false
       @_maintain_cb?()
-    else
-      @warn "tried to unlock file that wasn't locked"
+    else if cb?
+      cb new Error "tried to unlock file that wasn't locked"
 
   #--------------------
 
@@ -148,10 +150,12 @@ class Lockfile
       await fs.write @fd, b, 0, b.length, 0, defer err
       if err?
         @warn "error in maintain_lock_loop: #{err}"
-      await @maintain_wait defer()
+      if @_locked
+        await @maintain_wait defer()
     await fs.unlink @filename, defer err
     if err?
       @warn "error deleting lock file: #{err}"
+    @_release_cb? err
 
 #==========================================================================
 

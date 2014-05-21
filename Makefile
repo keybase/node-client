@@ -20,6 +20,7 @@ $(BUILD_STAMP): \
 	lib/command/config.js \
 	lib/command/decrypt.js \
 	lib/command/decrypt_and_verify.js \
+	lib/command/dir.js \
 	lib/command/encrypt.js \
 	lib/command/help.js \
 	lib/command/id.js \
@@ -55,6 +56,7 @@ $(BUILD_STAMP): \
 	lib/constants.js \
 	lib/db.js \
 	lib/display.js \
+	lib/dve.js \
 	lib/env.js \
 	lib/err.js \
 	lib/file.js \

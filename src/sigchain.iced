@@ -224,7 +224,7 @@ exports.Link = class Link
     msg = scraper.format_msg { arg, ok }
     msg.push ("(you've recently OK'ed this proof)") if skip
     msg.push "(failed with code #{rc}#{errmsg})" if not ok
-    log.console.error msg.join(' ')
+    log.lconsole "error", log.package().INFO, msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"
 
     assert?.success @human_url()
@@ -621,17 +621,18 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_remote_proofs : ({skip, pubkey, assertions}, cb) ->
+  check_remote_proofs : ({username, skip, pubkey, assertions}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
     log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
 
     msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint pubkey.fingerprint()}")
-    log.console.error msg
+    log.lconsole "error", log.package().INFO, msg
     n = 0
 
     # In case there was an assertion on the public key fingerprint itself...
     assertions?.found('key', false)?.success().set_payload pubkey.fingerprint() 
+    assertions?.found('keybase', false)?.success().set_payload username
 
     if (tab = @table?[ST.REMOTE_PROOF])?
       log.debug "| Loaded table with #{Object.keys(tab).length} keys"

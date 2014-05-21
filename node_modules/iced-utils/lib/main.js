@@ -10,4 +10,6 @@
 
   exports.getopt = require('./getopt');
 
+  exports.lockfile = require('./lockfile');
+
 }).call(this);

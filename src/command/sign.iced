@@ -40,7 +40,7 @@ exports.Command = class Command extends Base
   #----------
 
   set_argv : (a) ->
-    if a.clearsign and a.deatch_sign
+    if a.clearsign and a.detach_sign
       new E.ArgsError "Can only handle one of --clearsign and --detach-sign"
     else
       super a

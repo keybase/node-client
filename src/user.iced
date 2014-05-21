@@ -382,7 +382,7 @@ exports.User = class User
     await @key.find defer err
     log.debug "- #{un}: checked #{if load_secret then 'secret' else 'public'} key"
 
-    if not err? and maybe_secret
+    if not err? and load_secret
       @set_have_secret_key true
     else if err? and (err instanceof E.NoLocalKeyError) and maybe_secret
       @key = master_ring().make_key_from_user @, false
@@ -458,6 +458,7 @@ exports.User = class User
 
   check_remote_proofs : (opts, cb) ->
     opts.pubkey = @key
+    opts.username = @username()
     await @sig_chain.check_remote_proofs opts, defer err, warnings, n_proofs
     cb err, warnings, n_proofs
 

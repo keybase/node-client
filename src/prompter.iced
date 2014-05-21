@@ -22,7 +22,7 @@ exports.Prompter = class Prompter
 
   #-------------------
 
-  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower,first_prompt,hint,normalizer}, cb) ->
+  read_field : (k,{prompt,passphrase,checker,confirm,defval,thrower,first_prompt,hint,normalizer,stderr}, cb) ->
     err = null
     ok = false
     first = true
@@ -32,7 +32,8 @@ exports.Prompter = class Prompter
       else (prompt + " (" + (hint or checker.hint) + "): ")
       first = false
 
-      obj = { prompt : p } 
+      obj = { prompt : p }
+      obj.output = process.stderr if stderr?
       if passphrase
         obj.silent = true
         obj.replace = "*"
@@ -95,7 +96,7 @@ exports.prompt_yn = ({prompt,defval}, cb) ->
 
 #========================================================================
 
-exports.prompt_passphrase = ({prompt,confirm,extra,short,no_leading_space}, cb) ->
+exports.prompt_passphrase = ({prompt,confirm,extra,short,no_leading_space,stderr}, cb) ->
   unless prompt?
     prompt = "Your keybase login passphrase"
     prompt += extra if extra?
@@ -110,6 +111,7 @@ exports.prompt_passphrase = ({prompt,confirm,extra,short,no_leading_space}, cb) 
       passphrase : true
       checker : checker
       confirm : confirm
+      stderr : stderr
   p = new Prompter seq
   await p.run defer err
   cb err, p.data().passphrase
