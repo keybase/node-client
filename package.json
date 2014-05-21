@@ -58,6 +58,7 @@
     "argparse",
     "bn",
     "cheerio",
+    "codesign",
     "colors",
     "deep-equal",
     "framed-msgpack-rpc",
