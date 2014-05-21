@@ -11,7 +11,7 @@ Bugfixes:
      - DNS assertions didn't work
      - `--assert keybase:foobob` now works too
 
-## 0.3.3
+## 0.3.3 (2014-05-15)
 
 Bugfixes:
 
