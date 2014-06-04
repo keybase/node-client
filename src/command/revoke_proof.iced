@@ -42,9 +42,10 @@ exports.Command = class Command extends ProofBase
 
   get_the_go_ahead : (cb) ->
     rp = @me.list_remote_proofs  {with_sig_ids : true } 
+    service_name_display = S.aliases_reverse[@service_name]
     err = null
     if not rp? or not (v = rp[@service_name])?
-      err = E.NotFoundError "No proof found for service '#{@service_name}'"
+      err = E.NotFoundError "No proof found for service '#{service_name_display}'"
     else if Array.isArray(v)
       d = {}
       names = []
@@ -70,16 +71,16 @@ exports.Command = class Command extends ProofBase
         log.console.log "Please specify which proof to revoke; try one of:"
         log.console.log ""
         for n in names
-          log.console.log "  keybase revoke-proof #{@service_name} #{n}"
+          log.console.log "  keybase revoke-proof #{service_name_display} #{n}"
         log.console.log ""
     else
       if @remote_name? and (@remote_name isnt v.name)
-        err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{@service_name}"
+        err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{service_name_display}"
       else if @remote_name?
         @sig_id = v.sig_id
       else 
         to_prompt = 
-          prompt : "Revoke your proof of #{v.name} at #{@service_name}?"
+          prompt : "Revoke your proof of #{v.name} at #{service_name_display}?"
           sig_id : v.sig_id
     if not err? and to_prompt?
       await prompt_yn { prompt : to_prompt.prompt, defval : false }, defer err, ok

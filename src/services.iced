@@ -3,16 +3,23 @@
 
 #=======================================================
 
-exports.aliases = 
-  twitter : "twitter"
+exports.aliases = aliases = 
   twtr    : "twitter"
+  twitter : "twitter"
   git     : "github"
-  github  : "github"
   gith    : "github"
+  github  : "github"
   https   : "generic_web_site"
   http    : "generic_web_site"
   web     : "generic_web_site"
   dns     : "dns"
+
+#=======================================================
+
+exports.aliases_reverse = aliases_reverse = {}
+
+for k,v of aliases
+  aliases_reverse[v] = k
 
 #=======================================================
 
