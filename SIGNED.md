@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTj33WAAoJEJgKPw0B/gTft3IH/3ieknJxIq8JkGvGLNJwqESo
-XpTS56Yy+oVxV6kldbKm0pllVpgLr3hf1G2Bq30QPcejkYHpdXfv/CjwrrDMr85W
-hBj64QHrlb33DT1hRFNbv+1kdYCBbIWXlsrKR7crXGIo9jyjjj1InLZbxFim3VIp
-nHyPQQcHULUDGf8W730yk1TRG9+nludSQ5q+ote8awrmupZk8MsbdEpaRlvULm8G
-2q/fCAzC8euf+oJ1CMAu3AHl9Pvj7vVNYZmpa7JfgtbKOjxBbPSP+bPkrE8Df3ad
-c95dKD1XT3jzzdJG6oMzwtr0sjqGAqN5y4tpiuJYhCJEz3dcjdY+qdBhfyOtYvc=
-=Fkhz
+iQEcBAABCgAGBQJTj340AAoJEJgKPw0B/gTftg8H/1cHrxxusMlk/pnhbbdfBjG1
+Lc+XLoW9p+2mBuhlxfklrGPuC1tXYCZ8dWI5vmd+PFyRBbEV5GjMeFGNnvsBfaHQ
+wwU7pyNuzffd5XgmBLnCaw2hjmRT55K218yMbDKMlOD9cdWCvTjfAoLOP8DwYg9r
+LwVve1k2mRABZCqZQ1YI3SemnLo5dHmGeKEbTZdrDKn5kUFZVCNJqF9n1w8Gb5Sc
+thMDKdZUTPAvfGDHU8H92KvGH3qRYGwGP8X++xhZcuy1P+cHCnvvuhaMl/8kSy/o
+e5kRapD0UmNCJIomEV9BuOylZsnLubrcTjxHDiJBbd0IOzlhW6I6v+cDy4vZpOw=
+=c/73
 -----END PGP SIGNATURE-----
 
 ```
@@ -1416,7 +1416,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                a95c661232055416c813eec79835a5b9208b2250e55badb5031f6014a831c555                                                                 
-1931            package.json                                  c2ea614a8b3fa2d3bba8d142aaf6f60c7a7d7992989ae7c3288d3b88ea625036                                                                 
+1930            package.json                                  f6cfc32a42a3c0e78e9d5f65c52dfa20a59b3db3c6f43f1b24029f08b8b543f6                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
@@ -1529,7 +1529,7 @@ dropbox  # ignore .dropbox-cache and other Dropbox-related files
 kb       # ignore anything as described by .kbignore files          
 ```
 
-<!-- summarize version = 0.0.9 -->
+<!-- summarize version = 0.0.8 -->
 
 ### End signed statement
 
