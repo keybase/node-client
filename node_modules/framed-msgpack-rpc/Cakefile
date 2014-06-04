@@ -9,8 +9,7 @@ task 'build', 'build the whole jam', (cb) ->
   files = fs.readdirSync 'src'
   files = ('src/' + file for file in files when file.match(/\.iced$/))
   await clearLibJs defer()
-  await runIced [ '-I', 'none', '-c', '-o', LIB ].concat(files), defer()
-  await copyIcedRuntime defer()
+  await runIced [ '-I', 'node', '-c', '-o', LIB ].concat(files), defer()
   await writeVersion defer()
   console.log "Done building."
   cb() if typeof cb is 'function'
@@ -36,24 +35,6 @@ task 'test', "run the test suite", (cb) ->
 task 'vtest', "run the test suite, w/ verbosity", (cb) ->
   await runIced [ "test/all.iced", '-d'], defer()
   cb() if typeof cb is 'function'
-
-copyIcedRuntime = (cb) ->
-  base = require.resolve 'iced-coffee-script'
-  dir = path.dirname base
-  stem = 'iced.js'
-  infile = path.join dir, stem
-  outfile = path.join LIB, stem
-  await fs.readFile infile, defer err, data
-  ok = false
-  if err
-    console.log "Error reading #{infile}: #{err}"
-  else
-    await fs.writeFile outfile, data, defer err
-    if err
-      console.log "Error writing #{outfile}: #{err}"
-    else
-      ok = true
-  cb ok
 
 writeVersion = (cb) ->
   infile = "package.json"

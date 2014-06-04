@@ -9,11 +9,9 @@ PORT = 8881
 n = null
 restart = true
 
-icmd = path.join __dirname, "..", "node_modules", ".bin", "iced"
-
 jenky_server_loop =  (cb) ->
   while restart
-    n = fork path.join(__dirname,"jenky_server.iced"), [], { execPath : icmd }
+    n = fork path.join(__dirname,"support","jenky_server.js"), [], {}
     await n.on 'message', defer msg
     if cb?
       t = cb
