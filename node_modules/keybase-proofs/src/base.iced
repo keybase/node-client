@@ -144,8 +144,8 @@ class Base
       new Error "Wrong local uid: got '#{a}' but wanted '#{b}'"
     else if not (kid = json?.body?.key?.key_id)?
       new Error "Needed a body.key.key_id but none given"
-    else if not bufeq_secure @km().get_pgp_key_id(), (new Buffer kid, "hex")
-      new Error "Verification key doesn't match packet (via key ID)"
+    else if not bufeq_secure (a = @km().get_pgp_key_id()), (new Buffer kid, "hex")
+      new Error "Verification key doesn't match packet (via key ID): #{a.toString('hex')} != #{kid}"
     else if not (fp = json?.body?.key?.fingerprint)?
       new Error "Needed a body.key.fingerprint but none given"
     else if not bufeq_secure @km().get_pgp_fingerprint(), (new Buffer fp, "hex")

@@ -64,7 +64,8 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
             human_url : url
             remote_id : url
           break
-        else if rc in [ v_codes.HTTP_400, v_codes.HTTP_500, v_codes.NOT_FOUND ]
+        else if rc in [ v_codes.HTTP_400,  v_codes.HTTP_500, 
+                        v_codes.NOT_FOUND, v_codes.PERMISSION_DENIED ]
           continue
         else
           break
