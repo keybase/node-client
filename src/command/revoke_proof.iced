@@ -45,7 +45,7 @@ exports.Command = class Command extends ProofBase
     service_name_display = S.aliases_reverse[@service_name]
     err = null
     if not rp? or not (v = rp[@service_name])?
-      err = E.NotFoundError "No proof found for service '#{service_name_display}'"
+      err = E.NotFoundError "No proof found for service '#{@argv.service}'"
     else if Array.isArray(v)
       d = {}
       names = []
@@ -71,16 +71,16 @@ exports.Command = class Command extends ProofBase
         log.console.log "Please specify which proof to revoke; try one of:"
         log.console.log ""
         for n in names
-          log.console.log "  keybase revoke-proof #{service_name_display} #{n}"
+          log.console.log "  keybase revoke-proof #{@argv.service} #{n}"
         log.console.log ""
     else
       if @remote_name? and (@remote_name isnt v.name)
-        err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{service_name_display}"
+        err = E.ArgsError "Wrong name provided: you have a proof for '#{v.name}' and not '#{@remote_name}' @#{@argv.service}"
       else if @remote_name?
         @sig_id = v.sig_id
       else 
         to_prompt = 
-          prompt : "Revoke your proof of #{v.name} at #{service_name_display}?"
+          prompt : "Revoke your proof of #{v.name} at #{@argv.service}?"
           sig_id : v.sig_id
     if not err? and to_prompt?
       await prompt_yn { prompt : to_prompt.prompt, defval : false }, defer err, ok
@@ -97,7 +97,7 @@ exports.Command = class Command extends ProofBase
     esc = make_esc cb, "Command::run"
     await @parse_args esc defer()
     await session.login esc defer()
-    await User.load_me { secret : true }, esc defer @me
+    await User.load_me { secret : true, show_perm_failures : true }, esc defer @me
     await @get_the_go_ahead esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()

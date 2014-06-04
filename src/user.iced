@@ -371,7 +371,7 @@ exports.User = class User
 
   #--------------
 
-  _load_me_2 : ({secret, maybe_secret, install_key}, cb) ->
+  _load_me_2 : ({secret, maybe_secret, install_key, show_perm_failures }, cb) ->
     esc = make_esc cb, "User::_load_me_2"
     @set_is_self true
     load_secret = secret or maybe_secret
@@ -398,7 +398,7 @@ exports.User = class User
       do_install = false
 
     log.debug "+ #{un}: verifying user and signatures"
-    await @verify esc defer()
+    await @verify {show_perm_failures}, esc defer()
     log.debug "- #{un}: verified users and signatures"
 
     if do_install
@@ -465,8 +465,8 @@ exports.User = class User
   #--------------
 
   # Also serves to compress the public signatures into a usable table.
-  verify : (cb) ->
-    await @sig_chain.verify_sig { @key }, defer err
+  verify : ({show_perm_failures}, cb) ->
+    await @sig_chain.verify_sig { show_perm_failures, @key }, defer err
     cb err
 
   #--------------

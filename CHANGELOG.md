@@ -7,7 +7,9 @@ Features:
 
 Bugfixes:
 
-  - Close keybase/keybase-issues#675
+  - Fix bugs in proof revocations
+    - Close keybase/keybase-issues#675
+    - Close keybase/keybase-issues#732
 
 ## 0.4.0 (2014-05-21)
 

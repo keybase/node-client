@@ -443,7 +443,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  _compress : () ->
+  _compress : ({show_perm_failures}) ->
 
     log.debug "+ compressing signature chain"
 
@@ -469,7 +469,9 @@ exports.SigChain = class SigChain
 
         when ST.REMOTE_PROOF 
           S = constants.proof_state 
-          if link.proof_state() in [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
+          states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
+          states.push S.PERM_FAILURE if show_perm_failures
+          if link.proof_state() in states
             keys = [ lt , link.proof_type() ]
             if (sub_id = link.get_sub_id())? then keys.push sub_id
             INSERT(out, keys, link)
@@ -556,7 +558,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  verify_sig : ({key}, cb) ->
+  verify_sig : ({key, show_perm_failures }, cb) ->
     esc = make_esc cb, "SigChain::verify_sig"
     @username = username = key.username()
     @pubkey = key
@@ -564,7 +566,7 @@ exports.SigChain = class SigChain
     if (@fingerprint = key.fingerprint()?.toLowerCase())? and @last()?.fingerprint()?
       @_true_last = @last()
       @_limit()
-      @_compress()
+      @_compress { show_perm_failures }
       await @_verify_sig esc defer()
     else
       log.debug "| Skipped since no fingerprint found in key or no links in chain"
