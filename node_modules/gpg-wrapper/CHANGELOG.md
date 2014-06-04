@@ -1,4 +1,10 @@
-## 0.0.45 (2015-05-15)
+## 0.0.46 (2014-06-05)
+
+Features:
+
+  - Version upgrades and ICS v1.7.1-c upgrade
+
+## 0.0.45 (2014-05-15)
 
 Bugfixes:
 
