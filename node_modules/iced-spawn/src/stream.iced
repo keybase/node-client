@@ -6,11 +6,15 @@ exports.NullInStream = class NullInStream extends stream.Readable
   _read : (sz) -> 
     @push null
     true
+  is_readable : () -> true
+  is_writable : () -> false
 
 ##=======================================================================
 
 exports.NullOutStream = class NullOutStream extends stream.Writable
   _write : (dat, encoding, cb) -> cb()
+  is_readable : () -> false
+  is_writable : () -> true
 
 ##=======================================================================
 
@@ -27,6 +31,8 @@ exports.BufferInStream = class BufferInStream extends stream.Readable
       @buf = @buf[n...]
     @push push_me
     true
+  is_readable : () -> true
+  is_writable : () -> false
 
 ##=======================================================================
 
@@ -41,6 +47,8 @@ exports.BufferOutStream = class BufferOutStream extends stream.Writable
     cb()
 
   data : () -> Buffer.concat @_v
+  is_readable : () -> false
+  is_writable : () -> true
 
 ##=======================================================================
 
@@ -49,6 +57,8 @@ exports.FnOutStream = class FnOutStream extends stream.Writable
   _write : (dat, encoding, cb) -> 
     @fn dat
     cb()
+  is_readable : () -> false
+  is_writable : () -> true
 
 ##=======================================================================
 

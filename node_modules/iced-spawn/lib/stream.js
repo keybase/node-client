@@ -18,6 +18,14 @@
       return true;
     };
 
+    NullInStream.prototype.is_readable = function() {
+      return true;
+    };
+
+    NullInStream.prototype.is_writable = function() {
+      return false;
+    };
+
     return NullInStream;
 
   })(stream.Readable);
@@ -31,6 +39,14 @@
 
     NullOutStream.prototype._write = function(dat, encoding, cb) {
       return cb();
+    };
+
+    NullOutStream.prototype.is_readable = function() {
+      return false;
+    };
+
+    NullOutStream.prototype.is_writable = function() {
+      return true;
     };
 
     return NullOutStream;
@@ -57,6 +73,14 @@
       return true;
     };
 
+    BufferInStream.prototype.is_readable = function() {
+      return true;
+    };
+
+    BufferInStream.prototype.is_writable = function() {
+      return false;
+    };
+
     return BufferInStream;
 
   })(stream.Readable);
@@ -78,6 +102,14 @@
       return Buffer.concat(this._v);
     };
 
+    BufferOutStream.prototype.is_readable = function() {
+      return false;
+    };
+
+    BufferOutStream.prototype.is_writable = function() {
+      return true;
+    };
+
     return BufferOutStream;
 
   })(stream.Writable);
@@ -93,6 +125,14 @@
     FnOutStream.prototype._write = function(dat, encoding, cb) {
       this.fn(dat);
       return cb();
+    };
+
+    FnOutStream.prototype.is_readable = function() {
+      return false;
+    };
+
+    FnOutStream.prototype.is_writable = function() {
+      return true;
     };
 
     return FnOutStream;
