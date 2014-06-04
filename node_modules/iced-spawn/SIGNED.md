@@ -1,16 +1,15 @@
 ##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
+Version: GnuPG v1
 
-iQEcBAABCgAGBQJTjfYfAAoJEJgKPw0B/gTfzKgH/1q04L8ipjn9D/sVddY4eDv6
-HAfOmPZTzbBU6OKNvuKCrn4q3nR6Jxx3yxEQvNleoYrmTiMMHZUBq881YlQ0OT7a
-9enPZudnlKplC65CFcARvoX5hfpbI57q62wo7KWEbEw67jHyOt82PeM6LuQzfFUZ
-OOepSJ0pGgmzivkp2+2NcaOlBpYcDy/u5JPq0H0FlVwrDqsbi/9URjlU7fC4DAyq
-EKFPG1F2BLemJdoyEyxfTX1F3WCl+hOFs8GX4aR1khMJV6II7/D7yFfXmSMY8NHJ
-LojrZ7eWjdJtqAqdd9EZdBEEoVVy6xNtB9a6r1J5dw9D7cxzJTQZEOMDKxBfFWM=
-=VpJa
+iQEcBAABAgAGBQJTj6ZVAAoJEJgKPw0B/gTfKf8H/A3/g74JeYUct7d1Nb9bbwQn
+mJSyZw0bpJaZaumTu1RYOGSVroYLWwa1qUjTsU1WEuKN48wOt4ZQg6vWHT2aLigE
+myh9XUyPtapvr8cmMRNtn/nDELXbkaEJ9kPuKBfCQ/aXZsYukthirAbbIFXDsf+l
+lqTxXlqcU1XSJfT8k7/JX7tl6eMakx5kB6NS/Z/32ehnB9V4AAhybIGxbwwa/VVm
+pQWpJ6d7HbjOfL2ut6skniOzy1Uzuqu5UqeF8go/qRwn+T/AckPwazJ1PJVAnkSK
+HG9/hM9pv2USnM4tU2C7dYJZrORsDwMVBeDN0sivlOh+PzjfODg0CZCp6uuBaYo=
+=6AKL
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,15 +24,15 @@ LojrZ7eWjdJtqAqdd9EZdBEEoVVy6xNtB9a6r1J5dw9D7cxzJTQZEOMDKxBfFWM=
 size   exec  file                    contents                                                        
              ./                                                                                      
 109            .gitignore            ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-1017           CHANGELOG.md          2b9b7d7c59bffbe7022c823939faea138cffa576671c5c2f30bb9baad7d0cf66
+1092           CHANGELOG.md          e03dc2c6345d8e3da75859f07d768369eb2275a272d6fd68d21395a91b4a16cf
 1489           LICENSE               1e933ceb3f4a00ae33672d4e344f9ff26e92bc8f34bc0c7a52fd0ef257607858
 395            Makefile              02abf7a21a3e70691d33338da881c966359adaa1a138c57d1c5815ec183acde6
 67             README.md             f278a0ddb855b655bc037f249a7009a7f6f2b459b1a1ff173ed128ed53e1331d
                lib/                                                                                  
-15722            cmd.js              59ce39027d5e22269ac8d36ad8637020019f2d9e2529efb85b007a2bd48065c4
-301              main.js             77ab4401be53df151e975af754ac776d513b8f867bd8cb369015d9942f95493c
-4029             stream.js           00a5e161096744c922b0f5ea030bf74d375d2b7159405b181d95b6276d6ec521
-752            package.json          d66436b631a2b8b217144f4efe3922d6b5d6d3a7db77da601e664c99ac497ed9
+15679            cmd.js              5e7c7fe90451eef075ea7ce9b08d67fb4fa95f04a711af9d80daafe663752fa8
+301              main.js             6d422ce96c4ed5d06fa50eed665c65ecc9b8113831e0a7dc131230e57acb724f
+4029             stream.js           5de24fd5e78e0da6135a858967054ba6076bc7b6780f1f12e5fe0005c1b69e03
+756            package.json          c8af9665f20ef23a4bd28f56b34ba56923b507f63673ffdfff555525c54f1fd7
                src/                                                                                  
 6569             cmd.iced            2825f8999ab597308752e33a7a78c412fd4ebc508347e9c007e356a31fcd227d
 105              main.iced           ebfcac1e8601511a4413583b4dca40bb5162ee02ef2295b418911991efa06fc0

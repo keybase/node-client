@@ -1,4 +1,10 @@
-## v0.0.8 (2014-06-05)
+## v0.0.9 (2014-06-04)
+
+Bugfixes:
+
+  - Another recompile for ICS v1.7.1-e
+
+## v0.0.8 (2014-06-04)
 
 Bugfixes:
 
