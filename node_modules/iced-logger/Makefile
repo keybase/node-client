@@ -13,7 +13,7 @@ $(BUILD_STAMP): \
 	date > $@
 
 clean:
-	find lib -type f -name *.js -exec rm {} \;
+	rm -f index.js
 
 build: $(BUILD_STAMP) 
 
