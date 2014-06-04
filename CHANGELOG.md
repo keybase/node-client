@@ -1,3 +1,10 @@
+## 0.4.2 (2014-06-04)
+
+Bugfixes:
+
+  - In the previous release, there were errant references to `iced-coffee-script`
+    in some compiled libraries.  Fix that and try again.
+
 ## 0.4.1 (2014-06-04)
 
 Features:
