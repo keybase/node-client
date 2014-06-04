@@ -5,6 +5,10 @@ Features:
   - Cascading upgrade to new ICS (v1.7.1-c), which doesn't depend on the ICS compiler
     at runtime.  This makes the package much smaller and strips dependencies.
 
+Bugfixes:
+
+  - Close keybase/keybase-issues#675
+
 ## 0.4.0 (2014-05-21)
 
 Features:
