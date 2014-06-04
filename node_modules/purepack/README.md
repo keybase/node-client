@@ -3,6 +3,8 @@ purepack
 
 A pure CoffeeScript implementation of Msgpack.
 
+[![build status](https://secure.travis-ci.org/maxtaco/purepack.png)](http://travis-ci.org/maxtaco/purepack)
+
 ## Install
 
     npm install purepack

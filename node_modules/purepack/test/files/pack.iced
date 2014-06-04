@@ -18,7 +18,7 @@ make_test = (k,v) -> (T, cb) ->
   catch e
     # Browserified buffers don't handle Gothic (extended UTF8) or
     # bad UTf8, so we'll just skip them for now...
-    if (k in [ 'gothic', 'bad_utf1']) and e.toString().match(/URIError/) and window?
+    if v.difficult and e.toString().match(/URIError/) and window?
       # it's OK
     else
       T.error "unexpected error in #{k}: #{e}"

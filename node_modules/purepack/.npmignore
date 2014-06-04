@@ -16,5 +16,4 @@ build/
 npm-debug.log
 node_modules
 test/browser/test.js
-test/pack/data.js
 build-stamp

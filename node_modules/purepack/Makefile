@@ -12,6 +12,7 @@ $(BUILD_STAMP): \
 	lib/main.js \
 	lib/buffer.js \
 	lib/const.js \
+        lib/frame.js \
 	lib/pack.js \
 	lib/unpack.js \
 	lib/util.js 
