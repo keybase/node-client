@@ -1,4 +1,10 @@
-## 0.0.21 (2014-06-05)
+## 0.0.22 (2014-06-04)
+
+Bugfixes:
+
+  - Recompile needed in last upgrade
+
+## 0.0.21 (2014-06-04)
 
 Features:
 

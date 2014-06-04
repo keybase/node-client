@@ -1,16 +1,15 @@
 ##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
+Version: GnuPG v1
 
-iQEcBAABCgAGBQJTjy8IAAoJEJgKPw0B/gTfkbcH/0nvkjHRvsObL0/3Wb7spwGW
-KArToHoLg0XBKaLaIDFMtbrgtj7nBC1V26udU6pTiPaATUZrVPAHz7MklgztqVVM
-Ec02/buXnY0WsKo/v6H2spDDFy9M2gzpdRrymzZ67ciMOuH7g2YqYHXiLUzU/Ro2
-qn5vSbByX5vXxRxk6JWrK5O+NWLPscQIuUuuXshZa7qpsVHqeF5SudRsO8q5qgXh
-9e5seYCoCFXrwPHwZu65H4asnZJPNsezX67bBe+QRJrQz2H3qm/tEXx/gOxXCrG2
-4JsedXs4upt7G+idSxDLjy5oZWUHjbL36zFNVu9E1hX8qKSrwKB1J1h5h98NFQg=
-=2kkp
+iQEcBAABAgAGBQJTj6PQAAoJEJgKPw0B/gTfig8IAK1dMm9nYsauEM3/3e85CbT7
+/rV0MeESlU4y5aIx5rOm/xRHhlTKLGa9bkTVqBzbYe1YFYmaL0h5U7ZAOs4FE0aW
+dBV2mnFxSXui+y0ELnNr5YpfPkki/d2dKgqd7/RdoIhOuqeVnHt0XPEBi+zbKeIr
+wQ+J7W2waKC3N0Aab5lgZl8AuCbKl5Dk95Cp4zsHtaHITic+4quurxJzUsMjHGoj
+hBWw5rGkT5jAwCUt47GcX59Ep/ZMUP2mP9MVFdGlQOQ6UkOC+wnlO22Lhywy7ib/
+8Zrm1O5iszXK4qC+r1x/fdFpmGlG2RilTjKJYIPN2uAUUXIGb6Me79rqcTkrfyg=
+=SFRe
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,16 +24,16 @@ qn5vSbByX5vXxRxk6JWrK5O+NWLPscQIuUuuXshZa7qpsVHqeF5SudRsO8q5qgXh
 size   exec  file               contents                                                        
              ./                                                                                 
 109            .gitignore       ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-919            CHANGELOG.md     39b33135407f2c7ec691391223c94a0598fea264f0e33959dcd6734d582760c8
+992            CHANGELOG.md     992c20d424dd8017c32b78cff82f808c553fc32c16a7a5a0f8770a218e45e964
 1483           LICENSE          333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d
 437            Makefile         a031266cdf17cdf3236a0f641bf9eb2a882bf49b5e5aaac8686e4d02e5f0c4b5
 106            README.md        0d5a7f840664005562cff3e2cee8d0d2e7468e24c4380169b6516ce318602f50
                lib/                                                                             
-15276            armor.js       b572d51515334ce8a9c57c4874cbc9592d73d34aa6468fd06bf34add74281cd2
-187              main.js        3af89a1a7aad4a34d84b4d6e7e0785aa138bb279e0c77abec5eb2a6b3b48aff0
-814              userid.js      73f17277c738d689a50e3fb573f79bee5de1f954a2c9175039fdd28863ff12ae
-11337            util.js        58da4731c6bcd9245999ac671bd12e0d5dfb5dfb428ecf3cbf39e361ed3b4ec5
-736            package.json     cfc5d1482fd2280b57f1cc4a0f27ef469b554f815197e6ae07a95ffb6844c299
+15276            armor.js       bc0ebabff9d5c93db3538cf7a4e43125b850cd64adc87b7475454af720dce91d
+187              main.js        c94977c724c76d803edbf6a08ddbc300a6aa930bf777fbd423eecca05f19fc54
+814              userid.js      2d0fff34cdbfbe9ccc7c80cca2a5dac70328e813178a41777efa4b3b1bf63650
+11298            util.js        e78832db6cf9743624c1105b3545c778e39b83c30448578e414a543f443994a1
+740            package.json     d0ca13d9828242d1170df4b27ebcd373e6d15eba6ae164107daabff8161cdaf6
                src/                                                                             
 12585            armor.iced     4f2bcfa15ca0ad895daefaca0d5856845fa984a9c362010423796f15c89eeeaa
 103              main.iced      4f6935672c854424a9d7dc96d3e446d39528b76091b4d06e199c67c5511cd09e
