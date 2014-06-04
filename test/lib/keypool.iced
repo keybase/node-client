@@ -12,7 +12,7 @@ class Keypool
 
   load : (cb) ->
     await @_keyring.find_keys_full { secret : true }, defer err, @_keys
-    dead = 5
+    dead = 10
     for [0...dead]
       @_keys.shift()
     cb err
