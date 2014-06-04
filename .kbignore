@@ -2,7 +2,13 @@ test
 hacks
 rel
 certs
+.gitignore
 node_modules/iced-coffee-script
 node_modules/optimist
 node_modules/iced-test
 node_modules/iced-expect
+node_modules/.bin/icake
+node_modules/.bin/iced
+build-stamp
+node_modules/kbpgp/build-stamp
+node_modules/triplesec/build-stamp

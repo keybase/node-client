@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTj30eAAoJEJgKPw0B/gTfL18H/j7OX1vYIVQ/oQuvAxX6wKkK
-ptR45UyJVYYmPBY8lH5tJB/4VaX8RycQUS7yBH4Nv97nURG6i8/eMtIZ3jzrhfvL
-MiWibIEXbKe4RaS3sSaNWSfu2pY72X/E9hJO6bKLkxpAYjHiPE2KpX5Iz9Fceq9K
-FIhPfXq3mHGADQ8qIZXwSbP6j2AfqPqgD4fpSxQE5t1dDqiwnZNFyLZlz1C7R7mk
-MoCMDoUgoNEWdGiXroMzRRGC+rajsb2m7EQl2Pwc7JP+sd4jUGCwwd5Z5rGm6qZO
-fmYFkm6KMQOY3LdSRc5nP8UF1PEjEFoggcwKoLiNSFfQfR9LSqJYXLiN9PRloDQ=
-=dMao
+iQEcBAABCgAGBQJTj33WAAoJEJgKPw0B/gTft3IH/3ieknJxIq8JkGvGLNJwqESo
+XpTS56Yy+oVxV6kldbKm0pllVpgLr3hf1G2Bq30QPcejkYHpdXfv/CjwrrDMr85W
+hBj64QHrlb33DT1hRFNbv+1kdYCBbIWXlsrKR7crXGIo9jyjjj1InLZbxFim3VIp
+nHyPQQcHULUDGf8W730yk1TRG9+nludSQ5q+ote8awrmupZk8MsbdEpaRlvULm8G
+2q/fCAzC8euf+oJ1CMAu3AHl9Pvj7vVNYZmpa7JfgtbKOjxBbPSP+bPkrE8Df3ad
+c95dKD1XT3jzzdJG6oMzwtr0sjqGAqN5y4tpiuJYhCJEz3dcjdY+qdBhfyOtYvc=
+=Fkhz
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,8 +24,7 @@ fmYFkm6KMQOY3LdSRc5nP8UF1PEjEFoggcwKoLiNSFfQfR9LSqJYXLiN9PRloDQ=
 ```
 size    exec  file                                            contents                                                                                                                         
               ./                                                                                                                                                                               
-146             .gitignore                                    9eeecc0d4d0e4b9f44fb6f9afeda6360e768024dd0950c6c2f6f7d7561f78ee3                                                                 
-123             .kbignore                                     96a99aafc8d1dd6a568fe2d3cf753f0e88b215221651c88cb9aa0e8d2c555919                                                                 
+259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
 17630           CHANGELOG.md                                  9e43be503a4701d5c51f9c76c59e31fba87289d81ba217572dfbde36e12b0011                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
@@ -116,8 +115,6 @@ size    exec  file                                            contents
 2356              version.js                                  2008982cefada8ab792f2b2fc447688c0e55f26bd9fd084b03dcbc1df1674cef                                                                 
                 node_modules/                                                                                                                                                                  
                   .bin/                                                                                                                                                                        
-                    icake                                     -> ../iced-coffee-script/bin/cake                                                                                                
-                    iced                                      -> ../iced-coffee-script/bin/coffee                                                                                              
                     semver                                    -> ../semver/bin/semver                                                                                                          
                   argparse/                                                                                                                                                                    
 2157                HISTORY.md                                70ceb72bd78b9801df9e5621544b1377b618937667088f4ee325dd8cda2ba934                                                                 
