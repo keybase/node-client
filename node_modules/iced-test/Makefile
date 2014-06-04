@@ -9,6 +9,9 @@ default: index.js
 pubclean:
 	rm -rf node_modules
 
+clean:
+	rm -f index.js
+
 setup:
 	npm install -d
 

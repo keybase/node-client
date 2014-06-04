@@ -52,7 +52,7 @@
   "devDependencies": {
     "iced-coffee-script": "~1.7.1-c",
     "iced-expect": "0.0.3",
-    "iced-test": "0.0.10",
+    "iced-test": ">=0.0.16",
     "optimist": "0.6.1"
   },
   "bundleDependencies": [

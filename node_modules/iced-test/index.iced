@@ -286,10 +286,18 @@ exports.BrowserRunner = class BrowserRunner extends Runner
 
 ##-----------------------------------------------------------------------
 
-exports.run = ({mainfile, klass, whitelist, files_dir}) ->
+exports.run = run = ({mainfile, klass, whitelist, files_dir}) ->
   klass = ServerRunner unless klass?
   runner = new klass()
   await runner.run { mainfile, whitelist, files_dir }, defer rc
   process.exit rc
+
+##-----------------------------------------------------------------------
+
+exports.main = main = ( {mainfile, files_dir} ) ->
+  argv = require('minimist')(process.argv[2...])
+  whitelist = if argv._.length > 0 then argv._ else null
+  files_dir = "files" unless files_dir?
+  run { mainfile, whitelist, files_dir }
 
 ##-----------------------------------------------------------------------
