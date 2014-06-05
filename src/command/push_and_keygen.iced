@@ -173,7 +173,7 @@ exports.Command = class Command extends Base
       log.info "Public key already uploaded; pushing only secret key"
       @_secret_only = true
     else if ckres.remote and not(@argv.secret)
-      err = new E.KeyExistsError "You already have a key registered; you must revoke or specify --update"
+      err = new E.KeyExistsError "You already have a key registered; either revoke or run `keybase push --update`"
     cb err
 
   #----------
