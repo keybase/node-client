@@ -1,8 +1,14 @@
-## 0.4.3
+## 0.4.3 (2014-06-05)
 
 Tweaks:
 
   - Better error mesasge for `keybase push --update` (see keybase/keybase-issues#758)
+
+Features:
+
+  - DNS proofs now work with either foo.com or _keybase.foo.com
+     - See keybase/keybase-issues#750
+     - Fix via upgrade to proofs v0.0.32
 
 ## 0.4.2 (2014-06-04)
 
