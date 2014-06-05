@@ -1,3 +1,9 @@
+## 0.4.3
+
+Tweaks:
+
+  - Better error mesasge for `keybase push --update` (see keybase/keybase-issues#758)
+
 ## 0.4.2 (2014-06-04)
 
 Bugfixes:
