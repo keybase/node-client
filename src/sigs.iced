@@ -262,7 +262,9 @@ exports.DnsProofGen = class DnsProofGen extends BaseSigGen
     arg.type = "web_service_binding.dns"
 
   instructions : () ->
-    "Please save the follows as a DNS TXT entry for #{colors.bold(@remote_host)}"
+    search = [ @remote_host, [ "_keybase", @remote_host ].join(".") ]
+    hosts = (colors.bold(h) for h in search).join(" OR ")
+    "Please save the following as a DNS TXT entry for #{hosts}"
 
   display_name : () -> @remote_host
   prompter : () ->

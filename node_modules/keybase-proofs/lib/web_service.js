@@ -50,7 +50,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/web_service.iced",
+            filename: "/Users/max/src/keybase/proofs/src/web_service.iced",
             funcname: "WebServiceBinding._v_check"
           });
           WebServiceBinding.__super__._v_check.call(_this, {

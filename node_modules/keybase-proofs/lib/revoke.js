@@ -39,7 +39,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/revoke.iced",
+            filename: "/Users/max/src/keybase/proofs/src/revoke.iced",
             funcname: "Revoke._v_check"
           });
           Revoke.__super__._v_check.call(_this, {

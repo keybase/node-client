@@ -60,7 +60,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
             funcname: "GenericWebSiteScraper._check_url"
           });
           _this._get_url_body({
@@ -132,7 +132,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/home/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
+                      filename: "/Users/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
                       funcname: "GenericWebSiteScraper.hunt2"
                     });
                     _this._check_url({
@@ -225,7 +225,7 @@ _break()
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
             funcname: "GenericWebSiteScraper.check_status"
           });
           _this._check_url({

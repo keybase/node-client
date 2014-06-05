@@ -48,7 +48,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
             funcname: "BearerToken.get"
           });
           _this._lock.acquire(__iced_deferrals.defer({
@@ -77,7 +77,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+                  filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
                   funcname: "BearerToken.get"
                 });
                 _this.base._get_url_body(opts, __iced_deferrals.defer({
@@ -190,7 +190,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
             funcname: "TwitterScraper.hunt2"
           });
           _this._get_body_api({
@@ -297,7 +297,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
             funcname: "TwitterScraper.check_status"
           });
           _this._get_url_body({
@@ -345,7 +345,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
             funcname: "TwitterScraper._get_bearer_token"
           });
           bt.get(__iced_deferrals.defer({
@@ -377,7 +377,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
             funcname: "TwitterScraper._get_body_api"
           });
           _this._get_bearer_token(__iced_deferrals.defer({
@@ -408,7 +408,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/max/src/keybase/proofs/src/scrapers/twitter.iced",
+                  filename: "/Users/max/src/keybase/proofs/src/scrapers/twitter.iced",
                   funcname: "TwitterScraper._get_body_api"
                 });
                 _this._get_url_body(args, __iced_deferrals.defer({

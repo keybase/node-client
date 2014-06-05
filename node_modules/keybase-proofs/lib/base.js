@@ -80,7 +80,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/base.iced",
+            filename: "/Users/max/src/keybase/proofs/src/base.iced",
             funcname: "Verifier.verify"
           });
           _this._parse_and_process(esc(__iced_deferrals.defer({
@@ -93,7 +93,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/max/src/keybase/proofs/src/base.iced",
+              filename: "/Users/max/src/keybase/proofs/src/base.iced",
               funcname: "Verifier.verify"
             });
             _this._check_json(esc(__iced_deferrals.defer({
@@ -110,7 +110,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/max/src/keybase/proofs/src/base.iced",
+                filename: "/Users/max/src/keybase/proofs/src/base.iced",
                 funcname: "Verifier.verify"
               });
               _this._check_expired(esc(__iced_deferrals.defer({
@@ -161,7 +161,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/max/src/keybase/proofs/src/base.iced",
+                filename: "/Users/max/src/keybase/proofs/src/base.iced",
                 funcname: "Verifier._parse_and_process"
               });
               _this._check_ids(msg.body, __iced_deferrals.defer({
@@ -189,7 +189,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/max/src/keybase/proofs/src/base.iced",
+                  filename: "/Users/max/src/keybase/proofs/src/base.iced",
                   funcname: "Verifier._parse_and_process"
                 });
                 _this.sig_eng.unbox(msg, __iced_deferrals.defer({
@@ -237,7 +237,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/max/src/keybase/proofs/src/base.iced",
+                filename: "/Users/max/src/keybase/proofs/src/base.iced",
                 funcname: "Verifier._check_json"
               });
               _this.base._v_check({
@@ -339,7 +339,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/base.iced",
+            filename: "/Users/max/src/keybase/proofs/src/base.iced",
             funcname: "Base.generate"
           });
           _this.sig_eng.box(json, __iced_deferrals.defer({
@@ -381,7 +381,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/base.iced",
+            filename: "/Users/max/src/keybase/proofs/src/base.iced",
             funcname: "Base.verify"
           });
           verifier.verify(__iced_deferrals.defer({
