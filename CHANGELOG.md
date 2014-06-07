@@ -1,3 +1,12 @@
+## 0.4.4 (2014-06-07)
+
+Bugfixes
+
+  - Address keybase/keybase-issues#732, again...
+    - This time, proving also needs to see perm failures when decided to supersede.
+  - Address keybase/keybase-issues#762
+    - We missed a spot where verify needs a first arg (empty dictionary).  
+
 ## 0.4.3 (2014-06-05)
 
 Tweaks:

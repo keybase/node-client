@@ -109,7 +109,7 @@ exports.KeyPull = class KeyPull
     esc = make_esc cb, "KeyPull::public_pull"
     await TmpKeyRing.make esc defer tmp_keyring
     await @me.import_public_key { keyring : tmp_keyring }, esc defer()
-    await @me.verify esc defer()
+    await @me.verify {}, esc defer()
     await @me.check_remote_proofs {}, esc defer warnings, n_proofs
     await @prompt_ok warnings.warnings().length, n_proofs, esc defer()
     await @me.key.commit {}, esc defer()
