@@ -1,22 +1,15 @@
-##### Signed by https://keybase.io/max74
+##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
+Version: GnuPG v1
 
-iQIcBAABCgAGBQJTkICBAAoJEGdqLioDrtnyX8EQALCGR+jWBSUotH68nmiU3Ig2
-KLCL1vDqQwT6FBjaJseLGCIooFK2vTdtgyJMNA674lW4dZRiOYoS2Z0eur3Jb6n3
-E5evSLG+TepMT3HcQ2fCQbH4QQ2VzapEjVimO7vucBSE79sB21xTjIxq2ecJOocz
-zHCEvW8X5lSs5XVQOSy/O24i61OjEWEgfllnbM8ANW36NUhoguoI72TXJRzj1qdj
-poLyVf0pdHJBqEvb1BaQSEefZGiN0uIxqXUK8S/yqU5lQin0d6R8zMa9rMoNrj8i
-XQSvjwEMXV0q+Ds7zLU8stm6MWOVYF3roI4oHXHDo1XPUPZFZj+2X5WBa3X5Dmzj
-Etq6q/ezGYz7bsosb3ITdguYCzh3n9+SnmN6IBiM6SDRGwPSVKdEE9K+z6HJBjN9
-JCB5+pujW67ae3VaNJ0ja5SuoBP+6AlTO8bef5mzU9opSCrCoD8Ky3Gtfnd8bShp
-5Idt1kLVAU+BYHqbqTgZzXMrYodZpjhsvmznAZ5X++ZShk18cpgg9lGAGRuhxb/z
-GRVdc11paVWsWHO5UcMnEpskUZi+MTaGUvjk3wDMalVqbG4ntwDfy8qDpTKN1yuy
-d/Jvs4vwAcN4mR2lvG6u/IdjFxqcdFjqdDigicLBG9BxyirSey9uoDO2R3SOvJzq
-11F+8G72Qqo01nMYnLNY
-=64yE
+iQEcBAABAgAGBQJTk3lnAAoJEJgKPw0B/gTfkH0H/2NI3anfO0HL0y/tyq5AXYle
+GzgcvvGx86jeLEZQ9OqxLSnUiSAVdAvIbJzB/F1WjH6vguM/a/N8ywaHCorllFxF
+uD27if5A3huCBczMpHXHgD6xWizkNNR99hMcyrXrxdwCIHHXBGmhNue1yxz3LGXW
+7beC51FR1YD6onbf88QHjopWvZQytaITNlNn6u4Cprd3dM/fQbe80x90SYbMw2Hk
+bWPGuxIZkvnZQHvemYW9EJNE4vktFfln0l/obIo9buyXRhuIKgxuXcM7p2Km6iJa
+5iaSQMj8m7sDm3rRadVN6ki/MvO5kBfL5sWpKZRuLDSwnjL9DpZalfPnAQA+R48=
+=2+ws
 -----END PGP SIGNATURE-----
 
 ```
@@ -32,7 +25,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-18078           CHANGELOG.md                                  ec7129d68f31184ac96690f4cb23038e971278e637ae4a46634021ddd856bd09                                                                 
+18360           CHANGELOG.md                                  23a854bfe4504598c23d28fa846e6874da9a63560e5ba683bec20de944ae5052                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 1977            Makefile                                      af715c922be1007c0e4aec42eb0ff1781e388183da5835384914ac804d67e41d                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -65,7 +58,7 @@ size    exec  file                                            contents
 3547                login.js                                  0fd53cbadeabfeeb83f58f7ce0735daeb4b89de5adcb1dd683ba2754291e28c5                                                                 
 2353                logout.js                                 dcf11c071e94eb31c6c9b187993a70a1f74d6eeba77157ecebbef4b2f06d9900                                                                 
 7154                proof_base.js                             6d8975ae80e5a1b686159c7ac55e23e32476924aea1f428419fb71a1cd0c30a7                                                                 
-21669               prove.js                                  4ff456833e7d087e38d1e00310ebb18f0c1df74872a1a8df679bf5352d23eb4b                                                                 
+21692               prove.js                                  27df0a04dd86303889934bdc97cb845dbd62bed4a297a19a962acd9a2414b5d7                                                                 
 3958                pull.js                                   c7b09e7eb04658c7f6cf5e5c990d3aa7dfc69eec2da6fce31e67b76d2ff2f78f                                                                 
 6884                push.js                                   41f4dc0ad21ac35402aff12b0dc33a77d78d30c7b2b7178dce19faa41d9cd7a5                                                                 
 25457               push_and_keygen.js                        c074da4266959bae6f3e32f480b6b9a27d89a20c57071c022f52109f705f466a                                                                 
@@ -94,7 +87,7 @@ size    exec  file                                            contents
 5988              hkp_loopback.js                             9c79c037fa1ea185a9dc2c88abb66f7b8e4228873cf88c5b468c3dce620b1ed1                                                                 
 24261             keymanager.js                               a89119846344e949c9c03fdced199d085fea4d642d6d6f91023ab01c45650288                                                                 
 19758             keypatch.js                                 12e81411bd4d201eb0881a741d30128194a77fec7a807f3ffb1216306de1f062                                                                 
-18929             keypull.js                                  59c7aac5b263a1d2ee42110c5db8be044845a37f5dbef1a9ea76bf129c2de11c                                                                 
+18914             keypull.js                                  da5e6341ef9fde4c3a51f0997646cbc5cfb50326885cf77152a9a8ccd569cb6f                                                                 
 4481              keyring.js                                  7dd39f1bdf455c565d6f636141c0ffc4faed37f0f01db93def81ce6e564ba1ad                                                                 
 7799              keys.js                                     6f2641386e5cba8c3c7beb742e3ed2a9df6bfb8e36c6d1aef202062af598c179                                                                 
 10041             keyselector.js                              b510620027ad1b566a697dcce4f87e9cc74fcb4fc645b03cd312a98992a63f9f                                                                 
@@ -1423,7 +1416,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                a95c661232055416c813eec79835a5b9208b2250e55badb5031f6014a831c555                                                                 
-1934            package.json                                  816e3db1ab9cb1f4eed017e5c30c0a5df3202b8a23b9e807a91ca40623cc0d5d                                                                 
+1934            package.json                                  b97383e4f6348091c41a2467eb6e5f75b00f9cec9b4f78eedd2fe3caa27170af                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
@@ -1466,7 +1459,7 @@ size    exec  file                                            contents
 1001                login.iced                                fef3f362004e03becfc6d140b2ed8d232a3a085edcb139fd88d940e4a942db1d                                                                 
 716                 logout.iced                               9317515389301defcd20709935437a409184bd76743270eadcf9e284ed7cbf8a                                                                 
 2506                proof_base.iced                           c6751b6ccf1c17eea37779c6916f00f4cc2c5f1d39f7615aae50312dfda88a67                                                                 
-4480                prove.iced                                223e218861f71e0b0c805a28b2c600ab2a1cb26602cc64700b69da0bc3af231c                                                                 
+4508                prove.iced                                ece40e3aa4f546412c84a2b7132c459e3a16f0ef1fdb5083e4d747d5b7505639                                                                 
 1256                pull.iced                                 d173926397fa816049158c14dcdab2ef2b702fa6490c013bbce3474f71dd34af                                                                 
 2466                push.iced                                 c370d55117d16fab62b52ad8e35b85cf736cd0a06ad273a019c6a195725a89f3                                                                 
 5256                push_and_keygen.iced                      4c917e69933deb679400c3d46d7526b3c12421e63fa022306998a83fc48b3f03                                                                 
@@ -1495,7 +1488,7 @@ size    exec  file                                            contents
 1470              hkp_loopback.iced                           98c05baa11eaeaa94a4aa2e3099ca421b6270fcdad9774eb3df7e933433ee71d                                                                 
 5402              keymanager.iced                             a78a36f516418d0dcbc71f36c3521eb65cb40a435b17a830f4c7833b397f1987                                                                 
 5035              keypatch.iced                               d460f987d549741b4f2bfe2fd004b0ac4340db420091993ec875ae01e1b40f93                                                                 
-4717              keypull.iced                                74c98ff1c87fe499928a86e37e61fe2edeb0f5498b2a00eb83eae5cf59b2f7b9                                                                 
+4721              keypull.iced                                14b21bdc5254e413eccf59e58f004583c3110688df3da7c203b555f44a44cc84                                                                 
 2224              keyring.iced                                e6f9d8003c3921797eed5a9ecc63664353052f76c2be2bc784f5bba95e38ca90                                                                 
 7737              keys.iced                                   8cf52e631fc6a3d463588b050018f502393ef6a2a888c9afec6d0e02cd2953c9                                                                 
 3493              keyselector.iced                            d773c38ee8c64ee3d3a6237595b98372a87fef6d8df8f12b46f6f42edbfe75ea                                                                 
