@@ -1,3 +1,10 @@
+## 0.4.5
+
+Bugfixes:
+
+  - More debugging for people stuck in strange corners w/r/t revoking and updating
+    failed proofs.
+
 ## 0.4.4 (2014-06-07)
 
 Bugfixes

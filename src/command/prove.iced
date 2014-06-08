@@ -67,11 +67,17 @@ exports.Command = class Command extends ProofBase
 
   check_exists_2 : (cb) ->
     err = null
+    log.debug "+ check_exists_2"
+    log.debug "| Remote proofs: #{JSON.stringify @rp}"
+    log.debug "| Service name: #{@service_name}"
+    log.debug "| Remote_name_normalized: #{@remote_name_normalized}"
     if not(@stub.single_occupancy()) and (v = @rp?[@service_name])? and 
          (@remote_name_normalized in v)
       prompt = "You already have claimed ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
       @supersede = true
+      log.debug '| supersede=true'
+    log.debug "- check_exists_2"
     cb err
 
   #----------
