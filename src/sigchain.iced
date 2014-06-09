@@ -466,9 +466,6 @@ exports.SigChain = class SigChain
       body = link.payload_json()?.body
       index[link.sig_id()] = link
 
-      console.log "fuuuuck"
-      console.log lt
-
       switch lt
         when ST.SELF_SIG     then out[lt] = link
 

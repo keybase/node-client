@@ -69,8 +69,6 @@ exports.Command = class Command extends Base
 
   check_exists : (cb) ->
     address_types = @me.sig_chain.table[ST.CRYPTOCURRENCY]
-    console.log "fuuuuck"
-    console.log @me.sig_chain.table
     links = (link for c in ACCTYPES when (link = address_types?[c])? )
     addresses = (link.body().cryptocurrency.address for link in links)
     if not addresses.length
@@ -90,8 +88,6 @@ exports.Command = class Command extends Base
         err = new E.ProofExistsError m
       else
         @revoke_sig_ids = (link.sig_id() for link in links)
-        console.log "shiiiit"
-        console.log @revoke_sig_ids
     cb err
 
   #----------
@@ -114,6 +110,7 @@ exports.Command = class Command extends Base
     await @check_exists esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
+    log.info "Success!"
     cb null
 
 ##=======================================================================
