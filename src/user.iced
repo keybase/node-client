@@ -478,37 +478,39 @@ exports.User = class User
   #--------------
 
   gen_remote_proof_gen : ({klass, remote_name_normalized, sig_id, supersede }, cb) ->
-    esc = make_esc cb, "User::gen_remote_proof_gen"
-    await @load_public_key {}, esc defer()
     arg = {
-      km : @key, 
       remote_name_normalized, 
       sig_id, 
-      supersede, 
-      merkle_root : @merkle_root(),
-      client : (new PackageJson()).track_obj()
+      supersede
     }
-    g = new klass arg
-    cb null, g
+    await @gen_proof_gen_base { klass, arg }, defer err, ret
+    cb err, ret
+
+  #--------------
+
+  gen_proof_gen_base : ({klass, arg}, cb) ->
+    ret = null
+    await @load_public_key {}, defer err
+    unless err?
+      arg.km = @key
+      arg.merkle_root = @merkle_root()
+      arg.client = (new PackageJson()).track_obj()
+      ret = new klass arg
+    cb null, ret
 
   #--------------
 
   gen_track_proof_gen : ({uid, track_obj, untrack_obj}, cb) ->
-    esc = make_esc cb, "User::gen_track_proof_gen"
-    await @load_public_key {}, esc defer()
     last_link = @sig_chain?.true_last()
     klass = if untrack_obj? then UntrackerProofGen else TrackerProofGen
     arg = 
-      km : @key
       seqno : (if last_link? then (last_link.seqno() + 1) else 1)
       prev : (if last_link? then last_link.id else null)
       uid : uid
-      client : (new PackageJson()).track_obj()
-      merkle_root : @merkle_root()
     arg.track = track_obj if track_obj?
     arg.untrack = untrack_obj if untrack_obj?
-    g = new klass arg
-    cb null, g
+    await @gen_proof_gen_base { klass, arg }, defer err, ret
+    cb err, ret
 
   #--------------
 

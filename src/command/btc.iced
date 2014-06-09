@@ -43,7 +43,7 @@ exports.Command = class Command extends Base
 
   add_subcommand_parse : (scp) ->
     opts = 
-      aliases : [ 'cryptocurrecy' ]
+      aliases : []
       help : "add a signed cryptocurrency address to your profile"
     name = "btc"
     sub = scp.addParser name, opts
@@ -82,9 +82,7 @@ exports.Command = class Command extends Base
   #----------
 
   allocate_proof_gen : (cb) ->
-    klass = proofs.Cryptocurrency
-    klass = S.classes[@service_name]
-    assert.ok klass?
+    klass = CryptocurrencySigGen
     await @me.gen_remote_proof_gen { @klass, @remote_name_normalized, @supersede }, defer err, @gen
     cb err
 
