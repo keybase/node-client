@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "argparse": "0.1.15",
+    "bitcoyne": "0.0.2",
     "bn": "0.0.1",
     "cheerio": "0.13.0",
     "codesign": "0.0.9",
@@ -57,6 +58,7 @@
   },
   "bundleDependencies": [
     "argparse",
+    "bitcoyne",
     "bn",
     "cheerio",
     "codesign",
