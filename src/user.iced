@@ -483,12 +483,12 @@ exports.User = class User
       sig_id, 
       supersede
     }
-    await @gen_proof_gen_base { klass, arg }, defer err, ret
+    await @gen_sig_base { klass, arg }, defer err, ret
     cb err, ret
 
   #--------------
 
-  gen_proof_gen_base : ({klass, arg}, cb) ->
+  gen_sig_base : ({klass, arg}, cb) ->
     ret = null
     await @load_public_key {}, defer err
     unless err?
@@ -509,7 +509,7 @@ exports.User = class User
       uid : uid
     arg.track = track_obj if track_obj?
     arg.untrack = untrack_obj if untrack_obj?
-    await @gen_proof_gen_base { klass, arg }, defer err, ret
+    await @gen_sig_base { klass, arg }, defer err, ret
     cb err, ret
 
   #--------------

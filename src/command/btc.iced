@@ -83,7 +83,10 @@ exports.Command = class Command extends Base
 
   allocate_proof_gen : (cb) ->
     klass = CryptocurrencySigGen
-    await @me.gen_remote_proof_gen { @klass, @remote_name_normalized, @supersede }, defer err, @gen
+    # Only BTC is supported just yet...
+    cryptocurrency = { address : @argv.btc[0], type : 'bitcoin' }
+    arg = { @revoke_sig_ids, cryptocurrency } 
+    await @me.gen_sig_base { klass, arg }, defer err, @gen
     cb err
 
   #----------
@@ -96,7 +99,6 @@ exports.Command = class Command extends Base
     await @check_exists esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
-    await @handle_post esc defer()
     cb null
 
 ##=======================================================================
