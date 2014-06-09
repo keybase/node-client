@@ -48,7 +48,7 @@ class BaseSigGen
       @merkle_root
     }
     # Recent addition --- any signature can carry a revocation with it...
-    arg.revoke = { sig_ids } if (sig_ids = @revoke_sig_ids?)
+    arg.revoke = { sig_ids } if (sig_ids = @revoke_sig_ids)?
     @_make_binding_eng arg
 
   #---------
@@ -161,7 +161,7 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
 
 #===========================================
 
-exports.CryptocurrencyProofGen = class CryptocurrencyProofGen extends BaseSigGen
+exports.CryptocurrencySigGen = class CryptocurrencySigGen extends BaseSigGen
 
   constructor : ({km, @cryptocurrency, revoke_sig_ids, client, merkle_root}) ->
     super { km, client, merkle_root, revoke_sig_ids }
@@ -172,6 +172,7 @@ exports.CryptocurrencyProofGen = class CryptocurrencyProofGen extends BaseSigGen
 
   _v_modify_store_arg : (arg) ->
     arg.type = "cryptocurrency"
+    arg.is_remote_proof = false
 
 #===========================================
 

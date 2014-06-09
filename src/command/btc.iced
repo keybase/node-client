@@ -3,7 +3,7 @@ log = require '../log'
 {ArgumentParser} = require 'argparse'
 {add_option_dict} = require './argparse'
 C = require('../constants').constants
-ST = C.signature_type
+ST = C.signature_types
 ACCTYPES = C.allowed_cryptocurrency_types
 {PackageJson} = require '../package'
 {E} = require '../err'
@@ -20,7 +20,7 @@ util = require 'util'
 fs = require 'fs'
 proofs = require 'keybase-proofs'
 bitcoyne = require 'bitcoyne'
-{CryptocurrencySigGen} = require './sigs'
+{CryptocurrencySigGen} = require '../sigs'
 
 ##=======================================================================
 
@@ -41,7 +41,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  add_subcommand_parse : (scp) ->
+  add_subcommand_parser : (scp) ->
     opts = 
       aliases : []
       help : "add a signed cryptocurrency address to your profile"
@@ -54,29 +54,44 @@ exports.Command = class Command extends Base
   #----------
 
   parse_args : (cb) ->
-    [err,{version}] = bitcoyne.address.check(@argv.btc[0])
+    [err,ret] = bitcoyne.address.check(@argv.btc[0])
     if err?
-      err = new E.BadCryptocurrencyAddress "Bad BTC address: #{err.message}"
-    else if version not in ACCTYPES
-      err = new E.UnsupportedCryptocurrencyAddress "Only support bitcoin addresses at current"
+      err = new E.BadCryptocurrencyAddressError "Bad BTC address: #{err.message}"
+    else if not ret?.version?
+      err = new E.BadCryptocurrencyAddressError "Bad BTC address; no type found"
+    else if not (ret.version in ACCTYPES)
+      err = new E.UnsupportedCryptocurrencyAddressError "Only support bitcoin addresses at current"
     else
-      @address_version = version
+      @address_version = ret.version
     cb err
 
   #----------
 
   check_exists : (cb) ->
     address_types = @me.sig_chain.table[ST.CRYPTOCURRENCY]
-    links = (link for c in C.ACCTYPES when (link = address_types[c])? )
-    es = if links.length is 1 then '' else 'es'
-    a = (link.body().cryptocurrency.address for s in sigs)
-    prompt = "You already have registed address#{s} #{a}; revoke and proceed? "
-    await prompt_yn { prompt, defval : false }, defer err, ok
-    if err? then # noop
-    else if not ok
-      err = new E.ProofExistsError "Addresses already exist"
+    console.log "fuuuuck"
+    console.log @me.sig_chain.table
+    links = (link for c in ACCTYPES when (link = address_types?[c])? )
+    addresses = (link.body().cryptocurrency.address for link in links)
+    if not addresses.length
+      err = null
+    else if @argv.btc[0] in addresses
+      err = new E.DuplicateError "you've already signed BTC address '#{@argv.btc[0]}'"
     else
-      @revoke_sig_ids = (link.id for link in links)
+      if addresses.length is 1
+        prompt = "You already have registed address #{addresses[0]}; revoke and proceed? "
+      else
+        prompt = "You already have registed addresses [#{addresses.join(',')}]; revoke and proceed? "
+      await prompt_yn { prompt, defval : false }, defer err, ok
+      if err? then # noop
+      else if not ok
+        m = if addresses.length is 1 then 'Address already exists'
+        else "Addresses already exist"
+        err = new E.ProofExistsError m
+      else
+        @revoke_sig_ids = (link.sig_id() for link in links)
+        console.log "shiiiit"
+        console.log @revoke_sig_ids
     cb err
 
   #----------

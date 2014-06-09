@@ -20,7 +20,7 @@ scrapemod = require './scrapers'
 {CHECK,BAD_X} = require './display'
 {athrow} = require('iced-utils').util
 {merkle_client} = require './merkle_client'
-bitcoyne = require 'bitcoyune'
+bitcoyne = require 'bitcoyne'
 
 ##=======================================================================
 
@@ -465,6 +465,9 @@ exports.SigChain = class SigChain
       pjs = link.payload_json_str()
       body = link.payload_json()?.body
       index[link.sig_id()] = link
+
+      console.log "fuuuuck"
+      console.log lt
 
       switch lt
         when ST.SELF_SIG     then out[lt] = link
