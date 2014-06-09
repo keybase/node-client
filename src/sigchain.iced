@@ -7,6 +7,7 @@ log = require './log'
 {format_fingerprint,Warnings,asyncify} = require('pgp-utils').util
 {make_esc} = require 'iced-error'
 ST = constants.signature_types
+ACCTYPES = constants.allowed_cryptocurrency_types
 {dict_union,date_to_unix,make_email} = require './util'
 proofs = require 'keybase-proofs'
 cheerio = require 'cheerio'
@@ -19,6 +20,7 @@ scrapemod = require './scrapers'
 {CHECK,BAD_X} = require './display'
 {athrow} = require('iced-utils').util
 {merkle_client} = require './merkle_client'
+bitcoyne = require 'bitcoyune'
 
 ##=======================================================================
 
@@ -486,9 +488,13 @@ exports.SigChain = class SigChain
         when ST.CRYPTOCURRENCY
           if not (id = body?.cryptocurrency?.address)?
             log.warn "Missing Cryptocurrency address"
-            log.debug "Full JSON in singature:"
+            log.debug "Full JSON in signature:"
             log.debug pjs
-          else MAKE(out, lt,{})[id] = link
+          else if not ([err,{version}] = bitcoyne.address.check(id, { version : ACCTYPES}))?
+            log.error "Error in checking cryptocurrency address: #{id}"
+          else if err?
+            log.warn "Error in cryptocurrency address: #{err.message}"
+          else MAKE(out, lt,{})[version] = link
 
         when ST.REVOKE
           if not (sig_id = body?.revoke?.sig_id)

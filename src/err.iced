@@ -18,6 +18,7 @@ exports.E = E = ie.make_errors
   BAD_VALUE : "bad value"
   BAD_SEQNO : "wrong sequence number"
   BAD_PAYLOAD_HASH : "bad payload hash from server"
+  BAD_CRYPTOCURRENCY_ADDRESS : "bad cryptocurrency address"
   INTERNAL : "internal assertion failed"
   MSGPACK : "Message pack format failure"
   BAD_PW_OR_MAC : "Bad password or file was corrupted"

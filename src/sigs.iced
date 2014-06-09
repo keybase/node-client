@@ -16,7 +16,7 @@ urlmod = require 'url'
 
 class BaseSigGen
 
-  constructor : ({@km, @client, @supersede, @merkle_root}) ->
+  constructor : ({@km, @client, @supersede, @merkle_root, @revoke_sig_ids}) ->
 
   #---------
 
@@ -35,7 +35,7 @@ class BaseSigGen
   #---------
 
   _get_binding_eng : () ->
-    @_make_binding_eng {
+    arg = {
       sig_eng : (new SignatureEngine {@km} ),
       @seqno,
       @prev,
@@ -47,6 +47,9 @@ class BaseSigGen
       @client,
       @merkle_root
     }
+    # Recent addition --- any signature can carry a revocation with it...
+    arg.revoke = { sig_ids } if (sig_ids = @revoke_sig_ids?)
+    @_make_binding_eng arg
 
   #---------
 
@@ -160,8 +163,8 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
 
 exports.CryptocurrencyProofGen = class CryptocurrencyProofGen extends BaseSigGen
 
-  constructor : ({km, @cryptocurrencty, client, merkle_root}) ->
-    super { km, client, merkle_root }
+  constructor : ({km, @cryptocurrency, revoke_sig_ids, client, merkle_root}) ->
+    super { km, client, merkle_root, revoke_sig_ids }
 
   _make_binding_eng : (arg) ->
     arg.cryptocurrency = @cryptocurrency
