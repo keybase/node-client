@@ -66,6 +66,7 @@ exports.constants = constants =
     TRACK : 3
     UNTRACK : 4
     REVOKE : 5
+    CRYPTOCURRENCY : 6
   skip :
     NONE : 0
     LOCAL : 1

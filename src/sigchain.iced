@@ -483,6 +483,13 @@ exports.SigChain = class SigChain
             log.debug pjs
           else MAKE(out,lt,{})[id] = link
 
+        when ST.CRYPTOCURRENCY
+          if not (id = body?.cryptocurrency?.address)?
+            log.warn "Missing Cryptocurrency address"
+            log.debug "Full JSON in singature:"
+            log.debug pjs
+          else MAKE(out, lt,{})[id] = link
+
         when ST.REVOKE
           if not (sig_id = body?.revoke?.sig_id)
             log.warn "Cannot find revoke sig_id in signature: #{pjs}"

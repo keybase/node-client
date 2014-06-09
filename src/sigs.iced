@@ -158,6 +158,20 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
 
 #===========================================
 
+exports.CryptocurrencyProofGen = class CryptocurrencyProofGen extends BaseSigGen
+
+  constructor : ({km, @cryptocurrencty, client, merkle_root}) ->
+    super { km, client, merkle_root }
+
+  _make_binding_eng : (arg) ->
+    arg.cryptocurrency = @cryptocurrency
+    new proofs.Cryptocurrency arg
+
+  _v_modify_store_arg : (arg) ->
+    arg.type = "cryptocurrency"
+
+#===========================================
+
 exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
   constructor : ({km,@prev,@seqno,@uid,@track,client,merkle_root}) ->
