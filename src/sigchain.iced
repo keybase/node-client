@@ -17,7 +17,7 @@ deq = require 'deep-equal'
 util = require 'util'
 {env} = require './env'
 scrapemod = require './scrapers'
-{CHECK,BAD_X} = require './display'
+{CHECK,BTC} = require './display'
 {athrow} = require('iced-utils').util
 {merkle_client} = require './merkle_client'
 bitcoyne = require 'bitcoyne'
@@ -169,6 +169,14 @@ exports.Link = class Link
 
   verify_sig : ({which, pubkey}, cb) ->
     pubkey.verify_sig { which, sig : @sig(), payload: @payload_json_str() }, cb
+
+  #-----------
+
+  display_cryptocurrency : (opts, cb) ->
+    cc = @to_cryptocurrency opts
+    msg = [ BTC, cc.type, colors.green(cc.address), "(#{colors.italic('unverified')})" ]
+    log.lconsole "error", log.package().INFO, msg.join(' ')
+    cb null
 
   #-----------
 
@@ -646,6 +654,15 @@ exports.SigChain = class SigChain
       log.debug "| no signatures for #{@uid}, so won't find in merkle tree; skipping check"
     log.debug "- sigchain check_merkle_tree"
     cb err
+
+  #-----------
+
+  display_cryptocurrency_addresses : (opts, cb) ->
+    esc = make_esc cb, "SigChain::display_cryptocurrency_addresses"
+    if (tab = @table[ST.CRYPTOCURRENCY])?
+      for k,v of tab
+        await v.display_cryptocurrency opts, esc defer()
+    cb null
 
   #-----------
 

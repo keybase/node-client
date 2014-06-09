@@ -456,6 +456,12 @@ exports.User = class User
 
   #--------------
 
+  display_cryptocurrency_addresses : (opts, cb) ->
+    await @sig_chain.display_cryptocurrency_addresses opts, defer err
+    cb err
+
+  #--------------
+
   check_remote_proofs : (opts, cb) ->
     opts.pubkey = @key
     opts.username = @username()

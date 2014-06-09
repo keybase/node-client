@@ -138,6 +138,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @make_quarantined_keyring esc defer()
     await @them.verify {}, esc defer()
     await @check_remote_proofs false, esc defer warnings # err isn't a failure here
+    await @them.display_cryptocurrency_addresses {}, esc defer()
     log.debug "- id"
     cb null
 
