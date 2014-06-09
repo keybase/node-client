@@ -205,7 +205,7 @@
                     }));
                     __iced_deferrals._fulfill();
                   })(function() {
-                    return __iced_k(typeof err !== "undefined" && err !== null ? console.error("Workaround for stdin bug failed: " + err.message) : fd !== 0 ? console.error("Workaround for stdin bug failed! Got " + fd + " != 0") : void 0);
+                    return __iced_k(typeof err !== "undefined" && err !== null ? console.error("Workaround for stdin bug failed: " + err.message) : void 0);
                   });
                 } else {
                   return __iced_k();
@@ -237,7 +237,7 @@
                 funcname: "SpawnEngine._node_workarounds"
               });
               _this._node_v0_10_workarounds(__iced_deferrals.defer({
-                lineno: 118
+                lineno: 119
               }));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -272,7 +272,7 @@
             funcname: "SpawnEngine._run"
           });
           _this._node_workarounds(__iced_deferrals.defer({
-            lineno: 132
+            lineno: 133
           }));
           __iced_deferrals._fulfill();
         });
@@ -379,10 +379,10 @@
             funcname: "ExecEngine._got_exec_cb"
           });
           _this.stdout.write(stdout, __iced_deferrals.defer({
-            lineno: 198
+            lineno: 199
           }));
           _this.stderr.write(stderr, __iced_deferrals.defer({
-            lineno: 199
+            lineno: 200
           }));
           __iced_deferrals._fulfill();
         });
@@ -470,7 +470,7 @@
               return rc = arguments[1];
             };
           })(),
-          lineno: 249
+          lineno: 250
         }));
         __iced_deferrals._fulfill();
       });
