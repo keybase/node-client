@@ -78,6 +78,10 @@ exports.Link = class Link
 
   #--------------------
 
+  to_cryptocurrency : (opts) -> @body()?.cryptocurrency
+
+  #--------------------
+
   to_list_display : (opts) ->
     name = scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
     if opts?.with_sig_ids or opts?.with_proof_states?
@@ -595,6 +599,15 @@ exports.SigChain = class SigChain
     if @table? and (tab = @table[ST.TRACK])?
       for k,v of tab
         out.push v.payload_json()
+    return out
+
+  #-----------
+
+  list_cryptocurrency_addresses : (opts = {}) ->
+    out = {}
+    if @table? and (tab = @table[ST.CRYPTOCURRENCY])?
+      for k,v of tab when (obj = v.to_cryptocurrency opts)?
+        out[obj.type] = obj.address
     return out
 
   #-----------

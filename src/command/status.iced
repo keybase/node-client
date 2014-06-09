@@ -57,6 +57,8 @@ exports.Command = class Command extends Base
           fingerprint : format_fingerprint me.fingerprint(true)
         if (rp = me.list_remote_proofs())?
           obj.user.proofs = rp
+        if (d = me.list_cryptocurrency_addresses())?
+          obj.user.cryptocurrency = d
     else
       obj = { status : { configured : false } }
 
@@ -73,9 +75,14 @@ exports.Command = class Command extends Base
         log.console.log "  * Key ID: #{ko.key_id}"
         log.console.log "  * Fingerprint: #{ko.fingerprint}"
       if (rp = obj.user.proofs)?
-          log.console.log "Remote proofs:"
-          for k,v of rp
-            log.console.log "  * #{k}: #{v}"
+        log.console.log "Remote proofs:"
+        for k,v of rp
+          log.console.log "  * #{k}: #{v}"
+      if (ct = obj.user.cryptocurrency)?
+        log.console.log "Cryptocurrency Addresses:"
+        for k,v of ct
+          log.console.log "  * #{k}: #{v}"
+
     else
       log.error "Not configured"
 

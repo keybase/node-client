@@ -473,6 +473,7 @@ exports.User = class User
 
   list_remote_proofs : (opts) -> @sig_chain?.list_remote_proofs(opts)
   list_trackees : () -> @sig_chain?.list_trackees()
+  list_cryptocurrency_addresses : () -> @sig_chain?.list_cryptocurrency_addresses()
   merkle_root : () -> @sig_chain?.merkle_root_to_track_obj()
 
   #--------------
