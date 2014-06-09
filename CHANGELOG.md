@@ -1,5 +1,9 @@
 ## 0.4.5
 
+Features:
+
+  - `keybase btc` support
+
 Bugfixes:
 
   - More debugging for people stuck in strange corners w/r/t revoking and updating
