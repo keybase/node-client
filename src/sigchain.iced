@@ -227,9 +227,11 @@ exports.SigChain = class SigChain
 
     out = new LinkTable()
     index = {}
+    seq = {}
 
     for link in @_links when link.fingerprint() is @fingerprint
       index[link.sig_id()] = link
+      seq[link.seqno()] = link
       link.insert_into_table { table : out, index, opts }
 
     # Prune out revoked links
@@ -239,6 +241,7 @@ exports.SigChain = class SigChain
     log.debug "- signature chain compressed"
     @table = out
     @index = index
+    @seq = seq
 
   #-----------
 

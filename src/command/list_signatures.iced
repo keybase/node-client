@@ -92,8 +92,8 @@ exports.Command = class Command extends Base
 
   display_text : (list) ->
     rows = for {seqno,id,type,ctime,live,payload} in list
-      row = [ seqno  ,
-        id[0..8] + "..." ,
+      row = [ seqno,
+        (if @argv.verbose then id else id[0..8] + "..." ),
         type,
         timeago(new Date(ctime*1000)),
       ]
