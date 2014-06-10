@@ -87,6 +87,7 @@ exports.Link = class Link
   walk : ({fn, parent, key}) -> fn { value : @, key, parent }
   flatten : () -> [ @ ]
   is_leaf : () -> true
+  is_revocable : () -> false
   matches : (rxx) -> !!(JSON.stringify(@condense()).match(rxx))
   condense : () -> @payload_json()
 
@@ -193,6 +194,7 @@ class SelfSig extends Link
   is_self_sig : () -> true
   condense : -> "self"
   type_str : -> "self"
+  is_revocable : () -> true
 
   #----------
 
@@ -215,6 +217,10 @@ class RemoteProof extends Link
   #-----------
 
   type_str : () -> "proof"
+  is_revocable : () -> true
+
+  #-----------
+
   condense : () -> 
     ret = {}
     pso = @proof_service_object()
@@ -409,6 +415,7 @@ class Cryptocurrency extends Link
   #-----------
 
   type_str : () -> "currency"
+  is_revocable : () -> true
 
   #-----------
 

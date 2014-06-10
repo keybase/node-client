@@ -38,7 +38,7 @@ $(BUILD_STAMP): \
 	lib/command/push_and_keygen.js \
 	lib/command/reset.js \
 	lib/command/revoke.js \
-	lib/command/revoke_proof.js \
+	lib/command/revoke_sig.js \
 	lib/command/search.js \
 	lib/command/sign.js \
 	lib/command/status.js \

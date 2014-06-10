@@ -68,6 +68,8 @@ exports.E = E = ie.make_errors
   REQ_GENERIC : "generic error"
   KEY_NOT_TRUSTED : "key not trusted"
   KEY_NOT_FOUND : "key not found"
+  REVOKED : "revoked"
+  REVOKE  : "error in revocation"
 
 #================================================
 

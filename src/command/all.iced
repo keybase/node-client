@@ -90,7 +90,7 @@ class Main
       "prove"
       "reset"
       "revoke"
-      "revoke_proof"
+      "revoke_sig"
       "search"
       "sign"
       "status"
