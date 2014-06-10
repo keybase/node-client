@@ -21,6 +21,10 @@ exports.Command = class Command extends Base
   #----------
 
   OPTS : 
+    r :
+      alias : 'revoked'
+      action : 'storeTrue'
+      help : 'show revoked signatures too'
     v :
       alias : 'verbose'
       action : 'storeTrue'
@@ -88,13 +92,15 @@ exports.Command = class Command extends Base
 
   display_text : (list) ->
     rows = for {seqno,id,type,ctime,live,payload} in list
-      [ seqno  ,
+      row = [ seqno  ,
         id[0..8] + "..." ,
         type,
         timeago(new Date(ctime*1000)),
-        (if live then "+" else "-"),
-        (if typeof(payload) is 'string' then payload else JSON.stringify(payload))
       ]
+      if (@argv.revoked) then row.push (if live then "+" else "-")
+      row.push (if typeof(payload) is 'string' then payload else JSON.stringify(payload))
+      row
+
     tablify rows, {
       row_start : ' '
       row_end : ''
@@ -192,7 +198,8 @@ exports.Command = class Command extends Base
     await @parse_args esc defer()
     if (un = env().get_username())?
       await session.check esc defer logged_in
-      await User.load_me {secret : false}, esc defer me
+      verify_opts = { show_revoked : @argv.revoked, show_perm_failures : true }
+      await User.load_me {secret : false, verify_opts }, esc defer me
       list = @process_sigs me
       log.console.log @display list
     else

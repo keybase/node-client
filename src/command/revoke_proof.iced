@@ -97,7 +97,7 @@ exports.Command = class Command extends ProofBase
     esc = make_esc cb, "Command::run"
     await @parse_args esc defer()
     await session.login esc defer()
-    await User.load_me { secret : true, show_perm_failures : true }, esc defer @me
+    await User.load_me { secret : true, verify_opts : { show_perm_failures : true } }, esc defer @me
     await @get_the_go_ahead esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()

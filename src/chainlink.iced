@@ -156,6 +156,31 @@ exports.Link = class Link
 
   #--------------------
 
+  _perform_revocations : ({table, index}) ->
+    ids = []
+    if (r = @body()?.revoke)?
+      ids.push r.sig_id if r.sig_id?
+      ids = ids.concat(r.sig_ids) if r.sig_ids?
+    if ids.length
+      log.debug "+ Link::_perform_revocations #{JSON.stringify(ids)}"
+      for id in ids
+        @_perform_revocation { id, table, index }
+      log.debug "- Link::_perform_revocations"
+
+  #--------------------
+
+  _perform_revocation : ({id, table, index}) ->
+    log.debug "+ Link::_perform_revocation #{id}"
+    if not (link = index[id])?
+      log.warn "Cannot revoke signature #{id} since we haven't seen it"
+    else if link.is_revoked()
+      log.info "Signature is already revoked: #{id}"
+    else
+      link.revoke()
+    log.debug "- Link::_perform_revocation #{id}"
+
+  #--------------------
+
   insert_into_table : () ->
     log.warn "unhandled public sig type: #{@sig_type()}"
 
@@ -200,16 +225,19 @@ class RemoteProof extends Link
 
   #-----------
 
-  insert_into_table : ({table, show_perm_failures }) ->
+  insert_into_table : ({table, index, opts}) ->
+    log.debug "+ RemoteProof::insert_into_table"
+    @_perform_revocations { index }
     S = constants.proof_state 
     states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
-    states.push S.PERM_FAILURE if show_perm_failures
+    states.push S.PERM_FAILURE if opts?.show_perm_failures
     if @proof_state() in states
       keys = [ @sig_type(), @proof_type() ]
       if (sub_id = @get_sub_id())? then keys.push sub_id
       table.insert_path keys, @
     else
       log.debug "Skipping remote proof in state #{@proof_state()}: #{@payload_json_str()}"
+    log.debug "- RemoteProof::insert_into_table"
 
   #-----------
 
@@ -351,13 +379,17 @@ class Track extends Link
 
   #----------
 
-  insert_into_table : ({table}) ->
+  insert_into_table : ({table, opts}) ->
     log.debug "+ Track::insert_into_table #{@sig_id()}"
     if not (id = @body()?.track?.id)? 
       log.warn "Missing track in signature"
       log.debug "Full JSON in signature:"
       log.debug @payload_json_str()
-    else table.insert_path [ @sig_type(), id] , @
+    else 
+      path = [ @sig_type(), id ]
+      # see the comment below about cryptocurrencies
+      if opts.show_revoked then path.push @seqno()
+      table.insert_path path, @
     log.debug "- Track::insert_into_table #{@sig_id()} (uid=#{id})"
 
 ##=======================================================================
@@ -388,8 +420,9 @@ class Cryptocurrency extends Link
 
   #-----------
 
-  insert_into_table : ({table }) ->
+  insert_into_table : ({table, index, opts }) ->
     log.debug "+ Cryptocurrency::insert_into_table #{@sig_id()}"
+    @_perform_revocations { index }
     if not (id = @body()?.cryptocurrency?.address)?
       log.warn "Missing Cryptocurrency address"
       log.debug "Full JSON in signature:"
@@ -398,8 +431,12 @@ class Cryptocurrency extends Link
       log.error "Error in checking cryptocurrency address: #{id}"
     else if err?
       log.warn "Error in cryptocurrency address: #{err.message}"
-    else
-      table.insert_path [ @sig_type(), ret.version ], @
+    else 
+      path = [ @sig_type(), ret.version ]
+      # if we want to see revoked signatures, we have to have multiple entries for
+      # bitcoins, so we further index on seqno
+      path.push @seqno() if opts?.show_revoked
+      table.insert_path path, @
     log.debug "- Cryptocurrency::insert_into_table #{@sig_id()}"
 
 ##=======================================================================
@@ -407,26 +444,26 @@ class Cryptocurrency extends Link
 class Revoke extends Link
 
   insert_into_table : ({index}) ->
-    log.debug "+ Revoke::insert_into_table #{@sig_id()}"
-    if not (sig_id = @body()?.revoke?.sig_id)
-      log.warn "Cannot find revoke sig_id in signature: #{@payload_json_str()}"
-    else if not (link = index[sig_id])?
-      log.warn "Cannot revoke signature #{sig_id} since we haven't seen it"
-    else if link.is_revoked()
-      log.info "Signature is already revoked: #{sig_id}"
-    else
-      link.revoke()
-    log.debug "- Revoke::insert_into_table #{@sig_id()}"
+    log.debug "+ Revoke::insert_into_table"
+    @_perform_revocations { index }
+    log.debug "- Revoke::insert_into_table"
 
 ##=======================================================================
 
 class Untrack extends Link
 
-  insert_into_table : ({table, index}) ->
+  insert_into_table : ({table, index, opts}) ->
+    log.debug "+ Untrack::insert_into_table"
     if not (id = @body()?.untrack?.id)? then log.warn "Mssing untrack in signature: #{@payload_json_str()}"
     else if not (link = table.get(ST.TRACK)?.get(id))? then log.warn "Unexpected untrack of #{id} in signature chain"
-    else if link.is_revoked() then log.debug "| Tracking was already revoked for #{id} (ignoring untrack)"
-    else link.revoke()
+    else if not (link.is_leaf()) and not opts?.show_revoked then log.warn "Unexpected multi-follow"
+    else
+      links = if link.is_leaf() then [ link ]
+      else link.flatten()
+      for link in links
+        if link.is_revoked() then log.debug "| Tracking was already revoked for #{id} (ignoring untrack)"
+        else link.revoke()
+    log.debug "- Untrack::insert_into_table"
 
 ##=======================================================================
 

@@ -221,7 +221,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  _compress : ({show_perm_failures}) ->
+  _compress : (opts) ->
 
     log.debug "+ compressing signature chain"
 
@@ -230,10 +230,11 @@ exports.SigChain = class SigChain
 
     for link in @_links when link.fingerprint() is @fingerprint
       index[link.sig_id()] = link
-      link.insert_into_table { table : out, index, show_perm_failures }
+      link.insert_into_table { table : out, index, opts }
 
     # Prune out revoked links
-    out.prune (obj) -> obj.is_revoked()
+    unless opts.show_revoked
+      out.prune (obj) -> obj.is_revoked()
 
     log.debug "- signature chain compressed"
     @table = out
@@ -269,7 +270,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  verify_sig : ({key, show_perm_failures }, cb) ->
+  verify_sig : ({key, opts}, cb) ->
     esc = make_esc cb, "SigChain::verify_sig"
     @username = username = key.username()
     @pubkey = key
@@ -277,7 +278,7 @@ exports.SigChain = class SigChain
     if (@fingerprint = key.fingerprint()?.toLowerCase())? and @last()?.fingerprint()?
       @_true_last = @last()
       @_limit()
-      @_compress { show_perm_failures }
+      @_compress (opts or {})
       await @_verify_sig esc defer()
     else
       log.debug "| Skipped since no fingerprint found in key or no links in chain"
