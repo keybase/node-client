@@ -202,7 +202,7 @@ exports.SigChain = class SigChain
     # Search for a freerider in an otherwise useful signature
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
-        for link in @flatten(@table?[type])
+        for link in @table?.get(type)?.flatten()
           if link.self_signer() is @username 
             found = true
             break

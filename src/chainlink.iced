@@ -85,6 +85,7 @@ exports.Link = class Link
 
   # Links are nodes in the tree, so no need to keep walking...
   walk : ({fn, parent, key}) -> fn { value : @, key, parent }
+  flatten : () -> [ @ ]
   is_leaf : () -> true
 
   #--------------------

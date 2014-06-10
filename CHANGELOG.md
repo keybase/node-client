@@ -3,6 +3,7 @@
 Features:
 
   - `keybase btc` support
+  - Refactor of the table structure for signatures read out of signature chain
 
 Bugfixes:
 
