@@ -16,7 +16,7 @@ $(BUILD_STAMP): \
 	lib/command/argparse.js \
 	lib/command/all.js \
 	lib/command/base.js \
-        lib/command/btc.js \
+	lib/command/btc.js \
 	lib/command/cert.js \
 	lib/command/config.js \
 	lib/command/decrypt.js \
@@ -27,6 +27,7 @@ $(BUILD_STAMP): \
 	lib/command/id.js \
 	lib/command/join.js \
 	lib/command/keygen.js \
+	lib/command/list_signatures.js \
 	lib/command/list_tracking.js \
 	lib/command/login.js \
 	lib/command/logout.js \
@@ -51,7 +52,7 @@ $(BUILD_STAMP): \
 	lib/basex.js \
 	lib/bn.js \
 	lib/ca.js \
-        lib/chainlink.js \
+	lib/chainlink.js \
 	lib/checkers.js \
 	lib/colors.js \
 	lib/config.js \

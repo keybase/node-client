@@ -81,6 +81,7 @@ class Main
       "id"
       "join"
       "keygen"
+      "list_signatures"
       "list_tracking"
       "login"
       "logout"
