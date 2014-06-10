@@ -4,6 +4,7 @@ Features:
 
   - `keybase btc` support
   - Refactor of the table structure for signatures read out of signature chain
+  - `keybase list-sigs` lists signatures in conveninent form
 
 Bugfixes:
 
