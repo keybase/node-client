@@ -21,7 +21,7 @@ scrapemod = require './scrapers'
 {athrow} = require('iced-utils').util
 {merkle_client} = require './merkle_client'
 bitcoyne = require 'bitcoyne'
-{Link} = require('./chainlink')
+{Link,LinkTable} = require('./chainlink')
 
 ##=======================================================================
 
@@ -224,51 +224,24 @@ exports.SigChain = class SigChain
 
     log.debug "+ compressing signature chain"
 
-    MAKE = (d,k,def) -> if (out = d[k]) then out else d[k] = out = def
-
-    INSERT = (d, keys, val) ->
-      for k in keys[0...-1]
-        d = MAKE(d,k,{})
-      d[keys[-1...][0]] = val
-
-    out = {}
+    out = new LinkTable()
     index = {}
 
     for link in @_links when link.fingerprint() is @fingerprint
       index[link.sig_id()] = link
+      link.insert_into_table { table : out, index, show_perm_failures }
 
-      link.insert_into_table { table : out, index , MAKE, INSERT, show_perm_failures }
-
-    prune = (d) ->
-      for k,v of d
-        if not (v instanceof Link) then prune v
-        else if v.is_revoked() then delete d[k]
-
-    # remove all revoked signatures in one final pass
-    prune out
+    # Prune out revoked links
+    out.prune (obj) -> obj.is_revoked()
 
     log.debug "- signature chain compressed"
     @table = out
 
   #-----------
 
-  flatten : (d) ->
-    links = []
-    if d?
-      search = [ d ]
-      while search.length
-        if ((front = search.pop()) instanceof Link) then links.push front
-        else
-          for k,v of front
-            search.push v
-    return links
-
-  #-----------
-
   # list all remote proofs in a flat list, taking out the structure that
   # the Web and DNS proofs are in a sub-dictionary
-  flattened_remote_proofs : () ->
-    @flatten @table?[ST.REMOTE_PROOF]
+  flattened_remote_proofs : () -> @table?.get(ST.REMOTE_PROOF)?.flatten() or []
 
   #-----------
 
@@ -290,8 +263,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-
-  get_track_obj : (uid) -> @table?[ST.TRACK]?[uid]?.to_table_obj()
+  get_track_obj : (uid) -> @table?.get_path([ST.TRACK, uid])?.to_table_obj()
 
   #-----------
 
@@ -316,7 +288,7 @@ exports.SigChain = class SigChain
 
   list_trackees : () ->
     out = []
-    if @table? and (tab = @table[ST.TRACK])?
+    if (tab = @table?.get(ST.TRACK)?.to_dict())
       for k,v of tab
         out.push v.payload_json()
     return out
@@ -324,7 +296,7 @@ exports.SigChain = class SigChain
   #-----------
 
   list_cryptocurrency_addresses : (opts = {}) ->
-    if @table? and (tab = @table[ST.CRYPTOCURRENCY])?
+    if (tab = @table?.get(ST.CRYPTOCURRENCY)?.to_dict())?
       out = {}
       for k,v of tab when (obj = v.to_cryptocurrency opts)?
         out[obj.type] = obj.address
@@ -336,15 +308,15 @@ exports.SigChain = class SigChain
 
   list_remote_proofs : (opts = {}) ->
     out = null
-    if @table? and (tab = @table[ST.REMOTE_PROOF])?
+    if (tab = @table.get(ST.REMOTE_PROOF)?.to_dict())?
       for type,obj of tab
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
 
         # In the case of an end-link, just display it.  In the 
         # case of a dictionary of more links, just list the keys
-        out[type] = if (obj instanceof Link) then obj.to_list_display(opts)
-        else (v.to_list_display(opts) for k,v of obj)
+        out[type] = if (obj.is_leaf()) then obj.to_list_display(opts)
+        else (v.to_list_display(opts) for k,v of obj.to_dict())
 
     return out
 
@@ -373,7 +345,7 @@ exports.SigChain = class SigChain
 
   display_cryptocurrency_addresses : (opts, cb) ->
     esc = make_esc cb, "SigChain::display_cryptocurrency_addresses"
-    if (tab = @table[ST.CRYPTOCURRENCY])?
+    if (tab = @table?.get(ST.CRYPTOCURRENCY)?.to_dict())?
       for k,v of tab
         await v.display_cryptocurrency opts, esc defer()
     cb null
@@ -393,15 +365,14 @@ exports.SigChain = class SigChain
     assertions?.found('key', false)?.success().set_payload pubkey.fingerprint() 
     assertions?.found('keybase', false)?.success().set_payload username
 
-    if (tab = @table?[ST.REMOTE_PROOF])?
-      log.debug "| Loaded table with #{Object.keys(tab).length} keys"
-      for type,v of tab
+    if (tab = @table?.get(ST.REMOTE_PROOF))?
+      log.debug "| Loaded table with #{tab.keys().length} keys"
+      for type,v of tab.to_dict()
         type = parseInt(type) # we expect it to be an int, not a dict key
 
         # For single-shot proofs like Twitter and Github, this will be the proof.
         # For multi-tenant proofs like 'generic_web_site', we have to go one level deeper
-        links = if (v instanceof Link) then [ v ]
-        else (v2 for k,v2 of v)
+        links = v.flatten()
 
         for link in links
           await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()

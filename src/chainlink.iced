@@ -83,6 +83,12 @@ exports.Link = class Link
 
   #--------------------
 
+  # Links are nodes in the tree, so no need to keep walking...
+  walk : ({fn, parent, key}) -> fn { value : @, key, parent }
+  is_leaf : () -> true
+
+  #--------------------
+
   verify : () ->
     err = null
     if (a = @obj.payload_hash) isnt (b = @id)
@@ -149,8 +155,7 @@ class SelfSig extends Link
 
   #----------
 
-  insert_into_table : ( {table} ) ->
-    table[@sig_type()] = @
+  insert_into_table : ( {table} ) -> table.insert @sig_type(), @
 
 ##=======================================================================
 
@@ -168,14 +173,14 @@ class RemoteProof extends Link
 
   #-----------
 
-  insert_into_table : ({table, INSERT, show_perm_failures }) ->
+  insert_into_table : ({table, show_perm_failures }) ->
     S = constants.proof_state 
     states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
     states.push S.PERM_FAILURE if show_perm_failures
     if @proof_state() in states
       keys = [ @sig_type(), @proof_type() ]
       if (sub_id = @get_sub_id())? then keys.push sub_id
-      INSERT(table, keys, @)
+      table.insert_path keys, @
     else
       log.debug "Skipping remote proof in state #{@proof_state()}: #{@payload_json_str()}"
 
@@ -314,13 +319,14 @@ class Track extends Link
 
   #----------
 
-  insert_into_table : ({table, MAKE }) ->
-
+  insert_into_table : ({table}) ->
+    log.debug "+ Track::insert_into_table #{@sig_id()}"
     if not (id = @body()?.track?.id)? 
       log.warn "Missing track in signature"
       log.debug "Full JSON in signature:"
       log.debug @payload_json_str()
-    else MAKE(table,@sig_type(),{})[id] = @
+    else table.insert_path [ @sig_type(), id] , @
+    log.debug "- Track::insert_into_table #{@sig_id()} (uid=#{id})"
 
 ##=======================================================================
 
@@ -338,7 +344,7 @@ class Cryptocurrency extends Link
 
   #-----------
 
-  insert_into_table : ({table, MAKE }) ->
+  insert_into_table : ({table }) ->
     log.debug "+ Cryptocurrency::insert_into_table #{@sig_id()}"
     if not (id = @body()?.cryptocurrency?.address)?
       log.warn "Missing Cryptocurrency address"
@@ -348,7 +354,8 @@ class Cryptocurrency extends Link
       log.error "Error in checking cryptocurrency address: #{id}"
     else if err?
       log.warn "Error in cryptocurrency address: #{err.message}"
-    else MAKE(table, @sig_type(), {})[ret.version] = @
+    else
+      table.insert_path [ @sig_type(), ret.version ], @
     log.debug "- Cryptocurrency::insert_into_table #{@sig_id()}"
 
 ##=======================================================================
@@ -373,8 +380,55 @@ class Untrack extends Link
 
   insert_into_table : ({table, index}) ->
     if not (id = @body()?.untrack?.id)? then log.warn "Mssing untrack in signature: #{@payload_json_str()}"
-    else if not (link = table[ST.TRACK]?[id])? then log.warn "Unexpected untrack of #{id} in signature chain"
+    else if not (link = table.get(ST.TRACK)?.get(id))? then log.warn "Unexpected untrack of #{id} in signature chain"
     else if link.is_revoked() then log.debug "| Tracking was already revoked for #{id} (ignoring untrack)"
     else link.revoke()
+
+##=======================================================================
+
+# We can either have a link as an element the links table, or a LinkCollection,
+# which we need in the case of HTTP and DNS proofs.
+exports.LinkTable = class LinkTable
+  constructor : (@table = {}) ->
+
+  insert : (key, value) -> @table[key] = value
+
+  insert_path : (path, value) ->
+    d = @
+    for k in path[0...-1]
+      unless (v = d.get(k))?
+        v = new LinkTable()
+        d.insert k, v
+      d = v
+    d.insert path[-1...][0], value
+
+  get : (key) -> @table[key]
+  keys : () -> Object.keys @table
+
+  get_path : (path) ->
+    v = @
+    (v = v[p] for p in path when v?)
+    return v
+
+  remove : (key) -> delete @table[key]
+
+  to_dict : () -> @table
+
+  is_leaf : () -> false
+
+  walk : ({fn}) ->
+    for k,v of @table
+      v.walk { fn, parent : @, key : k}
+
+  flatten : () -> 
+    out = []
+    fn = ({key, value, parent}) -> out.push value
+    @walk { fn }
+    return out
+
+  prune : (prune_condition) ->
+    fn = ({key, value, parent}) ->
+      parent.remove(key) if prune_condition(value)
+    @walk { fn }
 
 ##=======================================================================
