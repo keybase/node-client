@@ -194,7 +194,7 @@ exports.SigChain = class SigChain
 
     log.debug "+ search for explicit self-signatures (found=#{found})"
     # Search for an explicit self-signature of this key
-    if not found and (link = @table?[ST.SELF_SIG])? and (link.self_signer() is @username)
+    if not found and (link = @table?.get(ST.SELF_SIG))? and (link.self_signer() is @username)
       found = true
     log.debug "- found -> #{found}"
 
@@ -202,7 +202,8 @@ exports.SigChain = class SigChain
     # Search for a freerider in an otherwise useful signature
     if not found
       for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
-        for link in @table?.get(type)?.flatten()
+        tab = @table?.get(type)?.flatten() or []
+        for link in tab
           if link.self_signer() is @username 
             found = true
             break
