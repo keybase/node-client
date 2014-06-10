@@ -235,60 +235,9 @@ exports.SigChain = class SigChain
     index = {}
 
     for link in @_links when link.fingerprint() is @fingerprint
-      lt = link.sig_type()
-      sig_id = link.sig_id()
-      pjs = link.payload_json_str()
-      body = link.payload_json()?.body
       index[link.sig_id()] = link
 
-      switch lt
-        when ST.SELF_SIG     then out[lt] = link
-
-        when ST.REMOTE_PROOF 
-          S = constants.proof_state 
-          states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
-          states.push S.PERM_FAILURE if show_perm_failures
-          if link.proof_state() in states
-            keys = [ lt , link.proof_type() ]
-            if (sub_id = link.get_sub_id())? then keys.push sub_id
-            INSERT(out, keys, link)
-
-        when ST.TRACK 
-          if not (id = body?.track?.id)? 
-            log.warn "Missing track in signature"
-            log.debug "Full JSON in signature:"
-            log.debug pjs
-          else MAKE(out,lt,{})[id] = link
-
-        when ST.CRYPTOCURRENCY
-          if not (id = body?.cryptocurrency?.address)?
-            log.warn "Missing Cryptocurrency address"
-            log.debug "Full JSON in signature:"
-            log.debug pjs
-          else if not ([err,{version}] = bitcoyne.address.check(id, { version : ACCTYPES}))?
-            log.error "Error in checking cryptocurrency address: #{id}"
-          else if err?
-            log.warn "Error in cryptocurrency address: #{err.message}"
-          else MAKE(out, lt,{})[version] = link
-
-        when ST.REVOKE
-          if not (sig_id = body?.revoke?.sig_id)
-            log.warn "Cannot find revoke sig_id in signature: #{pjs}"
-          else if not (link = index[sig_id])?
-            log.warn "Cannot revoke signature #{sig_id} since we haven't seen it"
-          else if link.is_revoked()
-            log.info "Signature is already revoked: #{sig_id}"
-          else
-            link.revoke()
-
-        when ST.UNTRACK
-          if not (id = body?.untrack?.id)? then log.warn "Mssing untrack in signature: #{pjs}"
-          else if not (link = out[ST.TRACK]?[id])? then log.warn "Unexpected untrack of #{id} in signature chain"
-          else if link.is_revoked() then log.debug "| Tracking was already revoked for #{id} (ignoring untrack)"
-          else link.revoke()
-
-        else
-          log.warn "unknown public sig type: #{lt}"
+      link.insert_into_table { table : out, index , MAKE, INSERT, show_perm_failures }
 
     prune = (d) ->
       for k,v of d

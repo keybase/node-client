@@ -50,46 +50,15 @@ exports.Link = class Link
   payload_json_str : () -> @obj.payload_json
   fingerprint : () -> @obj.fingerprint.toLowerCase()
   short_key_id : () -> @fingerprint()[-8...].toUpperCase()
-  is_self_sig : () -> @sig_type() in [ ST.SELF_SIG, ST.REMOTE_PROOF, ST.TRACK ]
+  is_self_sig : () -> false
   self_signer : () -> @payload_json()?.body?.key?.username
-  proof_service_object : () -> @payload_json()?.body?.service
-  remote_username : () -> @proof_service_object()?.username
   sig_type : () -> @obj.sig_type
-  proof_type : () -> @obj.proof_type
-  proof_state : () -> @obj.proof_state
   sig_id : () -> @obj.sig_id
-  api_url : () -> @obj.api_url
-  human_url : () -> @obj.human_url
-  proof_text_check : () -> @obj.proof_text_check
   remote_id : () -> @obj.remote_id
   body : () -> @payload_json()?.body
   ctime : () -> date_to_unix @obj.ctime
   revoke : () -> @_revoked = true
   is_revoked : () -> @_revoked
-
-  #--------------------
-
-  get_sub_id : () -> 
-    scrapemod.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
-
-  #--------------------
-
-  to_cryptocurrency : (opts) -> @body()?.cryptocurrency
-
-  #--------------------
-
-  to_list_display : (opts) ->
-    name = scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
-    if opts?.with_sig_ids or opts?.with_proof_states?
-      { name, sig_id : @sig_id(), proof_state : @proof_state() }
-    else name
-
-  #--------------------
-
-  to_table_obj : () -> 
-    ret = @body().track
-    ret.ctime = @ctime()
-    return ret
 
   #--------------------
 
@@ -133,23 +102,8 @@ exports.Link = class Link
   #--------------------
 
   # XXX maybe also refresh the state flag from the server?
-  refresh : (cb) ->
-    log.debug "+ refresh link"
-    if (@sig_type() is ST.REMOTE_PROOF) and not @api_url()?
-      log.debug "| Proof_id = #{@obj.proof_id}"
-      arg = 
-        endpoint : "sig/remote_proof"
-        args :
-          proof_id : @obj.proof_id
-      log.debug "| request proof refresh for id=#{@obj.proof_id}"
-      await req.get arg, defer err, body
-      if not err? and (row = body?.row)? and (u = row.api_url)?
-        log.debug "| Refreshed with api_url -> #{u}"
-        @obj.api_url = u
-        @obj.human_url = row.human_url
-        await @store defer err
-    log.debug "- refresh_link"
-    cb err
+  # Only does something for remote proofs...
+  refresh : (cb) -> cb null
 
   #--------------------
 
@@ -180,13 +134,55 @@ exports.Link = class Link
   verify_sig : ({which, pubkey}, cb) ->
     pubkey.verify_sig { which, sig : @sig(), payload: @payload_json_str() }, cb
 
+  #--------------------
+
+  insert_into_table : () ->
+    log.warn "unhandled public sig type: #{@sig_type()}"
+
+##=======================================================================
+
+class SelfSig extends Link
+
+  #----------
+
+  is_self_sig : () -> true
+
+  #----------
+
+  insert_into_table : ( {table} ) ->
+    table[@sig_type()] = @
+
+##=======================================================================
+
+class RemoteProof extends Link
+
   #-----------
 
-  display_cryptocurrency : (opts, cb) ->
-    cc = @to_cryptocurrency opts
-    msg = [ BTC, cc.type, colors.green(cc.address), "(#{colors.italic('unverified')})" ]
-    log.lconsole "error", log.package().INFO, msg.join(' ')
-    cb null
+  proof_service_object : () -> @payload_json()?.body?.service
+  proof_type : () -> @obj.proof_type
+  proof_state : () -> @obj.proof_state
+  remote_username : () -> @proof_service_object()?.username
+  api_url : () -> @obj.api_url
+  human_url : () -> @obj.human_url
+  proof_text_check : () -> @obj.proof_text_check
+
+  #-----------
+
+  insert_into_table : ({table, INSERT, show_perm_failures }) ->
+    S = constants.proof_state 
+    states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
+    states.push S.PERM_FAILURE if show_perm_failures
+    if @proof_state() in states
+      keys = [ @sig_type(), @proof_type() ]
+      if (sub_id = @get_sub_id())? then keys.push sub_id
+      INSERT(table, keys, @)
+    else
+      log.debug "Skipping remote proof in state #{@proof_state()}: #{@payload_json_str()}"
+
+  #-----------
+
+  get_sub_id : () -> 
+    scrapemod.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
 
   #-----------
 
@@ -270,32 +266,115 @@ exports.Link = class Link
       proof_type : @obj.proof_type
   }
 
+  #----------
+
+  to_list_display : (opts) ->
+    name = scrapemod.alloc_stub(@proof_type())?.to_list_display(@proof_service_object())
+    if opts?.with_sig_ids or opts?.with_proof_states?
+      { name, sig_id : @sig_id(), proof_state : @proof_state() }
+    else name
+
+  #----------
+
+  refresh : (cb) ->
+    err = null
+    log.debug "+ refresh RemoteProof link"
+    if not @api_url()?
+      log.debug "| Proof_id = #{@obj.proof_id}"
+      arg = 
+        endpoint : "sig/remote_proof"
+        args :
+          proof_id : @obj.proof_id
+      log.debug "| request proof refresh for id=#{@obj.proof_id}"
+      await req.get arg, defer err, body
+      if not err? and (row = body?.row)? and (u = row.api_url)?
+        log.debug "| Refreshed with api_url -> #{u}"
+        @obj.api_url = u
+        @obj.human_url = row.human_url
+        await @store defer err
+    log.debug "- refresh RemoteProof link"
+    cb err
+
+  #----------
+
+  is_self_sig : () -> true
+
 ##=======================================================================
-
-class SelfSig extends Link
-
-#------------
-
-class RemoteProof extends Link
-
-#------------
 
 class Track extends Link
 
-#------------
+  to_table_obj : () -> 
+    ret = @body().track
+    ret.ctime = @ctime()
+    return ret
 
-class Cryptocurrency extends Link
+  #----------
 
-#------------
+  is_self_sig : () -> true
 
-class Revoke extends Link
+  #----------
 
-#------------
+  insert_into_table : ({table, MAKE }) ->
 
-class Untrack extends Link
+    if not (id = @body()?.track?.id)? 
+      log.warn "Missing track in signature"
+      log.debug "Full JSON in signature:"
+      log.debug @payload_json_str()
+    else MAKE(table,@sig_type(),{})[id] = @
 
 ##=======================================================================
 
-exports.alloc = (obj) ->
+class Cryptocurrency extends Link
+
+  to_cryptocurrency : (opts) -> @body()?.cryptocurrency
+
+  #-----------
+
+  display_cryptocurrency : (opts, cb) ->
+    cc = @to_cryptocurrency opts
+    msg = [ BTC, cc.type, colors.green(cc.address), "(#{colors.italic('one-way')})" ]
+    log.lconsole "error", log.package().INFO, msg.join(' ')
+    cb null
+
+  #-----------
+
+  insert_into_table : ({table, MAKE }) ->
+    log.debug "+ Cryptocurrency::insert_into_table #{@sig_id()}"
+    if not (id = @body()?.cryptocurrency?.address)?
+      log.warn "Missing Cryptocurrency address"
+      log.debug "Full JSON in signature:"
+      log.debug @payload_json_str()
+    else if not ([err,ret] = bitcoyne.address.check(id, { version : ACCTYPES}))?
+      log.error "Error in checking cryptocurrency address: #{id}"
+    else if err?
+      log.warn "Error in cryptocurrency address: #{err.message}"
+    else MAKE(table, @sig_type(), {})[ret.version] = @
+    log.debug "- Cryptocurrency::insert_into_table #{@sig_id()}"
+
+##=======================================================================
+
+class Revoke extends Link
+
+  insert_into_table : ({index}) ->
+    log.debug "+ Revoke::insert_into_table #{@sig_id()}"
+    if not (sig_id = @body()?.revoke?.sig_id)
+      log.warn "Cannot find revoke sig_id in signature: #{@payload_json_str()}"
+    else if not (link = index[sig_id])?
+      log.warn "Cannot revoke signature #{sig_id} since we haven't seen it"
+    else if link.is_revoked()
+      log.info "Signature is already revoked: #{sig_id}"
+    else
+      link.revoke()
+    log.debug "- Revoke::insert_into_table #{@sig_id()}"
+
+##=======================================================================
+
+class Untrack extends Link
+
+  insert_into_table : ({table, index}) ->
+    if not (id = @body()?.untrack?.id)? then log.warn "Mssing untrack in signature: #{@payload_json_str()}"
+    else if not (link = table[ST.TRACK]?[id])? then log.warn "Unexpected untrack of #{id} in signature chain"
+    else if link.is_revoked() then log.debug "| Tracking was already revoked for #{id} (ignoring untrack)"
+    else link.revoke()
 
 ##=======================================================================
