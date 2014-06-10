@@ -172,6 +172,7 @@ exports.Command = class Command extends Base
 
   parse_filter : (cb) ->
     err = null
+    @filter_rxx = null
     if (f = @argv.filter)? and f.length
       try
         @filter_rxx = new RegExp(f, "i")
@@ -181,13 +182,29 @@ exports.Command = class Command extends Base
 
   #----------
 
+  select_sigs : (cb) ->
+    if not (@tab = @me.sig_chain.table)? then # noop, no sigs
+    else if @types then @tab = @tab.select(@types)
+    cb null
+
+  #----------
+
+  filter_sigs : (cb) ->
+    if @filter_rxx? and @tab?
+      @tab.prune (obj) => not(obj.matches(@filter_rxx))
+    cb null
+
+  #----------
+
   run : (cb) ->
     esc = make_esc cb, "Command::run"
     await @parse_args esc defer()
     if (un = env().get_username())?
       await session.check esc defer logged_in
-      await User.load_me {secret : false}, esc defer me
-      list = []
+      await User.load_me {secret : false}, esc defer @me
+      await @select_sigs esc defer()
+      await @filter_sigs esc defer()
+      console.log util.inspect @tab, { depth : null }
       log.console.log @display list
     else
       log.warn "Not logged in"

@@ -87,6 +87,7 @@ exports.Link = class Link
   walk : ({fn, parent, key}) -> fn { value : @, key, parent }
   flatten : () -> [ @ ]
   is_leaf : () -> true
+  matches : (rxx) -> !!(@payload_json_str().match rxx)
 
   #--------------------
 
@@ -431,5 +432,11 @@ exports.LinkTable = class LinkTable
     fn = ({key, value, parent}) ->
       parent.remove(key) if prune_condition(value)
     @walk { fn }
+
+  select : (keys) ->
+    out = new LinkTable
+    for k in keys
+      out.insert k, @get(k)
+    return out
 
 ##=======================================================================
