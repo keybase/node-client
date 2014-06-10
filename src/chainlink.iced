@@ -87,7 +87,19 @@ exports.Link = class Link
   walk : ({fn, parent, key}) -> fn { value : @, key, parent }
   flatten : () -> [ @ ]
   is_leaf : () -> true
-  matches : (rxx) -> !!(@payload_json_str().match rxx)
+  matches : (rxx) -> !!(JSON.stringify(@condense()).match(rxx))
+  condense : () -> @payload_json()
+
+  #--------------------
+
+  summary : () -> {
+    seqno : @seqno()
+    id : @sig_id()
+    type : @type_str()
+    ctime : @ctime()
+    live : not(@is_revoked())
+    payload : @condense()
+  }
 
   #--------------------
 
@@ -154,6 +166,8 @@ class SelfSig extends Link
   #----------
 
   is_self_sig : () -> true
+  condense : -> "self"
+  type_str : -> "self"
 
   #----------
 
@@ -172,6 +186,17 @@ class RemoteProof extends Link
   api_url : () -> @obj.api_url
   human_url : () -> @obj.human_url
   proof_text_check : () -> @obj.proof_text_check
+
+  #-----------
+
+  type_str : () -> "proof"
+  condense : () -> 
+    ret = {}
+    pso = @proof_service_object()
+    key = pso.name or pso.protocol
+    val = pso.username or pso.domain
+    ret[key] = val
+    return ret
 
   #-----------
 
@@ -321,6 +346,11 @@ class Track extends Link
 
   #----------
 
+  condense : () -> @body().track.basics.username 
+  type_str : () -> "track"
+
+  #----------
+
   insert_into_table : ({table}) ->
     log.debug "+ Track::insert_into_table #{@sig_id()}"
     if not (id = @body()?.track?.id)? 
@@ -335,6 +365,18 @@ class Track extends Link
 class Cryptocurrency extends Link
 
   to_cryptocurrency : (opts) -> @body()?.cryptocurrency
+
+  #-----------
+
+  condense : () -> 
+    d = @body().cryptocurrency
+    ret = {}
+    ret[d.type] = d.address
+    return ret
+
+  #-----------
+
+  type_str : () -> "currency"
 
   #-----------
 

@@ -237,6 +237,7 @@ exports.SigChain = class SigChain
 
     log.debug "- signature chain compressed"
     @table = out
+    @index = index
 
   #-----------
 

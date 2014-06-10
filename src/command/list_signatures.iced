@@ -30,7 +30,7 @@ exports.Command = class Command extends Base
     t :
       alias : 'type'
       action : "append"
-      help : 'the type of signatures to output; choose from ["track","proof","bitcoin","self"]; all by default'
+      help : 'the type of signatures to output; choose from ["track","proof","currency","self"]; all by default'
 
   #----------
 
@@ -42,7 +42,7 @@ exports.Command = class Command extends Base
   TYPES : 
     track : ST.TRACK
     proof : ST.REMOTE_PROOF
-    bitcoin : ST.CRYPTOCURRENCY
+    currency : ST.CRYPTOCURRENCY
     self : ST.SELF_SIG
 
   #----------
@@ -204,8 +204,7 @@ exports.Command = class Command extends Base
       await User.load_me {secret : false}, esc defer @me
       await @select_sigs esc defer()
       await @filter_sigs esc defer()
-      console.log util.inspect @tab, { depth : null }
-      log.console.log @display list
+      log.console.log (p.summary() for p in @tab.flatten())
     else
       log.warn "Not logged in"
     cb null
