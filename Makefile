@@ -51,6 +51,7 @@ $(BUILD_STAMP): \
 	lib/basex.js \
 	lib/bn.js \
 	lib/ca.js \
+        lib/chainlink.js \
 	lib/checkers.js \
 	lib/colors.js \
 	lib/config.js \
