@@ -11,6 +11,8 @@ util = require 'util'
 {E} = require '../err'
 {constants} = require '../constants'
 ST = constants.signature_types
+{tablify} = require 'tablify'
+timeago = require 'timeago'
 
 ##=======================================================================
 
@@ -59,54 +61,14 @@ exports.Command = class Command extends Base
 
   #----------
 
-  sort_list : (v) ->
-    sort_fn = (a,b) ->
-      a = ("" + a).toLowerCase()
-      b = ("" + b).toLowerCase()
-      if a < b then -1 
-      else if a > b then 1
-      else 0
-    if not v? then {}
-    else
-      v = ( [ pj.body.track.basics.username, pj ] for pj in v)
-      v.sort sort_fn
-      out = {}
-      for [k,val] in v
-        out[k] = val
-      out
+  display_json : (list) ->
+    JSON.stringify list, null, "  "
 
   #----------
 
-  condense_record : (o) ->
-    rps = [] unless (rps = o.body.track.remote_proofs)?
-    proofs = (v for rp in rps when (v = rp?.remote_key_proof?.check_data_json))
-    out = 
-      uid : o.body.track.id
-      key : o.body.track.key.key_fingerprint?.toUpperCase()
-      proofs : proofs
-      ctime : o.ctime
-    return out
-
-  #----------
-
-  condense_records : (d) ->
-    out = {}
-    for k,v of d
-      out[k] = @condense_record v
-    out
-
-  #----------
-
-  display_json : (d) ->
-    unless @argv.verbose
-      d = @condense_records d
-    JSON.stringify d, null, "  "
-
-  #----------
-
-  display : (v) ->
-    if @argv.json then @display_json v
-    else @display_text v
+  display : (list) ->
+    if @argv.json then @display_json list
+    else @display_text list
 
   #----------
 
@@ -124,10 +86,21 @@ exports.Command = class Command extends Base
 
   #----------
 
-  display_text : (d) ->
-    d = @condense_records d
-    lines = (@display_text_line(k,v) for k,v of d)
-    lines.join("\n")
+  display_text : (list) ->
+    rows = for {seqno,id,type,ctime,live,payload} in list
+      [ seqno  ,
+        id[0..8] + "..." ,
+        type,
+        timeago(new Date(ctime*1000)),
+        (if live then "+" else "-"),
+        (if typeof(payload) is 'string' then payload else JSON.stringify(payload))
+      ]
+    tablify rows, {
+      row_start : ' '
+      row_end : ''
+      spacer : '  '
+      row_sep_char : ''
+    }
 
   #----------
 
@@ -182,17 +155,35 @@ exports.Command = class Command extends Base
 
   #----------
 
-  select_sigs : (cb) ->
-    if not (@tab = @me.sig_chain.table)? then # noop, no sigs
-    else if @types then @tab = @tab.select(@types)
-    cb null
+  select_sigs : (me) ->
+    if not (tab = me.sig_chain.table)? then tab = []
+    else if @types? then tab = tab.select(@types)
+    tab
 
   #----------
 
-  filter_sigs : (cb) ->
-    if @filter_rxx? and @tab?
-      @tab.prune (obj) => not(obj.matches(@filter_rxx))
-    cb null
+  filter_sigs : (tab) ->
+    if @filter_rxx?
+      tab.prune (obj) => not(obj.matches(@filter_rxx))
+
+  #----------
+
+  list_sigs : (tab) ->
+    list = (p.summary() for p in tab.flatten())
+
+  #----------
+
+  sort_sigs : (list) ->
+    list.sort (a,b) -> (a.seqno - b.seqno)
+
+  #----------
+
+  process_sigs : (me) ->
+    tab = @select_sigs me
+    @filter_sigs tab
+    list = @list_sigs tab
+    @sort_sigs list
+    list
 
   #----------
 
@@ -201,10 +192,9 @@ exports.Command = class Command extends Base
     await @parse_args esc defer()
     if (un = env().get_username())?
       await session.check esc defer logged_in
-      await User.load_me {secret : false}, esc defer @me
-      await @select_sigs esc defer()
-      await @filter_sigs esc defer()
-      log.console.log (p.summary() for p in @tab.flatten())
+      await User.load_me {secret : false}, esc defer me
+      list = @process_sigs me
+      log.console.log @display list
     else
       log.warn "Not logged in"
     cb null
