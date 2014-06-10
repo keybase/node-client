@@ -408,7 +408,7 @@ exports.LinkTable = class LinkTable
 
   get_path : (path) ->
     v = @
-    (v = v[p] for p in path when v?)
+    (v = v.get(p) for p in path when v?)
     return v
 
   remove : (key) -> delete @table[key]
