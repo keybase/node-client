@@ -4,6 +4,7 @@ Bugfixes:
 
   - More debugging for people stuck in strange corners w/r/t revoking and updating
     failed proofs.
+  - More restricted key flags on key generation; see keybase/keybase-issues#764
 
 ## 0.4.4 (2014-06-07)
 

@@ -9,6 +9,7 @@
 {E} = require './err'
 {make_scrypt_progress_hook} = require './util'
 {StatusParser} = require './gpg'
+log = require './log'
 
 #=====================================================
 
@@ -44,8 +45,10 @@ exports.KeyManager = class KeyManager
       "%echo generating"
       "Key-Type: RSA"
       "Key-Length: #{@config.master.bits}"
+      "Key-Usage: sign,auth"
       "Subkey-Type: RSA"
       "Subkey-Length: #{@config.subkey.bits}"
+      "Subkey-Usage: encrypt"
       "Name-Real: #{h}/#{@username}"
       "Name-Email: #{email}"
       "Expire-date: #{@config.expire}"
@@ -55,15 +58,17 @@ exports.KeyManager = class KeyManager
     stdin = script.join("\n")
     args = [ "--batch", "--gen-key", "--keyid-format", "long", "--status-fd", '2' ]
     stderr = new BufferOutStream()
-    await @ring.gpg { args, stdin, stderr, secret : true }, esc defer out
-    err = null
-    status_parser = (new StatusParser).parse { buf : stderr.data() }
-    if (kc = status_parser.lookup('KEY_CREATED'))? and kc.length >= 2
-      fingerprint = kc[1]
-      @key = @ring.make_key { fingerprint, secret : true }
-      await @key.load esc defer()
+    await @ring.gpg { args, stdin, stderr, secret : true }, defer err, out
+    if err?
+      log.warn stderr.data().toString()
     else
-      err = new E.GenerateError "Failed to parse output of key generation"
+      status_parser = (new StatusParser).parse { buf : stderr.data() }
+      if (kc = status_parser.lookup('KEY_CREATED'))? and kc.length >= 2
+        fingerprint = kc[1]
+        @key = @ring.make_key { fingerprint, secret : true }
+        await @key.load esc defer()
+      else
+        err = new E.GenerateError "Failed to parse output of key generation"
     cb err
 
   #--------------
