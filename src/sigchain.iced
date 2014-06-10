@@ -296,12 +296,11 @@ exports.SigChain = class SigChain
   #-----------
 
   list_cryptocurrency_addresses : (opts = {}) ->
+    out = null
     if (tab = @table?.get(ST.CRYPTOCURRENCY)?.to_dict())?
-      out = {}
       for k,v of tab when (obj = v.to_cryptocurrency opts)?
+        out or= {}
         out[obj.type] = obj.address
-    else
-      out = null
     return out
 
   #-----------
