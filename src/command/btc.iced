@@ -77,9 +77,9 @@ exports.Command = class Command extends Base
       err = new E.DuplicateError "you've already signed BTC address '#{@argv.btc[0]}'"
     else
       if addresses.length is 1
-        prompt = "You already have registed address #{addresses[0]}; revoke and proceed? "
+        prompt = "You already have registered address #{addresses[0]}; revoke and proceed?"
       else
-        prompt = "You already have registed addresses [#{addresses.join(',')}]; revoke and proceed? "
+        prompt = "You already have registered addresses [#{addresses.join(',')}]; revoke and proceed?"
       await prompt_yn { prompt, defval : false }, defer err, ok
       if err? then # noop
       else if not ok
