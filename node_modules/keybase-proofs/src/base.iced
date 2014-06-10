@@ -195,7 +195,7 @@ class Base
 
   #------
 
-  json : -> json_stringify_sorted @_json()
+  json : -> json_stringify_sorted @_json {}
 
   #------
 

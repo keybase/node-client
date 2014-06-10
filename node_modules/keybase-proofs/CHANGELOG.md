@@ -1,3 +1,10 @@
+## 0.0.34 (2014-06-10)
+
+Bugfixes:
+
+  - Fix a bug with revocation in which we weren't providing a default
+    argument to _json(), which was crashing the proof generation.
+
 ## 0.0.33 (2014-06-09)
 
 Features:

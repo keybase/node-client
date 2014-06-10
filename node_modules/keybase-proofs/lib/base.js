@@ -329,7 +329,7 @@
     };
 
     Base.prototype.json = function() {
-      return json_stringify_sorted(this._json());
+      return json_stringify_sorted(this._json({}));
     };
 
     Base.prototype.generate = function(cb) {
