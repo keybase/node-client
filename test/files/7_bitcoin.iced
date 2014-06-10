@@ -35,3 +35,22 @@ exports.replace_address_1 = (T,cb) ->
   T.no_error err
   cb()
 
+sig_id = null
+
+exports.lookup_sig_id_1 = (T,cb) ->
+  args = [ "list-sigs", "-j", "-t", "currency" ]
+  await bob.keybase { args, quiet : false }, defer err, out
+  T.no_error err
+  o = JSON.parse out.toString()
+  last = o[-1...][0]
+  sig_id = last.id
+  T.assert sig_id?, "got back a sig_id"
+  T.equal last.type, 'currency', 'of the right form'
+  T.assert last.live, 'it is now live'
+  cb()
+
+exports.revoke_sig_1 = (T,cb) ->
+  args = [ "revoke-sig", sig_id ]
+  await bob.keybase { args, quiet : true}, defer err, out
+  T.no_error err
+  cb()
