@@ -32,7 +32,7 @@ exports.Command = class Command extends Base
     f : 
       alias : 'force'
       action : 'storeTrue'
-      help : 'force overwrite, revoking the old for this address'
+      help : 'force overwrite, revoking any old addresses'
 
   #----------
 
@@ -43,12 +43,12 @@ exports.Command = class Command extends Base
 
   add_subcommand_parser : (scp) ->
     opts = 
-      aliases : []
+      aliases : [ 'bitcoin' ]
       help : "add a signed cryptocurrency address to your profile"
     name = "btc"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
-    sub.addArgument [ "btc" ], { nargs : 1 }
+    sub.addArgument [ "btc" ], { nargs : 1, help :"the address to sign and publicly post"  }
     return opts.aliases.concat [ name ]
 
   #----------
@@ -75,7 +75,7 @@ exports.Command = class Command extends Base
       err = null
     else if @argv.btc[0] in addresses
       err = new E.DuplicateError "you've already signed BTC address '#{@argv.btc[0]}'"
-    else
+    else if not @argv.force
       if addresses.length is 1
         prompt = "You already have registered address #{addresses[0]}; revoke and proceed?"
       else
@@ -86,8 +86,10 @@ exports.Command = class Command extends Base
         m = if addresses.length is 1 then 'Address already exists'
         else "Addresses already exist"
         err = new E.ProofExistsError m
-      else
-        @revoke_sig_ids = (link.sig_id() for link in links)
+
+    unless err?
+      @revoke_sig_ids = (link.sig_id() for link in links)
+      
     cb err
 
   #----------

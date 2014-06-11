@@ -160,7 +160,7 @@ exports.Link = class Link
   _perform_revocations : ({table, index}) ->
     ids = []
     if (r = @body()?.revoke)?
-      ids.push r.sig_id if r.sig_id?
+      ids.push(r.sig_id) if r.sig_id?
       ids = ids.concat(r.sig_ids) if r.sig_ids?
     if ids.length
       log.debug "+ Link::_perform_revocations #{JSON.stringify(ids)}"
@@ -173,7 +173,7 @@ exports.Link = class Link
   _perform_revocation : ({id, table, index}) ->
     log.debug "+ Link::_perform_revocation #{id}"
     if not (link = index[id])?
-      log.warn "Cannot revoke signature #{id} since we haven't seen it"
+      log.warn "Cannot revoke signature '#{id}' since we haven't seen it"
     else if link.is_revoked()
       log.info "Signature is already revoked: #{id}"
     else
