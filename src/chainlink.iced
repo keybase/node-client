@@ -222,12 +222,11 @@ class RemoteProof extends Link
   #-----------
 
   condense : () -> 
-    ret = {}
     pso = @proof_service_object()
     key = pso.name or pso.protocol
-    val = pso.username or pso.domain
-    ret[key] = val
-    return ret
+    key += ":" unless key[-1...][0] is ':'
+    val = pso.username or pso.domain or pso.hostname
+    [ key, val ].join '//'
 
   #-----------
 
