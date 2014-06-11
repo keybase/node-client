@@ -6,6 +6,7 @@ Features:
   - Refactor of the table structure for signatures read out of signature chain
   - `keybase list-sigs` lists signatures in conveninent form, included revoked
     signatures
+  - Get rid of `keybase revoke-proofs` in favor of `keybase revoke-sig`.
 
 Bugfixes:
 
