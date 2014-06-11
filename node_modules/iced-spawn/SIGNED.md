@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQEcBAABAgAGBQJTj6ZVAAoJEJgKPw0B/gTfKf8H/A3/g74JeYUct7d1Nb9bbwQn
-mJSyZw0bpJaZaumTu1RYOGSVroYLWwa1qUjTsU1WEuKN48wOt4ZQg6vWHT2aLigE
-myh9XUyPtapvr8cmMRNtn/nDELXbkaEJ9kPuKBfCQ/aXZsYukthirAbbIFXDsf+l
-lqTxXlqcU1XSJfT8k7/JX7tl6eMakx5kB6NS/Z/32ehnB9V4AAhybIGxbwwa/VVm
-pQWpJ6d7HbjOfL2ut6skniOzy1Uzuqu5UqeF8go/qRwn+T/AckPwazJ1PJVAnkSK
-HG9/hM9pv2USnM4tU2C7dYJZrORsDwMVBeDN0sivlOh+PzjfODg0CZCp6uuBaYo=
-=6AKL
+iQEcBAABAgAGBQJTlj2qAAoJEJgKPw0B/gTfHDIH/3e5LJ2MDVkTiiRDlGYcnQKt
+LLIkvpeaa9mjdCbjuBrrAA7mlM8x9N8EQjb3yD97I8YkOeNslQOLKt8muNT1n7Y4
++cdr0NTrxQcpuDbIjVAaFJSoWqXgvgBe6pu3wy4l2HmVy0F08WN6jj41hSRWQzur
+j6BYGXT0aZLR2xKR2gm8yeL6WDkxQ6i0heI7PYXJZKqVobyFOc2uOBUeG8kVy9FH
+zhn9AUlymPIeV3Ebk6jH7dbVDFjAvyLjWVr27v9U9byOBghLUXbz4txeQbsczGJ1
+7CtrjvE4Iq4cG2K0VeebssmqwYe7cAAKSSe6mf1TewOYjVBdqfS/Axm/DA1+4Lw=
+=eCgr
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,17 +24,17 @@ HG9/hM9pv2USnM4tU2C7dYJZrORsDwMVBeDN0sivlOh+PzjfODg0CZCp6uuBaYo=
 size   exec  file                    contents                                                        
              ./                                                                                      
 109            .gitignore            ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-1092           CHANGELOG.md          e03dc2c6345d8e3da75859f07d768369eb2275a272d6fd68d21395a91b4a16cf
+1165           CHANGELOG.md          0f9fa752f971da73ca2782d6cc6899391e6c5997688f2e9ef56701b3055c251e
 1489           LICENSE               1e933ceb3f4a00ae33672d4e344f9ff26e92bc8f34bc0c7a52fd0ef257607858
 395            Makefile              02abf7a21a3e70691d33338da881c966359adaa1a138c57d1c5815ec183acde6
 67             README.md             f278a0ddb855b655bc037f249a7009a7f6f2b459b1a1ff173ed128ed53e1331d
                lib/                                                                                  
-15679            cmd.js              5e7c7fe90451eef075ea7ce9b08d67fb4fa95f04a711af9d80daafe663752fa8
+15596            cmd.js              ae070a5dfa716069b0f265d49047281a3cb796f54e525f5e47a5e4df66f8ce84
 301              main.js             6d422ce96c4ed5d06fa50eed665c65ecc9b8113831e0a7dc131230e57acb724f
 4029             stream.js           5de24fd5e78e0da6135a858967054ba6076bc7b6780f1f12e5fe0005c1b69e03
-756            package.json          c8af9665f20ef23a4bd28f56b34ba56923b507f63673ffdfff555525c54f1fd7
+757            package.json          d313025535f2e706243cbf8ef48f57dd13eec213455d306844bbb49f71a3638f
                src/                                                                                  
-6569             cmd.iced            2825f8999ab597308752e33a7a78c412fd4ebc508347e9c007e356a31fcd227d
+6627             cmd.iced            2ab7a08cb365927f06fa2a5e61d3cc309ef9abf2017b8b8d6ef50ce95d6a1ce0
 105              main.iced           ebfcac1e8601511a4413583b4dca40bb5162ee02ef2295b418911991efa06fc0
 1898             stream.iced         db23e88641eeb10efae2e67339c3330609298592b47c6eb65b8780ceddbe7af6
                test/                                                                                 
@@ -59,7 +59,7 @@ dropbox  # ignore .dropbox-cache and other Dropbox-related files
 kb       # ignore anything as described by .kbignore files          
 ```
 
-<!-- summarize version = 0.0.8 -->
+<!-- summarize version = 0.0.9 -->
 
 ### End signed statement
 

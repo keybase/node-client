@@ -108,8 +108,9 @@ exports.SpawnEngine = class SpawnEngine extends BaseEngine
         await fs.open process.execPath, "r", defer err, fd
         if err?
           console.error "Workaround for stdin bug failed: #{err.message}"
-        else if fd isnt 0
-          console.error "Workaround for stdin bug failed! Got #{fd} != 0"
+        #else if fd isnt 0
+        # skip the spammy warning (espcially on windows)
+        # console.error "Workaround for stdin bug failed! Got #{fd} != 0"
     cb()
 
   #---------------

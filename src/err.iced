@@ -18,6 +18,8 @@ exports.E = E = ie.make_errors
   BAD_VALUE : "bad value"
   BAD_SEQNO : "wrong sequence number"
   BAD_PAYLOAD_HASH : "bad payload hash from server"
+  BAD_CRYPTOCURRENCY_ADDRESS : "bad cryptocurrency address"
+  UNSUPPORTED_CRYPTOCURRENCY_ADDRESS : "cryptocurrency protocol not supported"
   INTERNAL : "internal assertion failed"
   MSGPACK : "Message pack format failure"
   BAD_PW_OR_MAC : "Bad password or file was corrupted"
@@ -66,6 +68,8 @@ exports.E = E = ie.make_errors
   REQ_GENERIC : "generic error"
   KEY_NOT_TRUSTED : "key not trusted"
   KEY_NOT_FOUND : "key not found"
+  REVOKED : "revoked"
+  REVOKE  : "error in revocation"
 
 #================================================
 

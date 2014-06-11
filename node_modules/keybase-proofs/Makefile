@@ -12,21 +12,22 @@ lib/%.js: src/%.iced
 	$(ICED) -I browserify -c -o `dirname $@` $<
 
 $(BUILD_STAMP): \
-	lib/main.js \
-	lib/constants.js \
-	lib/base.js \
-	lib/web_service.js \
 	lib/alloc.js \
-	lib/util.js \
-	lib/track.js \
 	lib/auth.js \
-	lib/revoke.js \
+	lib/base.js \
 	lib/b64extract.js \
+	lib/constants.js \
+        lib/cryptocurrency.js \
+	lib/main.js \
+	lib/revoke.js \
 	lib/scrapers/base.js \
 	lib/scrapers/dns.js \
 	lib/scrapers/generic_web_site.js \
 	lib/scrapers/github.js \
-	lib/scrapers/twitter.js
+	lib/scrapers/twitter.js \
+	lib/track.js \
+	lib/web_service.js \
+	lib/util.js 
 	date > $@
 
 build: $(BUILD_STAMP) 

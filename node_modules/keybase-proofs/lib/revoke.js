@@ -14,20 +14,12 @@
   exports.Revoke = Revoke = (function(_super) {
     __extends(Revoke, _super);
 
-    function Revoke(obj) {
-      this.revoke = obj.revoke;
-      Revoke.__super__.constructor.call(this, obj);
+    function Revoke() {
+      return Revoke.__super__.constructor.apply(this, arguments);
     }
 
     Revoke.prototype._type = function() {
       return constants.sig_types.revoke;
-    };
-
-    Revoke.prototype._json = function() {
-      var ret;
-      ret = Revoke.__super__._json.call(this, {});
-      ret.body.revoke = this.revoke;
-      return ret;
     };
 
     Revoke.prototype._v_check = function(_arg, cb) {
@@ -50,15 +42,15 @@
                 return err = arguments[0];
               };
             })(),
-            lineno: 20
+            lineno: 11
           }));
           __iced_deferrals._fulfill();
         });
       })(this)((function(_this) {
         return function() {
-          var _ref, _ref1;
+          var _ref, _ref1, _ref2, _ref3;
           if (typeof err === "undefined" || err === null) {
-            err = ((_ref = json.body) != null ? (_ref1 = _ref.revoke) != null ? _ref1.sig_id : void 0 : void 0) == null ? new Error("Missing revoke.sig_id in signature") : void 0;
+            err = !(((_ref = json.body) != null ? (_ref1 = _ref.revoke) != null ? _ref1.sig_id : void 0 : void 0) != null) && !(((_ref2 = json.body) != null ? (_ref3 = _ref2.revoke) != null ? _ref3.sig_ids : void 0 : void 0) != null) ? new Error("Missing revoke.sig_ids in signature") : void 0;
           }
           return cb(err);
         };

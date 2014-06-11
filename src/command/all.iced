@@ -71,6 +71,7 @@ class Main
     add_option_dict @ap, Base.OPTS
 
     list = [ 
+      "btc"
       "cert"
       "dir"
       "config"
@@ -80,6 +81,7 @@ class Main
       "id"
       "join"
       "keygen"
+      "list_signatures"
       "list_tracking"
       "login"
       "logout"
@@ -88,7 +90,7 @@ class Main
       "prove"
       "reset"
       "revoke"
-      "revoke_proof"
+      "revoke_sig"
       "search"
       "sign"
       "status"

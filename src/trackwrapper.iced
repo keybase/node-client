@@ -30,7 +30,7 @@ exports.TrackWrapper = class TrackWrapper
   #--------
 
   last : () -> @sig_chain.last()
-  table : () -> @sig_chain.table?[ST.REMOTE_PROOF] or {}
+  table : () -> @sig_chain.table?.get(ST.REMOTE_PROOF)?.to_dict() or {}
 
   #--------
 
@@ -119,10 +119,10 @@ exports.TrackWrapper = class TrackWrapper
       for rp in track_cert.remote_proofs
         rkp = rp.remote_key_proof
         row = @table()[rkp.proof_type]
-        if (rkp.proof_type in [ PT.generic_web_site, PT.dns ])
+        unless row.is_leaf() 
           sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
-          row = row[sub_id]
-        if not (row instanceof Link)
+          row = row.get(sub_id)
+        if not row.is_leaf()
           tmp = "Got bad link, it wasn't a link at all"
         else if not deq((a = rkp.check_data_json), (b = row?.body()?.service))
           tmp = "Remote ID changed: #{JSON.stringify a} != #{JSON.stringify b}"

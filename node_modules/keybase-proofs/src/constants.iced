@@ -11,6 +11,7 @@ exports.constants = constants =
     auth : "auth"
     untrack : "untrack"
     revoke : "revoke"
+    cryptocurrency : "cryptocurrency"
   proof_types :
     none : 0
     keybase : 1

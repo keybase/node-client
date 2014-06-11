@@ -1,5 +1,12 @@
 ## 0.4.5
 
+Features:
+
+  - `keybase btc` support
+  - Refactor of the table structure for signatures read out of signature chain
+  - `keybase list-sigs` lists signatures in conveninent form, included revoked
+    signatures
+
 Bugfixes:
 
   - More debugging for people stuck in strange corners w/r/t revoking and updating
