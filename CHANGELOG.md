@@ -1,10 +1,11 @@
-## 0.4.7 
+## 0.4.7 (2014-06-12)
 
 Tweaks:
 
   - Make input scheme more robust for revoke-sig
+  - Close keybase/keybase-issues#771 -- a null @table bug in sigchain
 
-## 0.4.6 (2015-06-12)
+## 0.4.6 (2014-06-12)
 
 Bugfixes:
 

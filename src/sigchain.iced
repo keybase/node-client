@@ -313,7 +313,7 @@ exports.SigChain = class SigChain
 
   list_remote_proofs : (opts = {}) ->
     out = null
-    if (tab = @table.get(ST.REMOTE_PROOF)?.to_dict())?
+    if (tab = @table?.get(ST.REMOTE_PROOF)?.to_dict())?
       for type,obj of tab
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
