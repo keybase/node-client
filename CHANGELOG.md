@@ -1,3 +1,10 @@
+## 0.4.6 (2015-06-12)
+
+Bugfixes:
+
+  - Don't include a `revoke : { sig_ids : [] }` stanza if we don't have to (via proofs@v0.0.35)
+  - Don't say "one-way" under a BTC sig since that's confusing
+
 ## 0.4.5 (2014-06-12)
 
 Features:

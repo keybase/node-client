@@ -296,7 +296,7 @@
     };
 
     Base.prototype._json = function(_arg) {
-      var expire_in, ret;
+      var expire_in, ret, _ref2, _ref3, _ref4;
       expire_in = _arg.expire_in;
       ret = {
         seqno: this.seqno,
@@ -322,7 +322,7 @@
       if (this.merkle_root != null) {
         ret.body.merkle_root = this.merkle_root;
       }
-      if (this.revoke != null) {
+      if ((((_ref2 = this.revoke) != null ? _ref2.sig_id : void 0) != null) || ((_ref3 = this.revoke) != null ? (_ref4 = _ref3.sig_ids) != null ? _ref4.length : void 0 : void 0) > 0) {
         ret.body.revoke = this.revoke;
       }
       return ret;

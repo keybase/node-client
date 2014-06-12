@@ -420,7 +420,7 @@ class Cryptocurrency extends Link
 
   display_cryptocurrency : (opts, cb) ->
     cc = @to_cryptocurrency opts
-    msg = [ BTC, cc.type, colors.green(cc.address), "(#{colors.italic('one-way')})" ]
+    msg = [ BTC, cc.type, colors.green(cc.address) ]
     log.lconsole "error", log.package().INFO, msg.join(' ')
     cb null
 

@@ -1,3 +1,9 @@
+## 0.0.35 (2014-06-11)
+
+Bugfix:
+
+  - Don't include a `revoke : { sig_ids : [] }` stanza if we don't need it
+
 ## 0.0.34 (2014-06-10)
 
 Bugfixes:

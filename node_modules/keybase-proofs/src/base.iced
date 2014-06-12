@@ -190,7 +190,7 @@ class Base
     }
     ret.body.client = @client if @client?
     ret.body.merkle_root = @merkle_root if @merkle_root?
-    ret.body.revoke = @revoke if @revoke?
+    ret.body.revoke = @revoke if (@revoke?.sig_id? or @revoke?.sig_ids?.length > 0)
     return ret
 
   #------
