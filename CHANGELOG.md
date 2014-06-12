@@ -1,3 +1,9 @@
+## 0.4.7 
+
+Tweaks:
+
+  - Make input scheme more robust for revoke-sig
+
 ## 0.4.6 (2015-06-12)
 
 Bugfixes:

@@ -37,6 +37,22 @@ exports.Command = class Command extends Base
 
   #----------
 
+  parse_args : (cb) ->
+    key = @argv.sig[0]
+    err = null
+    if @argv.seqno
+      if key.match /^\d+$/ then @seqno = parseInt(key,10)
+      else err = new E.ArgsError "bad integer: #{key}"
+    else if not key.match /^[A-Fa-f0-9]+$/ 
+      err = new E.ArgsError "bad signature ID: #{key}"
+    else if key.length < 4
+      err = new E.ArgsError "bad signature ID #{key}; must provide at least a 4-char prefix"
+    else
+      @sig_id = key.toLowerCase()
+    cb err
+
+  #----------
+
   add_subcommand_parser : (scp) ->
     opts = 
       help : "revoke a proof or signature"
@@ -73,8 +89,8 @@ exports.Command = class Command extends Base
 
   find_sig : (cb) ->
     key = @argv.sig[0]
-    if @argv.seqno then sig = @me.sig_chain.seq[key]
-    else [err, sig] = @find_sig_by_prefix key
+    if @seqno then sig = @me.sig_chain.seq[@seqno]
+    else [err, sig] = @find_sig_by_prefix @sig_id
     err = if err? then err
     else if not sig? then new E.NotFoundError "Signature not found (key=#{key})"
     else if sig.is_revoked() then new E.RevokedError "Signature already revoked"
@@ -87,6 +103,7 @@ exports.Command = class Command extends Base
 
   run : (cb) ->
     esc = make_esc cb, "Command::run"
+    await @parse_args esc defer()
     await session.login esc defer()
     await User.load_me { secret : true, verify_opts : { show_perm_failures : true } }, esc defer @me
     await @find_sig esc defer()
