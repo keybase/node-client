@@ -1,7 +1,7 @@
 {
   "name": "keybase",
   "version": "0.4.7",
-  "rdescription": "CLI interface to keybase.io",
+  "description": "CLI interface to keybase.io",
   "repository": {
     "type": "git",
     "url": "git://github.com/keybase/node-client"
