@@ -165,7 +165,7 @@ exports.Command = class Command extends Base
     await @me.check_key { secret : false }, esc defer ckres
     err = null
     if @argv.update and ckres.remote
-      log.info "Updating both remote key with local version"
+      log.info "Updating both remote keys with local version"
       @argv.search = @me.fingerprint()
     else if @argv.update and not(ckres.remote)
       err = new E.NoRemoteKeyError "can't update your key; you don't have one uploaded; try push without --update"
