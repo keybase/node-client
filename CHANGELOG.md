@@ -4,6 +4,8 @@ Bugfixes:
 
   - Fix broken package.json, introduced in 7fe003cbb4fae4328da67bdefa54d8ef8133c7c8
     Thank you @Fishrock123 for pointing it out.
+  - Force upgrade to merkle-tree@0.0.10, to fix broken hash validations after we
+    started to include prev_root in the root block.
 
 ## 0.4.7 (2014-06-12)
 
