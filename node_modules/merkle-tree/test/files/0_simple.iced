@@ -66,7 +66,7 @@ exports.find_all_3 = (T,cb) -> find_all T,cb
 exports.update_all = (T,cb) ->
   obj_factory.modify_some 2
   for key,val of obj_factory.dump_all()
-    await mem_tree.upsert { key, val }, defer err
+    await mem_tree.upsert { key, val }, defer err, new_root_hash
     T.no_error err
   cb()
 

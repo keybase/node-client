@@ -36,4 +36,7 @@ exports.MemTree = class MemTree extends Base
     @_root = key
     cb null
 
+  # Useful for testing
+  get_root_node : () -> @_nodes[@_root]
+
 #====================================================================

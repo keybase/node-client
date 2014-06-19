@@ -38,9 +38,18 @@ exports.do_empty_build = (T,cb) ->
 #===============================================================
 
 exports.upsert_all = (T,cb) ->
+  last = null
   for key,val of kvpairs
-    await mem_tree.upsert { key, val }, defer err
+    await mem_tree.upsert { key, val }, defer err, new_root_hash
     T.no_error err
+
+    new_root_node = mem_tree.get_root_node()
+    new_root_hash_2 = mem_tree.hash_fn new_root_node.obj_s
+    T.equal new_root_hash_2, new_root_hash, "Got the right hash back"
+    if last?
+      T.equal new_root_node.obj.prev_root, last, "Prev pointer was correct"
+    last = new_root_hash 
+
   cb()
 
 #===============================================================
