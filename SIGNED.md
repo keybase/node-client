@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJToyTYAAoJEJgKPw0B/gTfBXAH/2WWW3iyQaMK3cnN62S9ghgo
-ggSj38YAhfvheg02CLkIP/jvnvp3ZWcK4sDqt2jqAtfZWEuniy5NbCrdBp+yrau3
-+hnL2uqZC27ObLWHT0cE41oW+94wgOOWyQdSOuuWvx6bmqK58L1aLlvm5X5AY0mQ
-5J3PDF351qU75pYchfnpKreIpO3PZlwcayhC6nAJ3T4hsfEEOAtsTLBQyhHJxFRk
-IBnj1Qg9oA7Q4PNmE+kwKY1LeskkU9lwDId6kCJIh5Wsk0WWLC+RCxcUG/vDcbpI
-VbACIa8S0fzqbUN33tBT6bt4NTdW0RXjXb1icZLHM/pY231KiegR9cXOfy7FViU=
-=pkGy
+iQEcBAABCgAGBQJTpFIwAAoJEJgKPw0B/gTfml0IALfTHJnhBCxE3XzJ6HNOQDs+
+CQpuDwpI28Pv8pXpK+Ze9KTt+xiTKAH+62hRBW5G39x5Seo2NMBV/oOonIPSan7r
+z8dwsfd+OA7p7p7rI4SNAzv4Vx+pWnFStLUNA5FO5rJqe5Q/aO7lTJJRKm5bIV8K
+KfCjbw1/3vDuHvS8LTP7H9R1khnEFGjhgOaJi/NOYZ4hjJGgW8rYhgZLYmXqFlC4
+sh5B0zJI6U6I/Z3e/cAxy8OQ4ftkAK7TfNf0RBzFnHxEtT53KpWfAJSvQnymjrF4
+s3lgXy7BEBbQTjmV5pCST9Itm4/OpuKLHKbewZ8rdrNLeiJjq72ZU6A/IHkt7RM=
+=IvC8
 -----END PGP SIGNATURE-----
 
 ```
@@ -26,7 +26,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-19494           CHANGELOG.md                                  fa5ede819fa53f6c47125ce224c903c08ca45007d6b0d988ef93d1e83496ffc9                                                                 
+19769           CHANGELOG.md                                  a0d51809172598c1f7c8e316c79d580f6508ef022a30d99e8430b105ea5f48a0                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2051            Makefile                                      20673e7665578448cfefa10f84448b7f5a485fdd7818331bee227bfe3f33c42d                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -75,7 +75,7 @@ size    exec  file                                            contents
 4744                switch.js                                 1430b2044c577280fbf68a637c94da5d01ef4357921ab79a6be1a295d3396b5c                                                                 
 2727                track.js                                  366cbefe49f6f23f5c0abb91031d5d5551bd88bc8d65d012fd267608553bf70e                                                                 
 12225               untrack.js                                3c9c08297d454bfc24c350d3a75f864b129837003c5c95c3d82d5ec00973b13b                                                                 
-4013                update.js                                 f531b784646a496e801dbe759943831837b2a5fef7a90c5835cb502a54464656                                                                 
+13572               update.js                                 77bf435ab65454244573f761fd52644d4ececa4f12b63b5323e7e37418e59c9c                                                                 
 2141                verify.js                                 2aa05a8e7ddec241c2a5fd6e3dcc87094b8c75be167523d81621d6d227d2161e                                                                 
 2486                version.js                                905cb1a18acdd471e11423d4e496743c6592cde3e3fb2bb6c0a785bf4dcf38dd                                                                 
 9645              config.js                                   b4bf47b9321251125974ec2d1723fc84b089456b4eb65cec4c9a41ba3cb58797                                                                 
@@ -1436,7 +1436,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                a95c661232055416c813eec79835a5b9208b2250e55badb5031f6014a831c555                                                                 
-1976            package.json                                  77e4756d7ad6717a65ba0040420129f55f5119918206c464f1e08679294e844f                                                                 
+1976            package.json                                  f17f11148ad9ef45821ed37873137c1cd521a0a544e53c92532d9335b175be10                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
@@ -1495,7 +1495,7 @@ size    exec  file                                            contents
 1527                switch.iced                               17b21c2ac58ac9458b8fbec8405aa6299b39b6e957ee0c73534c1bb5a19bc883                                                                 
 973                 track.iced                                9b6adb1a238983c6bc58fe12738ce037651293c6ce647bfa81d5b456e6ce8f70                                                                 
 2797                untrack.iced                              1dab8d54872ab365c53bcde19ab9dbf719bc539f36c124f664a6b43ea6f07949                                                                 
-1917                update.iced                               a4fa99496217f9ce7793e7aea50acc5c1dce489d1879e0c5d91bafd6b6fddbd2                                                                 
+4455                update.iced                               e10c6d728208bae7d5b37f6806dbe282cce42a5b3e4d71e89e63bb18ca5abd76                                                                 
 1116                verify.iced                               980429ae24a7ca8be803d5f8495facd2026de546dc916d224616eca2bad4dfb8                                                                 
 760                 version.iced                              207a75ddf11490064b34ceeb90c776bdc5c576b4a76a2bb4713943e1d4e23d5d                                                                 
 2850              config.iced                                 903ed142606ad1bf637ee4b30d61d8148b2659098fe39b9e1e883284c9ff590b                                                                 
