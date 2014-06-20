@@ -122,9 +122,6 @@ exports.Command = class Command extends Base
 
   compute_prefix : (cb) ->
 
-    console.log "fu9uuuck"
-    console.log @argv
-
     if @argv.prefix then @prefix = @argv.prefix
     else if (process.env.PREFIX?.length) then # noop
     else if (((implicit_path = @my_bindir.split(path.sep)).pop() is 'bin') and
