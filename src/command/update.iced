@@ -35,6 +35,10 @@ exports.Command = class Command extends Base
     p : 
       alias : "prefix"
       help : "the prefix to install to"
+    g :
+      alias : 'global'
+      help : "install globally; don't try to guess prefix"
+      action : "storeTrue"
 
   add_subcommand_parser : (scp) ->
     opts = 
@@ -69,10 +73,18 @@ exports.Command = class Command extends Base
 
   #----------
 
+  kbi : ({args, verbose}, cb) ->
+    name = @argv.cmd or "keybase-installer"
+    log.info "Running `#{name} #{args.join(' ')}`" if verbose
+    await run { name, args }, defer err, out
+    cb err, out, name
+
+  #----------
+
   probe_installer : (cb) ->
-    await run { name : 'keybase-installer', args : ["--version"]  }, defer err, vers
+    await @kbi {args : ["--version"]}, defer err, vers, name
     if err?
-      err = new Error "Can't find `keybase-installer` in your path: #{err.message}"
+      err = new Error "Can't find `#{name}` in your path: #{err.message}"
     else
       log.info "Found keybase-installer: #{vers}"
     cb err
@@ -100,13 +112,26 @@ exports.Command = class Command extends Base
 
   #----------
 
+  path_join = (arr) ->
+    res = path.join arr...
+    if arr[0]?.length is 0
+      res = path.sep + res
+    return res
+
+  #----------
+
   compute_prefix : (cb) ->
+
+    console.log "fu9uuuck"
+    console.log @argv
+
     if @argv.prefix then @prefix = @argv.prefix
     else if (process.env.PREFIX?.length) then # noop
     else if (((implicit_path = @my_bindir.split(path.sep)).pop() is 'bin') and
-         not (path_eq @npm_install_prefix.split(path.sep), implicit_path))
+         not (path_eq @npm_install_prefix.split(path.sep), implicit_path)) and
+         not @argv.global
       # In this case, we're going to install to where we were installed
-      @prefix = path.join implicit_path...
+      @prefix = path_join implicit_path
       log.info "Detected custom path '#{@prefix}'; preserving it!"
     else
       log.info "Using default npm install prefix"
@@ -139,9 +164,7 @@ exports.Command = class Command extends Base
     for a in [ "skip-cleanup" ]
       args.push("--#{a}") if (v = @argv[rewrite(a)])
 
-    inargs = {args, name : }
-
-    await run inargs, defer err, out
+    await @kbi {args, verbose : true }, defer err, out
     cb err
 
 ##=======================================================================
