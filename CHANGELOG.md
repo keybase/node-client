@@ -1,3 +1,11 @@
+## 0.4.9 (2014-06-20)
+
+Features:
+
+  - `keybase update` now attempts to overwrite itself via the `--prefix` option to
+    `keybase-installer`.  This is especially relevant for people who installed
+    with the `--prefix` option to begin with...
+
 ## 0.4.8 (2014-06-19) [Forced-upgrade]
 
 Bugfixes:

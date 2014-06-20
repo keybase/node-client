@@ -12,6 +12,26 @@ path = require 'path'
 
 rewrite = (s) -> s.replace(/-/g, "_")
 
+#----------
+
+path_eq = (a,b) ->
+  return false unless a.length is b.length
+  for e,i in a
+    return false unless e is b[i]
+  return true
+
+#----------
+
+path_join = (arr) ->
+  res = path.join arr...
+  if arr[0]?.length is 0
+    res = path.sep + res
+  return res
+
+#----------
+
+strip = (s) -> if (m = s.match /(\S+)/) then m[1] else s
+
 ##=======================================================================
 
 exports.Command = class Command extends Base
@@ -98,25 +118,11 @@ exports.Command = class Command extends Base
     if err?
       err = new Error "Can't launch `npm`: #{err.message}"
     else
-      @npm_install_prefix = ret.toString('utf8')
+      @npm_install_prefix = strip ret.toString('utf8')
       log.info "Computed npm install prefix: #{@npm_install_prefix}"
     cb err
 
-  #----------
 
-  path_eq = (a,b) ->
-    return false unless a.length is b.length
-    for e,i in a
-      return false unless e is b[i]
-    return true
-
-  #----------
-
-  path_join = (arr) ->
-    res = path.join arr...
-    if arr[0]?.length is 0
-      res = path.sep + res
-    return res
 
   #----------
 
