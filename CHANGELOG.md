@@ -1,4 +1,4 @@
-## 0.4.8
+## 0.4.8 (2014-06-19) [Forced-upgrade]
 
 Bugfixes:
 
