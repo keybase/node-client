@@ -34,7 +34,7 @@ exports.Command = class Command extends Base
 
   add_subcommand_parser : (scp) ->
     opts = 
-      help : "pull your private key from the server"
+      help : "pull your public (& private, if possible) key(s) from the server"
     name = "pull"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
