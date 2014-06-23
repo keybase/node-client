@@ -176,6 +176,21 @@ exports.CryptocurrencySigGen = class CryptocurrencySigGen extends BaseSigGen
 
 #===========================================
 
+exports.AnnouncementSigGen = class AnnouncementSigGen extends BaseSigGen
+
+  constructor : ({km, @announcement, revoke_sig_ids, client, merkle_root}) ->
+    super { km, client, merkle_root, revoke_sig_ids }
+
+  _make_binding_eng : (arg) ->
+    arg.announcement = @announcement
+    new proofs.Announcement arg
+
+  _v_modify_store_arg : (arg) ->
+    arg.type = "announcement"
+    arg.is_remote_proof = false
+
+#===========================================
+
 exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
   constructor : ({km,@prev,@seqno,@uid,@track,client,merkle_root}) ->
