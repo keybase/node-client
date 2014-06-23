@@ -10,6 +10,10 @@ Security improvements:
 
   - Cache the last-fetched Merkle root block, to detect rollbacks...
 
+Features:
+
+  - `keybase announce` now allows arbitrary announcements
+
 
 ## 0.4.9 (2014-06-20)
 
