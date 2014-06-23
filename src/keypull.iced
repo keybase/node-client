@@ -9,7 +9,7 @@ req = require './req'
 {TmpKeyRing,master_ring} = require './keyring'
 {prompt_yn} = require './prompter'
 colors = require './colors'
-{athrow} = require('pgp-utils').util
+{format_fingerprint,athrow} = require('pgp-utils').util
 
 ##=======================================================================
 
@@ -46,7 +46,7 @@ exports.KeyPull = class KeyPull
         cb err, passphrase
       await KeyManager.import_from_p3skb { raw : p3skb, prompter }, esc defer km
       await km.save_to_ring { passphrase }, esc defer()
-      log.info "Pulled secret key (#{@me.fingerprint(true)})"
+      log.info "Pulled secret key (#{format_fingerprint @me.fingerprint(true)})"
 
     log.debug "- KeyPull::secret_pull"
     cb err
@@ -114,7 +114,7 @@ exports.KeyPull = class KeyPull
     await @me.check_remote_proofs {}, esc defer warnings, n_proofs
     await @prompt_ok warnings.warnings().length, n_proofs, esc defer()
     await @me.key.commit {}, esc defer()
-    log.info "Pulled public key (#{@me.fingerprint(true)})"
+    log.info "Pulled public key (#{format_fingerprint @me.fingerprint(true)})"
     log.debug "- KeyPull::public_pull"
     cb null
 
