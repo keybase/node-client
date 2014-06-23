@@ -16,11 +16,23 @@ assert = require 'assert'
 session = require '../session'
 S = require '../services'
 {dict_union} = require '../util'
+iutils = require 'iced-utils'
+{drain} = iutils.drain
+{a_json_parse} = iutils.util
 util = require 'util'
 fs = require 'fs'
 proofs = require 'keybase-proofs'
 bitcoyne = require 'bitcoyne'
 {CryptocurrencySigGen} = require '../sigs'
+
+##=======================================================================
+
+stream_open = (f, cb) ->
+  ret = fs.createReadStream f
+  ret.on 'error', (err) -> 
+    err = new E.NotFoundError "Could not open file '#{f}': #{err.code}"
+    cb err, null
+  ret.on 'open', () -> cb null, ret
 
 ##=======================================================================
 
@@ -51,7 +63,6 @@ exports.Command = class Command extends Base
 
   #----------
 
-  #----------
   add_subcommand_parser : (scp) ->
     opts = 
       aliases : [ ]
@@ -65,25 +76,49 @@ exports.Command = class Command extends Base
 
   parse_args : (cb) ->
     err = null
-    if @argv.e and @argv.j
-      err = new E.ArgsError "can't specify both -j and -e"
-    else if @argv.f and @argv.m
-      err = new E.ArgsError "can't specify both -f and -m"
+    if @argv.encode and @argv.json
+      err = new E.ArgsError "can't specify both -j/--json and -e/--encode"
+    else if @argv.file and @argv.message
+      err = new E.ArgsError "can't specify both -f/--file and -m/--message"
     cb err
 
   #----------
 
   allocate_proof_gen : (cb) ->
     klass = AnnouncementSigGen
-    # Only BTC is supported just yet...
-    cryptocurrency = { address : @argv.btc[0], type : 'bitcoin' }
-    arg = { @revoke_sig_ids, cryptocurrency } 
+    arg = { @announcement }
     await @me.gen_sig_base { klass, arg }, defer err, @gen
     cb err
 
   #----------
 
   load_announcement : (cb) ->
+    stream = null
+    esc = make_esc cb, "Command::load_announcement"
+    if (m = @argv.m)? then @raw = new Buffer m, 'utf8'
+    else if (f = @argv.file)?
+      await stream_open f, esc defer stream
+    else
+      stream = process.stdin
+    if stream?
+      await drain stream, esc defer @raw
+    cb null
+
+  #----------
+
+  encode_ennouncement : (cb) ->
+    esc = make_esc cb, "Command::encode_announcement"
+    if @argv.json
+      await a_json_parse @raw.toString('utf8'), esc defer data
+      encoding = "json"
+    else if @argv.encode
+      data = @raw.toString('base64')
+      encoding = "base64"
+    else
+      encoding = "utf8"
+      data = @raw.toString('utf8')
+    @announcement = { data, encoding }
+    cb null
 
   #----------
 
@@ -93,6 +128,9 @@ exports.Command = class Command extends Base
     await session.login esc defer()
     await User.load_me { secret : true }, esc defer @me
     await @load_announcement esc defer()
+    await @encode_ennouncement esc defer()
+    console.log @announcement
+    return cb null
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     log.info "Success!"

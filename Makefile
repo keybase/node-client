@@ -13,6 +13,7 @@ lib/%.js: src/%.iced
 	$(ICED) -I node -c -o `dirname $@` $<
 
 $(BUILD_STAMP): \
+	lib/command/announce.js \
 	lib/command/argparse.js \
 	lib/command/all.js \
 	lib/command/base.js \
