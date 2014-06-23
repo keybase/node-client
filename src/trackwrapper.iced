@@ -17,6 +17,7 @@ util = require 'util'
 {env} = require './env'
 scrapers = require './scrapers'
 {Link} = require './sigchain'
+{CHECK} = require './display'
 
 ##=======================================================================
 
@@ -174,6 +175,7 @@ exports.TrackWrapper = class TrackWrapper
     log.debug "+ storing local track object"
     type = constants.ids.local_track
     await db.put { type, key : @uid, value : @track_obj }, defer err
+    log.info "#{CHECK} Wrote tracking info to local database"
     log.debug "- stored local track object"
     cb err
 
@@ -225,9 +227,11 @@ exports.TrackWrapper = class TrackWrapper
   #--------
 
   store_remote : (cb) ->
-    await @tracker.gen_track_proof_gen { @uid, @track_obj }, defer err, g
-    await g.run defer err unless err?
-    cb err
+    esc = make_esc cb, "TrackWrapper::store_remote"
+    await @tracker.gen_track_proof_gen { @uid, @track_obj }, esc defer g
+    await g.run esc defer()
+    log.info "#{CHECK} Wrote tracking info to remote keybase.io server"
+    cb null
 
   #--------
 
