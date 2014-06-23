@@ -86,8 +86,9 @@ class DB
 
   #-----
 
-  put : ({type, key, value, name, names}, cb) ->
+  put : ({type, key, value, name, names, debug}, cb) ->
     kvsk = make_kvstore_key {type,key}
+    log.debug "| DB put value #{kvsk}" if debug
     await @db.put { key : kvsk, value }, defer err, obj
     unless err?
       {hkey} = obj
@@ -95,6 +96,7 @@ class DB
       if names and names.length
         for name in names
           lk = make_lookup_key(name)
+          log.debug "| DB put lookup: #{lk} -> #{hkey}" if debug
           await @db.put { key : lk, value : hkey }, defer tmp
           if tmp? and not err? then err = tmp
     cb err

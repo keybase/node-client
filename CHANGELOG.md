@@ -4,6 +4,10 @@ Bugfixes:
 
   - Fix documentation bug in `keyase pull` (see keybase/keybase-issues#811)
 
+Security improvements:
+
+  - Cache the last-fetched Merkle root block, to detect rollbacks...
+
 
 ## 0.4.9 (2014-06-20)
 

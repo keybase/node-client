@@ -1,4 +1,4 @@
-
+db = require './db'
 merkle = require 'merkle-tree'
 req = require './req'
 log = require './log'
@@ -9,10 +9,15 @@ log = require './log'
 {master_ring} = require './keyring'
 keys = require './keys'
 {env} = require './env'
+C = require('./constants').constants
 
 #===========================================================
 
 class MerkleClient extends merkle.Base
+
+  @LATEST : "latest"
+
+  #------
 
   constructor : () ->
     super {}
@@ -74,6 +79,7 @@ class MerkleClient extends merkle.Base
     else if (a = root.ctime) isnt (b = json.ctime)
       new E.VerifyError "Ctime mismatch: #{a} != #{b}"
     else 
+      root.payload = json
       null
     cb err
 
@@ -125,6 +131,44 @@ class MerkleClient extends merkle.Base
 
   #------
 
+  rollback_check : ({root}, cb) ->
+    log.debug "+ Rollback check"
+    esc = make_esc cb, "MerkleClient::rollback_check"
+    await @load_last_root esc defer last_root
+    err = null
+    if last_root? and (not (q = last_root.payload.body?.seqno)? or q > (p = root.payload.body?.seqno))
+      err = new E.VersionRollbackError "Merkle root version rollback detected: #{q} > #{p}"
+    else
+      await @store_this_root { root } , esc defer()
+    log.debug "- Rollback check"
+    cb err
+
+  #------
+
+  store_this_root : ({root}, cb) ->
+    pj = root.payload_json
+    root.payload_json = null
+    await db.put {
+      type : C.ids.merkle_root
+      key : root.hash
+      value : root
+      name : {
+        type : C.lookups.merkle_root
+        name : MerkleClient.LATEST
+      }
+      debug : true
+    }, defer err
+    root.payload_json = pj
+    cb err
+
+  #------
+
+  load_last_root : (cb) ->
+    await db.lookup { type : C.lookups.merkle_root, name : MerkleClient.LATEST }, defer err, obj
+    cb err, obj
+
+  #------
+
   verify_root : ({root}, cb) ->
     root or= @_root
     log.debug "+ merkle verify_root"
@@ -132,7 +176,7 @@ class MerkleClient extends merkle.Base
     if not root?
       err = new E.NotFoundError 'no root found'
     else if @_verified[(rh = root.hash)]
-      log.debug "| no need to verified root #{rh}; already verified"
+      log.debug "| no need to verify root #{rh}; already verified"
     else
       fingerprint = root.key_fingerprint
       esc = make_esc cb, "Merkle::verify_root"
@@ -140,6 +184,7 @@ class MerkleClient extends merkle.Base
       await @get_merkle_key { fingerprint }, esc defer key
       await @verify_root_json { root }, esc defer()
       await key.verify_sig { which : "merkle root", sig : root.sig, payload : root.payload_json  }, esc defer()
+      await @rollback_check { root }, esc defer()      
       @_verified[rh] = true
     log.debug "- merkle verify_root"
     cb err
