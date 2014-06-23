@@ -2,7 +2,8 @@
 
 Bugfixes:
 
-  - Fix documentation bug in `keyase pull` (see keybase/keybase-issues#811)
+  - Fix documentation bug in `keybase pull` (see keybase/keybase-issues#811);
+    Also, explicitly output (via log.info) which keys were pulled
 
 Security improvements:
 

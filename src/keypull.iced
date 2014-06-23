@@ -46,6 +46,7 @@ exports.KeyPull = class KeyPull
         cb err, passphrase
       await KeyManager.import_from_p3skb { raw : p3skb, prompter }, esc defer km
       await km.save_to_ring { passphrase }, esc defer()
+      log.info "Pulled secret key (#{@me.fingerprint(true)})"
 
     log.debug "- KeyPull::secret_pull"
     cb err
@@ -113,7 +114,7 @@ exports.KeyPull = class KeyPull
     await @me.check_remote_proofs {}, esc defer warnings, n_proofs
     await @prompt_ok warnings.warnings().length, n_proofs, esc defer()
     await @me.key.commit {}, esc defer()
-
+    log.info "Pulled public key (#{@me.fingerprint(true)})"
     log.debug "- KeyPull::public_pull"
     cb null
 
