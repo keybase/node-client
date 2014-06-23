@@ -12,6 +12,7 @@ exports.constants = constants =
     untrack : "untrack"
     revoke : "revoke"
     cryptocurrency : "cryptocurrency"
+    announcement : "announcement"
   proof_types :
     none : 0
     keybase : 1

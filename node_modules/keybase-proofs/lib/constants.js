@@ -16,7 +16,8 @@
       auth: "auth",
       untrack: "untrack",
       revoke: "revoke",
-      cryptocurrency: "cryptocurrency"
+      cryptocurrency: "cryptocurrency",
+      announcement: "announcement"
     },
     proof_types: {
       none: 0,

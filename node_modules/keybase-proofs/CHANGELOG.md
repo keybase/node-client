@@ -1,3 +1,9 @@
+## 0.0.36 (2014-06-23)
+
+Features:
+
+  - Support for announcements
+
 ## 0.0.35 (2014-06-11)
 
 Bugfix:

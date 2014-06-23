@@ -9,7 +9,6 @@ ACCTYPES = C.allowed_cryptocurrency_types
 {E} = require '../err'
 {make_esc} = require 'iced-error'
 {prompt_yn,prompt_remote_name} = require '../prompter'
-{GenericWebSiteProofGen,TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
 {req} = require '../req'
 assert = require 'assert'
@@ -23,7 +22,7 @@ util = require 'util'
 fs = require 'fs'
 proofs = require 'keybase-proofs'
 bitcoyne = require 'bitcoyne'
-{CryptocurrencySigGen} = require '../sigs'
+{AnnouncementSigGen} = require '../sigs'
 
 ##=======================================================================
 
@@ -95,7 +94,7 @@ exports.Command = class Command extends Base
   load_announcement : (cb) ->
     stream = null
     esc = make_esc cb, "Command::load_announcement"
-    if (m = @argv.m)? then @raw = new Buffer m, 'utf8'
+    if (m = @argv.message)? then @raw = new Buffer m, 'utf8'
     else if (f = @argv.file)?
       await stream_open f, esc defer stream
     else
@@ -129,8 +128,6 @@ exports.Command = class Command extends Base
     await User.load_me { secret : true }, esc defer @me
     await @load_announcement esc defer()
     await @encode_ennouncement esc defer()
-    console.log @announcement
-    return cb null
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()
     log.info "Success!"

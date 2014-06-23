@@ -13,11 +13,12 @@ lib/%.js: src/%.iced
 
 $(BUILD_STAMP): \
 	lib/alloc.js \
+	lib/announcement.js \
 	lib/auth.js \
 	lib/base.js \
 	lib/b64extract.js \
 	lib/constants.js \
-        lib/cryptocurrency.js \
+	lib/cryptocurrency.js \
 	lib/main.js \
 	lib/revoke.js \
 	lib/scrapers/base.js \
