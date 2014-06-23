@@ -1,3 +1,10 @@
+## 0.4.10
+
+Bugfixes:
+
+  - Fix documentation bug in `keyase pull` (see keybase/keybase-issues#811)
+
+
 ## 0.4.9 (2014-06-20)
 
 Features:
