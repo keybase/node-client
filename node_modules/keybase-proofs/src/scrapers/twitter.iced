@@ -17,6 +17,14 @@ sncmp = (a,b) ->
 
 #================================================================================
 
+ws_normalize = (x) -> 
+  v = x.split(/[\t\r\n ]+/)
+  v.shift() if v.length and v[0].length is 0
+  v.pop() if v.length and v[-1...][0].length is 0
+  v.join ' '
+
+#================================================================================
+
 class BearerToken
 
   #----------------
@@ -167,10 +175,17 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
       html = tweet_p.html()
     else
       html = null
-        
-    x = /^(@[a-zA-Z0-9_-]+\s+)/
-    @log "+ Checking tweet '#{inside} for signature '#{proof_text_check}'"
+  
+    # MK 2014/06/24
+    # Map 1+ spaces to 1 space in both cases.  Also pop and shift off any leading
+    # and trailing spaces.
+    inside = ws_normalize inside
+    proof_text_check = ws_normalize proof_text_check
+
+    @log "+ Checking tweet '#{inside}' for signature '#{proof_text_check}'"
     @log "| html is: #{html}" if html?
+
+    x = /^(@[a-zA-Z0-9_-]+\s+)/
     while (m = inside.match(x))?
       p = m[1]
       inside = inside[p.length...]
