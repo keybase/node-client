@@ -135,7 +135,7 @@ function bnpFromNumber(a,b,c) {
 }
 
 // (public) convert to bigendian byte array
-function bnToByteArray() {
+function bnToByteArray(encode_sign_bit) {
   var i = this.t, r = new Array();
   r[0] = this.s;
   var p = this.DB-(i*this.DB)%8, d, k = 0;
@@ -151,8 +151,10 @@ function bnToByteArray() {
         d = (this[i]>>(p-=8))&0xff;
         if(p <= 0) { p += this.DB; --i; }
       }
-      //if((d&0x80) != 0) d |= -256;
-      //if(k == 0 && (this.s&0x80) != (d&0x80)) ++k;
+      if (encode_sign_bit) {
+        if((d&0x80) != 0) d |= -256;
+        if(k == 0 && (this.s&0x80) != (d&0x80)) ++k;
+      }
       if(k > 0 || d != this.s) r[k++] = d;
     }
   }

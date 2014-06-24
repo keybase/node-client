@@ -1,0 +1,11 @@
+{
+  "name": "bigi-benchmark",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "dependencies": {
+    "benchmark": "^1.0.0",
+    "bigi" : "*",
+    "bn": "*"
+  }
+}

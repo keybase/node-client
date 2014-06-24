@@ -13,6 +13,9 @@ $(OUT): pkg/pre.js jsbn/*.js pkg/post.js
 
 build: $(OUT)
 
+test:
+	npm test
+
 clean:
 	\rm -rf $(OUT) $(BROWSER) $(TEST_BROWSER)
 

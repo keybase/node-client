@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTj0EUAAoJEJgKPw0B/gTfpoUH/iAgZVMwsh70xf0OCdOVJWrK
-7BI3VR4v62y4zTl+bjHRcZI8r5K00Yf+nTGIIzPyic0O6lg/VQPO1FU7Q3eQGg5p
-g0ZyTUovnryapoIJCZYjSskr8zXvGt6gPKF1cQ+0YHRp68pI9PDepEgw90EbDu89
-SBguN5seueIJw5RMn2IdPCOAjw+3vPDNI/KdVgwARaACcA2OOjDxNu/9PFxsV+0b
-twwG0ZDxGeTaAU3wfxvug1fKDqjEwAhnd2U+W4wDJyBqua1xWAF4cIDNY3DjGc74
-DZ8quZGVR0PyhiqFstIx8OS+tUVkgxJHHVp6EOOfHj7cWfSTfBxMDUjjKmU0mA8=
-=QQ7t
+iQEcBAABCgAGBQJTpIVwAAoJEJgKPw0B/gTfpHYH/ib6YbBLDanjQSQ+S4CaoOcP
+1tV7uhKEnwOpzPLxoj0XG06BgNuernAqtPNRqdLAIcaGhDmebZ/1nQWTV034FKSV
+UXfIeVZIaYhZgcwpoMU62mB51kt3wyMC0jok4tLFjSCKys7YutwHT1NKjyd+5tdH
+YXWlbw56QF7ZMkFI0LW5PVPmLpp5n6FfCxvCMJnKh1G+dJO4IBjONffkL4Rs9Bf2
+s+/xCDKSESFV/dEDoQtAMYkmc3AuXTumtt6vWEmtQkWvEiXuff+j7tFMLj2MSlqv
+A82ZtxkdWYMKaI2CVmv+H31vaHNpfXo/Ct2KtvYJgF/GMNBIhNNKqpQzGbKAgoE=
+=BJxQ
 -----END PGP SIGNATURE-----
 
 ```
@@ -31,7 +31,7 @@ size  exec  file                contents
               lib/                                                                              
 5698            generator.js    e958adddfedd4e92e8778670d01323085a14abef3f16fc7212abf7f366b3e3e4
 132             main.js         6db8bf9163e15abaf89a4af5b50afa2fd0f1a552adc94f069a6c1d393fc9fd79
-632           package.json      e0a86aa1c1fac02c17e5087ca033d5cd9b3c98138fac16ea98da5ed61271ab7a
+634           package.json      dac2fc410da687f84f448ade06f4c7ffb7ad90d1353f6a6f475f8105021673b5
               src/                                                                              
 2078            generator.iced  68ae5500546c6fa7570361fb8ff60d50e85d965c761f5a4307ad477f9020aaeb
 57              main.iced       a246ca8c283f8023ae8379262178664ed69399b06307c9832b3993243e7296c5
@@ -53,7 +53,7 @@ dropbox  # ignore .dropbox-cache and other Dropbox-related files
 kb       # ignore anything as described by .kbignore files          
 ```
 
-<!-- summarize version = 0.0.8 -->
+<!-- summarize version = 0.0.9 -->
 
 ### End signed statement
 

@@ -1,3 +1,9 @@
+## 0.4.11 (2014-06-24)
+
+Bugfixes:
+
+  - Upgrade bn, kbpgp and triplesec
+
 ## 0.4.10 (2014-06-24)
 
 Bugfixes:
