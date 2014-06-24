@@ -1,4 +1,4 @@
-## 0.4.10
+## 0.4.10 (2014-06-24)
 
 Bugfixes:
 
@@ -13,8 +13,7 @@ Security improvements:
 
 Features:
 
-  - `keybase announce` now allows arbitrary announcements
-
+  - `keybase announce` now allows arbitrary announcements (disabled feature for now...)
 
 ## 0.4.9 (2014-06-20)
 

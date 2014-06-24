@@ -71,7 +71,6 @@ class Main
     add_option_dict @ap, Base.OPTS
 
     list = [ 
-      "announce"
       "btc"
       "cert"
       "dir"
