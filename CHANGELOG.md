@@ -1,3 +1,9 @@
+## 0.4.12
+
+Bugfixes:
+
+  - Close #163: crasher when retracking someone who deleted a proof
+
 ## 0.4.11 (2014-06-24)
 
 Bugfixes:
