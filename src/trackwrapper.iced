@@ -120,14 +120,19 @@ exports.TrackWrapper = class TrackWrapper
       for rp in track_cert.remote_proofs
         rkp = rp.remote_key_proof
         row = @table()[rkp.proof_type]
-        unless row.is_leaf() 
-          sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
-          row = row.get(sub_id)
-        if not row.is_leaf()
-          tmp = "Got bad link, it wasn't a link at all"
-        else if not deq((a = rkp.check_data_json), (b = row?.body()?.service))
-          tmp = "Remote ID changed: #{JSON.stringify a} != #{JSON.stringify b}"
+        if not row?
+          tmp = "Proof deleted: #{JSON.stringify rkp.check_data_json}"
           break
+        else
+          unless row.is_leaf() 
+            sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
+            row = row.get(sub_id)
+          if not row.is_leaf()
+            tmp = "Got bad link, it wasn't a link at all (for proof type: #{rkp.proof_type})"
+            break
+          else if not deq((a = rkp.check_data_json), (b = row?.body()?.service))
+            tmp = "Remote ID changed: #{JSON.stringify a} != #{JSON.stringify b}"
+            break
       tmp
 
     ret = true
