@@ -174,6 +174,9 @@ class Env
       config : (c) -> c.user?.name
       dflt   : -> null
 
+  is_me : (u2) ->
+    u2? and (u2.toLowerCase() is @get_username().toLowerCase())
+
   get_uid : () ->
     @get_opt 
       env    : (e) -> e.KEYBASE_UID

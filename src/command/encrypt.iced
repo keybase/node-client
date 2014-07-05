@@ -83,7 +83,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::run"
     batch = (not @argv.message and not @argv.file?)
     them_un = @argv.them[0]
-    if them_un is env().get_username()
+    if env().is_me them_un
       @is_self = true
       await User.load_me { secret : true }, esc defer @them
     else

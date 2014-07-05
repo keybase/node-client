@@ -3,6 +3,8 @@
 Bugfixes:
 
   - Close #163: crasher when retracking someone who deleted a proof
+  - Close keybase/keybase-issues#839 --- is self check was case sensitive
+    and should not be
 
 ## 0.4.11 (2014-06-24)
 

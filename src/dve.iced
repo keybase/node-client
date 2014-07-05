@@ -95,7 +95,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       err = new E.WrongSignerError "Wrong signer: wanted '#{a}' but got '#{b}'"
       await athrow err, esc defer()
 
-    if @username is env().get_username()
+    if env().is_me @username
       @is_self = true
       log.info "Valid signature from #{colors.bold('you')}"
     else
