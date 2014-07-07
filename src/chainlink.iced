@@ -175,7 +175,7 @@ exports.Link = class Link
     if not (link = index[id])?
       log.warn "Cannot revoke signature '#{id}' since we haven't seen it"
     else if link.is_revoked()
-      log.info "Signature is already revoked: #{id}"
+      log.debug "Signature is already revoked: #{id}"
     else
       link.revoke()
     log.debug "- Link::_perform_revocation #{id}"
