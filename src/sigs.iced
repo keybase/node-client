@@ -420,7 +420,6 @@ exports.TwitterProofGen = class TwitterProofGen extends SocialNetworkProofGen
 
 #===========================================
 
-
 exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.GithubBinding
   _remote_service_name : () -> "github"
@@ -436,6 +435,15 @@ exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
       else
         super()
 
+#===========================================
+
+exports.CoinbaseProofGen = class CoinbaseProofGen extends SocialNetworkProofGen
+  _binding_klass : () -> proofs.CoinbaseBinding
+  _remote_service_name : () -> "coinbase"
+  imperative_verb : () -> "update your Coinbase profile with"
+  display_name : () -> "coinbase"
+  instructions : () -> "Please update your coinbase profile HERE to show this proof"
+    
 #===========================================
 
 exports.SignatureEngine = class SignatureEngine 

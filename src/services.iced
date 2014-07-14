@@ -1,5 +1,5 @@
 
-{DnsProofGen,TwitterProofGen,GithubProofGen,GenericWebSiteProofGen} = require './sigs'
+{CoinbaseProofGen,DnsProofGen,TwitterProofGen,GithubProofGen,GenericWebSiteProofGen} = require './sigs'
 
 #=======================================================
 
@@ -13,6 +13,7 @@ exports.aliases = aliases =
   http    : "generic_web_site"
   web     : "generic_web_site"
   dns     : "dns"
+  coinbase : 'coinbase'
 
 #=======================================================
 
@@ -28,6 +29,7 @@ exports.classes =
   github  : GithubProofGen
   generic_web_site : GenericWebSiteProofGen
   dns : DnsProofGen
+  coinbase : CoinbaseProofGen
 
 #=======================================================
 

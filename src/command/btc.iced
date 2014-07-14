@@ -9,7 +9,6 @@ ACCTYPES = C.allowed_cryptocurrency_types
 {E} = require '../err'
 {make_esc} = require 'iced-error'
 {prompt_yn,prompt_remote_name} = require '../prompter'
-{GenericWebSiteProofGen,TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
 {req} = require '../req'
 assert = require 'assert'

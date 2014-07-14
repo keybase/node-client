@@ -6,7 +6,6 @@ log = require '../log'
 {E} = require '../err'
 {make_esc} = require 'iced-error'
 {prompt_yn,prompt_remote_name} = require '../prompter'
-{GenericWebSiteProofGen,TwitterProofGen,GithubProofGen} = require '../sigs'
 {User} = require '../user'
 {req} = require '../req'
 assert = require 'assert'
@@ -42,7 +41,7 @@ exports.ProofBase = class Command extends Base
     {name,config,OPTS} = @command_name_and_opts()
     sub = scp.addParser name, config
     add_option_dict sub, OPTS
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service; can be one of: {twitter,github,web,dns}" }
+    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service; can be one of: {twitter,github,web,dns,coinbase}" }
     sub.addArgument [ "remote_name"], { nargs : "?", help : "username or hostname at that service" }
     return config.aliases.concat [ name ]
 

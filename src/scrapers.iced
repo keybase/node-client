@@ -84,6 +84,13 @@ exports.Github = class Github extends SocialNetwork
 
 #==============================================================
 
+exports.Coinbase = class Coinbase extends SocialNetwork
+  constructor : () ->
+    get_scraper_klass : () ->proofs.CoinbaseScraper
+    which : () -> "coinbase"
+
+#==============================================================
+
 exports.Dns = class Dns extends Base
   constructor : () ->
   get_scraper_klass : () -> proofs.DnsScraper
@@ -139,6 +146,7 @@ exports.alloc_stub = alloc_stub = (type) ->
   klass = switch type
     when PT.twitter          then Twitter
     when PT.github           then Github
+    when PT.coinbase         then Coinbase
     when PT.generic_web_site then GenericWebSite
     when PT.dns              then Dns
     else null
