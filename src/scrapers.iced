@@ -84,6 +84,13 @@ exports.Github = class Github extends SocialNetwork
 
 #==============================================================
 
+exports.Reddit = class Reddit extends SocialNetwork
+  constructor : () ->
+  get_scraper_klass : () -> proofs.RedditScraper
+  which : () -> "reddit"
+
+#==============================================================
+
 exports.Dns = class Dns extends Base
   constructor : () ->
   get_scraper_klass : () -> proofs.DnsScraper
@@ -141,6 +148,7 @@ exports.alloc_stub = alloc_stub = (type) ->
     when PT.github           then Github
     when PT.generic_web_site then GenericWebSite
     when PT.dns              then Dns
+    when PT.reddit           then Reddit
     else null
   if klass then new klass {} 
   else null

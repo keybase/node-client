@@ -420,6 +420,15 @@ exports.TwitterProofGen = class TwitterProofGen extends SocialNetworkProofGen
 
 #===========================================
 
+exports.RedditProofGen = class RedditProofGen extends SocialNetworkProofGen
+  _binding_klass : () -> proofs.RedditBinding
+  _remote_service_name : () -> "reddit"
+  imperative_verb : () -> "post"
+  display_name : () -> "Reddit"
+  instructions : () -> "Please #{colors.bold('publicly')} tweet the following:"
+
+#===========================================
+
 
 exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.GithubBinding

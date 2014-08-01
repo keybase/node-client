@@ -42,7 +42,7 @@ exports.TrackWrapper = class TrackWrapper
   #--------
 
   _check_remote_proof : (rp) ->
-    proofs_with_service_names = [ PT.twitter, PT.github ]
+    proofs_with_service_names = [ PT.twitter, PT.github, PT.reddit ]
     if not (rkp = rp.remote_key_proof)? 
       new E.RemoteProofError "no 'remote_key_proof field'"
     else if not (stub = scrapers.alloc_stub(rkp.proof_type))?

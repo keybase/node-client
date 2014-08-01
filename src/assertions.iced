@@ -74,6 +74,7 @@ class Assert
       when 'web' then WebAssert
       when 'key' then KeyAssert
       when 'keybase' then KeybaseAssert
+      when 'reddit' then RedditAssert
       when 'dns' then DnsAssert
       else 
         err = new E.BadAssertionError "unknown assertion type: #{key}"
@@ -246,6 +247,7 @@ class SocialNetworkAssert extends Assert
 
 class TwitterAssert extends SocialNetworkAssert
 class GithubAssert extends SocialNetworkAssert
+class RedditAssert extends SocialNetworkAssert
 
 #=======================================================================
 
