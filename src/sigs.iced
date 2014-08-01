@@ -452,6 +452,8 @@ exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _remote_service_name : () -> "github"
   imperative_verb : () -> "post a Gist with"
   display_name : () -> "GitHub"
+  instructions : () ->
+    "Please #{colors.bold 'publicly'} post the following Gist, and name it #{colors.bold colors.red 'keybase.md'}:"
 
   make_retry_msg : (status) ->
     switch status
