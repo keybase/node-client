@@ -85,7 +85,7 @@ class BaseSigGen
     await req.post { endpoint, args }, defer err, body
 
     unless err?
-      { @proof_text, @proof_id, @sig_id } = body
+      { @proof_text, @proof_id, @sig_id, @proof_metadata } = body
       log.debug "| reply with value: #{JSON.stringify body}"
 
     if not(err?) and @expect_proof_text()
@@ -114,6 +114,10 @@ class BaseSigGen
     klass = @_binding_klass()
     ret = klass.normalize_name(n)
     cb null, ret
+
+  #-----------------------
+
+  show_proof_text : () -> @proof_text
 
   #-----------------------
 
@@ -425,7 +429,20 @@ exports.RedditProofGen = class RedditProofGen extends SocialNetworkProofGen
   _remote_service_name : () -> "reddit"
   imperative_verb : () -> "post"
   display_name : () -> "Reddit"
-  instructions : () -> "Please #{colors.bold('publicly')} tweet the following:"
+  instructions : () -> "Please click on the following link to post to Reddit:"
+
+  show_proof_text : () ->
+    body = @proof_text
+    title = @proof_metadata.title
+    url = urlmod.format {
+      protocol : "https"
+      host : "www.reddit.com"
+      pathname : "/r/KeybaseProofs/submit"
+      query : 
+        title : @proof_metadata.title
+        text : @proof_text
+    }
+    url
 
 #===========================================
 
@@ -435,8 +452,6 @@ exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
   _remote_service_name : () -> "github"
   imperative_verb : () -> "post a Gist with"
   display_name : () -> "GitHub"
-  instructions : () ->
-    "Please #{colors.bold 'publicly'} post the following Gist, and name it #{colors.bold colors.red 'keybase.md'}:"
 
   make_retry_msg : (status) ->
     switch status

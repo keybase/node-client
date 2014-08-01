@@ -112,10 +112,10 @@ exports.Command = class Command extends ProofBase
     log.console.log ""
     if (f = @argv.output)?
       log.info "Writing proof to file '#{f}'..."
-      await fs.writeFile f, @gen.proof_text, esc defer()
+      await fs.writeFile f, @gen.get_proof_text(), esc defer()
       log.info "Wrote proof to '#{f}'"
     else
-      log.console.log @gen.proof_text
+      log.console.log @gen.show_proof_text()
     log.console.log ""
     prompt = true
     esc = make_esc cb, "Command::prompt"
