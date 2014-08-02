@@ -37,7 +37,7 @@
     "iced-utils": "0.1.20",
     "kbpgp": ">=0.1.21",
     "keybase-path": "0.0.10",
-    "keybase-proofs": "0.0.40",
+    "keybase-proofs": "^1.0.0",
     "merkle-tree": "0.0.10",
     "mkdirp": "0.3.5",
     "pgp-utils": ">=0.0.22",

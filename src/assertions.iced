@@ -70,6 +70,7 @@ class Assert
     err = out = null
     klass = switch key
       when 'github' then GithubAssert
+      when 'coinbase' then CoinbaseAssert
       when 'twitter' then TwitterAssert 
       when 'web' then WebAssert
       when 'key' then KeyAssert
@@ -248,6 +249,7 @@ class SocialNetworkAssert extends Assert
 class TwitterAssert extends SocialNetworkAssert
 class GithubAssert extends SocialNetworkAssert
 class RedditAssert extends SocialNetworkAssert
+class CoinbaseAssert extends SocialNetworkAssert
 
 #=======================================================================
 

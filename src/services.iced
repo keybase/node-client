@@ -1,5 +1,5 @@
 
-{RedditProofGen,DnsProofGen,TwitterProofGen,GithubProofGen,GenericWebSiteProofGen} = require './sigs'
+sigs = require './sigs'
 
 #=======================================================
 
@@ -13,6 +13,7 @@ exports.aliases = aliases =
   http    : "generic_web_site"
   web     : "generic_web_site"
   dns     : "dns"
+  coinbase : 'coinbase'
 
 #=======================================================
 
@@ -24,11 +25,12 @@ for k,v of aliases
 #=======================================================
 
 exports.classes = 
-  twitter : TwitterProofGen
-  github  : GithubProofGen
-  generic_web_site : GenericWebSiteProofGen
-  dns : DnsProofGen
-  reddit : RedditProofGen
+  twitter : sigs.TwitterProofGen
+  github  : sigs.GithubProofGen
+  generic_web_site : sigs.GenericWebSiteProofGen
+  dns : sigs.DnsProofGen
+  reddit : sigs.RedditProofGen
+  coinbase : sigs.CoinbaseProofGen
 
 #=======================================================
 
