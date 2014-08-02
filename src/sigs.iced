@@ -445,8 +445,11 @@ exports.RedditProofGen = class RedditProofGen extends SocialNetworkProofGen
 
     # Use '+'-encoding for a smaller URL
     # Replace '(', ")" and "'" so that URL-detection works in Linux
+    # Padding is not needed now, but might be in the future depending on 
+    # changes we make
+    pad2 = (x) -> if x.length is 1 then "0#{x}" else x
     url = url.replace(/%20/g, '+').
-              replace(/[()']/g, (c) -> "%" + c.charCodeAt(0).toString(16))
+              replace(/[()']/g, (c) -> "%" + pad2(c.charCodeAt(0).toString(16)))
 
 #===========================================
 
