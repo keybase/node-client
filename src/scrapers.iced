@@ -93,8 +93,8 @@ exports.Reddit = class Reddit extends SocialNetwork
 
 exports.Coinbase = class Coinbase extends SocialNetwork
   constructor : () ->
-    get_scraper_klass : () ->proofs.CoinbaseScraper
-    which : () -> "coinbase"
+  get_scraper_klass : () -> proofs.CoinbaseScraper
+  which : () -> "coinbase"
 
 #==============================================================
 
