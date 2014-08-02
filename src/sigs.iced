@@ -442,7 +442,11 @@ exports.RedditProofGen = class RedditProofGen extends SocialNetworkProofGen
         title : @proof_metadata.title
         text : @proof_text
     }
-    url
+
+    # Use '+'-encoding for a smaller URL
+    # Replace '(', ")" and "'" so that URL-detection works in Linux
+    url = url.replace(/%20/g, '+').
+              replace(/[()']/g, (c) -> "%" + c.charCodeAt(0).toString(16))
 
 #===========================================
 
