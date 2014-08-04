@@ -28,10 +28,10 @@ class Base
 
   make_scraper : () ->
     klass = @get_scraper_klass()
-    @_scraper = new klass { 
-      libs : { cheerio, request : my_request, log }, 
-      log_level : 'debug', 
-      proxy : env().get_proxy() 
+    @_scraper = new klass {
+      libs : { cheerio, request : my_request, log },
+      log_level : 'debug',
+      proxy : env().get_proxy()
       ca : proxyca.get()?.data()
     }
 
@@ -49,7 +49,7 @@ class Base
 
   #-------------------
 
-  validate : (arg, cb) -> 
+  validate : (arg, cb) ->
     await @_scraper.validate arg, defer err, rc
     cb err, rc
 
@@ -58,7 +58,7 @@ class Base
 class SocialNetwork extends Base
 
   format_msg : ({arg, ok}) -> [
-    (if ok then CHECK else BAD_X) 
+    (if ok then CHECK else BAD_X)
     ('"' + ((if ok then colors.green else colors.red) arg.username) + '"')
     "on"
     (@which() + ":")
@@ -91,6 +91,13 @@ exports.Reddit = class Reddit extends SocialNetwork
 
 #==============================================================
 
+exports.HackerNews = class HackerNews extends SocialNetwork
+  constructor : () ->
+  get_scraper_klass : () -> proofs.HackerNewsScraper
+  which : () -> "hackernews"
+
+#==============================================================
+
 exports.Coinbase = class Coinbase extends SocialNetwork
   constructor : () ->
   get_scraper_klass : () -> proofs.CoinbaseScraper
@@ -120,7 +127,7 @@ exports.GenericWebSite = class GenericWebSite extends Base
   get_sub_id : (o) -> (x.toLowerCase() for x in [ o.protocol, o.hostname ]).join "//"
   to_list_display : (o) -> @get_sub_id o
 
-  format_msg : ({arg, display, ok}) -> 
+  format_msg : ({arg, display, ok}) ->
     color = if not(ok) then 'red'
     else if arg.protocol is 'http:' then 'yellow'
     else 'green'
@@ -157,8 +164,9 @@ exports.alloc_stub = alloc_stub = (type) ->
     when PT.generic_web_site then GenericWebSite
     when PT.dns              then Dns
     when PT.reddit           then Reddit
+    when PT.hackernews       then HackerNews
     else null
-  if klass then new klass {} 
+  if klass then new klass {}
   else null
 
 #==============================================================

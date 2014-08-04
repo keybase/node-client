@@ -9,6 +9,7 @@ exports.aliases = aliases =
   git     : "github"
   github  : "github"
   reddit  : "reddit"
+  hackernews : "hackernews"
   https   : "generic_web_site"
   http    : "generic_web_site"
   web     : "generic_web_site"
@@ -31,6 +32,7 @@ exports.classes =
   dns : sigs.DnsProofGen
   reddit : sigs.RedditProofGen
   coinbase : sigs.CoinbaseProofGen
+  hackernews : sigs.HackerNewsProofGen
 
 #=======================================================
 

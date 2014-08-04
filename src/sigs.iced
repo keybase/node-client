@@ -473,6 +473,16 @@ exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
 
 #===========================================
 
+exports.HackerNewsProofGen = class HackerNewsProofGen extends SocialNetworkProofGen
+  _binding_klass : () -> proofs.HackerNewsBinding
+  _remote_service_name : () -> "hackernews"
+  imperative_verb : () -> "update your profile with"
+  display_name : () -> "HackerNews"
+  instructions : () ->
+    "Please edit your HackerNews profile to contain the following text. Click here: https://news.ycombinator.com/user?id=#{@remote_username}"
+
+#===========================================
+
 exports.CoinbaseProofGen = class CoinbaseProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.CoinbaseBinding
   _remote_service_name : () -> "coinbase"

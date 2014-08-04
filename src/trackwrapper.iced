@@ -35,15 +35,15 @@ exports.TrackWrapper = class TrackWrapper
 
   #--------
 
-  flat_table : () -> 
+  flat_table : () ->
     @_ft = @sig_chain.flattened_remote_proofs() if not @_ft?
     return @_ft
 
   #--------
 
   _check_remote_proof : (rp) ->
-    proofs_with_service_names = [ PT.twitter, PT.github, PT.reddit, PT.coinbase ]
-    if not (rkp = rp.remote_key_proof)? 
+    proofs_with_service_names = [ PT.twitter, PT.github, PT.reddit, PT.coinbase, PT.hackernews ]
+    if not (rkp = rp.remote_key_proof)?
       new E.RemoteProofError "no 'remote_key_proof field'"
     else if not (stub = scrapers.alloc_stub(rkp.proof_type))?
       new E.RemoteProofError "Can't allocate a scraper stub for #{rkp.proof_type}"
@@ -62,14 +62,14 @@ exports.TrackWrapper = class TrackWrapper
   # actually never fail, unless there was a bug in the client.
   _check_track_obj : (o) ->
     err = null
-    if (a = o.id) isnt (b = @trackee.id) 
+    if (a = o.id) isnt (b = @trackee.id)
       err = new E.UidMismatchError "#{a} != #{b}"
     else if ((a = o.basics?.username) isnt (b = @trackee.username()))
       err = new E.UsernameMismatchError "#{a} != #{b}"
     else
       for rp in o.remote_proofs when not err?
         err = @_check_remote_proof rp
-    return err 
+    return err
 
   #--------
 
@@ -97,7 +97,7 @@ exports.TrackWrapper = class TrackWrapper
       log.debug "| last link: #{JSON.stringify last}" if last?
       false
     else
-      log.debug "| Timing was ok: #{unix_time()} - #{last_check} < #{rpri}" 
+      log.debug "| Timing was ok: #{unix_time()} - #{last_check} < #{rpri}"
       true
 
     log.debug "- _skip_remote_check -> #{ret}"
@@ -124,7 +124,7 @@ exports.TrackWrapper = class TrackWrapper
           tmp = "Proof deleted: #{JSON.stringify rkp.check_data_json}"
           break
         else
-          unless row.is_leaf() 
+          unless row.is_leaf()
             sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
             row = row.get(sub_id)
           if not row.is_leaf()
@@ -188,7 +188,7 @@ exports.TrackWrapper = class TrackWrapper
 
   @remove_local_track : ({uid}, cb) ->
     log.debug "+ removing local track object for #{uid}"
-    await db.remove { 
+    await db.remove {
       type : constants.ids.local_track
       key : uid
       optional : true
@@ -199,13 +199,13 @@ exports.TrackWrapper = class TrackWrapper
   #--------
 
   check : () ->
-    if @local 
+    if @local
       if (e = @_check_track_obj @local)?
         log.warn "Local tracking object was invalid: #{e.message}"
         @local = null
       else
         log.debug "| local track checked out"
-    if @remote? 
+    if @remote?
       if (e = @_check_track_obj @remote)?
         log.warn "Remote tracking object was invalid: #{e.message}"
         @remote = null
@@ -220,7 +220,7 @@ exports.TrackWrapper = class TrackWrapper
     log.debug "+ loading Tracking info w/ remote=#{!!remote}"
     track = new TrackWrapper { uid, trackee, tracker, remote  }
     await track.load_local defer err
-    track = null if err? 
+    track = null if err?
     track?.check()
     log.debug "- loaded tracking info"
     cb err, track

@@ -20,7 +20,7 @@ class WebServiceBinding extends Base
   #---------------
 
   # For Twitter, Github, etc, this will be empty.  For non-signle-occupants,
-  # it will be the unique id for the resource, like https://keybase.io/ for 
+  # it will be the unique id for the resource, like https://keybase.io/ for
   # Web services.
   resource_id : () -> ""
 
@@ -30,7 +30,7 @@ class WebServiceBinding extends Base
 
   #---------------
 
-  _v_check : ({json}, cb) -> 
+  _v_check : ({json}, cb) ->
     await super { json }, defer err
     if not(err?) and not(@_service_obj_check(json?.body?.service))
       err = new Error "Bad service object found"
@@ -59,7 +59,7 @@ class SocialNetworkBinding extends WebServiceBinding
     if @check_name(n) then SocialNetworkBinding.normalize_name n
     else null
 
-  check_inputs : () -> 
+  check_inputs : () ->
     if (@check_name(@user.remote)) then null
     else new Error "Bad remote_username given: #{@user.remote}"
 
@@ -83,7 +83,7 @@ class GenericWebSiteBinding extends WebServiceBinding
 
   @parse : (h, opts = {}) ->
     ret = null
-    if h? and (h = h.toLowerCase())? and (o = urlmod.parse(h))? and 
+    if h? and (h = h.toLowerCase())? and (o = urlmod.parse(h))? and
         o.hostname? and (not(o.path?) or (o.path is '/')) and not(o.port?)
       protocol = o.protocol or opts.protocol
       if protocol?
@@ -244,8 +244,21 @@ class CoinbaseBinding extends SocialNetworkBinding
     else if n.match /^[a-z1-9_]{2,16}$/ then true
     else false
 
-  @name_hint : () -> "alphanumerics, between 1 and 20 characters long"
+  @name_hint : () -> "alphanumerics, between 2 and 16 characters long"
   check_name : (n) -> CoinbaseBinding.check_name(n)
+
+#==========================================================================
+
+class HackerNewsBinding extends SocialNetworkBinding
+  service_name : -> "hackernews"
+  proof_type   : -> constants.proof_types.hackernews
+
+  @check_name : (n) ->
+    if not n? or not (n = n.toLowerCase())? then false
+    else if n.match /^[a-z0-9_-]{2,15}$/ then true
+    else false
+  @name_hint : () -> "alphanumerics, between 2 and 15 characters long"
+  check_name : (n) -> HackerNewsBinding.check_name(n)
 
 #==========================================================================
 
@@ -256,5 +269,6 @@ exports.GithubBinding = GithubBinding
 exports.GenericWebSiteBinding = GenericWebSiteBinding
 exports.CoinbaseBinding = CoinbaseBinding
 exports.DnsBinding = DnsBinding
+exports.HackerNewsBinding = HackerNewsBinding
 
 #==========================================================================

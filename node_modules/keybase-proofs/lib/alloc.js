@@ -35,6 +35,8 @@
           return web_service.DnsBinding;
         case "web_service_binding.coinbase":
           return web_service.CoinbaseBinding;
+        case "web_service_binding.hackernews":
+          return web_service.HackerNewsBinding;
         case "generic_binding":
           return base.GenericBinding;
         case "track":

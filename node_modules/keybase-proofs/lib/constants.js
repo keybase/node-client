@@ -26,6 +26,7 @@
       github: 3,
       reddit: 4,
       coinbase: 5,
+      hackernews: 6,
       generic_web_site: 1000,
       dns: 1001
     },

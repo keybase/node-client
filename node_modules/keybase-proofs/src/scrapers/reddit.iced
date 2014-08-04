@@ -3,18 +3,12 @@
 {v_codes} = constants
 {Lock} = require 'iced-lock'
 {make_esc} = require 'iced-error'
-{make_ids} = require '../base'
+{proof_text_check_to_med_id} = require '../base'
 
 #================================================================================
 
 PREFIX = "https://www.reddit.com"
 SUBREDDIT = PREFIX + "/r/keybaseproofs"
-
-#================================================================================
-
-proof_text_check_to_med_id = (proof_text_check) ->
-  {med_id} = make_ids(new Buffer proof_text_check, 'base64')
-  med_id
 
 #================================================================================
 
@@ -53,7 +47,7 @@ class GlobalHunter
       args =
         url : SUBREDDIT + "/.json"
         json : true
-        qs: 
+        qs:
           count : 25
           cachebust : Math.random()
       args.qs.after = after if after?
@@ -97,7 +91,7 @@ class GlobalHunter
     if not @_running
       await @start_scraper_loop {scraper}, defer err
     @_lock.release()
-    rc = if err? then @_last_rc 
+    rc = if err? then @_last_rc
     else if (out = @_cache[med_id])? then v_codes.OK
     else v_codes.NOT_FOUND
     cb err, rc, out
@@ -116,7 +110,7 @@ exports.RedditScraper = class RedditScraper extends BaseScraper
   # ---------------------------------------------------------------------------
 
   _check_args : (args) ->
-    if not(args.username?) 
+    if not(args.username?)
       new Error "Bad args to Reddit proof: no username given"
     else if not (args.name?) or (args.name isnt 'reddit')
       new Error "Bad args to Reddit proof: type is #{args.name}"
@@ -162,14 +156,14 @@ exports.RedditScraper = class RedditScraper extends BaseScraper
 
   check_data : ({json, username, proof_text_check}) ->
     med_id = proof_text_check_to_med_id proof_text_check
-    if not (json.subreddit? and json.author? and json.selftext? and json.title) 
+    if not (json.subreddit? and json.author? and json.selftext? and json.title)
       v_codes.CONTENT_MISSING
-    else if (json.subreddit.toLowerCase() isnt 'keybaseproofs') 
+    else if (json.subreddit.toLowerCase() isnt 'keybaseproofs')
       v_codes.SERVICE_ERROR
     else if not sncmp(json.author, username) then v_codes.BAD_USERNAME
-    else if (json.title.indexOf(med_id) < 0) 
+    else if (json.title.indexOf(med_id) < 0)
       v_codes.TITLE_NOT_FOUND
-    else 
+    else
 
       # strip leading spaces on the input document, so we can look for the target
       # sig on the first column.

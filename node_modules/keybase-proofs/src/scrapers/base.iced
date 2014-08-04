@@ -16,7 +16,7 @@ class BaseScraper
   hunt : (username, proof_check_text, cb) -> hunt2 { username, proof_check_text }, cb
   hunt2 : (args, cb) -> cb new Error "unimplemented"
   id_to_url : (username, status_id) ->
-  check_status : ({username, url, signature, status_id}, cb) -> 
+  check_status : ({username, url, signature, status_id}, cb) ->
   _check_args : () -> new Error "unimplemented"
 
   #-------------------------------------------------------------
@@ -44,13 +44,13 @@ class BaseScraper
     cb err, rc
 
   #-------------------------------------------------------------
- 
+
   # Given a validated signature, check that the payload_text_check matches the sig.
   _validate_text_check : ({signature, proof_text_check }) ->
     [err, msg] = decode signature
     if not err? and ("\n\n" + msg.payload + "\n") isnt proof_text_check
       err = new Error "Bad payload text_check"
-    return err 
+    return err
 
   #-------------------------------------------------------------
 
@@ -70,7 +70,7 @@ class BaseScraper
     opts.headers or= {}
     opts.headers["User-Agent"] = user_agent
     await @libs.request opts, defer err, response, body
-    rc = if err? 
+    rc = if err?
       if err.code is 'ETIMEDOUT' then               v_codes.TIMEOUT
       else                                          v_codes.HOST_UNREACHABLE
     else if (response.statusCode in [401,403]) then v_codes.PERMISSION_DENIED

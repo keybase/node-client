@@ -26,7 +26,7 @@ add_ids = (sig_body, out) ->
 
 #------
 
-make_ids = (sig_body) -> 
+make_ids = (sig_body) ->
   out = {}
   add_ids sig_body, out
   return out
@@ -40,13 +40,19 @@ sig_id_to_med_id = (sig_id) -> base64u.encode sig_id
 sig_id_to_short_id = (sig_id) ->
   base64u.encode sig_id[0...constants.short_id_bytes]
 
-#------
+#================================================================================
+
+proof_text_check_to_med_id = (proof_text_check) ->
+  {med_id} = make_ids(new Buffer proof_text_check, 'base64')
+  med_id
+
+#================================================================================
 
 exports.cieq = cieq = (a,b) -> (a? and b? and (a.toLowerCase() is b.toLowerCase()))
 
 #==========================================================================
 
-class Verifier 
+class Verifier
 
   constructor : ({@pgp, @id, @short_id, @skip_ids, @make_ids}, @sig_eng, @base) ->
 
@@ -102,11 +108,11 @@ class Verifier
 
   #---------------
 
-  _check_json : (cb) -> 
+  _check_json : (cb) ->
     err = @json = jsons = null
     if (n = @literals.length) isnt 1
       err = new Error "Expected only one pgp literal; got #{n}"
-    else 
+    else
       l = @literals[0]
       jsons = l.data
       [e, @json] = katch (() -> JSON.parse jsons)
@@ -137,7 +143,7 @@ class Base
 
   #------
 
-  _v_check : ({json}, cb) -> 
+  _v_check : ({json}, cb) ->
     err = if not cieq (a = json?.body?.key?.username), (b = @user.local.username)
       new Error "Wrong local user: got '#{a}' but wanted '#{b}'"
     else if (a = json?.body?.key?.uid) isnt (b = @user.local.uid)
@@ -172,13 +178,13 @@ class Base
   #------
 
   _json : ({expire_in}) ->
-    ret = { 
+    ret = {
       seqno : @seqno
       prev : @prev
       ctime : unix_time()
       tag : constants.tags.sig
       expire_in : expire_in or constants.expire_in
-      body : 
+      body :
         version : constants.versions.sig
         type : @_type()
         key :
@@ -228,15 +234,15 @@ class Base
     cb err, out
 
   #-------
-  
+
   km : () -> @sig_eng.get_km()
 
   #-------
 
   check_inputs : () -> null
-  
+
   #-------
-  
+
   # Check this proof against the existing proofs
   check_existing : () -> null
 
@@ -270,7 +276,7 @@ class Base
           err = new Error "Found a bad signature in proof text: #{b[0...60]} != #{check_for[0...60]} (slack=#{s})"
           break
     cb err
-  
+
 #==========================================================================
 
 class GenericBinding extends Base
@@ -286,6 +292,7 @@ exports.sig_id_to_short_id = sig_id_to_short_id
 exports.sig_id_to_med_id = sig_id_to_med_id
 exports.make_ids = make_ids
 exports.add_ids = add_ids
+exports.proof_text_check_to_med_id = proof_text_check_to_med_id
 
 #==========================================================================
 

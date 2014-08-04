@@ -22,18 +22,19 @@ $(BUILD_STAMP): \
 	lib/main.js \
 	lib/revoke.js \
 	lib/scrapers/base.js \
-        lib/scrapers/coinbase.js \
+	lib/scrapers/coinbase.js \
 	lib/scrapers/dns.js \
 	lib/scrapers/generic_web_site.js \
 	lib/scrapers/github.js \
+	lib/scrapers/hackernews.js \
 	lib/scrapers/reddit.js \
 	lib/scrapers/twitter.js \
 	lib/track.js \
 	lib/web_service.js \
-	lib/util.js 
+	lib/util.js
 	date > $@
 
-build: $(BUILD_STAMP) 
+build: $(BUILD_STAMP)
 
 test-server: $(BUILD_STAMP)
 	$(ICED) test/run.iced
@@ -50,7 +51,7 @@ $(TEST_STAMP): test/browser/test.js
 test: test-server test-browser
 
 clean:
-	rm -rf lib/* lib/scrapers/* $(BUILD_STAMP) $(TEST_STAMP) 
+	rm -rf lib/* lib/scrapers/* $(BUILD_STAMP) $(TEST_STAMP)
 
 setup:
 	npm install -d

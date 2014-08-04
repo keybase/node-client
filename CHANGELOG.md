@@ -1,3 +1,9 @@
+## 0.4.14 (2014-08-04)
+
+Features:
+
+  - HackerNews proofs
+
 ## 0.4.13 (2014-08-04)
 
 Bufixes
@@ -14,6 +20,9 @@ Bugfixes:
     and should not be
   - Close keybase/keybase-issues#834 --- double-revocation of sigs
     is a silent event, only shows up with --debug.
+
+Features:
+
   - Coinbase support
   - Reddit support
 

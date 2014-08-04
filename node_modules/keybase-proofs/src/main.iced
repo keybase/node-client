@@ -16,6 +16,7 @@ mods = [
   require('./scrapers/generic_web_site')
   require('./scrapers/dns')
   require('./scrapers/coinbase')
+  require('./scrapers/hackernews')
 ]
 
 for m in mods

@@ -1,5 +1,5 @@
 
-exports.constants = constants = 
+exports.constants = constants =
   tags :
     sig : "signature"
   versions :
@@ -20,13 +20,14 @@ exports.constants = constants =
     github : 3
     reddit : 4
     coinbase : 5
+    hackernews : 6
     generic_web_site : 1000
     dns              : 1001
   expire_in : 60*60*24*365*5 # 5 years....
   http_timeout : 15*1000 # give up after 15 seconds....
   short_id_bytes : 27
   shortest_pgp_signature : 100 # can't have a PGP signature shorter than this...
-  
+
   v_codes : # verification codes for hosted proofs
     NONE:              0
     OK:                1

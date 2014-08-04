@@ -77,7 +77,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/max/src/keybase/proofs/src/scrapers/base.iced",
+                filename: "/Users/max/src/keybase/proofs/src/scrapers/base.iced",
                 funcname: "BaseScraper.validate"
               });
               _this.check_status(args, __iced_deferrals.defer({
@@ -140,7 +140,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/max/src/keybase/proofs/src/scrapers/base.iced",
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/base.iced",
             funcname: "BaseScraper._get_url_body"
           });
           _this.libs.request(opts, __iced_deferrals.defer({
