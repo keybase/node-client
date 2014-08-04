@@ -1,5 +1,4 @@
 
-{home} = require './path'
 kbpath = require 'keybase-path'
 {join} = require 'path'
 {constants} = require './constants'
@@ -13,12 +12,12 @@ class RunMode
 
   DEVEL : 0
   PROD : 1
-  
+
   constructor : (s) ->
     t =
       devel : @DEVEL
       prod : @PROD
-      
+
     [ @_v, @_name, @_chosen ] = if (s? and (m = t[s])?) then [m, s, true ]
     else [ @PROD, "prod", false ]
 
@@ -63,7 +62,9 @@ class Env
     @config = null
     @session = null
     @kbpath = kbpath.new_eng {
-      get_home : () => @get_home()
+      hooks :
+        get_home : () => @_get_home()
+      name : "keybase"
     }
 
   set_config  : (c) -> @config = c
@@ -74,7 +75,9 @@ class Env
     co = @config?.obj()
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
 
-  get_config_dir : () -> @kbpath.config_dir 'keybase'
+  get_config_dir : () -> @kbpath.config_dir()
+  get_data_dir : () -> @kbpath.data_dir()
+  get_cache_dir : () -> @kbpath.cache_dir()
 
   get_port   : ( ) ->
     @get_opt
@@ -94,14 +97,14 @@ class Env
       env    : (e) -> e.KEYBASE_SESSION_FILE
       arg    : (a) -> a.session_file
       config : (c) -> c?.files?.session
-      dflt   : ( ) => join @get_config_dir(), FN.session_file
+      dflt   : ( ) => join @get_cache_dir(), FN.session_file
 
   get_db_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_DB_FILE
       arg    : (a) -> a.db_file
       config : (c) -> c?.files?.db
-      dflt   : ( ) => join @get_config_dir(), FN.db_file
+      dflt   : ( ) => join @get_data_dir(), FN.db_file
 
   get_nedb_filename : () ->
     @get_opt
@@ -184,7 +187,7 @@ class Env
     u2? and (u2.toLowerCase() is @get_username().toLowerCase())
 
   get_uid : () ->
-    @get_opt 
+    @get_opt
       env    : (e) -> e.KEYBASE_UID
       arg    : (a) -> a.uid
       config : (c) -> c.user?.id
@@ -197,11 +200,13 @@ class Env
       config : (c) -> c.user?.email
       dflt   : -> null
 
-  get_home : (null_ok = false) ->
+  _get_home : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_HOME_DIR
       arg    : (a) -> a.homedir
-      dflt   : -> if null_ok then null else home()
+      dflt   : -> null
+
+  get_home : (opts) -> @kbpath.home(opts)
 
   get_home_gnupg_dir : (null_ok = false) ->
     ret = @get_home null_ok
@@ -216,7 +221,7 @@ class Env
       dflt   : -> null
 
   get_proxy : () ->
-    @get_opt 
+    @get_opt
       env    : (e) -> e.http_proxy or e.https_proxy
       arg    : (a) -> a.proxy
       config : (c) -> c.proxy?.url
@@ -249,7 +254,7 @@ class Env
       dflt   :     -> false
 
   get_merkle_checks : () ->
-    unless @_merkle_mode 
+    unless @_merkle_mode
       raw = @get_opt
         env    : (e) -> e.KEYBASE_MERKLE_CHECKS
         arg    : (a) -> a.merkle_checks
@@ -302,6 +307,6 @@ class Env
 ##=======================================================================
 
 _env = null
-exports.init_env = (a) -> _env = new Env 
+exports.init_env = (a) -> _env = new Env
 exports.env      = ()  -> _env
 
