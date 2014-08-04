@@ -1,3 +1,11 @@
+## 0.6.0
+
+  - Support XDG_CONFIG_DIR and friends for Linuxes.
+    - Addresses keybase/keybase-issues#277
+    - Addresses keybase/node-client#143
+  - This will break previous versions of the keybase node-client by moving the
+    home directory somewhere else.
+
 ## 0.5.1 (2014-08-28)
 
 Features:
