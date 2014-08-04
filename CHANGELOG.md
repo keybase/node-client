@@ -1,3 +1,11 @@
+## 0.5.0
+
+  - Support XDG_CONFIG_DIR and friends for Linuxes.
+    - Addresses keybase/keybase-issues#277
+    - Addresses keybase/node-client#143
+  - This will break previous versions of the keybase node-client by moving the
+    home directory somewhere else.
+
 ## 0.4.21 and 0.4.22 (2014-08-22)
 
   - Fix broken dep with bitcoyne/kbpgp
