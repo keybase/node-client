@@ -1,5 +1,6 @@
 
 {home} = require './path'
+kbpath = require 'keybase-path'
 {join} = require 'path'
 {constants} = require './constants'
 {make_full_username,make_email} = require './util'
@@ -61,6 +62,9 @@ class Env
     @argv = null
     @config = null
     @session = null
+    @kbpath = kbpath.new_eng {
+      get_home : () => @get_home()
+    }
 
   set_config  : (c) -> @config = c
   set_session : (s) -> @session = s
@@ -69,6 +73,8 @@ class Env
   get_opt : ({env, arg, config, dflt}) ->
     co = @config?.obj()
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
+
+  get_config_dir : () -> @kbpath.config_dir 'keybase'
 
   get_port   : ( ) ->
     @get_opt
@@ -81,21 +87,21 @@ class Env
     @get_opt
       env    : (e) -> e.KEYBASE_CONFIG_FILE
       arg    : (a) -> a.config
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.config_file
+      dflt   : ( ) => join @get_config_dir(), FN.config_file
 
   get_session_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_SESSION_FILE
       arg    : (a) -> a.session_file
       config : (c) -> c?.files?.session
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.session_file
+      dflt   : ( ) => join @get_config_dir(), FN.session_file
 
   get_db_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_DB_FILE
       arg    : (a) -> a.db_file
       config : (c) -> c?.files?.db
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.db_file
+      dflt   : ( ) => join @get_config_dir(), FN.db_file
 
   get_nedb_filename : () ->
     @get_opt
@@ -107,7 +113,7 @@ class Env
       env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR
       arg    : (a) -> a.tmp_keyring_dir
       config : (c) -> c?.files?.tmp_keyring_dir
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.tmp_keyring_dir
+      dflt   : ( ) => join @get_config_dir(), FN.tmp_keyring_dir
 
   get_preserve_tmp_keyring : () ->
     @get_opt

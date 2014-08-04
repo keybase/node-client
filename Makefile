@@ -77,7 +77,6 @@ $(BUILD_STAMP): \
 	lib/log.js \
 	lib/merkle_client.js \
 	lib/package.js \
-	lib/path.js \
 	lib/prompter.js \
 	lib/proxyca.js \
 	lib/services.js \
