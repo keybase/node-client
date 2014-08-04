@@ -14,7 +14,7 @@ urlmod = require 'url'
 
 #===========================================
 
-url_reencode = (x) ->
+url_reencode = (url) ->
   # Use '+'-encoding for a smaller URL
   # Replace '(', ")" and "'" so that URL-detection works in Linux
   # Padding is not needed now, but might be in the future depending on

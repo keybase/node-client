@@ -1,3 +1,10 @@
+## 0.4.13 (2014-08-04)
+
+Bufixes
+
+  - fix bug in reddit proofs
+    - Address: keybase-issues/issues/909
+
 ## 0.4.12 (2014-08-04)
 
 Bugfixes:
