@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTjzMyAAoJEJgKPw0B/gTfLx0IALafUMekx6uqCk09Cdmk9YO1
-C3fCPAvJIwXjUa1D8EdXt+nWTWO8QJ4+gAI1eAAf095npOw39pYukm8UQXP2D+fE
-QuX0WS5Gd78L2U8Tx7+5csyWnKgugMoBxK4P2xaClB1WWDdV0PNk7ULM7IfSUE8S
-aa9zMMoEHqA0tkCViYecGnlPHhdKIT3VHVPkunXH479/ZUxQ1FA/iuWgXz2vqGg1
-COoxrXs18XW49Wp6niynCAcEBgL8sXXaXxsw/C4G3gI1Q7ofcvJlF9LSwn2Vf3zb
-8W3/RHzrhqh4paQF6gJmprOSErlW+/VshzD46fGYB4uo3jl18GXi4lTAjz1WNmk=
-=O0Gp
+iQEcBAABCgAGBQJT39HAAAoJEJgKPw0B/gTfyDUH/2Gkk/fkgpBBYy7md/qgdven
+dHwwzfXvp+WOEZcDRFhRva4ly7RQJHFF0a6zY3qdBBOQ3D4yE7BFmlrpqS8yLhqJ
+Im63rA+Ny+NOzQggYh93nDI3P62g7pQttk8vTQbiRRFMkl+AVtk5AUg0pvbo7Tiq
+twgzj840jxhDdNc7WwMf/n6PBOgWpgwEr/0MdPQdgRyI0jQcgnqsPbOalxEP+pAV
+LTyT2FgC0yx+WlT7umy3+2twJCxf8TDnTHXGAQbAXBlGROXZBFiLha5XQrXPDmNG
+l1v9bikZSyYjlHXx+zj8EwEAifs591rwkLTWlXCVPRSQeXqmkebMcAGYaXKIaLw=
+=YoU1
 -----END PGP SIGNATURE-----
 
 ```
@@ -29,10 +29,10 @@ size  exec  file            contents
 334           Makefile      46ef2af0d44ee236eaee20196dd2301b83e55517d3a163abdc5e9e40a8b0c0f3
 57            README.md     eba23a2d29ac9116c43978735933bee668cc87c8e6dbe7314a706025f5086fa8
               lib/                                                                          
-5549            main.js     ecb92f6bccbff6564652806cf4e4027946b79e9ca84dd628696c8f6b73f98196
-618           package.json  27e5539c07ade19c3ed990abc946449b781298f1439373ae9f77181141238b85
+6476            main.js     9ee24589dc7e93cdb69c5f03b4d03fd63057b026bc67f7eedafd7e91a6b2433d
+681           package.json  3f5fb0763bc1368743534e890779eba2981370255bbfee7fe511fc11fcc16bba
               src/                                                                          
-2599            main.iced   c3b748111db7c34e5ab84797438f80e47b573e597254287f34635e944a0a912f
+2980            main.iced   70c60de6075843c7c08edb9a985dd1a15e07f1042f20400bf25e0260ec3dace1
 ```
 
 #### Ignore
@@ -49,7 +49,7 @@ dropbox  # ignore .dropbox-cache and other Dropbox-related files
 kb       # ignore anything as described by .kbignore files          
 ```
 
-<!-- summarize version = 0.0.8 -->
+<!-- summarize version = 0.0.9 -->
 
 ### End signed statement
 
