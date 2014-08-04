@@ -18,6 +18,22 @@ pnzRg9xqxeu/jkZWQuyUmSfpbPnD9U4b3sLG0yNumTz39Cnpor/woaFutPRzNb2Q
 IPyR6O/MMQYgQ+9eQmOk
 =IBcK
 -----END PGP SIGNATURE-----
+```
+
+##### Signed by https://keybase.io/max
+```
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
+Comment: GPGTools - https://gpgtools.org
+
+iQEcBAABCgAGBQJT3+kqAAoJEJgKPw0B/gTfX14H/iZ6+LK8n9Amo0EtMfH7RSy/
+eWZklSAvTx98Lv1fQXByo4zimV9A6EyQz6g5lHDzdYwH8CCX0R8rCszS5DI0MDdb
+wh1UuzMvlKpMR4qkP8eh0OZe7R/CeBIYXfwyhTH06bgJ2pjpKzs5Ts2yc2gbr+QE
+8TWqg9yNUhKhKzjnCO6OJDG7agNGUarNbt3Ch9Ua3o57+YssX8bHB/B5TWjWcV4B
+mpUuB6m2Q6ztP/xl0PiNrCAsln4Tw/7vOH+9YaWgXvyBECxZBnIznbJ57kUA1m3k
+Rbcd5pOHhmwTlXp1yl2+4mxl+mqOv5xSRm0zKp1xbwAEZtYV0Jycanie9bXvr98=
+=AHnw
+-----END PGP SIGNATURE-----
 
 ```
 
