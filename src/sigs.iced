@@ -14,6 +14,17 @@ urlmod = require 'url'
 
 #===========================================
 
+url_reencode = (x) ->
+  # Use '+'-encoding for a smaller URL
+  # Replace '(', ")" and "'" so that URL-detection works in Linux
+  # Padding is not needed now, but might be in the future depending on
+  # changes we make
+  pad2 = (x) -> if x.length is 1 then "0#{x}" else x
+  url.replace(/%20/g, '+').
+      replace(/[()']/g, (c) -> "%" + pad2(c.charCodeAt(0).toString(16)))
+
+#===========================================
+
 class BaseSigGen
 
   constructor : ({@km, @client, @supersede, @merkle_root, @revoke_sig_ids}) ->
@@ -40,7 +51,7 @@ class BaseSigGen
       @seqno,
       @prev,
       host : constants.canonical_host,
-      user : 
+      user :
         local :
           uid : session.get_uid()
           username : env().get_username()
@@ -53,7 +64,7 @@ class BaseSigGen
 
   #---------
 
-  _do_signature : (cb) -> 
+  _do_signature : (cb) ->
     @eng = @_get_binding_eng()
     await @eng.generate defer err, @sig
     cb err
@@ -70,7 +81,7 @@ class BaseSigGen
   #---------
 
   _store_signature : (cb) ->
-    args = 
+    args =
       sig : @sig.pgp
       sig_id_base : @sig.id
       sig_id_short : @sig.short_id
@@ -110,7 +121,7 @@ class BaseSigGen
 
   #-----------------------
 
-  normalize_name : (n, cb) -> 
+  normalize_name : (n, cb) ->
     klass = @_binding_klass()
     ret = klass.normalize_name(n)
     cb null, ret
@@ -130,7 +141,7 @@ class BaseSigGen
   check_name_input : (s) -> @check_name(s)
 
   #-----------------------
-  
+
   single_occupancy : () -> @_binding_klass().single_occupancy()
 
   #-----------------------
@@ -145,7 +156,7 @@ class BaseSigGen
 
 #===========================================
 
-exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen 
+exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen
 
   _v_modify_store_arg : (arg) ->
     arg.type = "web_service_binding.keybase"
@@ -155,12 +166,12 @@ exports.KeybaseProofGen = class KeybaseProofGen extends BaseSigGen
 
 #===========================================
 
-exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen 
+exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
 
   # stub this out since it's not needed; we'll be doing a post elsewhere
   _store_signature : (cb) -> cb null
-  
-  _make_binding_eng : (arg) -> 
+
+  _make_binding_eng : (arg) ->
     new proofs.KeybaseBinding arg
 
 #===========================================
@@ -202,11 +213,11 @@ exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
   _get_announce_number : (cb) -> cb null
 
-  _make_binding_eng : (arg) -> 
+  _make_binding_eng : (arg) ->
     arg.track = @track
     new proofs.Track arg
 
-  _v_modify_store_arg : (arg) -> 
+  _v_modify_store_arg : (arg) ->
     arg.uid = @uid
     arg.type = "track"
   _get_api_endpoint : () -> "follow"
@@ -220,11 +231,11 @@ exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
   _get_announce_number : (cb) -> cb null
 
-  _make_binding_eng : (arg) -> 
+  _make_binding_eng : (arg) ->
     arg.untrack = @untrack
     new proofs.Untrack arg
 
-  _v_modify_store_arg : (arg) -> 
+  _v_modify_store_arg : (arg) ->
     arg.uid = @uid
     arg.type = "untrack"
   _get_api_endpoint : () -> "follow"
@@ -251,11 +262,11 @@ class SocialNetworkProofGen extends BaseSigGen
     arg.remote_username = @remote_username
     arg.type = "web_service_binding." + @_remote_service_name()
 
-  prompter : () -> 
+  prompter : () ->
     klass = @_binding_klass()
     ret = {
       prompt  : "Your username on #{@display_name()}"
-      checker : 
+      checker :
         f         : klass.check_name
         hint      : klass.name_hint()
         normalize : klass.normalize_name
@@ -270,7 +281,7 @@ exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
   constructor : (args) ->
     @revoke_sig_id = args.sig_id
     super args
-    
+
   _make_binding_eng : (args) ->
     args.revoke = { sig_id : @revoke_sig_id }
     new proofs.Revoke args
@@ -285,7 +296,7 @@ exports.RevokeProofSigGen = class RevokeProofSigGen extends BaseSigGen
 exports.DnsProofGen = class DnsProofGen extends BaseSigGen
 
   _binding_klass : () -> proofs.DnsBinding
-  constructor : (args) -> 
+  constructor : (args) ->
     @remote_host = args.remote_name_normalized
     super args
 
@@ -308,7 +319,7 @@ exports.DnsProofGen = class DnsProofGen extends BaseSigGen
     klass = @_binding_klass()
     return {
       prompt : "DNS Domain to check"
-      checker : 
+      checker :
         f     : (i) => @check_name_input(i)
         hint  : klass.name_hint()
     }
@@ -348,7 +359,7 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     files = @filenames h
     (colors.bold(f) for f in files).join("\n  or ")
 
-  instructions : () -> 
+  instructions : () ->
     "Please save the following file as #{@styled_filenames()}"
 
   display_name : () -> @filenames().join(' OR ' )
@@ -361,7 +372,7 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
     klass = @_binding_klass()
     return {
       prompt : "Hostname to check"
-      checker : 
+      checker :
         f    : (i) => @check_name_input(i)
         hint : klass.name_hint()
     }
@@ -394,7 +405,7 @@ exports.GenericWebSiteProofGen = class GenericWebSiteProofGen extends BaseSigGen
       args = { endpoint : "remotes/check", args : { hostname } }
       await req.get args, defer err, res
       if err? then # noop
-      else if not (protocol = res?.results?.first)? 
+      else if not (protocol = res?.results?.first)?
         err = new E.HostError "Host #{n} is down; tried 'http' and 'https' protocols"
       else if i.match(/^https:\/\//) and (protocol isnt 'https:')
         err = new E.SecurityError "You specified HTTPS for #{i} but only HTTP is available"
@@ -434,22 +445,14 @@ exports.RedditProofGen = class RedditProofGen extends SocialNetworkProofGen
   show_proof_text : () ->
     body = @proof_text
     title = @proof_metadata.title
-    url = urlmod.format {
+    url_reencode urlmod.format {
       protocol : "https"
       host : "www.reddit.com"
       pathname : "/r/KeybaseProofs/submit"
-      query : 
+      query :
         title : @proof_metadata.title
         text : @proof_text
     }
-
-    # Use '+'-encoding for a smaller URL
-    # Replace '(', ")" and "'" so that URL-detection works in Linux
-    # Padding is not needed now, but might be in the future depending on 
-    # changes we make
-    pad2 = (x) -> if x.length is 1 then "0#{x}" else x
-    url = url.replace(/%20/g, '+').
-              replace(/[()']/g, (c) -> "%" + pad2(c.charCodeAt(0).toString(16)))
 
 #===========================================
 
@@ -475,11 +478,12 @@ exports.CoinbaseProofGen = class CoinbaseProofGen extends SocialNetworkProofGen
   _remote_service_name : () -> "coinbase"
   imperative_verb : () -> "update your Coinbase profile with"
   display_name : () -> "coinbase"
-  instructions : () -> "Please update your coinbase profile HERE to show this proof"
-    
+  instructions : () ->
+    "Please update your Coinbase profile to show this proof. Click here: https://coinbase.com/#{@remote_username}/public-key"
+
 #===========================================
 
-exports.SignatureEngine = class SignatureEngine 
+exports.SignatureEngine = class SignatureEngine
 
   #------------
 
@@ -493,9 +497,9 @@ exports.SignatureEngine = class SignatureEngine
 
   box : (msg, cb) ->
     out = {}
-    arg = 
+    arg =
       stdin : new Buffer(msg, 'utf8')
-      args : [ "-u", @km.get_pgp_key_id(), "--sign", "-a", "--keyid-format", "long" ] 
+      args : [ "-u", @km.get_pgp_key_id(), "--sign", "-a", "--keyid-format", "long" ]
       quiet : true
     await master_ring().gpg arg, defer err, pgp
     unless err?
