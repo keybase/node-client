@@ -116,7 +116,7 @@ class Env
       env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR
       arg    : (a) -> a.tmp_keyring_dir
       config : (c) -> c?.files?.tmp_keyring_dir
-      dflt   : ( ) => join @get_config_dir(), FN.tmp_keyring_dir
+      dflt   : ( ) => join @get_cache_dir(), FN.tmp_keyring_dir
 
   get_preserve_tmp_keyring : () ->
     @get_opt
