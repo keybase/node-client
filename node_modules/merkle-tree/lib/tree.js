@@ -304,8 +304,8 @@
     };
 
     Base.prototype.commit_root = function(_arg, cb) {
-      var key, txinfo;
-      key = _arg.key, txinfo = _arg.txinfo;
+      var key, prev_root, txinfo;
+      key = _arg.key, txinfo = _arg.txinfo, prev_root = _arg.prev_root;
       return this.unimplemented();
     };
 
@@ -350,7 +350,7 @@
       ___iced_passed_deferral = iced.findDeferral(arguments);
       key = _arg.key, val = _arg.val, txinfo = _arg.txinfo;
       cb = chain_err(cb, this.unlock.bind(this));
-      esc = make_esc(cb, "full_build");
+      esc = make_esc(cb, "upsert");
       (function(_this) {
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
@@ -359,7 +359,7 @@
             funcname: "Base.upsert"
           });
           _this._lock.acquire(__iced_deferrals.defer({
-            lineno: 266
+            lineno: 269
           }));
           __iced_deferrals._fulfill();
         });
@@ -377,7 +377,7 @@
                   return root = arguments[0];
                 };
               })(),
-              lineno: 269
+              lineno: 272
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -399,7 +399,7 @@
                         return curr = arguments[0];
                       };
                     })(),
-                    lineno: 273
+                    lineno: 276
                   })));
                   __iced_deferrals._fulfill();
                 })(__iced_k);
@@ -452,7 +452,7 @@
                                 return curr = arguments[0];
                               };
                             })(),
-                            lineno: 286
+                            lineno: 289
                           })));
                           __iced_deferrals._fulfill();
                         })(__iced_k);
@@ -497,7 +497,7 @@
                             return tmp = arguments[0];
                           };
                         })(),
-                        lineno: 303
+                        lineno: 304
                       })));
                       __iced_deferrals._fulfill();
                     })(function() {
@@ -552,7 +552,7 @@
                                   obj: obj,
                                   obj_s: obj_s
                                 }, esc(__iced_deferrals.defer({
-                                  lineno: 315
+                                  lineno: 316
                                 })));
                                 __iced_deferrals._fulfill();
                               })(_next);
@@ -574,7 +574,7 @@
                             txinfo: txinfo,
                             prev_root: prev_root
                           }, esc(__iced_deferrals.defer({
-                            lineno: 318
+                            lineno: 319
                           })));
                           __iced_deferrals._fulfill();
                         })(function() {
@@ -627,7 +627,7 @@
                 return root_obj = arguments[1];
               };
             })(),
-            lineno: 337
+            lineno: 338
           })));
           __iced_deferrals._fulfill();
         });
@@ -668,7 +668,7 @@
                         return node = arguments[0];
                       };
                     })(),
-                    lineno: 340
+                    lineno: 341
                   })));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -684,7 +684,7 @@
                           key: curr,
                           node: node
                         }, esc(__iced_deferrals.defer({
-                          lineno: 342
+                          lineno: 343
                         })));
                         __iced_deferrals._fulfill();
                       })(__iced_k);
@@ -716,7 +716,7 @@
     };
 
     Base.prototype.build = function(_arg, cb) {
-      var esc, h, sorted_map, ___iced_passed_deferral, __iced_deferrals, __iced_k;
+      var esc, h, prev_root, sorted_map, ___iced_passed_deferral, __iced_deferrals, __iced_k;
       __iced_k = __iced_k_noop;
       ___iced_passed_deferral = iced.findDeferral(arguments);
       sorted_map = _arg.sorted_map;
@@ -730,7 +730,7 @@
             funcname: "Base.build"
           });
           _this._lock.acquire(__iced_deferrals.defer({
-            lineno: 359
+            lineno: 360
           }));
           __iced_deferrals._fulfill();
         });
@@ -742,16 +742,13 @@
               filename: "/Users/max/src/keybase/node-merkle-tree/src/tree.iced",
               funcname: "Base.build"
             });
-            _this.hash_tree_r({
-              level: 0,
-              sorted_map: sorted_map
-            }, esc(__iced_deferrals.defer({
+            _this.lookup_root(esc(__iced_deferrals.defer({
               assign_fn: (function() {
                 return function() {
-                  return h = arguments[0];
+                  return prev_root = arguments[0];
                 };
               })(),
-              lineno: 360
+              lineno: 361
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -761,14 +758,36 @@
                 filename: "/Users/max/src/keybase/node-merkle-tree/src/tree.iced",
                 funcname: "Base.build"
               });
-              _this.commit_root({
-                key: h
+              _this.hash_tree_r({
+                level: 0,
+                sorted_map: sorted_map,
+                prev_root: prev_root
               }, esc(__iced_deferrals.defer({
-                lineno: 361
+                assign_fn: (function() {
+                  return function() {
+                    return h = arguments[0];
+                  };
+                })(),
+                lineno: 362
               })));
               __iced_deferrals._fulfill();
             })(function() {
-              return cb(null);
+              (function(__iced_k) {
+                __iced_deferrals = new iced.Deferrals(__iced_k, {
+                  parent: ___iced_passed_deferral,
+                  filename: "/Users/max/src/keybase/node-merkle-tree/src/tree.iced",
+                  funcname: "Base.build"
+                });
+                _this.commit_root({
+                  key: h,
+                  prev: prev_root
+                }, esc(__iced_deferrals.defer({
+                  lineno: 363
+                })));
+                __iced_deferrals._fulfill();
+              })(function() {
+                return cb(null);
+              });
             });
           });
         };
@@ -808,7 +827,7 @@
                     return err = arguments[0];
                   };
                 })(),
-                lineno: 372
+                lineno: 374
               }));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -875,7 +894,7 @@
                               return h = arguments[1];
                             };
                           })(),
-                          lineno: 386
+                          lineno: 388
                         }));
                         __iced_deferrals._fulfill();
                       })(function() {
@@ -931,7 +950,7 @@ _break()
                           return err = arguments[0];
                         };
                       })(),
-                      lineno: 392
+                      lineno: 394
                     }));
                     __iced_deferrals._fulfill();
                   })(__iced_k);

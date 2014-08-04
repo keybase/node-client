@@ -24,6 +24,7 @@ exports.check_bad_address_2 = (T,cb) ->
   cb()
 
 exports.check_bad_coin_1 = (T,cb) ->
+  # This is a litecoin address
   c = "LdoZadzUUFoazyDLEm3G73b9XKAd8hu8oc"
   [err,ret] = address.check c
   T.assert err?, "an error"
@@ -31,6 +32,7 @@ exports.check_bad_coin_1 = (T,cb) ->
   cb()
 
 exports.good_alt_coin_1 = (T,cb) ->
+  # This is a litecoin address
   c = "LdoZadzUUFoazyDLEm3G73b9XKAd8hu8oc"
   [err,ret] = address.check c, { versions : [48] }
   T.no_error err

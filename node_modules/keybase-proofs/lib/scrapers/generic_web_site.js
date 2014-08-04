@@ -206,16 +206,6 @@ _break()
       return false;
     };
 
-    GenericWebSiteScraper.prototype._validate_text_check = function(_arg) {
-      var err, msg, proof_text_check, signature, _ref;
-      signature = _arg.signature, proof_text_check = _arg.proof_text_check;
-      _ref = decode(signature), err = _ref[0], msg = _ref[1];
-      if ((err == null) && ("\n\n" + msg.payload + "\n") !== proof_text_check) {
-        err = new Error("Bad payload text_check");
-      }
-      return err;
-    };
-
     GenericWebSiteScraper.prototype.check_status = function(_arg, cb) {
       var api_url, err, hostname, proof_text_check, protocol, rc, ___iced_passed_deferral, __iced_deferrals, __iced_k;
       __iced_k = __iced_k_noop;
@@ -238,7 +228,7 @@ _break()
                 return rc = arguments[1];
               };
             })(),
-            lineno: 94
+            lineno: 85
           }));
           __iced_deferrals._fulfill();
         });

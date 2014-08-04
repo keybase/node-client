@@ -27,7 +27,7 @@
     filename: "filename",
     funcname: "funcname",
     catchExceptions: 'catchExceptions',
-    runtime_modes: ["node", "inline", "window", "none", "browserify"],
+    runtime_modes: ["node", "inline", "window", "none", "browserify", "interp"],
     trampoline: "trampoline",
     context: "context"
   };

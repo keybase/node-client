@@ -17,7 +17,7 @@ make_defer_return = (obj, defer_args, id, trace_template, multi) ->
       obj = null unless multi
       o._fulfill id, trace
     else
-      warn "overused deferral at #{intern._trace_to_string trace}"
+      warn "overused deferral at #{_trace_to_string trace}"
 
   ret[C.trace] = trace
 

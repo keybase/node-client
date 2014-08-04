@@ -1,16 +1,15 @@
 ##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
+Version: GnuPG v2
 
-iQEcBAABCgAGBQJTjym3AAoJEJgKPw0B/gTfsVAH/3E5jI7h0WpUObZL2cJ5q0Sb
-EeGZkeOL4X+xfVO5GczAegxNmQtFy74xWzpxlycBCZOOJ4al2Qp9VyA4SXiqht67
-kqivGZAf98FOOsPolfWbTzatHZ/qx7TfH/gxfECvKyYYd6nDOsm6B5e9nUDDRKBN
-VNvAjF6Ge6eHugtlm98c9WTn4ia7ue1b1ovbKMQvUROUPHbVCdjlaWDv1pWAObD7
-NqbdVMz+AMHoTd6/8u9u2z7GdDj2Ynwp2rkJmJ1TjRmOaVtw8rTSp0litirPv5xt
-gmt4Av3D7Wk1kpZ6zW+9wnI0nAE/CLo2H7We11fmonsGK5JbG3qaF9dkZWrna/8=
-=WRTi
+iQEcBAABAgAGBQJTqiMBAAoJEJgKPw0B/gTfP/gIAKh8kcbMTSf3bqEe3EHU/K+D
+YA/u5HLY9K/4368l0cL79/AdyZ7iWrblsUjq6YbwbT5beBRotqoVXfJ1QKLOyszC
+jetuSv3ygUs4kC2ESW0TINhKcXCC18zkpRiihCdQNCN/X9a7o+Gf/XHFK1+fh/dR
+akW4K7mSiNTc2Wp5/MlozXbUhFVp44AO5vpKBlE6hCmuftZbDUWiC53JFEBYlDhS
+qPyCh8Fvg4KKiAQPjZj3k6eblW23IdZDxflmZVWs2BMbb1qdiG1LKdT/VzbvESwi
+QGs37PFtMW2nUeaYBSG17ncZClt5a2AWtZ78HsIaHBFOFRhu2+vhHW8Wbxr8zqE=
+=Neu9
 -----END PGP SIGNATURE-----
 
 ```
@@ -45,7 +44,7 @@ size   exec  file                          contents
 984              timer.js                  ff8e5eeedd441ee1bcc07db4a80201c9c93ec542b13acf0ab39ba6e3db4a3cf4
 23574            transport.js              66d03982e1cf5767e0066986a9cc42b946e37152df6830bf5b423ad111d2cc71
 26               version.js                f3baefd0b197adfca2cf24e613bbba582c453d1b7ad22b56fda43bafd6231447
-767            package.json                ccc75e17b7cd7ec8bc2fa4e9f013f73e6dc4fe9d39e79752a4327593eb706bbf
+768            package.json                9b3ec84e13ce852b2adaea16f42565780590060fd9fc3d20755f99708fa3d742
                src/                                                                                        
 714              client.iced               6640bbae283ba92516da749894b7740dc6e10db9af48289282e59da045b1498e
 4560             debug.iced                7b2b81b8dae1729ba3d29de7dfac2960d285b7adc7359c4ccf2556bf12b6f70f
@@ -94,7 +93,7 @@ dropbox  # ignore .dropbox-cache and other Dropbox-related files
 kb       # ignore anything as described by .kbignore files          
 ```
 
-<!-- summarize version = 0.0.8 -->
+<!-- summarize version = 0.0.9 -->
 
 ### End signed statement
 

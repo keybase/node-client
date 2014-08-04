@@ -28,7 +28,7 @@
         }
         return o._fulfill(id, trace);
       } else {
-        return warn("overused deferral at " + (intern._trace_to_string(trace)));
+        return warn("overused deferral at " + (_trace_to_string(trace)));
       }
     };
     ret[C.trace] = trace;

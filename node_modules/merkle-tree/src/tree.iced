@@ -228,17 +228,17 @@ exports.Base = class Base
 
   #---------------------------------
 
-  hash_fn     : (s)                     -> @unimplemented()
-  store_node  : ({key, obj, obj_s}, cb) -> @unimplemented()
-  commit_root : ({key, txinfo},     cb) -> @unimplemented()
-  lookup_node : ({key},             cb) -> @unimplemented()
+  hash_fn     : (s                           ) -> @unimplemented()
+  store_node  : ({key, obj, obj_s},        cb) -> @unimplemented()
+  commit_root : ({key, txinfo, prev_root}, cb) -> @unimplemented()
+  lookup_node : ({key},                    cb) -> @unimplemented()
 
   # Callback cb with an <err,String,Object> triple.
   #  The err is set is an error was encountered.
   #  The String is the hash of the root.
   #  The Object, optional, is the the other data stored at the root node,
   #    such as signatures or sequence numbers.
-  lookup_root : (                   cb) -> @unimplemented()
+  lookup_root : (                          cb) -> @unimplemented()
 
   #-----------------------------------------
 
@@ -266,7 +266,7 @@ exports.Base = class Base
 
     # All happens with a lock
     cb = chain_err cb, @unlock.bind(@)
-    esc = make_esc cb, "full_build"
+    esc = make_esc cb, "upsert"
     await @_lock.acquire defer()
 
     # Now find the root
@@ -359,8 +359,9 @@ exports.Base = class Base
     cb = chain_err cb, @unlock.bind(@)
     esc = make_esc cb, "full_build"
     await @_lock.acquire defer()
-    await @hash_tree_r { level : 0, sorted_map }, esc defer h
-    await @commit_root { key : h}, esc defer()
+    await @lookup_root esc defer prev_root
+    await @hash_tree_r { level : 0, sorted_map, prev_root }, esc defer h
+    await @commit_root { key : h, prev : prev_root }, esc defer()
     cb null
 
   #-----------------------------------------
