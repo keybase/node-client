@@ -1,14 +1,17 @@
 
-exports.constants = constants = 
+exports.constants = constants =
   version : 1
   api_version : "1.0"
   canonical_host : "keybase.io"
   client_name : "keybase.io node.js client"
-  server : 
+  user_agent :
+    main : "Keybase-CLI"
+    details : "#{process.platform}; node.js #{process.versions.node}"
+  server :
     host : "api.keybase.io"
     port : 443
     no_tls : false
-  filenames : 
+  filenames :
     config_dir : ".keybase"
     config_file : "config.json"
     session_file : "session.json"
@@ -46,7 +49,7 @@ exports.constants = constants =
     sig_chain_link : "e0"
     local_track : "e1"
     merkle_root : "e2"
-  import_state : 
+  import_state :
     NONE : 0
     TEMPORARY : 1
     FINAL : 2

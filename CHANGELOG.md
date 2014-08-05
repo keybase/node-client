@@ -1,3 +1,9 @@
+## 0.4.15 
+
+Bugfixes:
+
+  - Proper U/A string for API calls to keybase.io
+
 ## 0.4.14 (2014-08-04)
 
 Features:

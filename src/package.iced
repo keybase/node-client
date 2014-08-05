@@ -10,7 +10,7 @@ package_json = require '../package.json'
 exports.PackageJson = class PackageJson
 
   #------------
-  
+
   constructor : ->
     @json = package_json
 
@@ -33,6 +33,12 @@ exports.PackageJson = class PackageJson
 
   identify_as : () ->
     "#{constants.client_name} v#{@version()} #{process.platform}"
+
+  #------------
+
+  user_agent : () ->
+    ua = constants.user_agent
+    "#{ua.main}/#{@version()} (#{ua.details})"
 
 ##=======================================================================
 

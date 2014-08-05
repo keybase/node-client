@@ -15,7 +15,7 @@ m = (dict, method) ->
 
 #=================================================
 
-exports.Client = class Client 
+exports.Client = class Client
 
   constructor : (@headers) ->
     @_cookies = {}
@@ -92,7 +92,9 @@ exports.Client = class Client
     json = true unless json?
     opts = { method, json, jar }
     opts.headers = @headers or {}
-    opts.headers["X-Keybase-Client"] = (new PackageJson).identify_as()
+    pjs = new PackageJson
+    opts.headers["X-Keybase-Client"] = pjs.identify_as()
+    opts.headers["User-Agent"] = pjs.user_agent()
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]
@@ -126,7 +128,7 @@ exports.Client = class Client
 
     await request opts, defer err, res, body
     if err? then err = @error_for_humans {err, uri : opts.uri, uri_fields }
-    else if not (res.statusCode in http_status) 
+    else if not (res.statusCode in http_status)
       if res.statusCode is 400 and res.headers?["x-keybase-client-unsupported"]
         v = res.headers["x-keybase-client-upgrade-to"]
         err = new E.RequiredUpgradeError "Upgrade is required! Run `keybase-installer` to upgrade to v#{v}"
