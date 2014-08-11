@@ -1,8 +1,9 @@
-## 0.4.15 
+## 0.4.15 (2014-08-11)
 
 Bugfixes:
 
   - Proper U/A string for API calls to keybase.io
+  - Upgrade to Proofs 1.0.4 for HN proofs
 
 ## 0.4.14 (2014-08-04)
 
