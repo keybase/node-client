@@ -1,3 +1,9 @@
+## 0.4.16
+
+Bugfixes:
+
+  - Upgrade to proofes v1.0.5 for HN fixes
+
 ## 0.4.15 (2014-08-11)
 
 Bugfixes:

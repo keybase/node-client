@@ -480,6 +480,14 @@ exports.HackerNewsProofGen = class HackerNewsProofGen extends SocialNetworkProof
   display_name : () -> "HackerNews"
   instructions : () ->
     "Please edit your HackerNews profile to contain the following text. Click here: https://news.ycombinator.com/user?id=#{@remote_username}"
+  do_recheck : (i) ->
+    log.info "We couldn't find a posted proof for #{@remote_username}.....#{colors.bold('yet')}"
+    if i < 3
+      log.info "HackerNews's API is slow to update, so be patient...try again?"
+      true
+    else
+      log.info "We'll keep trying and let you know!"
+      false
 
 #===========================================
 
