@@ -260,6 +260,17 @@ class HackerNewsBinding extends SocialNetworkBinding
   @name_hint : () -> "alphanumerics, between 2 and 15 characters long"
   check_name : (n) -> HackerNewsBinding.check_name(n)
 
+  # HN names are case-sensitive
+  @normalize_name : (n) -> 
+    if n[0] is '@' then n[1...] else n
+  normalize_name : (n) ->
+    n or= @user.remote
+    if @check_name(n) then HackerNewsBinding.normalize_name n
+    else null
+  _service_obj_check : (x) ->
+    so = @service_obj()
+    return (x? and (so.username is x.username) and cieq(so.name, x.name))
+
 #==========================================================================
 
 exports.TwitterBinding = TwitterBinding
