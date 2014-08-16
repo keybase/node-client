@@ -83,7 +83,7 @@ exports.constants = constants =
   time :
     remote_proof_recheck_interval : 60 * 60 * 24 # check remote proofs every day
   keygen :
-    expire : "10y"
+    expire : "2y"
     master : bits : 4096
     subkey : bits : 4096
 
