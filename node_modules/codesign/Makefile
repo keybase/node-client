@@ -26,6 +26,7 @@ $(BUILD_STAMP): \
 	lib/preset/globber.js \
 	lib/preset/kb.js \
 	lib/preset/preset_base.js \
+	lib/preset/svn.js \
 	lib/summarized_item.js \
 	lib/top.js \
 	lib/utils.js \
