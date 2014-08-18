@@ -70,6 +70,7 @@ exports.E = E = ie.make_errors
   KEY_NOT_FOUND : "key not found"
   REVOKED : "revoked"
   REVOKE  : "error in revocation"
+  KARMA : "insufficient karma"
 
 #================================================
 

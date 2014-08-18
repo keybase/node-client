@@ -1,8 +1,16 @@
+## 0.4.17 (2014-08-18)
+
+Nits:
+
+  - Remove experimental warning on dir sign/verify
+  - Check HN users exist and have enough karma before letting them prove
+     - via proofs@1.0.6
+
 ## 0.4.16 (2014-08-14)
 
 Bugfixes:
 
-  - Upgrade to proofes v1.0.5 for HN fixes
+  - Upgrade to proof@1.0.5 for HN fixes
 
 ## 0.4.15 (2014-08-11)
 

@@ -23,7 +23,7 @@ exports.Command = class Command extends ProofBase
   #----------
 
   OPTS : dict_union ProofBase.OPTS, {
-    o : 
+    o :
       alias : "output"
       help : "output proof text to file (rather than standard out)"
   }
@@ -36,7 +36,7 @@ exports.Command = class Command extends ProofBase
   #----------
 
   command_name_and_opts : () ->
-    config = 
+    config =
       aliases : [ "proof" ]
       help : "add a proof of identity"
     name = "prove"
@@ -70,7 +70,7 @@ exports.Command = class Command extends ProofBase
     log.debug "| Remote proofs: #{JSON.stringify @rp}"
     log.debug "| Service name: #{@service_name}"
     log.debug "| Remote_name_normalized: #{@remote_name_normalized}"
-    if not(@stub.single_occupancy()) and (v = @rp?[@service_name])? and 
+    if not(@stub.single_occupancy()) and (v = @rp?[@service_name])? and
          (@remote_name_normalized in v)
       prompt = "You already have claimed ownership of #{@remote_name}; overwrite? "
       await @check_exists_common prompt, defer err
@@ -82,7 +82,7 @@ exports.Command = class Command extends ProofBase
   #----------
 
   poll_server : (cb) ->
-    arg = 
+    arg =
       endpoint : "sig/posted"
       args :
         proof_id : @gen.proof_id
@@ -90,6 +90,15 @@ exports.Command = class Command extends ProofBase
     res = if err? then false else body.proof_ok
     status = if err? then null else body.proof_res?.status
     cb err, res, status
+
+  #----------
+
+  do_prechecks : (cb) ->
+    err = null
+    if @argv.force then # noop
+    else
+      await @stub.do_precheck { @remote_name_normalized }, defer err
+    cb err
 
   #----------
 
@@ -132,7 +141,7 @@ exports.Command = class Command extends ProofBase
         await @poll_server esc defer found, status
         i++
         prompt = not found
-        if found 
+        if found
           fail = false
           log.info "Success!"
         else
@@ -159,6 +168,7 @@ exports.Command = class Command extends ProofBase
     await @prompt_remote_name esc defer()
     await @normalize_remote_name esc defer()
     await @check_exists_2 esc defer()
+    await @do_prechecks esc defer()
     await @do_warnings esc defer()
     await @allocate_proof_gen esc defer()
     await @gen.run esc defer()

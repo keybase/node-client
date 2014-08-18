@@ -11,6 +11,7 @@ colors = require './colors'
 {E} = require './err'
 req = require './req'
 urlmod = require 'url'
+scrapers = require './scrapers'
 
 #===========================================
 
@@ -148,6 +149,7 @@ class BaseSigGen
 
   get_warnings : ({}) -> []
   do_recheck : (i) -> true
+  do_precheck : ( { remote_name_normalized } ) -> cb null
 
   #-----------------------
 
@@ -262,10 +264,12 @@ class SocialNetworkProofGen extends BaseSigGen
     arg.remote_username = @remote_username
     arg.type = "web_service_binding." + @_remote_service_name()
 
+  get_prompt : () -> "Your username on #{@display_name()}"
+
   prompter : () ->
     klass = @_binding_klass()
     ret = {
-      prompt  : "Your username on #{@display_name()}"
+      prompt  : @get_prompt()
       checker :
         f         : klass.check_name
         hint      : klass.name_hint()
@@ -480,6 +484,7 @@ exports.HackerNewsProofGen = class HackerNewsProofGen extends SocialNetworkProof
   display_name : () -> "HackerNews"
   instructions : () ->
     "Please edit your HackerNews profile to contain the following text. Click here: https://news.ycombinator.com/user?id=#{@remote_username}"
+
   do_recheck : (i) ->
     log.info "We couldn't find a posted proof for #{@remote_username}.....#{colors.bold('yet')}"
     if i < 3
@@ -488,6 +493,19 @@ exports.HackerNewsProofGen = class HackerNewsProofGen extends SocialNetworkProof
     else
       log.info "We'll keep trying and let you know!"
       false
+  get_warnings : ( { remote_name_normalized } ) -> []
+
+  do_precheck : ( { remote_name_normalized } , cb) ->
+    scraper = (new scrapers.HackerNews).make_scraper()
+    await scraper.get_karma remote_name_normalized, defer err, json
+    if err? then # noop
+    else if not(json?)
+      log.warn "#{colors.bold("ATTENTION")}: HackerNews only publishes users to their API with #{colors.bold("karma > 1")}."
+      log.warn "Your account #{colors.bold(remote_name_normalized)} doesn't qualify, or doesn't exist!"
+      err = new E.KarmaError "Insufficient HackerNews karma (>= 2 needed) or bad username (case sensitive!)"
+    cb err
+
+  get_prompt : () -> "Your username on #{@display_name()} (**case sensitive**)"
 
 #===========================================
 
