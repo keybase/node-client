@@ -1,3 +1,10 @@
+## 0.4.18 (2014-08-18)
+
+Bugfixes:
+
+  - Fix crasher in `keybase list-signatures` where there are no sigs
+      - Close keybase/keybase-issues#914
+
 ## 0.4.17 (2014-08-18)
 
 Nits:
@@ -124,7 +131,7 @@ Bugfixes
   - Address keybase/keybase-issues#732, again...
     - This time, proving also needs to see perm failures when decided to supersede.
   - Address keybase/keybase-issues#762
-    - We missed a spot where verify needs a first arg (empty dictionary).  
+    - We missed a spot where verify needs a first arg (empty dictionary).
 
 ## 0.4.3 (2014-06-05)
 
@@ -206,13 +213,13 @@ Features:
     so this way users are checking the server as they go.
 
 Bugfixes:
- 
+
   - Better error messages when network problems are encountered.
   - Fix bug with signatures dates not working in different locales
   - Address #157 -- Don't look for English GPG output in key generation
-  - Address keybase/keybase-issues#649 -- mixed success/failure 
+  - Address keybase/keybase-issues#649 -- mixed success/failure
     messges in the case of failed tracking.
-  - Don't load the user's me object twice --- put it in a cache the 
+  - Don't load the user's me object twice --- put it in a cache the
     first time, and fetch it out the second.
 
 Cleanups:
@@ -231,7 +238,7 @@ Bugfixes:
 
 Features:
   - Remove nedb dependency.  Replace it with our new iced-db, which is simply
-    an FS-based key-value store. 
+    an FS-based key-value store.
 
 Bugfixes:
   - Address keybase/keybase-issues#540 -- you couldn't open two instances of NEDB
@@ -247,7 +254,7 @@ Bugfixes:
 
 Features:
 
-  - Support for DNS proofs 
+  - Support for DNS proofs
   - Support for Web proofs at foo.com/keybase.txt
 
 Bugfixes:
@@ -282,7 +289,7 @@ Bugfixes:
 
 ## 0.2.15 (2014-04-02)
 
-Bugfixes 
+Bugfixes
 
   - Fix bugs in binary output, which was being Utf8-mangled and also supplemented with a newline.
      - Address keybase/keybase-issues#463
@@ -293,7 +300,7 @@ Bugfixes
 
 **SECURITY BUGFIX**
 
-  - Sanity-check the server's proof text, in case it's cheating.  Check to make sure that the only 
+  - Sanity-check the server's proof text, in case it's cheating.  Check to make sure that the only
     plausible proof is the one that we made, and that others aren't coming along for the ride.
     This check comes via keybase-proofs @v0.0.20.
 
@@ -388,7 +395,7 @@ Bugfixes:
 ## 0.2.1 (2014-03-27)
 
 Features
- 
+
   - `keybase help <cmd>` now works
   - `keybase prove` has a new -o option, for writing a proof out to a file
 
@@ -473,10 +480,10 @@ Bugfixes:
 ## 0.0.40 (2014-03-18)
 
 Bugfixes:
-                                                                                       
+
   - We weren't hitting the cache on fingerprint_to_username lookups due to case incompatibilities.  Solve this with a sledgehammer; always convert lookups to lowercase.
-  - Close keybase/keybase-issues#278 -- a broken error case that would have crashed anyways 
-  - More debug messages                                         
+  - Close keybase/keybase-issues#278 -- a broken error case that would have crashed anyways
+  - More debug messages
   - More fixes for people who specify `primary-kerying` or `keyring` in the gpg.conf files.  Disable a few checks for them, and also pass --no-gpp-options through to gpg-wrapper
 
 ## 0.0.39 (2014-03-15)
@@ -564,7 +571,7 @@ Bugfixes:
     luckily boilerplate header, but don't take a risk.  See #116.
 
 Cleanups:
-  
+
   - Address issue #115, cleanup tracking, don't reimport the key into 1-shot rings, like
     crazy, use a QuarantinedKeyRing instead.  Upgrade to gpg-wrapper@0.0.37 for this.
 
@@ -600,7 +607,7 @@ Bugfixes:
   - We broke tracking and proof uploads in 0.0.26. After a key revocation, the end of the
     sigchain was effectively null, but the server rejects such a chain; we still need to link
     to the last link of the previous key.
-  - Redact contents of session file in -d to guard people's secrets if they post them to a 
+  - Redact contents of session file in -d to guard people's secrets if they post them to a
     discussion thread.
   - Fix decryption/verification of a signcrypted message, breaking on node v0.10.0 due
     to a bug in libuv.  Plausible workaround in iced-spawn v0.0.5
@@ -615,7 +622,7 @@ Bugfixes:
 
 Bugfixes:
 
-  - Fix bug in sigchain verification; only look at the tail links that also have the same 
+  - Fix bug in sigchain verification; only look at the tail links that also have the same
     fingerprint as the currenlty active key.
   - Actually honor the --no-key-pull flag to login
 
@@ -670,7 +677,7 @@ Bugfixes:
 ## 0.0.20 (2014-02-21)
 
 Bugfixes:
- 
+
   - Fix keybase/node-client#106, that '\r's on windows were basing PGP block parsing
   - Update for new github gist URLs, which now can be at githubusercontent.com
     (see keybase/keybase-issues#19)
@@ -678,17 +685,17 @@ Bugfixes:
 ## 0.0.19 (2014-02-20)
 
 Bugfixes:
-  
+
   - Fix a crash in keybase id, which was crashing on failed key proofs.
 
 ## 0.0.18 (2014-02-20)
 
 Features:
- 
+
   - DSA and ElGamal are now working; not as well-tested as RSA, so rocky road ahead
 
 Bugfixes:
-  
+
   - Upgrade to gpg-wrapper 0.0.33; better error-reporting, rather than the abstruse "error exit 2"
 
 ## 0.0.17 (2014-02-18)
@@ -734,8 +741,8 @@ Bugfixes:
   - Upgrade to gpg-wrapper v0.0.30, to fix bug in gpg.set_log (which wasn't there)
 
 Features:
-	
-  - You can now join the waitlist from the command-line client; sorry, this might be 
+
+  - You can now join the waitlist from the command-line client; sorry, this might be
 	considered a bug....
 
 ## 0.0.11 (2014-02-17)
@@ -753,13 +760,13 @@ Features:
 
 Bugfixes:
 
-   - Issue #82: A regression from the previous release, in which we weren't asking properly for 
+   - Issue #82: A regression from the previous release, in which we weren't asking properly for
    remote tracking.  Hopefully this fixes it, but it's quite fussy
 
 ## 0.0.8 (2014-02-14)
 
 Bugfixes:
-	
+
   - Add UID and username into config.json on successful login, if it's not there (Issue #78 & #79)
   - Use session.get_uid() and not env().get_uid() for proofs, which should be more robust (Issue #78 & #79)
   - Some services weren't logging in, so add logins for them (Issue #78 & #79)
@@ -768,7 +775,7 @@ Bugfixes:
 ## 0.0.7
 
 Bugfixes:
-	
+
   - Downgrade SQLite to v2.1.15, which still works with Arch linux (hopefully?)
   but doesn't fetch code remotely.  Turns out v2.2.0 is doing that via node-pre-gyp,
   which is therefore breaking the security of the install process.
@@ -792,12 +799,12 @@ Bugfixes:
 
   - Error out if you try to track yourself
   - But you can encrypt for yourself, special-case that in the encryption subcommand
-  - Close #77: we were being too conservative in determining if a track of another 
+  - Close #77: we were being too conservative in determining if a track of another
   user was still "fresh".  It is now considering fresh if you're signed the tail
   of their chain (as before), or if you've signed the last non-revoke, non-prove,
   event.  In other words, we can skip over "track"/"untrack" events in their chain.
 
 Features:
-	
+
   - Inaugural changelog
 

@@ -13,6 +13,7 @@ util = require 'util'
 ST = constants.signature_types
 {tablify} = require 'tablify'
 timeago = require 'timeago'
+{LinkTable} = require '../chainlink'
 
 ##=======================================================================
 
@@ -20,7 +21,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS : 
+  OPTS :
     r :
       alias : 'revoked'
       action : 'storeTrue'
@@ -45,7 +46,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  TYPES : 
+  TYPES :
     track : ST.TRACK
     proof : ST.REMOTE_PROOF
     currency : ST.CRYPTOCURRENCY
@@ -54,7 +55,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       help : "list of your non-revoked signatures"
       aliases : [ "list-sigs" ]
     name = "list-signatures"
@@ -142,7 +143,7 @@ exports.Command = class Command extends Base
   #----------
 
   parse_args : (cb) ->
-    esc = make_esc cb, "Command::parse_args"    
+    esc = make_esc cb, "Command::parse_args"
     await @parse_filter esc defer()
     await @parse_types esc defer()
     cb null
@@ -162,7 +163,7 @@ exports.Command = class Command extends Base
   #----------
 
   select_sigs : (me) ->
-    if not (tab = me.sig_chain.table)? then tab = []
+    if not (tab = me.sig_chain.table)? then tab = new LinkTable()
     else if @types? then tab = tab.select(@types)
     tab
 
@@ -201,7 +202,8 @@ exports.Command = class Command extends Base
       verify_opts = { show_revoked : @argv.revoked, show_perm_failures : true }
       await User.load_me {secret : false, verify_opts }, esc defer me
       list = @process_sigs me
-      log.console.log @display list
+      list = @display list
+      log.console.log list if list.length
     else
       log.warn "Not logged in"
     cb null

@@ -1,7 +1,7 @@
 
 #
 # A file that wraps the creation and management of test
-# users, potentially with features to access test twitter 
+# users, potentially with features to access test twitter
 # and github accounts. As such, it might need access to
 # a configuration file, since we don't want to push our
 # test twitter/github credentials to github.
@@ -51,7 +51,7 @@ exports.User = class User
 
   #---------------
 
-  @generate : (base) -> 
+  @generate : (base) ->
     base or= randhex(3)
     opts =
       username : "test_#{base}"
@@ -85,7 +85,7 @@ exports.User = class User
 
   write_config : (cb) ->
     esc = make_esc cb, "User::write_config"
-    await @keybase { args : [ "config" ], quiet : true }, esc defer()  
+    await @keybase { args : [ "config" ], quiet : true }, esc defer()
     args = [
       "config"
       "--json"
@@ -107,7 +107,7 @@ exports.User = class User
 
   #-----------------
 
-  _keybase_cmd : (inargs) -> 
+  _keybase_cmd : (inargs) ->
     inargs.args = [ "--homedir", @homedir ].concat inargs.args
     config().keybase_cmd inargs
     log.debug "Running keybase: " + JSON.stringify(inargs)
@@ -125,8 +125,8 @@ exports.User = class User
   keybase_expect : (args) ->
     inargs = { args, opts : {} }
     if config().debug
-      inargs.opts = 
-        debug : { stdout : true } 
+      inargs.opts =
+        debug : { stdout : true }
         passthrough : { stderr : true }
     @_keybase_cmd inargs
     eng = new Engine inargs
@@ -204,9 +204,9 @@ exports.User = class User
     log.debug "- Did HTTP action, completed w/ proof_id=#{proof_id}"
     await eng.sendline "y", esc defer()
 
-    eng.expect { 
+    eng.expect {
       repeat : true,
-      pattern : (new RegExp "Check #{which} again now\\? \\[Y/n\\] ", "i") 
+      pattern : (new RegExp "Check #{which} again now\\? \\[Y/n\\] ", "i")
     }, (err, data, source) =>
       log.info "Trying #{which} again, maybe they're slow to update?"
       await setTimeout defer(), 1000
@@ -216,7 +216,7 @@ exports.User = class User
     await eng.wait defer rc
     if rc isnt 0
       err = new Error "Error from keybase prove: #{rc}"
-    else 
+    else
       @_proofs[which] = { proof, proof_id, acct }
       @_state.proved[which] = true
     cb err
@@ -250,7 +250,7 @@ exports.User = class User
   #-----------------
 
   prove_twitter : (cb) ->
-    opts = 
+    opts =
       which : "twitter"
       search_regex : /Please.*tweet.*the following:\s+(\S.*?)\n/
       http_action : tweet_api
@@ -260,7 +260,7 @@ exports.User = class User
   #-----------------
 
   prove_github : (cb) ->
-    opts = 
+    opts =
       which : "github"
       search_regex : /Please.*?post the following Gist, and name it.*?:\s+(\S[\s\S]*?)\n\nCheck GitHub now\?/i
       http_action : gist_api
@@ -283,8 +283,10 @@ exports.User = class User
     await @init esc('init', defer())
     await @signup esc('signup', defer())
     await @push_key esc('push_key', defer())
+    await @list_signatures esc('list_signatures', defer())
     await @prove_github esc('prove_github', defer()) if github
     await @prove_twitter esc('prove_twitter', defer()) if twitter
+    await @list_signatures esc('list_signatures', defer())
     await @write_pw esc('write_pw', defer()) if save_pw
     gcb null
 
@@ -341,6 +343,15 @@ exports.User = class User
 
   #-----------------
 
+  list_signatures : (cb) ->
+    esc = make_esc cb, "User::list_signatures"
+    eng = @keybase_expect [ "list-signatures" ]
+    await eng.wait defer rc
+    err = assert_kb_ok rc
+    cb err
+
+  #-----------------
+
   unfollow : (followee, cb) ->
     esc = make_esc cb, "User::follow"
     eng = @keybase_expect [ "untrack", "--remove-key", followee.username ]
@@ -352,7 +363,7 @@ exports.User = class User
 
   write_pw : (cb) ->
     esc = make_esc cb, "User::write_pw"
-    await @keybase { args : [ "config" ], quiet : true }, esc defer()  
+    await @keybase { args : [ "config" ], quiet : true }, esc defer()
     args = [
       "config"
       "user.passphrase"
@@ -402,7 +413,7 @@ exports.User = class User
 
   load_status : (cb) ->
     esc = make_esc cb, "User::load_status"
-    await @keybase { args : [ "status"] }, esc defer out 
+    await @keybase { args : [ "status"] }, esc defer out
     await a_json_parse out, esc defer json
     @_status = json
     cb null
@@ -411,14 +422,14 @@ exports.User = class User
 
 class Users
 
-  constructor : () -> 
-    @_list = [] 
+  constructor : () ->
+    @_list = []
     @_lookup = {}
 
   push : (u) ->
     @_list.push u
     @_lookup[u.username] = u
-  
+
   lookup : (u) -> @_lookup[u]
 
   lookup_or_gen : (u) ->
