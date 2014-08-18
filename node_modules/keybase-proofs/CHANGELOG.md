@@ -1,3 +1,9 @@
+## 1.0.6 (2014-08-18)
+
+  - Yet more HackerNews fixes; only allow a proof posting if we can lookup their karma.
+    For dummy users, the JSON endpoint will yield null, which means they won't be able to
+    show their profile, either
+
 ## 1.0.5 (2014-08-14)
 
   - More HN fixes --- don't normalize usernames with toLowerCase();

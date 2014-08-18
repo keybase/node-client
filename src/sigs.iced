@@ -149,7 +149,7 @@ class BaseSigGen
 
   get_warnings : ({}) -> []
   do_recheck : (i) -> true
-  do_precheck : ( { remote_name_normalized } ) -> cb null
+  do_precheck : ( { remote_name_normalized }, cb) -> cb null
 
   #-----------------------
 

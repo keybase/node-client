@@ -34,12 +34,53 @@
       }
     };
 
+    HackerNewsScraper.prototype.api_base = function(username) {
+      return "https://hacker-news.firebaseio.com/v0/user/" + username;
+    };
+
     HackerNewsScraper.prototype.api_url = function(username) {
-      return "https://hacker-news.firebaseio.com/v0/user/" + username + "/about.json";
+      return this.api_base(username) + "/about.json";
+    };
+
+    HackerNewsScraper.prototype.karma_url = function(username) {
+      return this.api_base(username) + "/karma.json";
     };
 
     HackerNewsScraper.prototype.human_url = function(username) {
       return "https://news.ycombinator.com/user?id=" + username;
+    };
+
+    HackerNewsScraper.prototype.get_karma = function(username, cb) {
+      var err, json, rc, ___iced_passed_deferral, __iced_deferrals, __iced_k;
+      __iced_k = __iced_k_noop;
+      ___iced_passed_deferral = iced.findDeferral(arguments);
+      (function(_this) {
+        return (function(__iced_k) {
+          __iced_deferrals = new iced.Deferrals(__iced_k, {
+            parent: ___iced_passed_deferral,
+            filename: "/Users/max/src/keybase/proofs/src/scrapers/hackernews.iced",
+            funcname: "HackerNewsScraper.get_karma"
+          });
+          _this._get_url_body({
+            url: _this.karma_url(username),
+            json: true
+          }, __iced_deferrals.defer({
+            assign_fn: (function() {
+              return function() {
+                err = arguments[0];
+                rc = arguments[1];
+                return json = arguments[2];
+              };
+            })(),
+            lineno: 36
+          }));
+          __iced_deferrals._fulfill();
+        });
+      })(this)((function(_this) {
+        return function() {
+          return cb(err, json);
+        };
+      })(this));
     };
 
     HackerNewsScraper.prototype.hunt2 = function(_arg, cb) {
@@ -102,7 +143,7 @@
                 return html = arguments[2];
               };
             })(),
-            lineno: 64
+            lineno: 75
           }));
           __iced_deferrals._fulfill();
         });

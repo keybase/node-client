@@ -23,8 +23,19 @@ exports.HackerNewsScraper = class HackerNewsScraper extends BaseScraper
 
   # ---------------------------------------------------------------------------
 
-  api_url : (username) -> "https://hacker-news.firebaseio.com/v0/user/#{username}/about.json"
+
+  # ---------------------------------------------------------------------------
+
+  api_base : (username) -> "https://hacker-news.firebaseio.com/v0/user/#{username}"
+  api_url : (username) -> @api_base(username) + "/about.json"
+  karma_url : (username) -> @api_base(username) + "/karma.json"
   human_url : (username) -> "https://news.ycombinator.com/user?id=#{username}"
+
+  # ---------------------------------------------------------------------------
+
+  get_karma : (username, cb) ->
+    await @_get_url_body { url : @karma_url(username), json : true }, defer err, rc, json
+    cb err, json
 
   # ---------------------------------------------------------------------------
 
