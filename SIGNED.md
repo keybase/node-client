@@ -1,16 +1,22 @@
-##### Signed by https://keybase.io/max
+##### Signed by https://keybase.io/max314
 ```
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJT8hhVAAoJEJgKPw0B/gTf4bYH/AwdbDV7kBirzyMGNs1/rjRH
-koIaQHgR9A3dQ0pLp5P6HZkqotZ5Tl84DF0+ctfMwvaSqcCABKkw8Up1V7wW2zDG
-loWijK0aBbtSZt4zJQjUBRVfvuLqUdTFhPg/m/jcCLUodYk4EsgqBaMqOdI/SRH1
-XYh94DBvngUDP1T6n50N2b/YGWmqFSLRxeESjGe2SRLwTDT1N583iyEAnu+6h1r7
-R17NV86xwsJcwN49O3K+PcpMsMN1mip3jEs2WReBWMni9TJuP8gwXE/f5eO4ATSp
-IaPV/yx+4G0aNZKh3FWtvQZ46NdkERWCKCUch4hcdo25Jvvr/5YXtuKtTo8Z9vg=
-=iFsG
+iQIcBAABCgAGBQJT8mPRAAoJEB75VqK1na5fiioP/jxuQmIJTFFw9dV6/Z6VEBjD
+ynhybYRo6s/T3CgaICpQ7Hba6uAvFjgmogu41agRQE/nu3Dffm5UjRnraX/jAIWn
+Qj+Ytj1VFb3HxXNr0jn2cN51n/fdSoM0G9uIFZyBXkLGd95lAV3JRgJDgUOFjDKZ
+Jb6G8uXhgE6UsHts/fFd70UiRl/FRtZ4VMQr/k+NZbsJ5Lml76dOTxPeySR1TpRi
+QW9IQLDfZ/fsSxPQ86On5A4mvXSYrSU70BRc45kIBAcu8Bw05Pt+WkRNOZpOjyRm
+yba2+Y6dDqsxXS0qe5trGo7fXEGsf2qIEoZZ7rX3i9LmAuOEBh6y52jHcm4T1QtQ
+FrT80c5Py4S1Ribxr0nWqrAt0RyfKKU5tK90mzdrCctL3CCI4vXMYhS88/G5Bh9G
+0Y+JS240gAboxNV45JBkLl0LLWnNig9vNNhNY7MIuv3UgqbuSNgVGI/pBLW+hXyf
+FR4wiftRakOBhnxgFZDGC1RiSixsPMTdgxrsjbeh5dH2AM3Rmdpwxna1qiKf9/v0
+4AqJAVR2nxSkyEadFyFCgrqt0faaImx5FltYmGlPFRfo6vjnV08ex0dEPylFOOIA
+Z5JCG4jXtuLf1bqSjIgOLxMPLiCJPITU5sJTdexQHP8bawC8VXUidYSPWcTczHRF
+5PfI8YgAJ48QSZ8fQJd6
+=xGX4
 -----END PGP SIGNATURE-----
 
 ```
@@ -26,7 +32,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-21285           CHANGELOG.md                                  c48d994c3cb2f685b9c87d22fa6ee414ce565354116f0d5f7963d5a03fb67efe                                                                 
+21275           CHANGELOG.md                                  896982de3cb8cb148aae21180ae2aeb41d5a27ed018283feacbea06b12598994                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2078            Makefile                                      223107332f36a4b6a7218fa3e5b79bd40799217aff9a6f7ce9e2f0a28832de8e                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -63,7 +69,7 @@ size    exec  file                                            contents
 2950                id.js                                     2c6b3f820e3aa8f93ada126a54f9419c2f86bef4578af0d6ccbc25e923317b74                                                                 
 24946               join.js                                   cad9d7283709b95800dbeff4926bb5cee40c34f3113febdf13a148ca01c7f096                                                                 
 5486                keygen.js                                 17181062454fdd9efa13beadd1eb7c949c2dc08366fd93215a6e1829295aa4f6                                                                 
-12108               list_signatures.js                        760918d0da3b42d2467f0093dfa8976f440cea281502531068a38bed42dae1b2                                                                 
+12241               list_signatures.js                        c77f0172eaef0e2a51cf31a6634c839ae9b3156a5005cc38c2d31d2c6ce1ef15                                                                 
 9633                list_tracking.js                          51bf2f40bc59ba126e465ad901810cf6a223376665f554e1d68d38547731aeab                                                                 
 3547                login.js                                  0fd53cbadeabfeeb83f58f7ce0735daeb4b89de5adcb1dd683ba2754291e28c5                                                                 
 2353                logout.js                                 dcf11c071e94eb31c6c9b187993a70a1f74d6eeba77157ecebbef4b2f06d9900                                                                 
@@ -1459,7 +1465,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                32ad9fd78a0b69e06fe013237b9551825b65315ab0e4965babad4a7c17e42ab7                                                                 
-1978            package.json                                  85c8ce7d7a790e639e0a2b9fd2f923173626281c6d0025f8bfd3f137fdb33914                                                                 
+1978            package.json                                  6d7361c6a50debcd1634e5417eeeb4fec4d3acf7e7c9562796f61ef5665fd90a                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
@@ -1501,7 +1507,7 @@ size    exec  file                                            contents
 1207                id.iced                                   b3cf2a5ab641a42c45c1ca0f83e2d10f0bc0ad2a039fed5dda676b93182ec7f2                                                                 
 6553                join.iced                                 b597732bf143e2b18c2076e6e8784ed27c3262e631d9fceb031450a397e39230                                                                 
 1575                keygen.iced                               f3f4b50465c56ae12f8f7b16bd4b949fd505f591d30990b84a52ebc7b448cf64                                                                 
-5015                list_signatures.iced                      b249972966460fb9fc22738df1c237748e6f2039626acab69bd8f8aa5a1df6bb                                                                 
+5091                list_signatures.iced                      fe32f889ade90f6df13e8db6db18ab0e2aec8e9589a2f8e6130e97a2e255d3be                                                                 
 3964                list_tracking.iced                        ad1e158025629b113fa4538f54acd56fde13f5182993cded08ad22d326753a78                                                                 
 1001                login.iced                                fef3f362004e03becfc6d140b2ed8d232a3a085edcb139fd88d940e4a942db1d                                                                 
 716                 logout.iced                               9317515389301defcd20709935437a409184bd76743270eadcf9e284ed7cbf8a                                                                 
