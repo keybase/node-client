@@ -1,38 +1,16 @@
-##### Signed by https://keybase.io/max314
-```
------BEGIN PGP SIGNATURE-----
-Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
-
-iQIcBAABCgAGBQJT8mPRAAoJEB75VqK1na5fiioP/jxuQmIJTFFw9dV6/Z6VEBjD
-ynhybYRo6s/T3CgaICpQ7Hba6uAvFjgmogu41agRQE/nu3Dffm5UjRnraX/jAIWn
-Qj+Ytj1VFb3HxXNr0jn2cN51n/fdSoM0G9uIFZyBXkLGd95lAV3JRgJDgUOFjDKZ
-Jb6G8uXhgE6UsHts/fFd70UiRl/FRtZ4VMQr/k+NZbsJ5Lml76dOTxPeySR1TpRi
-QW9IQLDfZ/fsSxPQ86On5A4mvXSYrSU70BRc45kIBAcu8Bw05Pt+WkRNOZpOjyRm
-yba2+Y6dDqsxXS0qe5trGo7fXEGsf2qIEoZZ7rX3i9LmAuOEBh6y52jHcm4T1QtQ
-FrT80c5Py4S1Ribxr0nWqrAt0RyfKKU5tK90mzdrCctL3CCI4vXMYhS88/G5Bh9G
-0Y+JS240gAboxNV45JBkLl0LLWnNig9vNNhNY7MIuv3UgqbuSNgVGI/pBLW+hXyf
-FR4wiftRakOBhnxgFZDGC1RiSixsPMTdgxrsjbeh5dH2AM3Rmdpwxna1qiKf9/v0
-4AqJAVR2nxSkyEadFyFCgrqt0faaImx5FltYmGlPFRfo6vjnV08ex0dEPylFOOIA
-Z5JCG4jXtuLf1bqSjIgOLxMPLiCJPITU5sJTdexQHP8bawC8VXUidYSPWcTczHRF
-5PfI8YgAJ48QSZ8fQJd6
-=xGX4
------END PGP SIGNATURE-----
-```
-
 ##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
+Comment: GPGTools - http://gpgtools.org
 
-iQEcBAABCgAGBQJT8mQlAAoJEJgKPw0B/gTfhX8IAL0UfDKOQAga6zmfCP78VWVK
-tGBR/zm9wWwOKfQSAlfm0KWKIfniL1rwTOS+tuTGEfWvxreXsSlSq6jioNgK0qXU
-Q9+Ps0e56XT96ZIFWPNNa2MD0IEhNHlzI5Oieq8aS45aq+bcVi+ge50gR6J7hTI7
-UgKcx5/gLqR+yoHrOKBEJzuMwabCWe2ilyiPYNodvTwcXk2a+E9mkmjCu9q8TaWh
-fE5V/msY1BZ9bwfABFccWaio7junLb46ASlE4rmQtwI5QMAZhuiCKh7xpbKwXdZX
-H+emMTmeREyG/3M1iB5WNZyTZq+rJOexQcWo9JcWHm0TNPOJPXXFwkEgviAFrXQ=
-=aygC
+iQEcBAABAgAGBQJT9NHjAAoJEJgKPw0B/gTfePIH/ipaVA1/CwbBzVwQXy0N15bY
+5BpQ9BgYQjqKhRdNmH90vT1lEQ2pq6BR4ZCu4l9BJ4NzwZlK6gGsWYovOor5LfxR
+0T+tjgfwJpDwghN3JjLmVZnHKKQsGOWuiIgoU+Gg4AoAxl9UGi4VQWpBOEY26Qkp
+loZlbtg0s3JrAAMgJewJ65kQx5aJjDfMXUDTVlNfo+tEV9hFLOkyfbgAQzyLPqtM
+0focfxzE2z0PUYrLZIifSqMymiep90+GZyfKhgUjng/MrfG5mK/cT3vWcbjOyD1f
+V9UPlHWITZPXm3/fGIhwZPpweofQn+JRjqwegNrPExcqFqln3Aylw7KdvHZ1KOU=
+=Re+P
 -----END PGP SIGNATURE-----
 
 ```
@@ -48,15 +26,14 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-21275           CHANGELOG.md                                  896982de3cb8cb148aae21180ae2aeb41d5a27ed018283feacbea06b12598994                                                                 
+21345           CHANGELOG.md                                  6091ce846476da113174724189b162186894575e4b3d7e7e1a2bc2616c7610db                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2078            Makefile                                      223107332f36a4b6a7218fa3e5b79bd40799217aff9a6f7ce9e2f0a28832de8e                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
                 Users/                                                                                                                                                                         
                   max/                                                                                                                                                                         
-                    src/                                                                                                                                                                       
-                      keybase/                                                                                                                                                                 
-                        node-client/                                                                                                                                                           
+                    .keybase/                                                                                                                                                                  
+                      tmp_keyrings/                                                                                                                                                            
                 bin/                                                                                                                                                                           
 58      x         main.js                                     79faf768d255a65075a2b061e21b2854fb301277ccc1f57eb40ce654275e621b                                                                 
                 json/                                                                                                                                                                          
@@ -97,7 +74,7 @@ size    exec  file                                            contents
 4690                reset.js                                  21499138a5a86ef662d228430cc94ddd624d1b8a66bb360a357a8670c9e9ec5f                                                                 
 10548               revoke.js                                 ac38b79fbf974f221f920d00150bccc1b4795d2d67a1910aaa2fe7b3a09d16d3                                                                 
 9189                revoke_sig.js                             726edc01c702cee053ec8283c3967cf776b7198cbaa9440b5510140c99e8c91f                                                                 
-7936                search.js                                 5553f448c16a10405c4cfcfb1e5db1a8e09f94a24d5ef798196a13a0c17e5c26                                                                 
+7953                search.js                                 275635789c12b902780f1bf729ec32fc919249beb0bf188790321d8fbe6dd161                                                                 
 7292                sign.js                                   3d54180cd7e669c2c1ed2d67d9b020b52bc3f829f79c168c5ad7db96f5cc61dc                                                                 
 5867                status.js                                 979e20634d20c4e91d80e618ba5d87d1a7667ea057d755b9b69133ba7cd5689c                                                                 
 4744                switch.js                                 1430b2044c577280fbf68a637c94da5d01ef4357921ab79a6be1a295d3396b5c                                                                 
@@ -1481,7 +1458,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                32ad9fd78a0b69e06fe013237b9551825b65315ab0e4965babad4a7c17e42ab7                                                                 
-1978            package.json                                  6d7361c6a50debcd1634e5417eeeb4fec4d3acf7e7c9562796f61ef5665fd90a                                                                 
+1978            package.json                                  322708b9212c498e175257c0d91752e7ff48fe32bdee82a67c2a3787dac98294                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
@@ -1535,7 +1512,7 @@ size    exec  file                                            contents
 1473                reset.iced                                1b4cac3ac7e7a8dc3b1166676ed62242d546a7b0a7af59ae34148e5a94fde4bf                                                                 
 2709                revoke.iced                               8ae0930335231edda9d006d6428d6e84d1654a1c358a11b0491f2208b34d1d82                                                                 
 3241                revoke_sig.iced                           7c9ed316b960bce4a2bb30af0baa4e9ec3eb7acece388599a1f374e25a686e1c                                                                 
-3090                search.iced                               515111bc972ef3222501fbd5f282831d8ab72099f2ecd16ad3559654d5ab6d11                                                                 
+3105                search.iced                               3a1a4c0ddd39685602b5be206426493884202f8eec4f2ee36f05035327eefe2a                                                                 
 2539                sign.iced                                 cbfb444921c2a416470465cc9268551edfe1648d28e1704239b6834c3c8d6f0f                                                                 
 2517                status.iced                               05609663b363e8a0edc53d52f12ee23a88208756f6062007cb6d9a5644f7dc3c                                                                 
 1527                switch.iced                               17b21c2ac58ac9458b8fbec8405aa6299b39b6e957ee0c73534c1bb5a19bc883                                                                 
