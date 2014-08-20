@@ -1,3 +1,9 @@
+## 0.4.19 (2014-08-20)
+
+Nit:
+
+  - Hackernews shown in search results
+
 ## 0.4.18 (2014-08-18)
 
 Bugfixes:
