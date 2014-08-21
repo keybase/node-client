@@ -1,3 +1,14 @@
+## 0.4.20
+
+Upgrades:
+
+  - keybase-proofs@1.0.7, kbpgp@1.0.2, triplesec@3.0.19
+
+Bugfixes:
+
+  - Address bad regex for coinbase proofs
+     - See keybase/keybase-issues#967
+
 ## 0.4.19 (2014-08-20)
 
 Nit:
