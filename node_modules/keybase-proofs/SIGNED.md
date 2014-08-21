@@ -2,15 +2,15 @@
 ```
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
-Comment: GPGTools - https://gpgtools.org
+Comment: GPGTools - http://gpgtools.org
 
-iQEcBAABCgAGBQJT8hYtAAoJEJgKPw0B/gTffrsH+QF6i2bX9APY5wZ/gwyYeXUe
-ADPbR5wcV57M3ECoH2Sx3K8mFkOeYt0NNrWruHPOFPjH4kxzR7f0YKiQ+rozc9O+
-zKwG1uyziSObFfNZopIna9+lt29f0ixSL/8uC32xJcajXUHqiDJa7YctvqqYU7cE
-+vRR+KdJvMC+H9VfZ6o5GerfyFenCDCGz4gDOinQe8FOVJqikKmMwjuAuzk/kMu8
-FALdURlB5ieRyQCJU0CG61os80rQixA3gPd3xdyAVcVnI2KmH2lzDW8kYsEv78gB
-UuNn+q/ZdIzh47Xg7t+wGytEge+aSBdtxzT3XMLWv209WeEF1eAjr5i8AsLXWRo=
-=Qv3C
+iQEcBAABAgAGBQJT9mPLAAoJEJgKPw0B/gTfFRgH/0CH2NLqhRtea6eyy8zGZuD8
+4sejYkICTxcJv9Z98isx7FUkmeEB3ZAT2m2LXItLQq+/AgwbpNF8UWkI/nRH9v+9
+KtSWjl9nE4Ar6SfUDK4uzzem6d8tTZ9bpCZZ5A9oLc4NjES2RER0EZST3jvmOlh2
+4Zj0U1NR4xD48r6DCzOZCvqUC1mKOgfLbBweuD/rrxj164uuxBjSc1V+YI9QHs/T
+eOO4XVYZmDtqcFHbC5aMYRh3WWJQhYMt4V3LnkvInzgw4dxVzt0Q70lMxexVCE/h
+Ej06dkIup3OUfgc7AUncZApysmr9Gy/2rRajK2A3tpV6CYsLSNVL8uAuH8RvSb0=
+=DSxe
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,7 +25,7 @@ UuNn+q/ZdIzh47Xg7t+wGytEge+aSBdtxzT3XMLWv209WeEF1eAjr5i8AsLXWRo=
 size   exec  file                         contents                                                        
              ./                                                                                           
 109            .gitignore                 ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-4551           CHANGELOG.md               233597d04b75bbfea17562d5c31d8cd540337ad1ef1ada5dfd092b1d2ffa9e2f
+4652           CHANGELOG.md               3691312489c5c399b054d86990f1a8a737264fb717392bb68da4995fb046a665
 1483           LICENSE                    333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d
 1232           Makefile                   eb813e716fdeb97f0020fb360a522c64f30a6b56bf8a739e19ebbe6e6e09eaff
 43             README.md                  b2db580fc880756ae739bb148570f6afb1c250e5c0d2c5fa56ce41491753ca6c
@@ -50,8 +50,8 @@ size   exec  file                         contents
 27410              twitter.js             df87a8879ed7d658de3e4db101c6f46e252e95640242a2d7e878420218485ac5
 1507             track.js                 3b1552409b374f87a4c498a7f4cd3da7fad88c31a904cfbb033db05c78a61648
 1452             util.js                  9fa6d9d731f6ec99349e5875cbe4f0102c6a1b2590f16daf48168c99d95ba4ac
-17840            web_service.js           98adf968d25f5560ed29b819cd2593d2670eab429fb3095e120bbeb09b17e225
-719            package.json               3249112140d97c7d105a451ff36bd73a14cb5bd327ab901eccde5c8049b4fd4e
+17840            web_service.js           a81f9b08a04d6595722c4c71b2c11cc54ffdf54f31d260c5d09f4aff95917292
+719            package.json               9844ca8f74439b7c107732143b43ecdac4bae4f1897048e5a1f93606066bba04
                src/                                                                                       
 1796             alloc.iced               8ced14c262cc2564923e4083635c3c5fa24ef1347343a5dd6f28f503075ffe71
 494              announcement.iced        2dba8539acbc9de3f92340b7700aa89077108ee4e816347e4e52cd294185c982
@@ -73,7 +73,7 @@ size   exec  file                         contents
 11420              twitter.iced           ed924d2f5e07a8259b392fb3aef9ba0d411cdd1f2cb6af478a9f62c597e89373
 764              track.iced               e31ae07947e8c7e55ef37aaaedde7dd01acda6939cf938eb156c8bf4c0c0f3d7
 912              util.iced                c179c01177ff245c74fe747e365a4ae50ca2275219d66379c034f1b9d3e13e45
-9130             web_service.iced         be4b266df964e1f1fbf0f30355cf6032a2bd7efdd7b540de8509fa3c320cd218
+9130             web_service.iced         dfeee25beb21df1ab54d700feb65fe87e913eb49f52afbad2295b98068498569
 1673           test_scraper.iced          099823ea87768b45dd205bd6dc36773999730dadb26fe3844e0a05f8668bb9d1
 ```
 

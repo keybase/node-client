@@ -1,3 +1,9 @@
+## 1.0.7 (2014-08-21)
+
+Bugfixes:
+
+  - Allow '0's in coinbase names. Thanks to @dtiersch for the PR.
+
 ## 1.0.6 (2014-08-18)
 
   - Yet more HackerNews fixes; only allow a proof posting if we can lookup their karma.

@@ -547,7 +547,7 @@
     CoinbaseBinding.check_name = function(n) {
       if ((n == null) || ((n = n.toLowerCase()) == null)) {
         return false;
-      } else if (n.match(/^[a-z1-9_]{2,16}$/)) {
+      } else if (n.match(/^[a-z0-9_]{2,16}$/)) {
         return true;
       } else {
         return false;

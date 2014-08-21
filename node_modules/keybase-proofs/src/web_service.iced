@@ -241,7 +241,7 @@ class CoinbaseBinding extends SocialNetworkBinding
 
   @check_name : (n) ->
     if not n? or not (n = n.toLowerCase())? then false
-    else if n.match /^[a-z1-9_]{2,16}$/ then true
+    else if n.match /^[a-z0-9_]{2,16}$/ then true
     else false
 
   @name_hint : () -> "alphanumerics, between 2 and 16 characters long"
