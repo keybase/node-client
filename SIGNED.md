@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJT91sNAAoJEERW+sAbkVdk+GgH/j3KLm96/9vd55roOv0xEFR8
-VA6/mhZ9feXDlN1wACLPQtqJyclvhwEuLOUI3hNbWCC+pWf9YN60rjdo8YeTQ4Qi
-hoEW/naqeiGI3QFl0ZrGF9yO1Gp7pAUX7rEoJ0Tas3ro/HORKREt6402uL5rly8E
-0b0NjriUxmXWyH0Nk2QmNPbD3scR/qe59RWSnd+ZmFKQCblSn+wKod16IjCbSzK9
-mDtxRuyG/TSj56ojsFs78KvKdxVNeAeLMf/QBaNLvvHmozgSBBZNbpnu8Z2GIysD
-di/PO8heV0QkMiPxdp9lDRvB4ADsKPHgkRuncY+LI2l3bfZiNwAVf3eaRknlHbc=
-=uJLV
+iQEcBAABAgAGBQJT913pAAoJEERW+sAbkVdk+uQH+wdkWXCS08fDsHMXvfao3WOf
+6/TN9zDvJhh8LTawE3d8zTxCdfQI/U46cdWe0/G2hgoRsDkYKqo0h8RAMh4J0DsR
++3Ya1pfkanc8Z1lbHlspNzmX5nOacaduWNaWl03WZTNCuhuBy/eBFIeaHtGYsm+1
+cT8OvEZ2mLb/A15f9A6tId0l3v5q8OB/bb1YuCVpNBOF3Saso+bWwZMoBfXThMJx
+yUs6b8te6WcjUblKffgFblOBAu/5xcQB04yF24zmCBeGGPrKvRqTMYhldY2kAea4
+uzqUt3zx98M3cvyVFEYKbfmR6ZxieMEdcMhjTxB80HBRrYQHJuCHGHrpStq94Wk=
+=U4q9
 -----END PGP SIGNATURE-----
 
 ```
@@ -1480,7 +1480,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
-2004            package.json                                  0dd22b9b82abe496a05ba00f00a58108541a0cf494c734a5baa0fd113b5a2df5                                                                 
+2006            package.json                                  d6498f48d2a764c822973e81874b886c0ddbaa373f2b0165d1d255a2f2880f1b                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
