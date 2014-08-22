@@ -1,4 +1,8 @@
-## 0.4.20
+## 0.4.21 and 0.4.22 (2014-08-22)
+
+  - Fix broken dep with bitcoyne/kbpgp
+
+## 0.4.20 (2014-08-22)
 
 Upgrades:
 
