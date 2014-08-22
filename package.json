@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "argparse": "0.1.15",
-    "bitcoyne": "0.0.5",
+    "bitcoyne": ">=0.0.6",
     "bn": "^1.0.1",
     "cheerio": "0.13.0",
     "codesign": "0.0.9",
