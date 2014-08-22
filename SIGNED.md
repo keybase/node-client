@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJT913pAAoJEERW+sAbkVdk+uQH+wdkWXCS08fDsHMXvfao3WOf
-6/TN9zDvJhh8LTawE3d8zTxCdfQI/U46cdWe0/G2hgoRsDkYKqo0h8RAMh4J0DsR
-+3Ya1pfkanc8Z1lbHlspNzmX5nOacaduWNaWl03WZTNCuhuBy/eBFIeaHtGYsm+1
-cT8OvEZ2mLb/A15f9A6tId0l3v5q8OB/bb1YuCVpNBOF3Saso+bWwZMoBfXThMJx
-yUs6b8te6WcjUblKffgFblOBAu/5xcQB04yF24zmCBeGGPrKvRqTMYhldY2kAea4
-uzqUt3zx98M3cvyVFEYKbfmR6ZxieMEdcMhjTxB80HBRrYQHJuCHGHrpStq94Wk=
-=U4q9
+iQEcBAABAgAGBQJT92AzAAoJEERW+sAbkVdk5gQH/3E9xrjR7NGPWxzaDs+L8iGO
+P/SAJCaWtkKXHr5ZWT81paTvptj8cPcE35m2lLwbDdW/1S5i47k+Hn+D80vW4RZH
+RzNM5vIXdTTiMKn/H6ZntPflNnd+Sk04Fm+hH+Kh6KaMDynRFnt+LVInhFU0L3pA
+QUSOjhyZFOPfXuPuE129o+cmJWYg2rl7vdulvG3Igz2aPc2Sb90Els+CsRjurGc7
+mYFW6wOa2ed8ckUcg5uXFfLm3c/omWMOZlvshFtpbQxr3jPVKaAfNgP02xwT2We7
+iCtwcEKFzrudplZ4hXOKfMc2eJ5OhxWM+rz6NjOAURSqS2/bCGZtAztK7TrsaAA=
+=tdH8
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,7 +25,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-21516           CHANGELOG.md                                  35ca218fa7f33760d7021cbf771c2590cb76914a2ff0d730e986b9aa96f8a8c2                                                                 
+21604           CHANGELOG.md                                  a850ce9e377fdcc1278cac9a6e1d56ebbca86fa50c62ca124732fba2d4570378                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2078            Makefile                                      223107332f36a4b6a7218fa3e5b79bd40799217aff9a6f7ce9e2f0a28832de8e                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -195,11 +195,11 @@ size    exec  file                                            contents
 1483                LICENSE                                   333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 414                 Makefile                                  3fc373da860330bca19decdb3649c59d78ce19476a55585d93aba3f4681d2636                                                                 
 91                  README.md                                 9bb4d8d39fabc12e85959613a2e93a28f33d0df82fdc5edd39caef80a1b46dcc                                                                 
-3458                SIGNED.md                                 76a5de985e331c6c0322cd969f6c530110985e1133533b4534f1d0553c8fa24d                                                                 
+3398                SIGNED.md                                 a0e25001bfdb0883acb0d3867a2854783360132609108a8bca98102757ebcb46                                                                 
                     lib/                                                                                                                                                                       
 1343                  address.js                              6eac2c746ef1eed9933ff4f1f24a070fb837f68af5bca75b3600483923e33649                                                                 
 113                   main.js                                 a5324b09b89f993deefae933e8352c8750732ea1c68d9959cce7d58ddb1999a6                                                                 
-1203                package.json                              bd4b7a88ec72d5dd4f211dcbf9bd5405593118b596c3da1d018b97bc1f4d39ce                                                                 
+1205                package.json                              9a67e28927413d86ee70c1b28c33659c926adb13dd862b57ebc9ee5f00d9eb8b                                                                 
                     src/                                                                                                                                                                       
 913                   address.iced                            ad19ee95d74a058d3746315a8c9814303ec7546e35b382e861dfd9dba927d70a                                                                 
 38                    main.iced                               795b67a4f1763d0ce0c878132d71f3bb7516a369d8f3c4b0dc1750dc18914765                                                                 
@@ -1480,7 +1480,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
-2006            package.json                                  d6498f48d2a764c822973e81874b886c0ddbaa373f2b0165d1d255a2f2880f1b                                                                 
+2006            package.json                                  f4e5d03167e89cba7522ee3aba001137c4deeadaae8c10481054b102a9dd9ba6                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
