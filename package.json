@@ -76,6 +76,7 @@
     "iced-spawn",
     "iced-utils",
     "kbpgp",
+    "keybase-sig-tree",
     "keybase-path",
     "keybase-proofs",
     "merkle-tree",
