@@ -13,6 +13,72 @@ C = require('./constants').constants
 
 #===========================================================
 
+class Triple 
+  constructor : ({@seqno, @payload_hash, @sig_id}) ->
+
+#--------------------------
+
+class MerkleLeafParser 
+
+  constructor : (@val) ->
+
+  parse : () ->
+
+    if not Array.isArray(@val) or @val.length < 2
+      throw new E.BadMerkleLeafError "Expected an array of length 2 or more"
+    else if typeof(@val[0]) isnt 'number'
+      throw new E.BadMerkleLeafError "Need a number for first slot"
+    else if typeof(@val[1]) is 'string'
+      # We messed up and didn't version the initial leafs of the tree
+      version = 1
+    else
+      version = @val[0]
+
+    switch version
+      when 1 then @parse_v1()
+      when 2 then @parse_v2()
+      else throw new E.BadMerkleLeafError "unknown leaf version: #{version}"
+
+  parse_v1 : () ->
+    pub = @parse_triple @val
+    new MerkleLeaf { pub }
+
+  parse_v2 : () -> 
+    if @val.length < 2 then throw new E.BadMerkleLeafError("No public chain")
+    pub = @parse_triple @val[1]
+    priv = if (@val.length > 2) and @val[2]?.length then @parse_triple(@val[2]) else null
+    return new MerkleLeaf { pub, priv }
+
+  match_hex : (s) ->
+    (typeof(s) is 'string') and !!(s.match(/^([a-fA-F0-9]*)$/)) and (s.length % 2 is 0)
+
+  parse_triple : (val) ->
+    msg = if (val.length < 2) then "Bad triple with < 2 values"
+    else if val.length > 3 then "Bad triple with > 3 values"
+    else if typeof(val[0]) isnt 'number' then "Bad sequence #"
+    else if not @match_hex(val[1]) then "bad value[1]"
+    else if val.length > 2 and val[2].length and not @match_hex(val[2]) then "bad value[2]"
+    else null
+    throw new E.BadMerkleLeafError(msg) if msg?
+    new Triple { seqno : val[0], payload_hash : val[1], sig_id : val[2] }
+
+#--------------------------
+
+exports.MerkleLeaf = class MerkleLeaf
+
+  constructor : ({@pub, @priv}) ->
+
+  get_public : () -> @pub
+
+  @parse: (version, val) ->
+    parser = new MerkleLeafParser version, val
+    err = leaf = null
+    try leaf = parser.parse()
+    catch e then err = e
+    [err, leaf]
+
+#===========================================================
+
 class MerkleClient extends merkle.Base
 
   @LATEST : "latest"
@@ -193,17 +259,20 @@ class MerkleClient extends merkle.Base
 
   find_and_verify : ( { key }, cb) ->
     log.debug "+ merkle find_and_verify: #{key}"
+    err = root = leaf = null
     await @find { key }, defer err, val, root
     log.debug "| find -> #{JSON.stringify val}"
+
     if err? then # noop
-    if not val? then err = new E.NotFoundError "No value #{key} found in merkle tree"
-    else if not Array.isArray(val) or val.length < 2 
-      err = new E.BadValueError "expected an array of length 2 or more"
-    else 
+    else if not val? then err = new E.NotFoundError "No value #{key} found in merkle tree"
+    else [err,leaf] = MerkleLeaf.parse val
+
+    unless err?
       await @verify_root {root}, defer err
+
     log.debug "- merkle find_and_verify -> #{err}"
 
-    cb err, val, root
+    cb err, leaf, root
 
 #===========================================================
 
