@@ -71,6 +71,7 @@
     "iced-data-structures",
     "iced-db",
     "iced-error",
+    "iced-lock",
     "iced-logger",
     "iced-runtime",
     "iced-spawn",
