@@ -21,6 +21,7 @@ $(BUILD_STAMP): \
 	lib/cryptocurrency.js \
 	lib/main.js \
 	lib/revoke.js \
+	lib/subkey.js \
 	lib/scrapers/base.js \
 	lib/scrapers/coinbase.js \
 	lib/scrapers/dns.js \

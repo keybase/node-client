@@ -1,4 +1,12 @@
+## 0.5.1 (2014-08-28)
+
+Features:
+
+  - Upgrade to keybase-proofs@v1.1.0, for support of subkey signatures when they arrive.
+
 ## 0.5.0 (2014-08-28)
+
+Features:
 
   - Support for versioned merkle leaves. Will be needed as we roll out semiprivate sigchains.
 
