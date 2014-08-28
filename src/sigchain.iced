@@ -334,7 +334,7 @@ exports.SigChain = class SigChain
     if lst?
       await merkle_client().find_and_verify { key : @uid }, defer err, val, merkle_root
       unless err?
-        [seqno, payload_hash] = val
+        {seqno, payload_hash} = val.get_public()
         if (a = seqno) isnt (b = lst.seqno())
           err = new E.BadSeqnoError "bad sequence in root: #{a} != #{b}"
         else if (a = payload_hash) isnt (b = lst.id)
