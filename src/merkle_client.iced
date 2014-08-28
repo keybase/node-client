@@ -10,7 +10,7 @@ log = require './log'
 keys = require './keys'
 {env} = require './env'
 C = require('./constants').constants
-{Leaf} = require('keybase-sig-tree').merkle.leaf
+{Leaf} = require('libkeybase').merkle.leaf
 
 #===========================================================
 
