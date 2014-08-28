@@ -1,3 +1,7 @@
+## 0.5.0 (2014-08-28)
+
+  - Support for versioned merkle leaves. Will be needed as we roll out semiprivate sigchains.
+
 ## 0.4.21 and 0.4.22 (2014-08-22)
 
   - Fix broken dep with bitcoyne/kbpgp
