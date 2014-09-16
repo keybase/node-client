@@ -67,7 +67,7 @@ class Env
     @session = null
     @kbpath = kbpath.new_eng {
       hooks :
-        get_home : () => @_get_home()
+        get_home : (opts) => @_get_home opts
       name : "keybase"
     }
 
@@ -220,7 +220,7 @@ class Env
       config : (c) -> c.user?.email
       dflt   : -> null
 
-  _get_home : () ->
+  _get_home : ({null_ok}) ->
     @get_opt
       env    : (e) -> e.KEYBASE_HOME_DIR
       arg    : (a) -> a.homedir
@@ -229,7 +229,7 @@ class Env
   get_home : (opts) -> @kbpath.home(opts)
 
   get_home_gnupg_dir : (null_ok = false) ->
-    ret = @get_home null_ok
+    ret = @get_home { null_ok : true }
     ret = join(ret, ".gnupg") if ret?
     return ret
 

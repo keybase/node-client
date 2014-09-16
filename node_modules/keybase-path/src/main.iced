@@ -36,9 +36,10 @@ class Posix extends Base
     @sep = pathmod.sep
   split : (x) -> x.split @sep
   home : (opts = {}) ->
-    ret = if (f = @hooks?.get_home)? then f() else null
-    ret or= process.env.HOME
-    if opts.array then @split(ret) else ret
+    ret = if (f = @hooks?.get_home)? then f(opts) else null
+    if not ret? and not opts.null_ok
+      ret = process.env.HOME
+    if (opts.array and ret?) then @split(ret) else ret
   normalize : (p) -> p
   config_dir_v1 : (name = null) ->
     dirs = @home { array : true }
@@ -104,8 +105,8 @@ class Win32 extends Base
 
   home : (opts = {}) ->
     ret = err = null
-    if (f = hooks?.get_home)? and (path = f())?
-      ret = if opts.array then @split(path) else path
+    if (f = hooks?.get_home)? and ((path = f(opts))? or opts.null_ok)
+      ret = if (opts.array and path?) then @split(path) else path
     else
       err = if not (e = process.env.TEMP)? then new Error "No env.TEMP variable found"
       else if (p = @split(e)).length is 0 then new Error "Malformed env.TEMP variable"

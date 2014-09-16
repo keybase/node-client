@@ -74,9 +74,11 @@
       if (opts == null) {
         opts = {};
       }
-      ret = (f = (_ref = this.hooks) != null ? _ref.get_home : void 0) != null ? f() : null;
-      ret || (ret = process.env.HOME);
-      if (opts.array) {
+      ret = (f = (_ref = this.hooks) != null ? _ref.get_home : void 0) != null ? f(opts) : null;
+      if ((ret == null) && !opts.null_ok) {
+        ret = process.env.HOME;
+      }
+      if (opts.array && (ret != null)) {
         return this.split(ret);
       } else {
         return ret;
@@ -219,8 +221,8 @@
         opts = {};
       }
       ret = err = null;
-      if (((f = typeof hooks !== "undefined" && hooks !== null ? hooks.get_home : void 0) != null) && ((path = f()) != null)) {
-        ret = opts.array ? this.split(path) : path;
+      if (((f = typeof hooks !== "undefined" && hooks !== null ? hooks.get_home : void 0) != null) && (((path = f(opts)) != null) || opts.null_ok)) {
+        ret = opts.array && (path != null) ? this.split(path) : path;
       } else {
         err = (e = process.env.TEMP) == null ? new Error("No env.TEMP variable found") : (p = this.split(e)).length === 0 ? new Error("Malformed env.TEMP variable") : !(p.pop().match(/^te?mp$/i)) ? new Error("TEMP didn't end in \\Temp") : (lst(p).toLowerCase() === "local" && !opts.local ? (p.pop(), p.push("Roaming")) : void 0, ret = opts.array ? p : this.unsplit(p), null);
         if (err != null) {
