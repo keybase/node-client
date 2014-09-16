@@ -81,7 +81,6 @@ class Env
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
 
   get_config_dir : (version = V2) ->
-    console.log "ok shit version =#{version}"
     if (version is V1) then @kbpath.config_dir_v1() else @kbpath.config_dir()
   get_data_dir : () -> @kbpath.data_dir()
   get_cache_dir : () -> @kbpath.cache_dir()
@@ -91,17 +90,10 @@ class Env
   # local files.
   maybe_fallback_to_layout_v1 : (cb) ->
     err = null
-    console.log "XXX"
     if not (@env.XDG_CONFIG_HOME or @env.XDG_CACHE_HOME or @env.XDG_DATA_HOME)
       old_config = @get_config_filename(V1)
-      console.log "shit!"
-      console.log old_config
       await fs.stat old_config, defer err, stat
-      console.log err
-      console.log stat
-      if not err? and stat?.isFile()
-        console.log "ok, we're in it!"
-        @kbpath = @kbpath.fallback_to_v1()
+      if not err? and stat?.isFile() then @kbpath = @kbpath.fallback_to_v1()
       else if err.code is 'ENOENT' then err = null
     cb err
 
