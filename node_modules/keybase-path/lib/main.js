@@ -216,14 +216,17 @@
     };
 
     Win32.prototype.home = function(opts) {
-      var e, err, f, p, path, ret;
+      var e, err, f, p, ret;
       if (opts == null) {
         opts = {};
       }
       ret = err = null;
-      if (((f = typeof hooks !== "undefined" && hooks !== null ? hooks.get_home : void 0) != null) && (((path = f(opts)) != null) || opts.null_ok)) {
-        ret = opts.array && (path != null) ? this.split(path) : path;
-      } else {
+      if ((f = typeof hooks !== "undefined" && hooks !== null ? hooks.get_home : void 0) != null) {
+        ret = f(opts);
+      }
+      if (ret != null) {
+        ret = (opts.array ? this.split(ret) : ret);
+      } else if (!opts.null_ok) {
         err = (e = process.env.TEMP) == null ? new Error("No env.TEMP variable found") : (p = this.split(e)).length === 0 ? new Error("Malformed env.TEMP variable") : !(p.pop().match(/^te?mp$/i)) ? new Error("TEMP didn't end in \\Temp") : (lst(p).toLowerCase() === "local" && !opts.local ? (p.pop(), p.push("Roaming")) : void 0, ret = opts.array ? p : this.unsplit(p), null);
         if (err != null) {
           throw err;

@@ -105,9 +105,11 @@ class Win32 extends Base
 
   home : (opts = {}) ->
     ret = err = null
-    if (f = hooks?.get_home)? and ((path = f(opts))? or opts.null_ok)
-      ret = if (opts.array and path?) then @split(path) else path
-    else
+
+    if (f = hooks?.get_home)? then ret = f(opts)
+
+    if ret? then ret = (if opts.array then @split(ret) else ret)
+    else if not opts.null_ok
       err = if not (e = process.env.TEMP)? then new Error "No env.TEMP variable found"
       else if (p = @split(e)).length is 0 then new Error "Malformed env.TEMP variable"
       else if not (p.pop().match /^te?mp$/i) then new Error "TEMP didn't end in \\Temp"
@@ -118,6 +120,7 @@ class Win32 extends Base
         ret = if opts.array then p else @unsplit(p)
         null
       if err? then throw err
+
     return ret
 
 #================
