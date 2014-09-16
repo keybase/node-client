@@ -12,12 +12,12 @@ class RunMode
 
   DEVEL : 0
   PROD : 1
-  
+
   constructor : (s) ->
     t =
       devel : @DEVEL
       prod : @PROD
-      
+
     [ @_v, @_name, @_chosen ] = if (s? and (m = t[s])?) then [m, s, true ]
     else [ @PROD, "prod", false ]
 
@@ -178,7 +178,7 @@ class Env
     u2? and (u2.toLowerCase() is @get_username().toLowerCase())
 
   get_uid : () ->
-    @get_opt 
+    @get_opt
       env    : (e) -> e.KEYBASE_UID
       arg    : (a) -> a.uid
       config : (c) -> c.user?.id
@@ -210,7 +210,7 @@ class Env
       dflt   : -> null
 
   get_proxy : () ->
-    @get_opt 
+    @get_opt
       env    : (e) -> e.http_proxy or e.https_proxy
       arg    : (a) -> a.proxy
       config : (c) -> c.proxy?.url
@@ -243,7 +243,7 @@ class Env
       dflt   :     -> false
 
   get_merkle_checks : () ->
-    unless @_merkle_mode 
+    unless @_merkle_mode
       raw = @get_opt
         env    : (e) -> e.KEYBASE_MERKLE_CHECKS
         arg    : (a) -> a.merkle_checks
@@ -296,6 +296,6 @@ class Env
 ##=======================================================================
 
 _env = null
-exports.init_env = (a) -> _env = new Env 
+exports.init_env = (a) -> _env = new Env
 exports.env      = ()  -> _env
 

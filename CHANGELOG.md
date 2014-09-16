@@ -1,3 +1,9 @@
+## 0.5.2
+
+Bugfixes:
+
+  - Fix a crasher in `keybase config` with resetting values in the config file
+
 ## 0.5.1 (2014-08-28)
 
 Features:

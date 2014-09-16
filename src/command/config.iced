@@ -12,7 +12,8 @@ urlmod = require 'url'
 ##=======================================================================
 
 convert = (s) ->
-  if s is 'true' then true
+  if not s? then null
+  else if s is 'true' then true
   else if s is 'false' then false
   else if s.match(/^[0-9]+$/) and not(isNaN(i = parseInt(s,10))) then i
   else s
@@ -44,7 +45,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       aliases : [ ]
       help : "make an initial configuration file"
     name = "config"
