@@ -1,8 +1,17 @@
-## 0.5.2
+## 0.6.0
 
 Bugfixes:
 
   - Fix a crasher in `keybase config` with resetting values in the config file
+
+Features:
+
+  - Support XDG_CONFIG_DIR and friends for Linuxes.
+    - Addresses keybase/keybase-issues#277
+    - Addresses keybase/node-client#143
+  - If you have a ~/.keybase directory, AND you don't have any XDG_* environment
+    variables set, then the client should fallback to the old behavior, of storing
+    all files in ~/.keybase.
 
 ## 0.5.1 (2014-08-28)
 

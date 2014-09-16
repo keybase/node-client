@@ -7,7 +7,7 @@
 #====================================================================
 
 log = require '../../lib/log'
-{home} = require '../../lib/path'
+kbpath = require 'keybase-path'
 {make_esc} = require 'iced-error'
 {a_json_parse} = require('iced-utils').util
 path = require 'path'
@@ -97,7 +97,7 @@ class Config
   #----------------
 
   open_config : (cb) ->
-    file = if @file then @file else path.join(home(),@DEFAULT_FILE)
+    file = if @file then @file else path.join(kbpath.home(),@DEFAULT_FILE)
     await fs.readFile file, defer err, data
     if not err?
       await a_json_parse data, defer err, @_data

@@ -49,14 +49,14 @@ class Main
 
   arg_parse_init : () ->
     err = null
-    @ap = new ArgumentParser 
+    @ap = new ArgumentParser
       addHelp : true
       version : @pkjson.version()
       description : 'keybase.io command line client'
       prog : @pkjson.bin()
 
     if not @add_subcommands()
-      err = new E.InitError "cannot initialize subcommands" 
+      err = new E.InitError "cannot initialize subcommands"
     return err
 
   #---------------------------------
@@ -70,7 +70,7 @@ class Main
     # Add the base options that are useful for all subcommands
     add_option_dict @ap, Base.OPTS
 
-    list = [ 
+    list = [
       "btc"
       "cert"
       "dir"
@@ -140,11 +140,12 @@ class Main
   #---------------------------------
 
   load_config : (cb) ->
-    err = null
+    esc = make_esc cb, "load_config"
     if @cmd.use_config()
+      await env().maybe_fallback_to_layout_v1 esc defer()
       @config = new Config env().get_config_filename(), @cmd.config_opts()
-      await @config.open defer err
-    cb err
+      await @config.open esc defer()
+    cb null
 
   #---------------------------------
 
@@ -225,7 +226,7 @@ class Main
 
   init_gpg : (cb) ->
     err = null
-    if @cmd.use_gpg() 
+    if @cmd.use_gpg()
       c = env().get_gpg_cmd()
       log.debug "+ testing GPG command-line client #{if c? then c else '<default: gpg>'}"
       await keyring.master_ring().test defer err, @_gpg_version

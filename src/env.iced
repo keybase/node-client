@@ -1,10 +1,11 @@
 
-{home} = require './path'
+kbpath = require 'keybase-path'
 {join} = require 'path'
 {constants} = require './constants'
 {make_full_username,make_email} = require './util'
 FN = constants.filenames
 SRV = constants.server
+fs = require 'fs'
 
 ##=======================================================================
 
@@ -53,6 +54,10 @@ class Strictness
 
 ##=======================================================================
 
+# Various obvious version #s
+V1 = 1
+V2 = 2
+
 class Env
 
   # Load in all viable command line switching opts
@@ -61,6 +66,11 @@ class Env
     @argv = null
     @config = null
     @session = null
+    @kbpath = kbpath.new_eng {
+      hooks :
+        get_home : () => @_get_home()
+      name : "keybase"
+    }
 
   set_config  : (c) -> @config = c
   set_session : (s) -> @session = s
@@ -70,6 +80,23 @@ class Env
     co = @config?.obj()
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
 
+  get_config_dir : (version = V2) ->
+    if (version is V1) then @kbpath.config_dir_v1() else @kbpath.config_dir()
+  get_data_dir : () -> @kbpath.data_dir()
+  get_cache_dir : () -> @kbpath.cache_dir()
+
+  # In v1 of layout configuration, we just do the obvious thing, which is to use ~/.keybase/;
+  # But in v2, we're trying to be compliant with the XDG specification for how to store
+  # local files.
+  maybe_fallback_to_layout_v1 : (cb) ->
+    err = null
+    if not (@env.XDG_CONFIG_HOME or @env.XDG_CACHE_HOME or @env.XDG_DATA_HOME)
+      old_config = @get_config_filename(V1)
+      await fs.stat old_config, defer err, stat
+      if not err? and stat?.isFile() then @kbpath = @kbpath.fallback_to_v1()
+      else if err.code is 'ENOENT' then err = null
+    cb err
+
   get_port   : ( ) ->
     @get_opt
       env    : (e) -> e.KEYBASE_PORT
@@ -77,25 +104,25 @@ class Env
       config : (c) -> c.server?.port
       dflt   : ( ) -> SRV.port
 
-  get_config_filename : () ->
+  get_config_filename : (version = V2) ->
     @get_opt
       env    : (e) -> e.KEYBASE_CONFIG_FILE
       arg    : (a) -> a.config
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.config_file
+      dflt   : ( ) => join @get_config_dir(version), FN.config_file
 
   get_session_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_SESSION_FILE
       arg    : (a) -> a.session_file
       config : (c) -> c?.files?.session
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.session_file
+      dflt   : ( ) => join @get_cache_dir(), FN.session_file
 
   get_db_filename : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_DB_FILE
       arg    : (a) -> a.db_file
       config : (c) -> c?.files?.db
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.db_file
+      dflt   : ( ) => join @get_data_dir(), FN.db_file
 
   get_nedb_filename : () ->
     @get_opt
@@ -107,7 +134,7 @@ class Env
       env    : (e) -> e.KEYBASE_TMP_KEYRING_DIR
       arg    : (a) -> a.tmp_keyring_dir
       config : (c) -> c?.files?.tmp_keyring_dir
-      dflt   : ( ) => join @get_home(), FN.config_dir, FN.tmp_keyring_dir
+      dflt   : ( ) => join @get_cache_dir(), FN.tmp_keyring_dir
 
   get_preserve_tmp_keyring : () ->
     @get_opt
@@ -191,11 +218,13 @@ class Env
       config : (c) -> c.user?.email
       dflt   : -> null
 
-  get_home : (null_ok = false) ->
+  _get_home : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_HOME_DIR
       arg    : (a) -> a.homedir
-      dflt   : -> if null_ok then null else home()
+      dflt   : -> null
+
+  get_home : (opts) -> @kbpath.home(opts)
 
   get_home_gnupg_dir : (null_ok = false) ->
     ret = @get_home null_ok
@@ -285,6 +314,11 @@ class Env
   #---------------
 
   keybase_full_username : () -> make_full_username @get_username()
+
+  #---------------
+
+  init_home_scheme : (cb) ->
+
 
   #---------------
 
