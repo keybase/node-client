@@ -142,7 +142,9 @@ class Main
   load_config : (cb) ->
     esc = make_esc cb, "load_config"
     if @cmd.use_config()
-      await env().maybe_fallback_to_layout_v1 esc defer()
+      await env().maybe_fallback_to_layout_v1 esc defer res
+      if res
+        log.debug "| Fallback to layout_v1"
       @config = new Config env().get_config_filename(), @cmd.config_opts()
       await @config.open esc defer()
     cb null

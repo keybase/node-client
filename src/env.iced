@@ -1,4 +1,3 @@
-
 kbpath = require 'keybase-path'
 {join} = require 'path'
 {constants} = require './constants'
@@ -90,12 +89,15 @@ class Env
   # local files.
   maybe_fallback_to_layout_v1 : (cb) ->
     err = null
+    res = false
     if not (@env.XDG_CONFIG_HOME or @env.XDG_CACHE_HOME or @env.XDG_DATA_HOME)
       old_config = @get_config_filename(V1)
       await fs.stat old_config, defer err, stat
-      if not err? and stat?.isFile() then @kbpath = @kbpath.fallback_to_v1()
+      if not err? and stat?.isFile()
+        @kbpath = @kbpath.fallback_to_v1()
+        res = true
       else if err.code is 'ENOENT' then err = null
-    cb err
+    cb err, res
 
   get_port   : ( ) ->
     @get_opt
