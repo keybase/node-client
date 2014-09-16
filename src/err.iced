@@ -71,6 +71,7 @@ exports.E = E = ie.make_errors
   REVOKED : "revoked"
   REVOKE  : "error in revocation"
   KARMA : "insufficient karma"
+  BAD_MERKLE_LEAF : "bad merkle leaf found"
 
 #================================================
 

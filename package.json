@@ -1,6 +1,6 @@
 {
   "name": "keybase",
-  "version": "0.4.22",
+  "version": "0.5.1",
   "description": "CLI interface to keybase.io",
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "kbpgp": ">=1.0.2",
     "keybase-path": "0.0.11",
     "keybase-proofs": "^1.0.7",
+    "libkeybase": "0.0.2",
     "merkle-tree": "0.0.12",
     "mkdirp": "0.3.5",
     "pgp-utils": ">=0.0.22",
@@ -70,6 +71,7 @@
     "iced-data-structures",
     "iced-db",
     "iced-error",
+    "iced-lock",
     "iced-logger",
     "iced-runtime",
     "iced-spawn",
@@ -77,6 +79,7 @@
     "kbpgp",
     "keybase-path",
     "keybase-proofs",
+    "libkeybase",
     "merkle-tree",
     "mkdirp",
     "pgp-utils",

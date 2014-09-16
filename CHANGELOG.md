@@ -1,10 +1,22 @@
-## 0.5.0
+## 0.6.0
 
   - Support XDG_CONFIG_DIR and friends for Linuxes.
     - Addresses keybase/keybase-issues#277
     - Addresses keybase/node-client#143
   - This will break previous versions of the keybase node-client by moving the
     home directory somewhere else.
+
+## 0.5.1 (2014-08-28)
+
+Features:
+
+  - Upgrade to keybase-proofs@v1.1.0, for support of subkey signatures when they arrive.
+
+## 0.5.0 (2014-08-28)
+
+Features:
+
+  - Support for versioned merkle leaves. Will be needed as we roll out semiprivate sigchains.
 
 ## 0.4.21 and 0.4.22 (2014-08-22)
 

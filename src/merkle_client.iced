@@ -10,6 +10,7 @@ log = require './log'
 keys = require './keys'
 {env} = require './env'
 C = require('./constants').constants
+{Leaf} = require('libkeybase').merkle.leaf
 
 #===========================================================
 
@@ -193,17 +194,20 @@ class MerkleClient extends merkle.Base
 
   find_and_verify : ( { key }, cb) ->
     log.debug "+ merkle find_and_verify: #{key}"
+    err = root = leaf = null
     await @find { key }, defer err, val, root
     log.debug "| find -> #{JSON.stringify val}"
+
     if err? then # noop
-    if not val? then err = new E.NotFoundError "No value #{key} found in merkle tree"
-    else if not Array.isArray(val) or val.length < 2 
-      err = new E.BadValueError "expected an array of length 2 or more"
-    else 
+    else if not val? then err = new E.NotFoundError "No value #{key} found in merkle tree"
+    else [err,leaf] = Leaf.parse val
+
+    unless err?
       await @verify_root {root}, defer err
+
     log.debug "- merkle find_and_verify -> #{err}"
 
-    cb err, val, root
+    cb err, leaf, root
 
 #===========================================================
 
