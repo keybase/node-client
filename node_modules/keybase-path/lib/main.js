@@ -193,6 +193,13 @@
     };
 
     Win32.prototype.config_dir = function(name) {
+      if (name == null) {
+        name = null;
+      }
+      return this.config_dir_v1(name);
+    };
+
+    Win32.prototype.config_dir_v1 = function(name) {
       var home;
       if (name == null) {
         name = null;

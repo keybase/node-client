@@ -37,7 +37,7 @@
     "iced-spawn": "0.0.10",
     "iced-utils": "0.1.20",
     "kbpgp": ">=1.0.2",
-    "keybase-path": "0.0.12",
+    "keybase-path": "0.0.13",
     "keybase-proofs": "^1.0.7",
     "libkeybase": "0.0.2",
     "merkle-tree": "0.0.12",

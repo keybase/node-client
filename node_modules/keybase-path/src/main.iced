@@ -90,7 +90,11 @@ class Win32 extends Base
 
   #-------
 
-  config_dir : (name = null) ->
+  config_dir : (name = null) -> @config_dir_v1(name)
+
+  #-------
+
+  config_dir_v1 : (name = null) ->
     home = @home()
     name or= @name
     if name? then @join(home, name)
