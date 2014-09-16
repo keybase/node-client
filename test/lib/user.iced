@@ -67,7 +67,7 @@ exports.User = class User
     esc = make_esc tmpcb, "User::check_if_exists"
     await fs.stat @homedir, esc defer()
     await fs.stat @keyring_dir(), esc defer()
-    await fs.stat path.join(@homedir, ".keybase", "config.json"), esc defer()
+    await fs.stat path.join(@homedir, ".config", "keybase", "config.json"), esc defer()
     cb true
 
   #-----------------
