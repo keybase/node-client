@@ -5,6 +5,7 @@ kbpath = require 'keybase-path'
 {make_full_username,make_email} = require './util'
 FN = constants.filenames
 SRV = constants.server
+fs = require 'fs'
 
 ##=======================================================================
 
@@ -53,6 +54,10 @@ class Strictness
 
 ##=======================================================================
 
+# Various obvious version #s
+V1 = 1
+V2 = 2
+
 class Env
 
   # Load in all viable command line switching opts
@@ -75,9 +80,30 @@ class Env
     co = @config?.obj()
     return env?(@env) or arg?(@argv) or (co? and config? co) or dflt?() or null
 
-  get_config_dir : () -> @kbpath.config_dir()
+  get_config_dir : (version = V2) ->
+    console.log "ok shit version =#{version}"
+    if (version is V1) then @kbpath.config_dir_v1() else @kbpath.config_dir()
   get_data_dir : () -> @kbpath.data_dir()
   get_cache_dir : () -> @kbpath.cache_dir()
+
+  # In v1 of layout configuration, we just do the obvious thing, which is to use ~/.keybase/;
+  # But in v2, we're trying to be compliant with the XDG specification for how to store
+  # local files.
+  maybe_fallback_to_layout_v1 : (cb) ->
+    err = null
+    console.log "XXX"
+    if not (@env.XDG_CONFIG_HOME or @env.XDG_CACHE_HOME or @env.XDG_DATA_HOME)
+      old_config = @get_config_filename(V1)
+      console.log "shit!"
+      console.log old_config
+      await fs.stat old_config, defer err, stat
+      console.log err
+      console.log stat
+      if not err? and stat?.isFile()
+        console.log "ok, we're in it!"
+        @kbpath = @kbpath.fallback_to_v1()
+      else if err.code is 'ENOENT' then err = null
+    cb err
 
   get_port   : ( ) ->
     @get_opt
@@ -86,11 +112,11 @@ class Env
       config : (c) -> c.server?.port
       dflt   : ( ) -> SRV.port
 
-  get_config_filename : () ->
+  get_config_filename : (version = V2) ->
     @get_opt
       env    : (e) -> e.KEYBASE_CONFIG_FILE
       arg    : (a) -> a.config
-      dflt   : ( ) => join @get_config_dir(), FN.config_file
+      dflt   : ( ) => join @get_config_dir(version), FN.config_file
 
   get_session_filename : () ->
     @get_opt
@@ -296,6 +322,11 @@ class Env
   #---------------
 
   keybase_full_username : () -> make_full_username @get_username()
+
+  #---------------
+
+  init_home_scheme : (cb) ->
+
 
   #---------------
 
