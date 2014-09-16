@@ -16,6 +16,11 @@ class Base
 
   #----------------
 
+  # Noop for everything but XdgPosix
+  fallback_to_v1 : () -> @
+
+  #----------------
+
   get_name : (name) -> name or @name
 
   #----------------
@@ -35,15 +40,23 @@ class Posix extends Base
     ret or= process.env.HOME
     if opts.array then @split(ret) else ret
   normalize : (p) -> p
-  config_dir : (name = null) ->
+  config_dir_v1 : (name = null) ->
     dirs = @home { array : true }
     if (name = @get_name name)?
       dirs.push("." + name)
     @unsplit dirs
+  config_dir : (name) -> @config_dir_v1(name)
 
 #================
 
-class Linux extends Posix
+# A Posix-style system like OSX or Linux that follows, roughly,
+# the XDG specification...
+class XdgPosix extends Posix
+
+  # Fallback to v1 of configuration, in which we ignored
+  # the XDG specification and just stuck everything in ~/.keybase
+  # (oh, life was simple back then!!)
+  fallback_to_v1 : () -> new Posix { @hooks, @name }
 
   config_dir : (name = null) ->
     prfx = process.env.XDG_CONFIG_HOME or @join(@home(), ".config")
@@ -63,10 +76,6 @@ class Linux extends Posix
 #================
 
 uc1 = (p) -> p[0].toUpperCase() + p[1...]
-
-#================
-
-class Darwin extends Posix
 
 #================
 
@@ -110,8 +119,8 @@ class Win32 extends Base
 
 _klass = switch process.platform
   when 'win32' then Win32
-  when 'linux' then Linux
-  when 'darwin' then Darwin
+  when 'linux' then XdgPosix
+  when 'darwin' then XdgPosix
   else Posix
 
 #================
