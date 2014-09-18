@@ -27,7 +27,7 @@ act =
     if strict
       args = ["dir", "verify", "--strict", who.homedir]
     else
-      args = ["dir", "verify", who.homedir]    
+      args = ["dir", "verify", who.homedir]
     await who.keybase {args, quiet: true}, defer err, out
     if expect_success
       T.no_error err, "failed to verify good home dir signing"
@@ -38,9 +38,8 @@ act =
 
   verify_with_assertions: (T, who, whom, assertions, expect_success, cb) ->
     args = ["dir", "verify", whom.homedir]
-    for ass in assertions
-      args.push "--assert"
-      args.push ass    
+    args.push "--assert"
+    args.push assertions.join " && "
     await who.keybase {args, quiet: true}, defer err, out
     if expect_success
       T.no_error err, "failed to verify good home dir signing"
@@ -77,9 +76,9 @@ act =
     T.no_error err, "failed to rmdir"
     cb()
 
-  symlink: (T, who, src, dest, cb) ->    
+  symlink: (T, who, src, dest, cb) ->
     p_src  = path.join who.homedir, src
-    p_dest = path.join who.homedir, dest 
+    p_dest = path.join who.homedir, dest
     await fs.symlink p_src, p_dest, defer err
     T.no_error err, "failed to symlink file"
     cb()
@@ -119,8 +118,8 @@ exports.alice_sign_and_verify_homedir = (T, cb) ->
 exports.assertions = (T, cb) ->
   await act.sign_home_dir          T, charlie,        defer()
   await act.proof_ids              T, charlie,        defer proof_ids
-  await act.verify_with_assertions T, alice, charlie, ["twitter:#{proof_ids.twitter}", "github:#{proof_ids.github}"],   true, defer()
-  await act.verify_with_assertions T, alice, charlie, ["twitter:evil_wrongdoer", "github:wrong_evildoer"],             false, defer()
+  await act.verify_with_assertions T, alice, charlie, ["twitter://#{proof_ids.twitter}", "github://#{proof_ids.github}"],   true, defer()
+  await act.verify_with_assertions T, alice, charlie, ["twitter://evil_wrongdoer", "github://wrong_evildoer"],             false, defer()
   cb()
 
 exports.alice_wrong_item_types = (T, cb) ->
@@ -199,8 +198,8 @@ exports.alice_bad_symlinks = (T, cb) ->
   dest1 = act.rfile()
   dest2 = act.rfile()
 
-  await act.append_junk T,       alice, dest1,       defer()  
-  await act.append_junk T,       alice, dest2,       defer()  
+  await act.append_junk T,       alice, dest1,       defer()
+  await act.append_junk T,       alice, dest2,       defer()
   await act.symlink T,           alice, dest1, src,  defer()
   await act.sign_home_dir T,     alice,              defer()
   await act.verify_home_dir T,   alice, true,        defer()

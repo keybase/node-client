@@ -159,7 +159,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     try
       @assertions = assertion.parse(a) if (a = @opts.assert)?
     catch e
-      err = new E.ParseAssertionError "Error parsing assertion #{a}: #{e.message}"
+      err = new E.ParseAssertionError "Error parsing assertion '#{a}': #{e.message}"
     cb err
 
   #----------

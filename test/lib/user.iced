@@ -243,8 +243,8 @@ exports.User = class User
   assertions : () ->
     d = @accounts()
     out = []
-    for k,v of d
-      out.push("--assert", [k, v].join(":") )
+    out.push "--assert"
+    out.push ( [k,v].join("://") for k,v of d ).join(" && ")
     return out
 
   #-----------------
