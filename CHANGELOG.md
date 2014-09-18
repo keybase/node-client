@@ -1,3 +1,15 @@
+## 0.6.1
+
+Bugfixes/Improvements:
+
+  - Overhaul assertions.
+  - Close keybase/keybase-issues#{970,971,972}
+  - Now you can make conjunctions via '&&' and disjunctions via '||'
+  - Grammar now is "twitter://maxtaco" and not "twitter:maxtaco"
+  - Parentheses also supported
+  - Only one "--assert" arg needed (since conjunctions as above).
+  - No warnings on unmatched proofs
+
 ## 0.6.0
 
 Bugfixes:

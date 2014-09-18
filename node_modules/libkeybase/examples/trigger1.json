@@ -1,0 +1,38 @@
+
+// Fully-explicit system, I don't think this is worthwhile, since it's unclear what else we'll
+// use it for..
+{
+  "players" : [ "04123456", "00112233" ],
+  "type" : "script",
+  "script": [
+    [ "let",
+      [ ["sender"  , [ "load", "`04123456" ] ],
+        ["receiver", [ "load", "`00112233" ] ] ]
+      [ "if",
+        [ "or",
+          ["eq", [ "get_proven_id", "receiver", "`twitter" ], "maxtaco"     ],
+          ["eq", [ "get_proven_id", "receiver", "`github"  ], "maxplusplus" ]
+        ],
+        [ "let",
+           [ [ "plaintext",  [ "decrypt", [ "get_key", "sender", "`main" ], "`---- BEGIN PGP MESSAGE ------..." ] ],
+             [ "ciphertext", [ "encrypt", [ "get_key", "receiver", "`myapp"], "plaintext" ] ] ],
+           [ "post", "00112233", "ciphertext" ]
+        ]
+      ]
+    ]
+  ]
+}
+
+// Simplified System -- let's go with this or else we'll never finish.
+{
+  "reencryption" : {
+    "sender" : "0412",
+    "receiver" : "8811",
+    "trigger" :
+      [ "or",
+        ["eq", [ "get_proven_id", "receiver", "`twitter" ], "maxtaco"     ],
+        ["eq", [ "get_proven_id", "receiver", "`github"  ], "maxplusplus" ] ],
+    "self_encryption" : "----- BEGIN PGP MESSAGE -----..."
+  },
+  "sig" : "----- BEGIN PGP MESSAGE -----...."
+}
