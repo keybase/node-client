@@ -22,10 +22,11 @@ scrapemod = require './scrapers'
 {merkle_client} = require './merkle_client'
 bitcoyne = require 'bitcoyne'
 {Link,LinkTable} = require('./chainlink')
+{Proof,ProofSet} = require('libkeybase').assertion
 
 ##=======================================================================
 
-exports.SigChain = class SigChain 
+exports.SigChain = class SigChain
 
   constructor : (@uid, @_links = []) ->
     @_lookup = {}
@@ -34,7 +35,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  _index_links : (list) -> 
+  _index_links : (list) ->
     for l in list
       @_lookup[l.id] = l
 
@@ -59,7 +60,7 @@ exports.SigChain = class SigChain
         links.push link
         curr = link.prev()
         log.debug "| -> found link and previous; prev=#{curr}"
-      else 
+      else
         log.debug "| -> reached the chain end"
         curr = null
     unless err?
@@ -78,7 +79,7 @@ exports.SigChain = class SigChain
     links or= @_links
     prev = null
     i =  0
-    for link in links 
+    for link in links
       if (prev? and (prev isnt link.prev())) or (not prev? and first and link.prev())
         return new E.CorruptionError "Bad chain link in #{link.seqno()}: #{prev} != #{link.prev()}"
       prev = link.id
@@ -92,7 +93,7 @@ exports.SigChain = class SigChain
     args = { @uid, low : (@last_seqno() + 1) }
     await req.get { endpoint : "sig/get", args }, esc defer body
     log.debug "| found #{body.sigs.length} new signatures"
-    new_links = [] 
+    new_links = []
     did_update = false
     for obj in body.sigs
       link = Link.alloc { obj }
@@ -139,7 +140,7 @@ exports.SigChain = class SigChain
 
   # For the sake of signing a signature chain, we use the true last, and not
   # the effective last.  The effective last is what we get after removing the
-  # links not signed by the current key. 
+  # links not signed by the current key.
   #
   # IF we haven't compressed yet, then the true last is simply the last
   true_last : () -> @_true_last or @last()
@@ -201,10 +202,10 @@ exports.SigChain = class SigChain
     log.debug "+ search for a free-rider on a track signature (found=#{found})"
     # Search for a freerider in an otherwise useful signature
     if not found
-      for type in [ ST.REMOTE_PROOF, ST.TRACK ] 
+      for type in [ ST.REMOTE_PROOF, ST.TRACK ]
         tab = @table?.get(type)?.flatten() or []
         for link in tab
-          if link.self_signer() is @username 
+          if link.self_signer() is @username
             found = true
             break
         break if found
@@ -259,7 +260,7 @@ exports.SigChain = class SigChain
 
   merkle_root_to_track_obj : () ->
     if @_merkle_root?
-      ret = 
+      ret =
         hash : @_merkle_root.hash
         seqno : @_merkle_root.seqno
         ctime : @_merkle_root.ctime
@@ -318,7 +319,7 @@ exports.SigChain = class SigChain
         type = proofs.proof_type_to_string[parseInt(type)]
         out or= {}
 
-        # In the case of an end-link, just display it.  In the 
+        # In the case of an end-link, just display it.  In the
         # case of a dictionary of more links, just list the keys
         out[type] = if (obj.is_leaf()) then obj.to_list_display(opts)
         else (v.to_list_display(opts) for k,v of obj.to_dict())
@@ -357,6 +358,19 @@ exports.SigChain = class SigChain
 
   #-----------
 
+  check_assertions : ({pubkey, username, assertions, proof_vec}, cb) ->
+    err = null
+    proof_vec.push(
+      ( new Proof { key : "fingerprint", value : pubkey.fingerprint() })
+      ( new Proof { key : "keybase", value : username })
+    )
+    proof_set = new ProofSet proof_vec
+    unless assertions.match_set proof_set
+      err = new E.FailedAssertionError "Assertion set failed"
+    cb err
+
+  #-----------
+
   check_remote_proofs : ({username, skip, pubkey, assertions}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
     log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
@@ -366,9 +380,9 @@ exports.SigChain = class SigChain
     log.lconsole "error", log.package().INFO, msg
     n = 0
 
-    # In case there was an assertion on the public key fingerprint itself...
-    assertions?.found('key', false)?.success().set_payload pubkey.fingerprint() 
-    assertions?.found('keybase', false)?.success().set_payload username
+
+    # Keep track of all assertions in this key-value vector.
+    proof_vec = []
 
     if (tab = @table?.get(ST.REMOTE_PROOF))?
       log.debug "| Loaded table with #{tab.keys().length} keys"
@@ -380,10 +394,14 @@ exports.SigChain = class SigChain
         links = v.flatten()
 
         for link in links
-          await link.check_remote_proof { skip, pubkey, type, warnings, assertions }, esc defer()
+          await link.check_remote_proof { skip, pubkey, type, warnings, proof_vec }, esc defer()
           n++
     else
       log.debug "| No remote proofs found"
+
+    if assertions?
+      await @check_assertions { pubkey, proof_vec, username, assertions }, esc defer()
+
     log.debug "- #{pubkey.username()}: checked remote proofs"
     cb null, warnings, n
 

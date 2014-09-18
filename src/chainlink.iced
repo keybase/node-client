@@ -29,7 +29,7 @@ exports.Link = class Link
   @ID_TYPE : constants.ids.sig_chain_link
 
   #--------------------
-  
+
   constructor : ({@id,@obj}) ->
     @id or= @obj.payload_hash
     @_revoked = false
@@ -39,7 +39,7 @@ exports.Link = class Link
   export_to_user : () -> {
     seqno : @seqno()
     payload_hash : @id
-    sig_id : @sig_id() 
+    sig_id : @sig_id()
   }
 
   #--------------------
@@ -221,7 +221,7 @@ class RemoteProof extends Link
 
   #-----------
 
-  condense : () -> 
+  condense : () ->
     pso = @proof_service_object()
     key = pso.name or pso.protocol
     key += ":" unless key[-1...][0] is ':'
@@ -233,7 +233,7 @@ class RemoteProof extends Link
   insert_into_table : ({table, index, opts}) ->
     log.debug "+ RemoteProof::insert_into_table"
     @_perform_revocations { index }
-    S = constants.proof_state 
+    S = constants.proof_state
     states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
     states.push S.PERM_FAILURE if opts?.show_perm_failures
     if @proof_state() in states
@@ -246,12 +246,12 @@ class RemoteProof extends Link
 
   #-----------
 
-  get_sub_id : () -> 
+  get_sub_id : () ->
     scrapemod.alloc_stub(@proof_type())?.get_sub_id(@proof_service_object())
 
   #-----------
 
-  check_remote_proof : ({skip, pubkey, type, warnings, assertions}, cb) ->
+  check_remote_proof : ({skip, pubkey, type, warnings, proof_vec}, cb) ->
 
     username = pubkey.username()
 
@@ -263,11 +263,7 @@ class RemoteProof extends Link
 
     log.debug "+ #{username}: checking remote #{type_s} proof"
 
-    assert = assertions?.found type_s
-
     await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
-
-    assert?.set_payload @payload_json()
 
     if not skip and not @api_url()
       await @refresh defer e2
@@ -278,13 +274,16 @@ class RemoteProof extends Link
     log.debug "| remote service desc is #{rsc}"
 
     await scrapemod.alloc type, esc defer scraper
-    arg = 
+    arg =
       api_url : @api_url(),
       signature : @sig(),
       proof_text_check : @proof_text_check()
       remote_id : (""+@remote_id())
       human_url : @human_url()
     arg = dict_union(arg, @proof_service_object())
+
+    # Keep track of this remote proof as a Key-Value pair.
+    proof_vec.push scraper.to_proof(arg)
 
     errmsg = ""
     if skip
@@ -311,8 +310,6 @@ class RemoteProof extends Link
     msg.push "(failed with code #{rc}#{errmsg})" if not ok
     log.lconsole "error", log.package().INFO, msg.join(' ')
     log.debug "- #{username}: checked remote #{type_s} proof"
-
-    assert?.success @human_url()
 
     cb null
 
@@ -346,7 +343,7 @@ class RemoteProof extends Link
     log.debug "+ refresh RemoteProof link"
     if not @api_url()?
       log.debug "| Proof_id = #{@obj.proof_id}"
-      arg = 
+      arg =
         endpoint : "sig/remote_proof"
         args :
           proof_id : @obj.proof_id
@@ -368,7 +365,7 @@ class RemoteProof extends Link
 
 class Track extends Link
 
-  to_table_obj : () -> 
+  to_table_obj : () ->
     ret = @body().track
     ret.ctime = @ctime()
     return ret
@@ -379,18 +376,18 @@ class Track extends Link
 
   #----------
 
-  condense : () -> @body().track.basics.username 
+  condense : () -> @body().track.basics.username
   type_str : () -> "track"
 
   #----------
 
   insert_into_table : ({table, opts}) ->
     log.debug "+ Track::insert_into_table #{@sig_id()}"
-    if not (id = @body()?.track?.id)? 
+    if not (id = @body()?.track?.id)?
       log.warn "Missing track in signature"
       log.debug "Full JSON in signature:"
       log.debug @payload_json_str()
-    else 
+    else
       path = [ @sig_type(), id ]
       # see the comment below about cryptocurrencies
       if opts.show_revoked then path.push @seqno()
@@ -405,7 +402,7 @@ class Cryptocurrency extends Link
 
   #-----------
 
-  condense : () -> 
+  condense : () ->
     d = @body().cryptocurrency
     ret = {}
     ret[d.type] = d.address
@@ -437,7 +434,7 @@ class Cryptocurrency extends Link
       log.error "Error in checking cryptocurrency address: #{id}"
     else if err?
       log.warn "Error in cryptocurrency address: #{err.message}"
-    else 
+    else
       path = [ @sig_type(), ret.version ]
       # if we want to see revoked signatures, we have to have multiple entries for
       # bitcoins, so we further index on seqno
@@ -507,7 +504,7 @@ exports.LinkTable = class LinkTable
     for k,v of @table
       v.walk { fn, parent : @, key : k}
 
-  flatten : () -> 
+  flatten : () ->
     out = []
     fn = ({key, value, parent}) -> out.push value
     @walk { fn }

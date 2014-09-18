@@ -9,6 +9,7 @@ colors = require 'colors'
 proxyca = require './proxyca'
 root_certs = require '../json/node_root_certs.json'
 semver = require 'semver'
+{Proof} = require('libkeybase').assertion
 
 #==============================================================
 
@@ -68,6 +69,8 @@ class SocialNetwork extends Base
 
   check_proof : (check_data_json) -> check_data_json?.name is @which()
 
+  to_proof : (arg) -> new Proof { key : @which(), value : arg.username }
+
 #==============================================================
 
 exports.Twitter = class Twitter extends SocialNetwork
@@ -118,6 +121,7 @@ exports.Dns = class Dns extends Base
       colors[color](arg.domain)
     ]
   check_proof : (check_data_json) -> check_data_json.domain?
+  to_proof : (arg) -> new Proof { key : 'dns', value : arg.domain }
 
 #==============================================================
 
@@ -141,6 +145,7 @@ exports.GenericWebSite = class GenericWebSite extends Base
     ]
 
   check_proof : (check_data_json) -> check_data_json.protocol? and check_data_json.hostname?
+  to_proof : (arg) -> new Proof { key : arg.protocol[0...-1], value : arg.hostname }
 
 #==============================================================
 

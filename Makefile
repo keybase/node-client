@@ -49,7 +49,6 @@ $(BUILD_STAMP): \
 	lib/command/update.js \
 	lib/command/verify.js \
 	lib/command/version.js \
-	lib/assertions.js \
 	lib/basex.js \
 	lib/bn.js \
 	lib/ca.js \
@@ -98,9 +97,9 @@ $(BUILD_STAMP): \
 clean:
 	find lib -type f -name *.js -exec rm {} \;
 
-build: $(BUILD_STAMP) 
+build: $(BUILD_STAMP)
 
-setup: 
+setup:
 	npm install -d
 
 test:

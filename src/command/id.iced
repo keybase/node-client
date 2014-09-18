@@ -10,9 +10,8 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS : 
+  OPTS :
     a :
-      action : 'append'
       alias : "assert"
       help : "provide a key assertion"
 
@@ -29,7 +28,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       aliases : [ "identify" ]
       help : "Identify a user, but don't accept or reject trust"
     name = "id"

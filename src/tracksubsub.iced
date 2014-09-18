@@ -17,7 +17,7 @@ util = require 'util'
 {env} = require './env'
 {TrackWrapper} = require './trackwrapper'
 {master_ring} = require './keyring'
-assertions = require './assertions'
+{assertion} = require 'libkeybase'
 {keypull} = require './keypull'
 colors = require './colors'
 
@@ -30,15 +30,14 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       alias : "track-remote"
       action : "storeTrue"
       help : "remotely track by default"
-    l : 
+    l :
       alias : "track-local"
       action : "storeTrue"
       help : "don't prompt for remote tracking"
     a :
-      action : 'append'
       alias : "assert"
-      help : "provide a key assertion"
-    batch : 
+      help : "provide an identity assertion"
+    batch :
       action : 'storeTrue'
       help : "batch-mode without interactivity"
     "prompt-remote" :
@@ -73,7 +72,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   prompt_track : (proofs, cb) ->
     ret = err = null
-    if @opts.track_remote 
+    if @opts.track_remote
       ret = true
     else if @is_batch()
       ret = false
@@ -89,7 +88,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   on_decrypt : (cb) ->
-    esc = make_esc cb, "TrackSubSub::on_decrypt" 
+    esc = make_esc cb, "TrackSubSub::on_decrypt"
     await @keypull esc defer()
     await User.load { username : @args.them }, esc defer @them
     @them.reference_public_key { keyring : @tmp_keyring }
@@ -105,11 +104,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::check_remote_proofs"
     log.debug "+ TrackSubSub::check_remote_proofs"
     await @parse_assertions esc defer()
-    opts = { skip, @assertions } 
+    opts = { skip, @assertions }
     await @them.check_remote_proofs opts, esc defer warnings, n_proofs
     err = null
-    if @assertions? and not(@assertions.check())
-      err = new E.BadAssertionError()
     log.debug "- TrackSubSub::check_remote_proofs -> #{err?.message}"
     cb err, warnings, n_proofs
 
@@ -145,7 +142,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   pre_encrypt : (cb) ->
-    if not env().is_configured() 
+    if not env().is_configured()
       await @id defer err
     else
       await session.load_and_check defer err, logged_in
@@ -159,7 +156,10 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   parse_assertions : (cb) ->
     err = null
-    [err, @assertions] = assertions.parse(a) if (a = @opts.assert)?
+    try
+      @assertions = assertion.parse(a) if (a = @opts.assert)?
+    catch e
+      err = new E.ParseAssertionError "Error parsing assertion #{a}: #{e.message}"
     cb err
 
   #----------
@@ -227,12 +227,12 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   all_prompts : (cb) ->
     esc = make_esc cb, "TrackSubSub::all_prompts"
     log.debug "+ TrackSubSub::all_prompts"
-    
+
     check = @trackw.skip_remote_check()
     if (check is constants.skip.NONE)
       log.info "...checking identity proofs"
       skp = false
-    else 
+    else
       log.info "...all remote checks are up-to-date"
       skp = true
     await @check_remote_proofs skp, esc defer warnings, n_proofs
@@ -241,7 +241,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     if ((approve = @trackw.skip_approval()) isnt constants.skip.NONE)
       log.debug "| skipping approval, since remote services & key are unchanged"
       accept = true
-    else if @assertions?.clean()
+    else if @assertions?
       log.info "Identity accepted due to clean and complete assertions"
       log.debug "| We can approve due to clean assertions"
       accept = true
@@ -268,6 +268,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       await @trackw.store_track { do_remote }, esc defer()
 
     log.debug "- TrackSubSub::all_prompts"
-    cb err, accept 
+    cb err, accept
 
 ##=======================================================================
