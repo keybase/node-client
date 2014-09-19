@@ -346,7 +346,7 @@ exports.User = class User
         err = new E.AmbiguityError "Multiple results returned for '#{username}'; expected only 1"
       else
         username = body.them[0].basics.username
-        assertion = uri
+        ass_out = uri
 
         # Prime the cache for other subsequent lookups for this user.
         user = new User body.them[0]
@@ -354,7 +354,7 @@ exports.User = class User
         User.server_cache[username] = user
 
     log.debug "- resolved to #{username}"
-    cb err, username, assertion
+    cb err, username, ass_out
 
   #--------------
 

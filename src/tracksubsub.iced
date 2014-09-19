@@ -126,7 +126,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  resolve_user_name : (cb) ->
+  resolve_them : (cb) ->
     await User.resolve_user_name { username : @args.them }, defer err, @args.them, @assertion
     cb err
 
@@ -137,7 +137,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
-    await @resolve_user_name esc defer()
+    await @resolve_them esc defer()
     await User.load { username : @args.them, require_public_key : true }, esc defer @them
     await @make_quarantined_keyring esc defer()
     await @them.verify {}, esc defer()
@@ -217,6 +217,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
     await User.load_me {maybe_secret : true}, esc defer @me
     await @check_not_self esc defer()
+
+    await @resolve_them esc defer()
     await User.load { username : @args.them, ki64 : @args.them_ki64, require_public_key : true }, esc defer @them
 
     # First see if we already have the key, in which case we don't
