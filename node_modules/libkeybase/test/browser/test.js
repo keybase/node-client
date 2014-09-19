@@ -24,7 +24,7 @@
 
   })();
 
-  URI = (function(_super) {
+  exports.URI = URI = (function(_super) {
     __extends(URI, _super);
 
     function URI(_arg) {
@@ -45,19 +45,38 @@
       }
     };
 
-    URI.parse = function(s) {
-      var key, klass, klasses, obj, ret, value;
+    URI.parse_to_kv_pair = function(s) {
+      var key, obj, value;
       obj = urlmod.parse(s);
       if (((key = obj.protocol) != null) && key.length) {
         key = key.toLowerCase();
         if ((key != null) && key.slice(-1) === ':') {
           key = key.slice(0, -1);
         }
+      }
+      value = obj.hostname;
+      if ((key == null) && (value == null)) {
+        value = obj.pathname;
+      }
+      if (value != null) {
+        value = value.toLowerCase();
+      }
+      return {
+        key: key,
+        value: value
+      };
+    };
+
+    URI.parse = function(_arg) {
+      var key, klass, klasses, ret, s, strict, value, _ref;
+      s = _arg.s, strict = _arg.strict;
+      _ref = URI.parse_to_kv_pair(s), key = _ref.key, value = _ref.value;
+      if (key != null ? key.length : void 0) {
+
+      } else if (!strict) {
+        key = "keybase";
       } else {
         throw new Error("Bad assertion, no 'type' given: " + s);
-      }
-      if ((value = obj.hostname) != null) {
-        value = value.toLowerCase();
       }
       klasses = {
         web: Web,
@@ -170,7 +189,7 @@
 
   })(URI);
 
-  AND = (function(_super) {
+  exports.AND = AND = (function(_super) {
     __extends(AND, _super);
 
     function AND() {
@@ -406,7 +425,7 @@ case 4:
  this.$ = $$[$0-1]; 
 break;
 case 5:
- this.$ = yy.URI.parse($$[$0]); 
+ this.$ = yy.URI.parse({s : $$[$0], strict : true}); 
 break;
 }
 },

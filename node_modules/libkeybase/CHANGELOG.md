@@ -1,3 +1,9 @@
+## 0.0.6 (2014-09-19)
+
+Features:
+
+  - Expose more parsing innards, to be used from the node-client command line
+
 ## 0.0.5 (2014-09-19)
 
 Bugfixes:

@@ -96,7 +96,7 @@ case 4:
  this.$ = $$[$0-1]; 
 break;
 case 5:
- this.$ = yy.URI.parse($$[$0]); 
+ this.$ = yy.URI.parse({s : $$[$0], strict : true}); 
 break;
 }
 },

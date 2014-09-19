@@ -1,5 +1,5 @@
 
-{parse,Proof,ProofSet} = require('../../').assertion
+{URI,parse,Proof,ProofSet} = require('../../').assertion
 
 expr = null
 
@@ -72,5 +72,15 @@ exports.parse_bad_1 = (T,cb) ->
       T.assert false, "#{bad}: shouldn't have parsed"
     catch error
       T.assert error?, "we got an error"
+  cb()
+
+exports.parse_URI = (T,cb) ->
+  r = URI.parse { s : "max", strict : false }
+  T.assert r?, "got something back without strict mode"
+  try
+    URI.parse { s : "max", strict : true }
+    T.assert false, "should not have worked with strict mode"
+  catch err
+    T.assert err?, "error on strict mode without key"
   cb()
 

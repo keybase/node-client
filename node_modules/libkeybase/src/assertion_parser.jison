@@ -28,5 +28,5 @@ e
     : e OR e          { $$ = new yy.OR($1, $3); }
     | e AND e         { $$ = new yy.AND($1, $3); }
     | LPAREN e RPAREN { $$ = $2; }
-    | URI             { $$ = yy.URI.parse($1); }
+    | URI             { $$ = yy.URI.parse({s : $1, strict : true}); }
     ;
