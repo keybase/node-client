@@ -1,4 +1,11 @@
-## 0.6.1
+## 0.6.2 (2014-09-19)
+
+Feature:
+
+  - You can use `twitter://maxtaco` anywhere where you used to use naked keybase names
+     - Try with `id`, `track`, and `encrypt`
+
+## 0.6.1 (2014-09-19)
 
 Bugfixes/Improvements:
 
