@@ -126,11 +126,18 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  resolve_user_name : (cb) ->
+    await User.resolve_user_name { username : @args.them }, defer err, @args.them, @assertion
+    cb err
+
+  #----------
+
   id : (cb) ->
     cb = chain_err cb, @qring_cleanup.bind(@)
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
+    await @resolve_user_name esc defer()
     await User.load { username : @args.them, require_public_key : true }, esc defer @them
     await @make_quarantined_keyring esc defer()
     await @them.verify {}, esc defer()

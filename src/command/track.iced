@@ -19,7 +19,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       aliases : [ ]
       help : "verify a user's authenticity and optionally track them"
     name = "track"

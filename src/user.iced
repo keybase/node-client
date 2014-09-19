@@ -32,6 +32,7 @@ exports.User = class User
   #--------------
 
   @cache : {}
+  @server_cache : {}
 
   @FIELDS : [ "basics", "public_keys", "id", "sigs", "private_keys", "logged_in" ]
 
@@ -280,14 +281,18 @@ exports.User = class User
 
   @load_from_server : ({username}, cb) ->
     log.debug "+ #{username}: load user from server"
-    args =
-      endpoint : "user/lookup"
-      args : {username }
-    await req.get args, defer err, body
-    ret = null
-    unless err?
-      ret = new User body.them
-      ret.set_logged_in()
+    if (ret = User.server_cache[username])?
+      log.debug "| hit server cache"
+    else
+      args =
+        endpoint : "user/lookup"
+        args : {username }
+      await req.get args, defer err, body
+      ret = null
+      unless err?
+        ret = new User body.them
+        ret.set_logged_in()
+        User.server_cache[username] = ret
     log.debug "- #{username}: loaded user from server"
     cb err, ret
 
@@ -329,6 +334,7 @@ exports.User = class User
   # resolve to a regular keybase username, like max.
   #
   @resolve_user_name : ({username}, cb) ->
+    log.debug "+ resolving username #{username}"
     esc = make_esc cb, "resolve_user_name"
     err = null
     await akatch (() -> assertion.URI.parse { s : username, strict : false }), esc defer uri
@@ -341,6 +347,13 @@ exports.User = class User
       else
         username = body.them[0].basics.username
         assertion = uri
+
+        # Prime the cache for other subsequent lookups for this user.
+        user = new User body.them[0]
+        user.set_logged_in()
+        User.server_cache[username] = user
+
+    log.debug "- resolved to #{username}"
     cb err, username, assertion
 
   #--------------
