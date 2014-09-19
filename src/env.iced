@@ -247,6 +247,27 @@ class Env
       config : (c) -> c.proxy?.url
       dflt   : -> null
 
+  get_tor : () ->
+    @get_opt
+      env    : (e) -> e.TOR_ENABLED
+      arg    : (a) -> a.tor
+      config : (c) -> c.tor?.enabled
+      dflt   : -> false
+
+  get_tor_proxy : () ->
+    @get_opt
+      env    : (e) -> e.TOR_PROXY
+      arg    : (a) -> a.tor_proxy
+      config : (c) -> c.tor?.proxy
+      dflt   : -> null
+
+  get_tor_hidden_address : () ->
+    @get_opt
+      env    : (e) -> e.TOR_HIDDEN_ADDRESS
+      arg    : (a) -> a.tor_hidden_address
+      config : (c) -> c.tor?.hidden_address
+      dflt   : -> constants.tor.hidden_address
+
   get_proxy_ca_certs : () ->
     @get_opt
       env    : (e) -> e.KEYBASE_PROXY_CA_CERTS

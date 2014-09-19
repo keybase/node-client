@@ -86,6 +86,8 @@ exports.constants = constants =
     expire : "10y"
     master : bits : 4096
     subkey : bits : 4096
+  tor:
+    hidden_address : "fncuwbiisyh6ak3i.onion"
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

@@ -37,20 +37,20 @@ exports.Base = class Base
 
   #-------------------
 
-  set_argv : (a) -> 
+  set_argv : (a) ->
     @argv = a
     return null
 
   #-------------------
 
   @OPTS :
-    p : 
+    p :
       alias : 'passhrase'
       help : 'passphrase used to log into keybase'
-    c : 
+    c :
       alias : 'config'
       help : "a configuration file (#{join '~', FN.config_dir, FN.config_file})"
-    i : 
+    i :
       alias : "interactive"
       action : "storeTrue"
       help : "interactive mode"
@@ -84,10 +84,10 @@ exports.Base = class Base
       help : "preserve the temporary keyring; don't clean it up"
     "homedir" :
       help : "specify a non-standard home directory; look for GPG keychain there"
-    g : 
+    g :
       alias : "gpg"
       help : "specify an alternate gpg command"
-    x : 
+    x :
       alias : 'proxy'
       help : 'specify a proxy server to all HTTPS requests'
     "proxy-ca-certs" :
@@ -100,6 +100,10 @@ exports.Base = class Base
     M :
       alias : "merkle-checks"
       help : "check that users' chains are reflected in sitewide state, one of {none,soft,strict}; soft by default"
+    "tor-proxy":
+      help : "specify a tor SOCKS proxy"
+    "tor-hidden-address":
+      help : "specify the tor hidden address for keybase.io"
 
   #-------------------
 
@@ -112,7 +116,7 @@ exports.Base = class Base
 
   #-------------------
 
-  make_outfile : (cb) -> 
+  make_outfile : (cb) ->
     await Outfile.open { target : @output_filename() }, defer err, file
     cb err, file
 

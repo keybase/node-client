@@ -107,6 +107,7 @@ exports.Client = class Client
       pathname : pathname or [ env().get_api_uri_prefix(), (endpoint + ".json") ].join("/")
       search : search
     }
+
     uri_fields.query = args if method in [ 'GET', 'DELETE' ]
     opts.uri = urlmod.format uri_fields
     if method is 'POST'
