@@ -46,7 +46,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------------------
 
-  constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local, @ran_keypull}) ->
+  constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local, @ran_keypull, @assertions}) ->
     @opts or= {}
     @qring = null
 
@@ -156,10 +156,19 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   parse_assertions : (cb) ->
     err = null
+    ca = null
     try
-      @assertions = assertion.parse(a) if (a = @opts.assert)?
+      ca = assertion.parse(a) if (a = @opts.assert)?
     catch e
       err = new E.ParseAssertionError "Error parsing assertion '#{a}': #{e.message}"
+
+    # If we get assertions back, and we already have assertions from
+    # username lookups, we have to satisfy all of them, so AND them together
+    if @assertions? and ca?
+      @assertions = new assertion.AND @assertions, ca
+    else if ca?
+      @assertions = ca
+
     cb err
 
   #----------

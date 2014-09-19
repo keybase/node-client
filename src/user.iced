@@ -12,9 +12,10 @@ log = require './log'
 {TrackWrapper} = require './trackwrapper'
 {fpeq,unix_time} = require('pgp-utils').util
 {QuarantinedKeyRing,TmpKeyRing,load_key,master_ring} = require './keyring'
-{athrow} = require('iced-utils').util
+{athrow,akatch} = require('iced-utils').util
 IS = constants.import_state
 {PackageJson} = require('./package')
+{assertion} = require 'libkeybase'
 
 ##=======================================================================
 
@@ -26,7 +27,7 @@ filter = (d, v) ->
 
 ##=======================================================================
 
-exports.User = class User 
+exports.User = class User
 
   #--------------
 
@@ -57,7 +58,7 @@ exports.User = class User
 
   #--------------
 
-  to_obj : () -> 
+  to_obj : () ->
     out = {}
     for k in User.FIELDS
       out[k] = @[k]
@@ -70,7 +71,7 @@ exports.User = class User
 
   #--------------
 
-  names : () -> 
+  names : () ->
     ret = [ { type : constants.lookups.username, name : @basics.username } ]
     if (ki64 = @key_id_64())?
       ret.push { type : constants.lookups.key_id_64_to_user, name : ki64 }
@@ -212,7 +213,7 @@ exports.User = class User
     unless err?
       d = {}
       d[key] = query.name
-      req_args = 
+      req_args =
         endpoint : "key/basics"
         args : d
       await req.get req_args, defer err, body
@@ -249,10 +250,10 @@ exports.User = class User
 
     if require_public_key and not remote.public_keys?.primary?
       await athrow new Error("user doesn't have a public key"), esc defer()
-    
+
     changed = true
     force_store = false
-    if local? 
+    if local?
       user = local
       await user.update_with remote, esc defer()
     else if remote?
@@ -260,7 +261,7 @@ exports.User = class User
       await user.load_full_sig_chain esc defer()
       force_store = true
     else
-      err = new E.UserNotFoundError "User #{username} wasn't found"
+      err = new E.NotFoundError "User #{username} wasn't found"
       await athrow err, esc defer()
 
     # This might noop or just warn depending on the user's preferences
@@ -271,7 +272,7 @@ exports.User = class User
 
     log.debug "- #{username}: loaded user"
 
-    # Cache in some cases... 
+    # Cache in some cases...
     User.cache[username] = user if cache? and not err? and user?
     cb err, user
 
@@ -279,7 +280,7 @@ exports.User = class User
 
   @load_from_server : ({username}, cb) ->
     log.debug "+ #{username}: load user from server"
-    args = 
+    args =
       endpoint : "user/lookup"
       args : {username }
     await req.get args, defer err, body
@@ -322,6 +323,29 @@ exports.User = class User
   #--------------
 
   #
+  # @resolve_user_name
+  #
+  # Given a username like reddit://maxtaco or fingerprint://aa99ee or keybase://max,
+  # resolve to a regular keybase username, like max.
+  #
+  @resolve_user_name : ({username}, cb) ->
+    esc = make_esc cb, "resolve_user_name"
+    err = null
+    await akatch (() -> assertion.URI.parse { s : username, strict : false }), esc defer uri
+    unless uri.is_keybase()
+      await req.get { endpoint : "user/lookup", args : uri.to_lookup_query() }, esc defer body
+      if body.them.length is 0
+        err = new E.NotFoundError "No user found for '#{username}'"
+      else if body.them.length > 1
+        err = new E.AmbiguityError "Multiple results returned for '#{username}'; expected only 1"
+      else
+        username = body.them[0].basics.username
+        assertion = uri
+    cb err, username, assertion
+
+  #--------------
+
+  #
   # load_me
   #
   # Loads the me user from some combination of the server and local storage.
@@ -333,7 +357,7 @@ exports.User = class User
   # @option {Bool} opts.install_key whether to install a key if it wasn't found
   # @param {Callback} cb Callback with an `<Error,User>` pair, with error set
   #   on failure, and null on success.
-  # 
+  #
   @load_me : (opts, cb) ->
     esc = make_esc cb, "User::load_me"
     log.debug "+ User::load_me"
@@ -348,7 +372,7 @@ exports.User = class User
 
   # Check that the end of this user's sig chain shows up in the current merkle
   # root (as it should!)
-  check_merkle_tree : (cb) -> 
+  check_merkle_tree : (cb) ->
 
     # Checking the Merkle tree for this user means getting the current
     # root, descending the tree for the user, and then ensuring that the
@@ -416,10 +440,10 @@ exports.User = class User
       ret.remote = (not(secret) or @private_key_bundle()?)
       key = master_ring().make_key_from_user @, secret
       await key.find defer err
-      if not err? 
+      if not err?
         ret.local = true
         @key = key if store
-      else if (err instanceof E.NoLocalKeyError) 
+      else if (err instanceof E.NoLocalKeyError)
         err = null
         ret.local = false
     log.debug "- #{@username()}: check_public_key: ret=#{JSON.stringify ret}; err=#{err}"
@@ -486,8 +510,8 @@ exports.User = class User
 
   gen_remote_proof_gen : ({klass, remote_name_normalized, sig_id, supersede }, cb) ->
     arg = {
-      remote_name_normalized, 
-      sig_id, 
+      remote_name_normalized,
+      sig_id,
       supersede
     }
     await @gen_sig_base { klass, arg }, defer err, ret
@@ -510,7 +534,7 @@ exports.User = class User
   gen_track_proof_gen : ({uid, track_obj, untrack_obj}, cb) ->
     last_link = @sig_chain?.true_last()
     klass = if untrack_obj? then UntrackerProofGen else TrackerProofGen
-    arg = 
+    arg =
       seqno : (if last_link? then (last_link.seqno() + 1) else 1)
       prev : (if last_link? then last_link.id else null)
       uid : uid
@@ -535,7 +559,7 @@ exports.User = class User
 
   #--------------
 
-  remove_key : (cb) -> 
+  remove_key : (cb) ->
     (master_ring().make_key_from_user @, false).remove cb
 
   #--------------
@@ -564,9 +588,9 @@ exports.User = class User
     else if fps.length > 1 then new E.CorruptionError "Import failed: found >1 fingerprints!"
     else if (a = @fingerprint())? and not fpeq(a, (b = fps[0]))
       new E.BadFingerprintError "Bad fingerprint: #{a} != #{b}; server lying?"
-    else 
+    else
       ret.set_fingerprint fps[0]
-      @key = key 
+      @key = key
       null
 
     log.debug "- make_quarantined_keyring -> #{err}"
