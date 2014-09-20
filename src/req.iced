@@ -6,6 +6,7 @@ log = require './log'
 {certs} = require './ca'
 {PackageJson} = require './package'
 proxyca = require './proxyca'
+tor = require './tor'
 
 #=================================================
 
@@ -84,6 +85,8 @@ exports.Client = class Client
       else
         new E.ReqGenericError "Could not access URL: #{uri}"
 
+
+
   #-----------------
 
   req : ({method, endpoint, args, http_status, kb_status, pathname, search, json, jar}, cb) ->
@@ -98,18 +101,24 @@ exports.Client = class Client
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]
-    tls = not env().get_no_tls()
+
+    tha = null
+    if (tor_on = tor.enabled())
+      tha = tor.hidden_address()
+      log.debug "| Using tor hidden address: #{JSON.stringify tha}"
+
+    tls = not(tor) and not(env().get_no_tls())
 
     uri_fields = {
       protocol : "http#{if tls then 's' else ''}"
-      hostname : env().get_host()
-      port : env().get_port()
+      hostname : if tor_on then tha.hostname else env().get_host()
+      port : if tor_on then tha.port else env().get_port()
       pathname : pathname or [ env().get_api_uri_prefix(), (endpoint + ".json") ].join("/")
       search : search
     }
-
     uri_fields.query = args if method in [ 'GET', 'DELETE' ]
     opts.uri = urlmod.format uri_fields
+    console.log opts
     if method is 'POST'
       opts.body = args
 
@@ -126,6 +135,8 @@ exports.Client = class Client
     else if (ca = certs[uri_fields.hostname])?
       log.debug "| Adding a custom CA for host #{uri_fields.hostname} when tls=#{tls}"
       opts.ca = [ ca ]
+
+    opts.agent = tor.agent() if tor_on
 
     await request opts, defer err, res, body
     if err? then err = @error_for_humans {err, uri : opts.uri, uri_fields }

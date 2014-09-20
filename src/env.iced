@@ -254,22 +254,30 @@ class Env
       config : (c) -> c.tor?.enabled
       dflt   : -> false
 
-  get_tor_proxy : () ->
+  get_tor_proxy : (null_ok) ->
     @get_opt
       env    : (e) -> e.TOR_PROXY
       arg    : (a) -> a.tor_proxy
       config : (c) -> c.tor?.proxy
-      dflt   : -> null
+      dflt   : -> if null_ok then null else constants.tor.default_proxy
 
-  get_tor_hidden_address : () ->
-    @get_opt
+  host_split : (s) ->
+    if not s? then s
+    else
+      parts = s.split /:/
+      hostname = parts[0]
+      port = if parts.length > 1 then parts[1] else null
+      {hostname, port}
+
+  get_tor_hidden_address : (null_ok) ->
+    @host_split @get_opt
       env    : (e) -> e.TOR_HIDDEN_ADDRESS
       arg    : (a) -> a.tor_hidden_address
       config : (c) -> c.tor?.hidden_address
-      dflt   : -> constants.tor.hidden_address
+      dflt   : -> if null_ok then null else constants.tor.hidden_address
 
   get_proxy_ca_certs : () ->
-    @get_opt
+    @host_split @get_opt
       env    : (e) -> e.KEYBASE_PROXY_CA_CERTS
       arg    : (a) -> a.proxy_ca_certs
       config : (c) -> c.proxy?.ca_certs

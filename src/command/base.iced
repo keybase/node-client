@@ -104,6 +104,11 @@ exports.Base = class Base
       help : "specify a tor SOCKS proxy"
     "tor-hidden-address":
       help : "specify the tor hidden address for keybase.io"
+    T :
+      alias : 'tor'
+      action : "storeTrue"
+      help : "enable Tor proxying with default settings; requires tor Socks5 proxy on port 9050"
+
 
   #-------------------
 

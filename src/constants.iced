@@ -88,6 +88,7 @@ exports.constants = constants =
     subkey : bits : 4096
   tor:
     hidden_address : "fncuwbiisyh6ak3i.onion"
+    default_proxy : "localhost:9050"
 
 constants.server.api_uri_prefix = "/_/api/" + constants.api_version
 

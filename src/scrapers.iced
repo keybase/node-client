@@ -10,6 +10,8 @@ proxyca = require './proxyca'
 root_certs = require '../json/node_root_certs.json'
 semver = require 'semver'
 {Proof} = require('libkeybase').assertion
+tor = require './tor'
+
 
 #==============================================================
 
@@ -18,6 +20,8 @@ my_request = (opts, cb) ->
   if semver.lt(process.version, "0.10.26")
     _certs = (v for k,v of root_certs) if not _certs?
     opts.ca = _certs unless opts.ca?
+  opts.agent = tor.agent() if tor.enabled()
+
   request opts, cb
 
 #==============================================================

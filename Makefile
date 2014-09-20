@@ -87,6 +87,7 @@ $(BUILD_STAMP): \
 	lib/session.js \
 	lib/setup.js \
 	lib/sigchain.js \
+	lib/tor.js \
 	lib/trackwrapper.js \
 	lib/tracksubsub.js \
 	lib/user.js \
