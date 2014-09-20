@@ -1,3 +1,9 @@
+## 1.1.1
+
+Features:
+
+  - Say if it is tor-safe or not. DNS and HTTP are not...
+
 ## 1.1.0 (2014-08-28)
 
 Features:

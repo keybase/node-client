@@ -74,6 +74,7 @@ exports.E = E = ie.make_errors
   KARMA : "insufficient karma"
   BAD_MERKLE_LEAF : "bad merkle leaf found"
   AMBIGUITY : "Multiple results when we wanted 1"
+  TOR_SECURITY : "security assumptions changed over Tor"
 
 #================================================
 

@@ -55,7 +55,11 @@ class Base
   #-------------------
 
   validate : (arg, cb) ->
-    await @_scraper.validate arg, defer err, rc
+    if tor.enabled() and not @_scraper.is_tor_secure(arg)
+      err = new E.TorSecurityError "check isn't reliable over Tor"
+      rc = proofs.constants.v_codes.TOR_SKIPPED
+    else
+      await @_scraper.validate arg, defer err, rc
     cb err, rc
 
 #==============================================================

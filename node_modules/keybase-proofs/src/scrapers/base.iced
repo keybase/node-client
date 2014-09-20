@@ -21,6 +21,12 @@ class BaseScraper
 
   #-------------------------------------------------------------
 
+  # Can we trust it over Tor? HTTP and DNS aren't trustworthy over
+  # Tor, but HTTPS is.
+  is_tor_secure : (args) -> true
+
+  #-------------------------------------------------------------
+
   logl : (level, msg) ->
     if (k = @libs.log)? then k[level](msg)
 

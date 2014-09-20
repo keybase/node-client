@@ -49,6 +49,7 @@ exports.constants = constants =
     FAILED_PARSE:      106
     DNS_ERROR :        107
     AUTH_FAILED:       108
+    TOR_SKIPPED:       109
     HTTP_500:          150
     TIMEOUT:           160
 

@@ -44,6 +44,10 @@
       return new Error("unimplemented");
     };
 
+    BaseScraper.prototype.is_tor_secure = function(args) {
+      return true;
+    };
+
     BaseScraper.prototype.logl = function(level, msg) {
       var k;
       if ((k = this.libs.log) != null) {
@@ -77,7 +81,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/proofs/src/scrapers/base.iced",
+                filename: "/home/max/src/keybase/proofs/src/scrapers/base.iced",
                 funcname: "BaseScraper.validate"
               });
               _this.check_status(args, __iced_deferrals.defer({
@@ -87,7 +91,7 @@
                     return rc = arguments[1];
                   };
                 })(),
-                lineno: 42
+                lineno: 48
               }));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -140,7 +144,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/proofs/src/scrapers/base.iced",
+            filename: "/home/max/src/keybase/proofs/src/scrapers/base.iced",
             funcname: "BaseScraper._get_url_body"
           });
           _this.libs.request(opts, __iced_deferrals.defer({
@@ -151,7 +155,7 @@
                 return body = arguments[2];
               };
             })(),
-            lineno: 71
+            lineno: 77
           }));
           __iced_deferrals._fulfill();
         });

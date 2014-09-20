@@ -25,6 +25,11 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
       new Error "Unknown protocol given: #{args.protocol}"
     else
       null
+
+  # ---------------------------------------------------------------------------
+
+  is_tor_secure : (args) -> args.protocol is 'https:'
+
   # ---------------------------------------------------------------------------
 
   make_url : ({protocol, hostname, pathname}) ->

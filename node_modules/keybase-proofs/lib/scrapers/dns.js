@@ -50,6 +50,10 @@
       return (_ref = urlmod.parse(u)) != null ? _ref.hostname : void 0;
     };
 
+    DnsScraper.prototype.is_tor_secure = function() {
+      return false;
+    };
+
     DnsScraper.prototype.hunt2 = function(_arg, cb) {
       var domain, err, out, url;
       domain = _arg.domain;
@@ -133,7 +137,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/proofs/src/scrapers/dns.iced",
+                      filename: "/home/max/src/keybase/proofs/src/scrapers/dns.iced",
                       funcname: "DnsScraper.check_status"
                     });
                     _this._check_status({
@@ -146,7 +150,7 @@
                           return rc = arguments[1];
                         };
                       })(),
-                      lineno: 71
+                      lineno: 72
                     }));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -183,7 +187,7 @@ _break()
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/proofs/src/scrapers/dns.iced",
+            filename: "/home/max/src/keybase/proofs/src/scrapers/dns.iced",
             funcname: "DnsScraper._check_status"
           });
           dns.resolveTxt(domain, __iced_deferrals.defer({
@@ -193,7 +197,7 @@ _break()
                 return records = arguments[1];
               };
             })(),
-            lineno: 80
+            lineno: 81
           }));
           __iced_deferrals._fulfill();
         });

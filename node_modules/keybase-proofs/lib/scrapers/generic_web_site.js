@@ -41,6 +41,10 @@
       }
     };
 
+    GenericWebSiteScraper.prototype.is_tor_secure = function(args) {
+      return args.protocol === 'https:';
+    };
+
     GenericWebSiteScraper.prototype.make_url = function(_arg) {
       var hostname, pathname, protocol;
       protocol = _arg.protocol, hostname = _arg.hostname, pathname = _arg.pathname;
@@ -60,7 +64,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
+            filename: "/home/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
             funcname: "GenericWebSiteScraper._check_url"
           });
           _this._get_url_body({
@@ -73,7 +77,7 @@
                 return raw = arguments[2];
               };
             })(),
-            lineno: 40
+            lineno: 45
           }));
           __iced_deferrals._fulfill();
         });
@@ -132,7 +136,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
+                      filename: "/home/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
                       funcname: "GenericWebSiteScraper.hunt2"
                     });
                     _this._check_url({
@@ -145,7 +149,7 @@
                           return rc = arguments[1];
                         };
                       })(),
-                      lineno: 58
+                      lineno: 63
                     }));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -215,7 +219,7 @@ _break()
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
+            filename: "/home/max/src/keybase/proofs/src/scrapers/generic_web_site.iced",
             funcname: "GenericWebSiteScraper.check_status"
           });
           _this._check_url({
@@ -228,7 +232,7 @@ _break()
                 return rc = arguments[1];
               };
             })(),
-            lineno: 85
+            lineno: 90
           }));
           __iced_deferrals._fulfill();
         });
