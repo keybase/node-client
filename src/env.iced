@@ -255,19 +255,20 @@ class Env
       dflt   : -> false
 
   get_tor_proxy : (null_ok) ->
-    @get_opt
+    @host_split @get_opt
       env    : (e) -> e.TOR_PROXY
       arg    : (a) -> a.tor_proxy
       config : (c) -> c.tor?.proxy
       dflt   : -> if null_ok then null else constants.tor.default_proxy
 
   host_split : (s) ->
-    if not s? then s
+    ret = if not s? then s
     else
       parts = s.split /:/
       hostname = parts[0]
       port = if parts.length > 1 then parts[1] else null
       {hostname, port}
+    ret
 
   get_tor_hidden_address : (null_ok) ->
     @host_split @get_opt
@@ -277,7 +278,7 @@ class Env
       dflt   : -> if null_ok then null else constants.tor.hidden_address
 
   get_proxy_ca_certs : () ->
-    @host_split @get_opt
+    @get_opt
       env    : (e) -> e.KEYBASE_PROXY_CA_CERTS
       arg    : (a) -> a.proxy_ca_certs
       config : (c) -> c.proxy?.ca_certs

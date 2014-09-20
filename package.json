@@ -48,7 +48,9 @@
     "read": "keybase/read",
     "request": "2.30.0",
     "semver": "2.2.1",
+    "socks5-client": "^0.3.6",
     "socks5-http-client": "^0.1.6",
+    "socks5-https-client": "^0.2.2",
     "tablify": "0.1.5",
     "timeago": "0.1.0",
     "triplesec": ">=3.0.16"
@@ -86,9 +88,12 @@
     "pgp-utils",
     "progress",
     "purepack",
-    "semver",
     "read",
     "request",
+    "semver",
+    "socks5-client",
+    "socks5-http-client",
+    "socks5-https-client",
     "tablify",
     "timeago",
     "triplesec"

@@ -20,7 +20,7 @@ my_request = (opts, cb) ->
   if semver.lt(process.version, "0.10.26")
     _certs = (v for k,v of root_certs) if not _certs?
     opts.ca = _certs unless opts.ca?
-  opts.agent = tor.agent() if tor.enabled()
+  tor.agent(opts)
 
   request opts, cb
 
