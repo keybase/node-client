@@ -37,7 +37,7 @@
     };
 
     CoinbaseScraper.prototype.get_tor_error = function(args) {
-      return [new Error("Coinbase runs over Cloudflare, with isn't yet compatible with tor"), v_codes.TOR_INCOMPATIBLE];
+      return [new Error("Can't (yet) check Coinbase over Tor due to CloudFlare"), v_codes.TOR_INCOMPATIBLE];
     };
 
     CoinbaseScraper.prototype.hunt2 = function(_arg, cb) {

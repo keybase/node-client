@@ -24,7 +24,7 @@ exports.CoinbaseScraper = class CoinbaseScraper extends BaseScraper
   # ---------------------------------------------------------------------------
 
   get_tor_error : (args) -> [ 
-    new Error("Coinbase runs over Cloudflare, with isn't yet compatible with tor"),
+    new Error("Can't (yet) check Coinbase over Tor due to CloudFlare")
     v_codes.TOR_INCOMPATIBLE 
   ]
 

@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJUHhaWAAoJEJgKPw0B/gTf9HkH/j5mFNoZfX4Yf3ixF/1VB3/z
-XSVLZA/ac5XQPjlRjsH0lQM/bEBbCX657YVwaxWwMToYAnLHbUCj8bY+34P/wrF7
-ec5VIzMx7PSpxuYgeeWqAfRwJ7SrqhAW9G94EfLdMW0o19+Ivt/YLowPh+s3FGcI
-G6QBXv96decbncssTBFszNTO/nJkexpd6R5a4nZHM/bcVqLx5wMfJaP985354TX3
-ctGxRpzVgDQXf8ty+Ch19ltxuBL5zlLE0irK0PUkZSd0iqM5UOI1hCeiV6bVKktu
-93r5wEFwa6+1qTDgQCcOT9kaI+TwV/gb+hbj21W74N9UEanbLUIvY/tFaQnOsDI=
-=p1pm
+iQEcBAABAgAGBQJUH1lNAAoJEJgKPw0B/gTf3GgH/20scBLcf9g1nCF68LRDbj1c
+GfTxsHSXj+qQMW2KubmCzU6fVDct6pecBZJu0xx/uFR6VT98kvHhrNo7MuiSVR3Z
+KjvZOEtgBT4r4hxu11mSKXkScp59qrPmHnKRMJBatJz5mwjD+EDHSCGV6UWuELuj
+t/R4LujzgJHmsAY6mSmLcKm2N7/C0VhsbMDNYNLer6TTD6xM2iU+QRFeVEjJkAHn
+y7JtZ6fAKmC2a9x1ajhg08b3vJVuCdHkC116hRm1ReUSDpz8jvwY8NWgTRYZY9Cq
+KuZ1PzjSKffjPMLz/3iIvF02BjXki6jvs9sqHr9JLDHU+4u/ZjXtVwBnRz2nPBg=
+=6xOk
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,7 +24,7 @@ ctGxRpzVgDQXf8ty+Ch19ltxuBL5zlLE0irK0PUkZSd0iqM5UOI1hCeiV6bVKktu
 size   exec  file                         contents                                                        
              ./                                                                                           
 109            .gitignore                 ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-5065           CHANGELOG.md               023db9bb32ecd97d59526d19d1ac6492ce5dd61a545f1aef665f5ca438750b4b
+5130           CHANGELOG.md               a880e61614231d288e4cbf250124010bf31c142f3e55c44f9e0f4f828212805f
 1483           LICENSE                    333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d
 1249           Makefile                   5d1a8ae00abc749629ff0218a4a1e760024c33974c28878372c68af112a9708d
 43             README.md                  b2db580fc880756ae739bb148570f6afb1c250e5c0d2c5fa56ce41491753ca6c
@@ -40,7 +40,7 @@ size   exec  file                         contents
 2342             revoke.js                3145022e644b382ca4170d80c2d6af4f75d201e4ead5fa65374c8c4f4700dc5e
                  scrapers/                                                                                
 6079               base.js                b9fc0c8fea9c428d35f151fce0bee2e088442375b4e32a9e0f0176646276a764
-4206               coinbase.js            8ed1918e10ee9b6e9e78e4f8e97774d1e8ed0bdd244797ab26386c819ac2f888
+4194               coinbase.js            c925fe5df673f4d8cdf399952e68ca61a552fdcedaf86ea2ed59dad96601aeb6
 7737               dns.js                 0029241ad4ebb6031a7a2fb2e80e353494e106ce56dd209256e02621aeeec1e3
 9436               generic_web_site.js    c4500162d9069134c31b2f8b1a559c0acc7dd1d3f98b1578a4f6dd54683e1189
 9897               github.js              89890ad3cb4c96795774c8a24753a12a614e0dd051882d6614c1401e08866bb1
@@ -51,7 +51,7 @@ size   exec  file                         contents
 1507             track.js                 3b1552409b374f87a4c498a7f4cd3da7fad88c31a904cfbb033db05c78a61648
 1452             util.js                  9fa6d9d731f6ec99349e5875cbe4f0102c6a1b2590f16daf48168c99d95ba4ac
 17840            web_service.js           a81f9b08a04d6595722c4c71b2c11cc54ffdf54f31d260c5d09f4aff95917292
-719            package.json               30ebfa49bd50cd68725efd9a8fe0e08e518f53286c1c7b066b1d2e3b88ef146d
+719            package.json               f472160b140bd5e3d2f87ea6f218fe98198f3f5b69290c5049c6421040ca8ffa
                src/                                                                                       
 1793             alloc.iced               58ef4a9120d125f379b852c1ae094ddfe03a005f2df3630fdd00c9a246750e7e
 494              announcement.iced        2dba8539acbc9de3f92340b7700aa89077108ee4e816347e4e52cd294185c982
@@ -64,7 +64,7 @@ size   exec  file                         contents
 538              revoke.iced              023a15aafd455e3da039524780865eae8a8ff424e173f0d300b5d12b656820da
                  scrapers/                                                                                
 3669               base.iced              5ac2218994a992cdd57b09280e4a27be103aa5e05855b57692bdf94d0c2847a7
-2421               coinbase.iced          587f54721f02b002acdb9f729160e88f7ff2beb6cb66d4d4a6a87f1ec86e5969
+2408               coinbase.iced          234fc3c5ee46c668e9480f6c2859a8f0bf360e1f0f0dc75efbe227fc85d94dd6
 3168               dns.iced               498966488d1a5cb52be620e8ab63839e9f62116002d8c701aa37abf555ac8b81
 3298               generic_web_site.iced  0e4a469ee057fd9e301d67559f9e7b5bff961e85d8cb32d30697ceb8b393c0ed
 3305               github.iced            f10410ccca3bb3fc5045024dada97a4974984ee433476bea30c1ab47f870da90

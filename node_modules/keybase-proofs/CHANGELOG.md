@@ -1,8 +1,14 @@
+## 1.1.3 (2014-09-21)
+
+Nits:
+
+  - Error message for cloudflare
+
 ## 1.1.2 (2014-09-20)
 
 Bugfixes:
 
-  - Make a bette coinbase warning...
+  - Make a better coinbase warning...
 
 ## 1.1.1 (2014-09-20)
 
