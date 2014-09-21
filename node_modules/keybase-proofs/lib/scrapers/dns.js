@@ -50,8 +50,8 @@
       return (_ref = urlmod.parse(u)) != null ? _ref.hostname : void 0;
     };
 
-    DnsScraper.prototype.is_tor_secure = function() {
-      return false;
+    DnsScraper.prototype.get_tor_error = function() {
+      return [new Error("DNS isn't reliable over tor"), v_codes.TOR_SKIPPED];
     };
 
     DnsScraper.prototype.hunt2 = function(_arg, cb) {

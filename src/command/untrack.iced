@@ -60,7 +60,7 @@ exports.Command = class Command extends Base
       go = false
     else
       args = 
-        prompt : "Remove #{@argv.them[0]}'s public key from your local keyring? "
+        prompt : "Remove #{@their_name}'s public key from your local keyring? "
         defval : true 
       await prompt_yn args, esc defer go
     if go
@@ -72,8 +72,13 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "Untrack::run"
     log.debug "+ run"
+
     await User.load_me {secret : true }, esc defer me
-    await User.load { username : @argv.them[0] }, esc defer them
+
+    # Resolve the username if it's in social-form
+    await User.resolve_user_name { username : @argv.them[0] }, esc defer @their_name
+    await User.load { username : @their_name }, esc defer them
+
     await TrackWrapper.load { tracker : me, trackee : them }, esc defer trackw
     {remote,local} = trackw.is_tracking()
 

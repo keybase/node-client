@@ -16,6 +16,7 @@ log = require './log'
 IS = constants.import_state
 {PackageJson} = require('./package')
 {assertion} = require 'libkeybase'
+tor = require './tor'
 
 ##=======================================================================
 
@@ -223,17 +224,17 @@ exports.User = class User
 
   #--------------
 
-  @load : ({username,ki64,require_public_key, cache, self}, cb) ->
+  @load : ({username,ki64,require_public_key, cache, self, secret}, cb) ->
     err = null
     if username? and (ret = User.cache[username])?
       log.debug "| hit user cache for #{username}"
     else
-      await User._load2 { username, ki64, require_public_key, cache, self}, defer err, ret
+      await User._load2 { username, ki64, require_public_key, cache, self, secret}, defer err, ret
     cb err, ret
 
   #--------------
 
-  @_load2 : ({username,ki64,require_public_key, cache, self}, cb) ->
+  @_load2 : ({username,ki64,require_public_key, cache, self, secret}, cb) ->
     esc = make_esc cb, "User::load"
     k = if username? then username else "Key: #{ki64}"
     log.debug "+ #{username}: load user"
@@ -243,11 +244,14 @@ exports.User = class User
     # If we need to, get the new username
     if not username? then username = local?.basics?.username
 
-    if self?
-      log.debug "| Checking session since we're loading User as self"
+    if self and secret and not tor.paranoid()
+      log.debug "| Checking session since we're loading User as self (and need secret key)"
       await session.load_and_check esc defer()
 
-    await User.load_from_server {username}, esc defer remote
+    if (self and tor.paranoid())
+      log.debug "| Skipping remote server check for ME in tor paranoid mode"
+    else
+      await User.load_from_server {self, secret, username}, esc defer remote
 
     if require_public_key and not remote.public_keys?.primary?
       await athrow new Error("user doesn't have a public key"), esc defer()
@@ -256,7 +260,8 @@ exports.User = class User
     force_store = false
     if local?
       user = local
-      await user.update_with remote, esc defer()
+      if remote?
+        await user.update_with remote, esc defer()
     else if remote?
       user = remote
       await user.load_full_sig_chain esc defer()
@@ -265,21 +270,26 @@ exports.User = class User
       err = new E.NotFoundError "User #{username} wasn't found"
       await athrow err, esc defer()
 
-    # This might noop or just warn depending on the user's preferences
-    await user.check_merkle_tree esc defer()
+    if (self and tor.paranoid())
+      log.debug "| Skipping merkle-tree check for ME in tor paranoid mode"
+    else
 
-    # Finally we can store...
-    await user.store force_store, esc defer()
+      # This might noop or just warn depending on the user's preferences
+      await user.check_merkle_tree esc defer()
+
+      # Finally we can store... If we actually fetched anything, which
+      # didn't happen in the case of (self and tor.paranoid())
+      await user.store force_store, esc defer()
 
     log.debug "- #{username}: loaded user"
 
     # Cache in some cases...
-    User.cache[username] = user if cache? and not err? and user?
+    User.cache[username] = user if cache and not err? and user?
     cb err, user
 
   #--------------
 
-  @load_from_server : ({username}, cb) ->
+  @load_from_server : ({self, secret, username}, cb) ->
     log.debug "+ #{username}: load user from server"
     if (ret = User.server_cache[username])?
       log.debug "| hit server cache"
@@ -287,6 +297,7 @@ exports.User = class User
       args =
         endpoint : "user/lookup"
         args : {username }
+        need_cookie : (self and secret)
       await req.get args, defer err, body
       ret = null
       unless err?
@@ -376,7 +387,7 @@ exports.User = class User
     log.debug "+ User::load_me"
     unless (username = env().get_username())?
       await athrow (new E.NoUsernameError "no username for current user; try `keybase login`"), esc defer()
-    await User.load { username, self : true }, esc defer me
+    await User.load { username, self : true, secret : opts.secret }, esc defer me
     await me._load_me_2 opts, esc defer()
     log.debug "- User::load_me"
     cb null, me

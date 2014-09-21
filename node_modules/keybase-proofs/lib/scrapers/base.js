@@ -44,8 +44,8 @@
       return new Error("unimplemented");
     };
 
-    BaseScraper.prototype.is_tor_secure = function(args) {
-      return true;
+    BaseScraper.prototype.get_tor_error = function(args) {
+      return [null, v_codes.OK];
     };
 
     BaseScraper.prototype.logl = function(level, msg) {

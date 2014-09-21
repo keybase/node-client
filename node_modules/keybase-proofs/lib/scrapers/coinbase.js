@@ -36,6 +36,10 @@
       return "https://coinbase.com/" + username + "/public-key";
     };
 
+    CoinbaseScraper.prototype.get_tor_error = function(args) {
+      return [new Error("Coinbase runs over Cloudflare, with isn't yet compatible with tor"), v_codes.TOR_INCOMPATIBLE];
+    };
+
     CoinbaseScraper.prototype.hunt2 = function(_arg, cb) {
       var err, name, out, proof_text_check, rc, url, username;
       username = _arg.username, proof_text_check = _arg.proof_text_check, name = _arg.name;
@@ -71,7 +75,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/proofs/src/scrapers/coinbase.iced",
+            filename: "/home/max/src/keybase/proofs/src/scrapers/coinbase.iced",
             funcname: "CoinbaseScraper.check_status"
           });
           _this._get_url_body({
@@ -84,7 +88,7 @@
                 return html = arguments[2];
               };
             })(),
-            lineno: 49
+            lineno: 56
           }));
           __iced_deferrals._fulfill();
         });

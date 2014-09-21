@@ -41,8 +41,12 @@
       }
     };
 
-    GenericWebSiteScraper.prototype.is_tor_secure = function(args) {
-      return args.protocol === 'https:';
+    GenericWebSiteScraper.prototype.get_tor_error = function(args) {
+      if (args.protocol === 'http:') {
+        return [new Error("HTTP (without TLS) isn't reliable over tor"), v_codes.TOR_SKIPPED];
+      } else {
+        return [null, v_codes.OK];
+      }
     };
 
     GenericWebSiteScraper.prototype.make_url = function(_arg) {
@@ -77,7 +81,7 @@
                 return raw = arguments[2];
               };
             })(),
-            lineno: 45
+            lineno: 49
           }));
           __iced_deferrals._fulfill();
         });
@@ -149,7 +153,7 @@
                           return rc = arguments[1];
                         };
                       })(),
-                      lineno: 63
+                      lineno: 67
                     }));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -232,7 +236,7 @@ _break()
                 return rc = arguments[1];
               };
             })(),
-            lineno: 90
+            lineno: 94
           }));
           __iced_deferrals._fulfill();
         });

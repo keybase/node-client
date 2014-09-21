@@ -170,7 +170,7 @@ exports.Session = class Session
     log.debug "+ session::check"
     if req.get_session() 
       log.debug "| calling to sesscheck"
-      await req.get { endpoint : "sesscheck" }, defer err, body
+      await req.get { endpoint : "sesscheck", need_cookie : true }, defer err, body
       if not err? 
         @_logged_in = true
         @uid = body.logged_in_uid

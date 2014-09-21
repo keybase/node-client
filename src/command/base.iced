@@ -104,6 +104,9 @@ exports.Base = class Base
       help : "specify a tor SOCKS proxy"
     "tor-hidden-address":
       help : "specify the tor hidden address for keybase.io"
+    "tor-paranoid" :
+      help : "Don't load our user from the server; might break certain features."
+      action : "storeTrue"
     T :
       alias : 'tor'
       action : "storeTrue"

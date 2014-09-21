@@ -87,11 +87,21 @@ exports.Client = class Client
 
   #-----------------
 
-  req : ({method, endpoint, args, http_status, kb_status, pathname, search, json, jar}, cb) ->
+  req : ({method, endpoint, args, http_status, kb_status, pathname, search, json, jar, need_cookie}, cb) ->
     method or= 'GET'
-    jar = true unless jar?
+
+    tha = null
+    if (tor_on = tor.enabled())
+      tha = tor.hidden_address()
+      log.debug "| Using tor hidden address: #{JSON.stringify tha}"
+
+    if not(jar?) and not(tor.paranoid()) and (need_cookie or not tor_on)
+      jar = true
+
     json = true unless json?
-    opts = { method, json, jar }
+    opts = { method, json }
+    opts.jar = jar if jar?
+
     opts.headers = @headers or {}
     pjs = new PackageJson
     opts.headers["X-Keybase-Client"] = pjs.identify_as()
@@ -99,11 +109,6 @@ exports.Client = class Client
 
     kb_status or= [ "OK" ]
     http_status or= [ 200 ]
-
-    tha = null
-    if (tor_on = tor.enabled())
-      tha = tor.hidden_address()
-      log.debug "| Using tor hidden address: #{JSON.stringify tha}"
 
     tls = not(tor_on) and not(env().get_no_tls())
 
@@ -119,7 +124,7 @@ exports.Client = class Client
     if method is 'POST'
       opts.body = args
 
-    log.debug "+ request to #{endpoint} (#{opts.uri})"
+    log.debug "+ request to #{endpoint} (#{opts.uri}) (cookie=#{!!jar})"
 
     if (prx = env().get_proxy())?
       log.debug "| using proxy #{prx}"
@@ -135,6 +140,10 @@ exports.Client = class Client
 
     tor.agent(opts)
 
+    unless jar?
+      delete opts.headers['X-Keybase-Session']
+      delete opts.headers['X-CSRF-Token']
+
     await request opts, defer err, res, body
     if err? then err = @error_for_humans {err, uri : opts.uri, uri_fields }
     else if not (res.statusCode in http_status)
@@ -147,6 +156,7 @@ exports.Client = class Client
     else if json and not(body?.status?.name in kb_status)
       err = new E.KeybaseError "#{body.status.desc} (error ##{body.status.code})"
       err.fields = body.status?.fields or {}
+      opts.agent = null
       log.debug "Full request: #{JSON.stringify opts}"
       log.debug "Full reply: #{JSON.stringify body}"
     else

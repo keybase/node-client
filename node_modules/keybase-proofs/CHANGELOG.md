@@ -1,4 +1,10 @@
-## 1.1.1
+## 1.1.2 (2014-09-20)
+
+Bugfixes:
+
+  - Make a bette coinbase warning...
+
+## 1.1.1 (2014-09-20)
 
 Features:
 

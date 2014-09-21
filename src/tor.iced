@@ -8,7 +8,8 @@ log = require './log'
 
 hidden_address = (null_ok) -> env().get_tor_hidden_address(null_ok)
 proxy = (null_ok) -> env().get_tor_proxy(null_ok)
-enabled = () -> env().get_tor()? or proxy(true)? or hidden_address(true)?
+enabled = () -> env().get_tor()? or proxy(true)? or hidden_address(true)? or paranoid()
+paranoid = () -> env().get_tor_paranoid()
 
 #-----------------
 
@@ -26,4 +27,4 @@ agent = (opts) ->
 
 #-----------------
 
-module.exports = { hidden_address, proxy, enabled, agent }
+module.exports = { hidden_address, proxy, enabled, agent, paranoid }

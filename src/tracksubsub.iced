@@ -20,6 +20,7 @@ util = require 'util'
 {assertion} = require 'libkeybase'
 {keypull} = require './keypull'
 colors = require './colors'
+tor = require './tor'
 
 ##=======================================================================
 
@@ -191,7 +192,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   keypull : (cb) ->
     err = null
-    if not(@ran_keypull) and not(@skip_keypull)
+    if not(@ran_keypull) and not(@skip_keypull) and not tor.enabled()
       await keypull { need_secret : false, stdin_blocked : @is_batch() }, defer err
       @ran_keypull = true
     cb err
@@ -279,6 +280,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else
       if (approve is constants.skip.REMOTE)
         do_remote = false
+      else if tor.paranoid()
+        log.info "Can't write tracking statement to server in tor-paranoid mode"
       else
         await @prompt_track n_proofs, esc defer do_remote
         if do_remote

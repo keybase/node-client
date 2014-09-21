@@ -26,7 +26,7 @@ exports.DnsScraper = class DnsScraper extends BaseScraper
 
   make_url : ({domain}) -> "dns://#{domain.toLowerCase()}"
   url_to_domain : (u) -> urlmod.parse(u)?.hostname
-  is_tor_secure : () -> false
+  get_tor_error : () -> [ new Error("DNS isn't reliable over tor"), v_codes.TOR_SKIPPED ]
 
   # ---------------------------------------------------------------------------
 

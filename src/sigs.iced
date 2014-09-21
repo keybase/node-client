@@ -94,7 +94,7 @@ class BaseSigGen
     log.debug "| writing to #{endpoint}"
     log.debug "| with args #{JSON.stringify args}"
 
-    await req.post { endpoint, args }, defer err, body
+    await req.post { need_cookie : true, endpoint, args }, defer err, body
 
     unless err?
       { @proof_text, @proof_id, @sig_id, @proof_metadata } = body

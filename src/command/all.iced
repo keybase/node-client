@@ -14,6 +14,7 @@ gpgw = require 'gpg-wrapper'
 keyring = require '../keyring'
 {platform_info,version_info} = require '../version'
 proxyca = require '../proxyca'
+tor = require '../tor'
 
 ##=======================================================================
 
@@ -241,6 +242,14 @@ class Main
 
   #----------------------------------
 
+  init_tor : (cb) ->
+    if tor.enabled()
+      px = tor.proxy()
+      log.warn "In tor mode: full-paranoia=#{tor.paranoid()}; proxy=#{px.hostname}:#{px.port}"
+    cb null
+
+  #----------------------------------
+
   init_proxy_cas : (cb) ->
     await proxyca.init defer err
     cb err
@@ -256,6 +265,7 @@ class Main
     @config_logger()
     await @load_config esc defer()
     env().set_config @config
+    await @init_tor esc defer()
     @init_keyring()
     await @init_gpg esc defer()
     await @init_proxy_cas esc defer()

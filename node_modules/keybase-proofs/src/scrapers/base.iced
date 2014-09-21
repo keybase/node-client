@@ -23,7 +23,7 @@ class BaseScraper
 
   # Can we trust it over Tor? HTTP and DNS aren't trustworthy over
   # Tor, but HTTPS is.
-  is_tor_secure : (args) -> true
+  get_tor_error : (args) -> [ null, v_codes.OK ]
 
   #-------------------------------------------------------------
 

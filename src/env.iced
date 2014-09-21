@@ -254,6 +254,13 @@ class Env
       config : (c) -> c.tor?.enabled
       dflt   : -> false
 
+  get_tor_paranoid : () ->
+    @get_opt
+      env    : (e) -> e.TOR_PARANOID
+      arg    : (a) -> a.tor_paranoid
+      config : (c) -> c.tor?.paranoid
+      dflt   : -> false
+
   get_tor_proxy : (null_ok) ->
     @host_split @get_opt
       env    : (e) -> e.TOR_PROXY

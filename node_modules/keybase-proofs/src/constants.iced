@@ -49,7 +49,6 @@ exports.constants = constants =
     FAILED_PARSE:      106
     DNS_ERROR :        107
     AUTH_FAILED:       108
-    TOR_SKIPPED:       109
     HTTP_500:          150
     TIMEOUT:           160
 
@@ -64,6 +63,8 @@ exports.constants = constants =
     CONTENT_MISSING:   207
     TITLE_NOT_FOUND:   208
     SERVICE_ERROR:     209
+    TOR_SKIPPED:       210
+    TOR_INCOMPATIBLE:  211
     HTTP_300:          230
     HTTP_400:          240
     HTTP_OTHER:        260

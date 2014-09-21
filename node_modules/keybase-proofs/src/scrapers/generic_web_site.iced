@@ -28,7 +28,11 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
 
   # ---------------------------------------------------------------------------
 
-  is_tor_secure : (args) -> args.protocol is 'https:'
+  get_tor_error : (args) -> 
+    if (args.protocol is 'http:')
+      [new Error("HTTP (without TLS) isn't reliable over tor"), v_codes.TOR_SKIPPED ]
+    else
+      [ null, v_codes.OK ]
 
   # ---------------------------------------------------------------------------
 
