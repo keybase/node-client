@@ -75,6 +75,7 @@ exports.E = E = ie.make_errors
   BAD_MERKLE_LEAF : "bad merkle leaf found"
   AMBIGUITY : "Multiple results when we wanted 1"
   TOR_SECURITY : "security assumptions changed over Tor"
+  TOR_STRICT : "Failure of basic site functionality with strict mode"
 
 #================================================
 

@@ -244,11 +244,15 @@ class Main
   #----------------------------------
 
   init_tor : (cb) ->
+    err = null
     if tor.enabled()
       px = tor.proxy()
-      log.warn "In tor mode: full-paranoia=#{tor.paranoid()}; proxy=#{px.hostname}:#{px.port}"
-      log.warn "tor support is in #{colors.bold('alpha')}; please be careful"
-    cb null
+      if @cmd.needs_cookies() and tor.strict()
+        err = new E.TorStrictError "Cannot run this command in Tor-strict mode"
+      else
+        log.warn "In tor mode: strict=#{tor.strict()}; proxy=#{px.hostname}:#{px.port}"
+        log.warn "tor support is in #{colors.bold('alpha')}; please be careful and report any issues"
+    cb err
 
   #----------------------------------
 

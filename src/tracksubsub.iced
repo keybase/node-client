@@ -280,8 +280,8 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else
       if (approve is constants.skip.REMOTE)
         do_remote = false
-      else if tor.paranoid()
-        log.info "Can't write tracking statement to server in tor-paranoid mode"
+      else if tor.strict()
+        log.warn "Can't write tracking statement to server in Tor-strict mode"
       else
         await @prompt_track n_proofs, esc defer do_remote
         if do_remote

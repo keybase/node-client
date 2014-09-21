@@ -44,8 +44,9 @@ exports.Client = class Client
   #-----------------
 
   set_session : (s) ->
-    @add_headers { "X-Keybase-Session" : s }
-    @_session = s
+    unless tor.strict()
+      @add_headers { "X-Keybase-Session" : s }
+      @_session = s
 
   #-----------------
 
@@ -62,8 +63,9 @@ exports.Client = class Client
   #-----------------
 
   set_csrf : (c) ->
-    @add_headers { "X-CSRF-Token" : c }
-    @_csrf = c
+    unless tor.strict()
+      @add_headers { "X-CSRF-Token" : c }
+      @_csrf = c
 
   #-----------------
 
@@ -103,7 +105,7 @@ exports.Client = class Client
       tha = tor.hidden_address()
       log.debug "| Using tor hidden address: #{JSON.stringify tha}"
 
-    if not(jar?) and not(tor.paranoid()) and (need_cookie or not tor_on)
+    if not(jar?) and not(tor.strict()) and (need_cookie or not tor_on)
       jar = true
 
     json = true unless json?
@@ -147,10 +149,6 @@ exports.Client = class Client
       opts.ca = [ ca ]
 
     tor.agent(opts)
-
-    unless jar?
-      delete opts.headers['X-Keybase-Session']
-      delete opts.headers['X-CSRF-Token']
 
     await request opts, defer err, res, body
     if err? then err = @error_for_humans {err, uri : opts.uri, uri_fields }

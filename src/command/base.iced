@@ -104,8 +104,9 @@ exports.Base = class Base
       help : "specify a tor SOCKS proxy"
     "tor-hidden-address":
       help : "specify the tor hidden address for keybase.io"
-    "tor-paranoid" :
-      help : "Don't load our user from the server; might break certain features."
+    S :
+      alias : "tor-strict"
+      help : "Don't show any user-identifiable information to server; might break some features"
       action : "storeTrue"
     T :
       alias : 'tor'
@@ -121,6 +122,7 @@ exports.Base = class Base
   use_gpg : () -> true
   config_opts : () -> {}
   needs_configuration : () -> false
+  needs_cookies : () -> false
 
   #-------------------
 

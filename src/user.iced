@@ -244,12 +244,12 @@ exports.User = class User
     # If we need to, get the new username
     if not username? then username = local?.basics?.username
 
-    if self and secret and not tor.paranoid()
+    if self and secret and not tor.strict()
       log.debug "| Checking session since we're loading User as self (and need secret key)"
       await session.load_and_check esc defer()
 
-    if (self and tor.paranoid())
-      log.debug "| Skipping remote server check for ME in tor paranoid mode"
+    if (self and tor.strict())
+      log.debug "| Skipping remote server check for ME in Tor strict mode"
     else
       await User.load_from_server {self, secret, username}, esc defer remote
 
@@ -266,19 +266,22 @@ exports.User = class User
       user = remote
       await user.load_full_sig_chain esc defer()
       force_store = true
+    else if tor.strict()
+      err = new E.TorStrictError "Can't load your info from the server in Tor-strict mode"
     else
       err = new E.NotFoundError "User #{username} wasn't found"
-      await athrow err, esc defer()
 
-    if (self and tor.paranoid())
-      log.debug "| Skipping merkle-tree check for ME in tor paranoid mode"
+    await athrow err, esc defer() if err?
+
+    if (self and tor.strict())
+      log.debug "| Skipping merkle-tree check for ME in Tor strict mode"
     else
 
       # This might noop or just warn depending on the user's preferences
       await user.check_merkle_tree esc defer()
 
       # Finally we can store... If we actually fetched anything, which
-      # didn't happen in the case of (self and tor.paranoid())
+      # didn't happen in the case of (self and tor.strict())
       await user.store force_store, esc defer()
 
     log.debug "- #{username}: loaded user"
