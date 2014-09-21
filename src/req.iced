@@ -16,6 +16,14 @@ m = (dict, method) ->
 
 #=================================================
 
+dcopy = (d) ->
+  out = {}
+  for k,v of d
+    out[k] = v
+  return out
+
+#=================================================
+
 exports.Client = class Client
 
   constructor : (@headers) ->
@@ -102,7 +110,7 @@ exports.Client = class Client
     opts = { method, json }
     opts.jar = jar if jar?
 
-    opts.headers = @headers or {}
+    opts.headers = if @headers? then dcopy(@headers) else {}
     pjs = new PackageJson
     opts.headers["X-Keybase-Client"] = pjs.identify_as()
     opts.headers["User-Agent"] = pjs.user_agent()
