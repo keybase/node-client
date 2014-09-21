@@ -15,6 +15,7 @@ keyring = require '../keyring'
 {platform_info,version_info} = require '../version'
 proxyca = require '../proxyca'
 tor = require '../tor'
+colors = require '../colors'
 
 ##=======================================================================
 
@@ -246,6 +247,7 @@ class Main
     if tor.enabled()
       px = tor.proxy()
       log.warn "In tor mode: full-paranoia=#{tor.paranoid()}; proxy=#{px.hostname}:#{px.port}"
+      log.warn "tor support is in #{colors.bold('alpha')}; please be careful"
     cb null
 
   #----------------------------------

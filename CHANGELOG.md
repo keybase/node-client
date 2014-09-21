@@ -5,6 +5,8 @@ Features:
   - Tor support; if you have a tor client running, specify config { tor : enabled : true }
     or -T on the command line to send http/https requests over TOR.
     - Will use the keybase hidden address
+    - --tor-paranoid (or { tor : paranoid : true }) will be careful not to send
+      any user-identifying information to the server. 
 
 ## 0.6.2 (2014-09-19)
 
