@@ -250,7 +250,7 @@ exports.User = class User
       await session.load_and_check esc defer()
 
     if (self and tor.strict())
-      log.warn "Tor strict mode: #{colors.bold('not')} syncing #{colors.bold('my')} profile with the server"
+      log.warn "Tor strict mode: #{colors.bold('not')} syncing your profile with the server"
     else
       await User.load_from_server {self, secret, username}, esc defer remote
 
@@ -275,7 +275,7 @@ exports.User = class User
     await athrow err, esc defer() if err?
 
     if (self and tor.strict())
-      log.debug "| Skipping merkle-tree check for my profile in strict Tor mode"
+      log.debug "| Skipping merkle-tree check for your profile in strict Tor mode"
     else
 
       # This might noop or just warn depending on the user's preferences
