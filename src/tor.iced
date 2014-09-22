@@ -8,8 +8,9 @@ log = require './log'
 
 hidden_address = (null_ok) -> env().get_tor_hidden_address(null_ok)
 proxy = (null_ok) -> env().get_tor_proxy(null_ok)
-enabled = () -> env().get_tor()? or proxy(true)? or hidden_address(true)? or strict()
-strict = () -> env().get_tor_strict() and not env().get_tor_leaky()
+enabled = () -> env().get_tor()? or proxy(true)? or hidden_address(true)? or strict() or leaky()
+leaky = () -> env().get_tor_leaky()
+strict = () -> env().get_tor_strict() and not leaky()
 
 #-----------------
 
@@ -27,4 +28,4 @@ agent = (opts) ->
 
 #-----------------
 
-module.exports = { hidden_address, proxy, enabled, agent, strict }
+module.exports = { hidden_address, proxy, enabled, agent, strict, leaky }
