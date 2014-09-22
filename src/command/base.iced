@@ -101,9 +101,12 @@ exports.Base = class Base
       alias : "merkle-checks"
       help : "check that users' chains are reflected in sitewide state, one of {none,soft,strict}; soft by default"
     "tor-proxy":
-      help : "specify a tor SOCKS proxy"
+      help : "specify a Tor SOCKS proxy"
     "tor-hidden-address":
-      help : "specify the tor hidden address for keybase.io"
+      help : "specify the Tor hidden address for keybase.io"
+    "tor-leaky" :
+      help : "override Tor strict mode"
+      action: "storeTrue"
     S :
       alias : "tor-strict"
       help : "Don't show any user-identifiable information to server; might break some features"
@@ -111,7 +114,7 @@ exports.Base = class Base
     T :
       alias : 'tor'
       action : "storeTrue"
-      help : "enable Tor proxying with default settings; requires tor Socks5 proxy on port 9050"
+      help : "enable Tor proxying with default settings; requires Tor Socks5 proxy on port 9050"
 
 
   #-------------------

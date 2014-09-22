@@ -261,6 +261,13 @@ class Env
       config : (c) -> c.tor?.strict
       dflt   : -> false
 
+  get_tor_leaky : () ->
+    @get_opt
+      env    : (e) -> e.TOR_LEAKY
+      arg    : (a) -> a.tor_leaky
+      config : (c) -> c.tor?.leaky
+      dflt   : -> false
+
   get_tor_proxy : (null_ok) ->
     @host_split @get_opt
       env    : (e) -> e.TOR_PROXY
