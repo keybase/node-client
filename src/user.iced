@@ -17,6 +17,7 @@ IS = constants.import_state
 {PackageJson} = require('./package')
 {assertion} = require 'libkeybase'
 tor = require './tor'
+colors = require './colors'
 
 ##=======================================================================
 
@@ -249,7 +250,7 @@ exports.User = class User
       await session.load_and_check esc defer()
 
     if (self and tor.strict())
-      log.debug "| Skipping remote server check for ME in Tor strict mode"
+      log.warn "Tor strict mode: #{colors.bold('not')} syncing #{colors.bold('my')} profile with the server"
     else
       await User.load_from_server {self, secret, username}, esc defer remote
 
