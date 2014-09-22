@@ -281,7 +281,7 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
       if (approve is constants.skip.REMOTE)
         do_remote = false
       else if tor.strict()
-        log.warn "Can't write tracking statement to server in Tor-strict mode"
+        log.warn "Can't write tracking statement to server in strict Tor mode"
       else
         await @prompt_track n_proofs, esc defer do_remote
         if do_remote

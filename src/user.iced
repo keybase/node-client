@@ -268,14 +268,14 @@ exports.User = class User
       await user.load_full_sig_chain esc defer()
       force_store = true
     else if tor.strict()
-      err = new E.TorStrictError "Can't load your info from the server in Tor-strict mode"
+      err = new E.TorStrictError "Can't load your info from the server in strict Tor mode"
     else
       err = new E.NotFoundError "User #{username} wasn't found"
 
     await athrow err, esc defer() if err?
 
     if (self and tor.strict())
-      log.debug "| Skipping merkle-tree check for ME in Tor strict mode"
+      log.debug "| Skipping merkle-tree check for my profile in strict Tor mode"
     else
 
       # This might noop or just warn depending on the user's preferences
