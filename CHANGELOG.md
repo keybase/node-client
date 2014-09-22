@@ -1,3 +1,9 @@
+## 0.7.1
+
+Bugfixes:
+
+  - Close #1038, a bug when posting signed BTC address first.
+
 ## 0.7.0 (2014-09-22)
 
 Features:
