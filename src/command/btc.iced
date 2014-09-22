@@ -67,7 +67,7 @@ exports.Command = class Command extends Base
   #----------
 
   check_exists : (cb) ->
-    address_types = @me.sig_chain.table.get(ST.CRYPTOCURRENCY)
+    address_types = @me.sig_chain?.table?.get(ST.CRYPTOCURRENCY) or null
     links = (link for c in ACCTYPES when (link = address_types?.get(c))?)
     addresses = (link.body().cryptocurrency.address for link in links)
     if not addresses.length
