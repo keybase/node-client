@@ -250,7 +250,7 @@ class Main
       if @cmd.needs_cookies() and tor.strict()
         err = new E.TorStrictError "Cannot run this command in Tor-strict mode"
       else
-        log.warn "In Tor mode: strict=#{colors.bold(JSON.stringify tor.strict())}; proxy=#{px.hostname}:#{px.port}"
+        log.warn "In Tor mode: strict=#{colors.bold(JSON.stringify !!tor.strict())}; proxy=#{px.hostname}:#{px.port}"
         log.warn "Tor support is in #{colors.bold('alpha')}; please be careful and report any issues"
     cb err
 
