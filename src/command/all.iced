@@ -248,7 +248,7 @@ class Main
     if tor.enabled()
       px = tor.proxy()
       if @cmd.needs_cookies() and tor.strict()
-        err = new E.TorStrictError "Cannot run this command in Tor-strict mode"
+        err = new E.TorStrictError "Cannot run this command in strict Tor mode"
       else
         log.warn "In Tor mode: strict=#{colors.bold(JSON.stringify !!tor.strict())}; proxy=#{px.hostname}:#{px.port}"
         log.warn "Tor support is in #{colors.bold('alpha')}; please be careful and report any issues"
