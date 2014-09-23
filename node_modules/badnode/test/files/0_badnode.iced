@@ -18,4 +18,5 @@ d =
   "0.11.1"  : null
 
 for k,v of d
-  ( (k2,v2) -> exports["test-#{k2}"] = test k2, v2)(k,v)
+  for prefix in ["", "v"] 
+    ( (k2,v2,p2) -> exports["test-#{p2}#{k2}"] = test (p2+k2), v2)(k,v,prefix)

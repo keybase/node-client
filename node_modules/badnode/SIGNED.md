@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJUIWzUAAoJEJgKPw0B/gTfIf0IAKE94RAeEHcUV+YCJxF2NxV5
-5ZzaOfidBQ6OdNc1Yc4vzQh7FumbmNPMuMGf8LTZmg+xpMGX7A18irtCqIQ2Lonk
-UABm2rgLa4xom+XSZh4707MivQIyj+hm23UfQ8V2Z8/H6QxeSUzh1u8yA7il0zbg
-jVZDD/wVGk9qqLcxbWFmv5Eg3iik8wbhMiixV4VeraLDyPruaqHwZl6NoZleQrld
-u4fJf9LzNfwU+zRzgEcdtLh0uInAbxSpBMF/k4AnK/RuE2LcMrq2iyCwqrrC1thO
-YIYssPNqNRJgYZpqBY+GPjzXaX0z2MnxLGIXJGx3w6JQ8q7bKFWuxmgZ8sTGyDs=
-=coPd
+iQEcBAABCgAGBQJUIXSnAAoJEJgKPw0B/gTfXlIIAKS5UGsYit3R4TOsCOkUUEoj
+9yXGGPWafZnmtLFXkvViT/kincpjf873B+Q/Iq37jEXadxhJcv8wS1GqhOUdkKbt
+SODVnvSjwcFbq1xXd2779rzw2Alg63pVMsEN0UXRsFYAWsBHk17ra/Je2tygQsr/
+cHRux/nyz9vLXxUNUCnHgKRr6DDV9g9s4V9oDdXg/qOFH0jaK5fdbPSrPKbLuH7e
+oO/iKHBNCWLCdkh7qxQVYfHoVrqbdhu4m3YlxNsJrJdOkkvGS3pAA0B34EPfl2zb
+KHjXjDa5rnnPCu83m2fqAEBUipPtqAoEnYxWPzMIOAZXKyNHVyuNmzje30WcuMo=
+=M+1n
 -----END PGP SIGNATURE-----
 
 ```
@@ -28,12 +28,12 @@ size  exec  file                  contents
 1473          LICENSE             d0560411ddd7937e8b87d85c290c0445bd9c390aa485eeac7f838e56e7598d95
 244           Makefile            7d397680c94d1b5ec2436610beb8dd4f27586306210920e31981449157824fd1
 64            README.md           076d41de237604bcc439602fc664111cf6db55550759e2d7af4b00388fbc8143
-928           index.iced          383d0c391e0cf0c251826c407c0adc535a16ddce7b19e5f10c3cb6463a925694
-1634          index.js            5afd05c7051a197faaf771a6a85310b2af045ecb46e2e5c339016e1954f35fdb
-659           package.json        0c315e11df4bd9fcba72a43c4aa434dc5e39c4f790b7644ee4d3ce7ecc567d1e
+924           index.iced          ad88b40b8519413ab132caa403327740829216b3eb29f59ddb94662c90ae791c
+1627          index.js            9ea58e70c4670f9d9c0684c95359bc43101e2550ccaf31b69188f5ab3d147f12
+658           package.json        a9fdbd59a98b4c0f7381d450ef4b97281d2e88b51a54eedba2c634a7ae6f6e45
               test/                                                                               
                 files/                                                                            
-489               0_badnode.iced  483998b8da79ddc688f52aa503e6270b34f260d20b5199ce523ce10a94b2b3bf
+538               0_badnode.iced  0c437564f590b6783ab7fecf676985f3297d751804e8fe24c89d91f9db4ec7bb
 183             run.iced          822568debeae702ca4d1f3026896d78b2d426e960d77cb3c374da059ef09f9fd
 ```
 

@@ -8,11 +8,11 @@ suggest_versions = [ "0.10.32", "0.11.13" ]
 suggest_version = "0.10.32"
 
 is_good_version = (v) ->
-  v or= process.version
   semver.satisfies(v, good_versions)
 
 check_node = (v) ->
   v or= process.version
+  v = semver.clean v
   problem = if is_good_version(v) then null
   else if v in known_bad_versions then problem = "known to crash"
   else if semver.satisfies(v, old_versions) then msg = "out of date"
@@ -26,4 +26,3 @@ check_node_async = (v, cb) ->
 
 module.exports = { known_bad_versions, old_versions, good_versions, suggest_version,
   suggest_versions, check_node, check_node_async, is_good_version}
-

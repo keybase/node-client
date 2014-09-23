@@ -16,13 +16,13 @@
   suggest_version = "0.10.32";
 
   is_good_version = function(v) {
-    v || (v = process.version);
     return semver.satisfies(v, good_versions);
   };
 
   check_node = function(v) {
     var msg, problem;
     v || (v = process.version);
+    v = semver.clean(v);
     problem = is_good_version(v) ? null : __indexOf.call(known_bad_versions, v) >= 0 ? problem = "known to crash" : semver.satisfies(v, old_versions) ? msg = "out of date" : !is_good_version(v) ? problem = "not recommended" : void 0;
     if (problem == null) {
       return null;
