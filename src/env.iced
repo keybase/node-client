@@ -205,7 +205,7 @@ class Env
       dflt   : -> null
 
   is_me : (u2) ->
-    u2? and (u2.toLowerCase() is @get_username().toLowerCase())
+    u2? and (u1 = @get_username())? and (u2.toLowerCase() is u1.toLowerCase())
 
   get_uid : () ->
     @get_opt
