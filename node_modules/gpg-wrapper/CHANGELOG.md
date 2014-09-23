@@ -1,4 +1,11 @@
-## 0.0.46 (2014-06-05)
+## 1.0.0 (2014-09-23)
+
+Features:
+
+  - Address keybase/keybase-isssues#1002 and look for gpg2 first.
+  - Also bump to a release version, this software is pretty mature by now.
+
+## 0.0.46 and 0.0.47 (2014-06-05)
 
 Features:
 

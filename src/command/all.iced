@@ -16,6 +16,7 @@ keyring = require '../keyring'
 proxyca = require '../proxyca'
 tor = require '../tor'
 colors = require '../colors'
+{check_node_async} = require 'badnode'
 
 ##=======================================================================
 
@@ -232,13 +233,16 @@ class Main
     err = null
     if @cmd.use_gpg()
       c = env().get_gpg_cmd()
-      log.debug "+ testing GPG command-line client #{if c? then c else '<default: gpg>'}"
-      await keyring.master_ring().test defer err, @_gpg_version
-      log.debug "- tested GPG command-line client -> #{err}"
+      log.debug "+ testing GPG command-line client #{if c? then c else '<default: gpg2 or gpg>'}"
+      await gpgw.find_and_set_cmd c, defer err, @_gpg_version, cmd
       if err?
-        err = new E.GpgError "Could not acces gpg cmd line client '#{c}'"
+        err = new E.GpgError err.message
       else if c?
-        gpgw.set_gpg_cmd c
+        log.debug "| Using the supplied GPG cmd: '#{c}'"
+      else if not c? and cmd
+        log.debug "| using GPG command: #{cmd}"
+        env().set_gpg_cmd cmd
+      log.debug "- tested GPG command-line client -> #{err}"
     cb err
 
   #----------------------------------
@@ -265,6 +269,9 @@ class Main
   setup : (cb) ->
     esc = make_esc cb, "setup"
 
+    # Check that we have a good version of node...
+    await check_node_async null, esc defer()
+
     init_env()
     await @parse_args esc defer()
     env().set_argv @argv
@@ -272,8 +279,8 @@ class Main
     await @load_config esc defer()
     env().set_config @config
     await @init_tor esc defer()
-    @init_keyring()
     await @init_gpg esc defer()
+    @init_keyring()
     await @init_proxy_cas esc defer()
 
     await @startup_message esc defer()

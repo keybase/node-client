@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJTjz9FAAoJEJgKPw0B/gTfYNYIAIzEKXwnFT709YfHZgPbsS/Q
-C+oKBmcAHIyyUoe8OHkhHY47iRAzg+/eKRuW/Ph2g9NWE3GFUVMVjqADxobqJA5T
-QmIvNHr86S8ZrrsM3+hLmpb0MofKWgjJGZXrCD6ol/I3T4XadcpIwkj3KcUn4pw+
-7HxNsTdfyX55kYagq+nbgbHW68bMP4nTxcT6j2qo8iEuir/bBd8rWEF/cXqrhYiw
-pfzA7n7KQBTSCTHNQ7vCifqs2rF2J3cWHwzGXtXqzFuARK+hr8/ugAocfnU5H++x
-gTlkggN8VE9hrjvEGg/c+NTTh9ro7X8rwRyGt5R4Bk3xr6ejKXRe1AJt+xPojIY=
-=CgZ8
+iQEcBAABCgAGBQJUIWHEAAoJEJgKPw0B/gTfZc8IAJAxmBlXK0r0Q0voA5d6AAgS
+9lmJYs23LTG2T5b/6rEiHKvxWkJKW6n3dFg9ZGppyfHHeUcVIoVEJc+xUjw+Vstn
+BV+fS+QmBTnhAbtgzJTRUnk6cZOLdf8FHXcGA5NZIsMkUFR6nAaMsD8RnqyKhIyR
+0XiL3AoU1TO9+DRLgnJ1oaFamSS+zFo10qm8xNpWNZvMBYtX2M/mfho1f7n23fA4
+CT0CII2FTE66UiT4inZ/t8VosNE+Mk2cHNM6W/nRAMCW/TEA1yWdCK25QIFLQ6yT
+fAkYYoe4IPsb8swmCNERpwu+QXftgZfdNLLNb/NvNkpb9o+PZt5cP9Zxv4Yx27I=
+=t4Ar
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,32 +25,32 @@ gTlkggN8VE9hrjvEGg/c+NTTh9ro7X8rwRyGt5R4Bk3xr6ejKXRe1AJt+xPojIY=
 size   exec  file                contents                                                        
              ./                                                                                  
 109            .gitignore        ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-3286           CHANGELOG.md      b89fe962ae695692d3db19abb44011fec2d1cf9fd2f8ea69d72bc0aaadfa14ff
+3473           CHANGELOG.md      5c1b90187b1b887372641e4f503753e26afa1bc6943ef26176dd26e77c46c211
 1483           LICENSE           333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d
 502            Makefile          960fe8002c2c2866c0963c9b0ed138dcb2a4feed693a3c668875935902f9b486
 55             README.md         fac7947ca164bd97f854cec88bc0266773ec378f4fb79cb1554662a4fd4079f9
                lib/                                                                              
 1100             colgrep.js      8cca2968a077b03d45b761139276f24f32b2a6948ada5fe825fcfd804105cda2
 408              err.js          ac74e7dbc52d8da10a4544bbedb78619a5407cdcdbb3893e7584fc5ca41c8e0d
-6260             gpg.js          68aca49cb3023b84fa7c7b3436b6856d1b160b201828f919afebfc7a79ae22cf
+9864             gpg.js          58f656e45b780600861b7d65c55a3720804ca9697f8cf996247486829f186bf5
 10991            index.js        0db004e6d3b606d0b5b385a9b91cbe6a8dfb20a793de8086e3084dae4d82ccf9
-92793            keyring.js      efefb8fa25ced79524992309bf82282df42fc4d5c44e6b972700bd69d60ed5df
+92762            keyring.js      fda9c5c6d615c44e6ade52b884bf672c970a4737c9a2edee3f693c77df39e61e
 387              main.js         92476f33f1ce68c8f74c993c3b3d9603b9f435f44a69ec3098e552b0c4d736b8
 3985             parse.js        57abc69755fc4eea76600b17082827fc23574fd7ba5b2a414cba40b89f0150a2
-709            package.json      34e99830ec6b14ba78d22f62754b503de393a3ff7eb32d098bf7400079018181
+708            package.json      0c085dc51a50c98e2a29f0a15f614d62629b86ed7fac6ade49a90afa55ee95b3
                src/                                                                              
 604              colgrep.iced    a3c53c57e739b9af47f7b8cdb31c3aaf3f7416c978e7905ec42bee4966bc3920
 351              err.iced        db7ddbbfbe1f076ad895a83e22cac8e720f260768456dd6aa0c97e5faf7ae9e5
-2061             gpg.iced        711eb4cd6636075cf6cdfa327100c47c69b286eefd61859656e1c6ca7aeb56fb
+2590             gpg.iced        cc3921f2f7c8b56940b3a8170e587d9375e7c58c50e873134c79c969c2db5148
 5674             index.iced      a0e6e71b262131c546976fc6adb140016c26380505cb2305dbcef01e4a3fbfa5
-28498            keyring.iced    49374a8caaf86211795cb98f844d0ea29774da7be4e772e1e96eee9901a64bb3
+28456            keyring.iced    091e445fbb29355b5935e19c35f5952ec315bc7029550b7a122c2e76d9038192
 225              main.iced       d06200c91a7f18bf1ece9ed92123ecf2362cf4592318ca23639b08356ce877ab
 1731             parse.iced      f031af161d3e124ef77ed4ff2e679b84db797c2462d407be0975383c30400857
                test/                                                                             
                  files/                                                                          
 1066               colgrep.iced  e055590058160122daaddaf0fe2784394981c3d599a86cfce892b31dc89e030f
 360                error.iced    d47058171d6c5a61c57829d9b9fa05f6c06153ce899d6a6ae61dc13c32b956ac
-1095               gpg.iced      fa2898ab0e413f32ec63da7e067bae699a4247d9399a8e02bc27d52d715b94c1
+1690               gpg.iced      d44f312444b293b551240e3028ea08b3e7d98818c9df58f052ec37b78b410b1a
 10403              index.iced    fb73ed7d38df999852f8b68e0fcf2c37615f24eaca8d83e2f9b353d18380f338
 36214              keyring.iced  f91c6534f85e4a1c09144539d03026b9152e86e45b994312b6662233751868ca
 1458               parse.iced    6502b4cbe550249868f8c9f257b621898ba76acf1e20242ecad1b811e0829c3d
@@ -71,7 +71,7 @@ dropbox  # ignore .dropbox-cache and other Dropbox-related files
 kb       # ignore anything as described by .kbignore files          
 ```
 
-<!-- summarize version = 0.0.8 -->
+<!-- summarize version = 0.0.9 -->
 
 ### End signed statement
 

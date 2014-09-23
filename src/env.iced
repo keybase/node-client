@@ -65,6 +65,7 @@ class Env
     @argv = null
     @config = null
     @session = null
+    @_gpg_cmd = null
     @kbpath = kbpath.new_eng {
       hooks :
         get_home : (opts) => @_get_home opts
@@ -234,11 +235,13 @@ class Env
     return ret
 
   get_gpg_cmd : () ->
-    @get_opt
+    @_gpg_cmd or @get_opt
       env    : (e) -> e.KEYBASE_GPG
       arg    : (a) -> a.gpg
       config : (c) -> c.gpg
       dflt   : -> null
+
+  set_gpg_cmd : (c) -> @_gpg_cmd = c
 
   get_proxy : () ->
     @get_opt

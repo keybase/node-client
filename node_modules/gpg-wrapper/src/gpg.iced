@@ -7,12 +7,29 @@ ispawn = require 'iced-spawn'
 ##=======================================================================
 
 _gpg_cmd = "gpg"
-exports.set_gpg_cmd = (c) -> _gpg_cmd = c
+exports.set_gpg_cmd = set_gpg_cmd = (c) -> _gpg_cmd = c
 exports.get_gpg_cmd = ( ) -> _gpg_cmd
 
 # A default log for uncaught stderr
 _log = null
 exports.set_log = (l) -> _log = l
+
+##=======================================================================
+
+exports.find_and_set_cmd = (cmd, cb) ->
+  if cmd?
+    await (new GPG { cmd }).test defer err, v
+    if err?
+      err = new Error "Could not access the supplied GPG command '#{cmd}'"
+  else
+    cmds = [ "gpg2", "gpg" ]
+    for cmd in cmds
+      await (new GPG { cmd }).test defer err, v
+      break unless err
+    if err?
+      err = new Error "Could not find GPG command: tried 'gpg2' and 'gpg'"
+  set_gpg_cmd(cmd) unless err?
+  cb err, v, cmd
 
 ##=======================================================================
 
@@ -25,7 +42,7 @@ exports.GPG = class GPG
 
   #----
 
-  mutate_args : (args) -> 
+  mutate_args : (args) ->
 
   #----
 
@@ -35,7 +52,7 @@ exports.GPG = class GPG
 
   #----
 
-  run : (inargs, cb) -> 
+  run : (inargs, cb) ->
     stderr = null
     @mutate_args inargs
     env = process.env
@@ -83,6 +100,6 @@ exports.GPG = class GPG
     await @assert_no_collision short_id, defer err, n
     err = new E.NotFoundError "Didn't find a key for #{short_id}" unless n is 1
     cb err
-    
+
 ##=======================================================================
 

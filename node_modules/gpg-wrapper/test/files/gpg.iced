@@ -1,5 +1,5 @@
 
-{colgrep,GPG,set_gpg_cmd} = require '../../lib/main'
+{get_gpg_cmd,find_and_set_cmd,colgrep,GPG,set_gpg_cmd} = require '../../lib/main'
 
 exports.test_assert_no_collision = (T,cb) ->
   obj = new GPG()
@@ -7,7 +7,7 @@ exports.test_assert_no_collision = (T,cb) ->
   T.no_error err
   out = colgrep {
     patterns : {
-      0 : /[ps]ub/ 
+      0 : /[ps]ub/
     },
     buffer : out,
     separator : /:/
@@ -45,3 +45,17 @@ exports.test_success_2 = (T,cb) ->
   T.no_error err, "and reset properly to standard gpg"
   cb()
 
+
+# Test will only work if you have both gpg and gpg2 installed
+exports.test_find = (T,cb) ->
+  await find_and_set_cmd null, defer err, version, cmd
+  T.no_error err
+  T.assert version?, "version came back"
+  T.equal cmd, "gpg2", "should find gpg2 by default"
+  T.equal get_gpg_cmd(), "gpg2", "should update global preferences"
+  await find_and_set_cmd "gpg", defer err, version, cmd
+  T.no_error err
+  T.assert version?, "version came back"
+  T.equal cmd, "gpg", "should find gpg if we asked"
+  T.equal get_gpg_cmd(), "gpg", "should update global preferences"
+  cb()

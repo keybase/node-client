@@ -3,6 +3,8 @@
 Bugfixes:
 
   - Close #1038, a bug when posting signed BTC address first.
+  - Address keybase/keybase-issues#1002
+  - Puke on bad versions of node, and give useful errors
 
 ## 0.7.0 (2014-09-22)
 

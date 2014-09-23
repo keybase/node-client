@@ -1,3 +1,10 @@
+## v1.0.0 (2014-09-21)
+
+Features:
+
+  - First real release
+  - Don't be picky at all with semver
+
 ## v0.0.10 (2014-06-09)
 
 Bugfixes:
