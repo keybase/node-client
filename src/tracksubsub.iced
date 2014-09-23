@@ -88,6 +88,15 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
+  on_loggedout_verify : (cb) ->
+    esc = make_esc cb, "TrackSubSub::on_decrypt"
+    await User.load { username : @args.them }, esc defer @them
+    @them.reference_public_key { keyring : @tmp_keyring }
+    await @them.verify {}, esc defer()
+    cb null
+
+  #----------
+
   on_decrypt : (cb) ->
     esc = make_esc cb, "TrackSubSub::on_decrypt"
     await @keypull esc defer()

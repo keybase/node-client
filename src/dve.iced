@@ -15,12 +15,13 @@ urlmod = require 'url'
 {HKPLoopback} = require './hkp_loopback'
 {fingerprint_to_key_id_64} = require('pgp-utils').util
 colors = require './colors'
+session = require './session'
 
 # Decrypt And Verify Engine
 
 ##=======================================================================
 
-exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine 
+exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   #----------
 
@@ -42,7 +43,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   #----------
 
-  try_track : () -> 
+  try_track : () ->
     (@argv.track or @argv.track_remote or @argv.track_local) and not @is_self
 
   #----------
@@ -65,7 +66,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   handle_id : (cb) ->
     log.debug "+ handle_id"
-    await @tssc.check_remote_proofs false, defer err, warnings 
+    await @tssc.check_remote_proofs false, defer err, warnings
     log.debug "- handle_id"
     cb err
 
@@ -85,7 +86,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
     esc = make_esc cb, "handle_signature"
     log.debug "+ handle_signature"
     await @check_imports esc defer()
-    arg = 
+    arg =
       type : constants.lookups.key_fingerprint_to_user
       name : @signing_key.primary
     await User.map_key_to_user arg, esc defer basics
@@ -100,19 +101,25 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
       log.info "Valid signature from #{colors.bold('you')}"
     else
       @is_self = false
-      @tssc = new TrackSubSubCommand { 
-        args : { them : @username }, 
-        opts : @argv, 
-        @tmp_keyring, 
+      @tssc = new TrackSubSubCommand {
+        args : { them : @username },
+        opts : @argv,
+        @tmp_keyring,
         @batch,
         ran_keypull : @_ran_keypull
       }
-      await @tssc.on_decrypt esc defer()
 
-      {remote,local} = @tssc.trackw.is_tracking()
-      tracks = if remote then "tracking remotely & locally"
-      else if local then "tracking locally only"
-      else "not tracking"
+      if session.is_logged_in()
+        await @tssc.on_decrypt esc defer()
+
+        {remote,local} = @tssc.trackw.is_tracking()
+        tracks = if remote then "tracking remotely & locally"
+        else if local then "tracking locally only"
+        else "not tracking"
+      else
+        await @tssc.on_loggedout_verify esc defer()
+        tracks = "not tracking"
+
       log.info "Valid signature from keybase user #{colors.bold(basics.username)} (#{tracks})"
 
     d = @sig_date
@@ -150,17 +157,17 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
 
   #----------
 
-  do_keypull : (cb) -> 
+  do_keypull : (cb) ->
     @_ran_keypull = false
     cb null
 
   #----------
 
   make_gpg_args : () ->
-    args = [ 
+    args = [
       "--status-fd", '2',
-      "--with-colons",   
-      "--keyid-format", "long", 
+      "--with-colons",
+      "--keyid-format", "long",
       "--keyserver" , @hkpl.url()
       "--keyserver-options", "auto-key-retrieve=1", # needed for GPG 1.4.x
       "--with-fingerprint"
@@ -173,7 +180,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
     gargs = { args }
     gargs.stderr = new BufferOutStream()
     if @argv.message
-      gargs.stdin = new BufferInStream @argv.message 
+      gargs.stdin = new BufferInStream @argv.message
     else if not @get_files(args)
       gargs.stdin = process.stdin
       @batch = true
@@ -198,10 +205,10 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
     await @do_output out, defer()
     if err?
       log.warn @decrypt_stderr.data().toString('utf8')
-    else if env().get_debug() 
+    else if env().get_debug()
       log.debug @decrypt_stderr.data().toString('utf8')
 
-    cb err 
+    cb err
 
   #----------
 
