@@ -1,3 +1,9 @@
+## 0.7.2
+
+Bugfixes:
+
+  - Allow `keybase verify` and `keybase dir verify` to work if you're not logged in
+
 ## 0.7.1 (2014-09-23)
 
 Bugfixes:
