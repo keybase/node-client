@@ -45,7 +45,7 @@ exports.Base = class Base
 
   @OPTS :
     p :
-      alias : 'passhrase'
+      alias : 'passphrase'
       help : 'passphrase used to log into keybase'
     c :
       alias : 'config'
@@ -163,4 +163,3 @@ exports.Base = class Base
     cb err
 
 #=========================================================================
-
