@@ -109,7 +109,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
         ran_keypull : @_ran_keypull
       }
 
-      if session.is_logged_in()
+      if session.logged_in()
         await @tssc.on_decrypt esc defer()
 
         {remote,local} = @tssc.trackw.is_tracking()
