@@ -1,9 +1,10 @@
-## 0.7.2
+## 0.7.2 (2014-09-23)
 
 Bugfixes:
 
   - Allow `keybase verify` and `keybase dir verify` to work if you're not logged in
   - Fix regression in the `-o` flag for proofs.  See pull/172
+  - Remove empty dir from SIGNED.md that showed up as a result of a testing bug
 
 ## 0.7.1 (2014-09-23)
 
