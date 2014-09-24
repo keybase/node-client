@@ -4,13 +4,13 @@
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJUIuYKAAoJEJgKPw0B/gTflXIH/3X5wV0KDZHbAbhbLrMX58/i
-N4b2nFA/Sq5RBicI6yraXRc/KCz+B3X3cDBK2arTYwxjhfJta0JvBXQ1LLaqgjwA
-8gMM26dL+c+1BrEdxH/IMCppjWZHp4E8KGvZcIXB2nKHq/iW9FNV3/zWlFVzOrtg
-+yoMlvVA2EkYqyulsT37lmSlEoYxlVK2V2A7FgFMeLcJzeDA66zdWSFp8+a/AE/b
-qhvOH3YYYWbQl+UCwbVUydxrt9LL55aaD1a89cPwYDCYxjGef1SazhGFz4zelV2X
-YldiBYCeBPyRQREvOaNjXpmd/K7ziwn15kbzPuEQ1T1MEKPVAb6fp6QNvVs9Svw=
-=N3I8
+iQEcBAABCgAGBQJUIuhOAAoJEJgKPw0B/gTf7JkIALV5+rJ5+I2h17KZxFfMUTKe
+eAAPGKRKgdk8Od5qi95Lzt+29Lg88eSMEe1g/+AgJRUw0zLftCjc4rgNX6J3H3Si
+NycBzmV1zZe9gpQc7reS1TKFTWaTTAFi4zLeJdclFmAWVzCjZRqn5t0C1eqR1f9P
+eNVcgLKT9dv7QHn1OEC0F1S2ovlAeEuK0IyFByYYmZJMCH8mTtuIS1sBzx9m6/Eu
+W5KlOkvbirJ04ThbiUBAFU6nTQVs/LGxHrUV2d+Z+008wPFtLhsOPeXGy8gWZhe0
+uxHE9dvQMrSedS3O4feIeDCNjsNUdES5PZQLa/Jonku4ovD/QQdn1QUGgPsItwY=
+=qYyw
 -----END PGP SIGNATURE-----
 
 ```
@@ -26,7 +26,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-23656           CHANGELOG.md                                  6e085bf6682f8d30f9dd78a45f5eada5799a03ac1c9dcc5d15973b0607d7612a                                                                 
+23749           CHANGELOG.md                                  55a80e36ab8358ddcd5d1ab45c7efc7057ab680635eaf615b3c705762e6a24ac                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2054            Makefile                                      9f991497e823a1b9be86be06c9f7061bc0c001db8c5c039feb9dd4cd54f35dbf                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -1803,7 +1803,7 @@ size    exec  file                                            contents
 2936                  util.iced                               67873c2a107653464b1203e8f726bf24caa8a023bd35cc1a73bb1252d0bce2d5                                                                 
 8608                  wordarray.iced                          3b97752e4661158ca84cc26234fcaa294b94b223b224bbe954527b5b8a72e804                                                                 
 29                  test-stamp                                ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
-2289            package.json                                  1596bb7a5c1b951c4630d1edd59b5c215294657a061e3bff1a0b3eb2148e3c73                                                                 
+2289            package.json                                  0d67264e3182c7e4ae10d33247462840873f3526e95524477958fef747edbc93                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
