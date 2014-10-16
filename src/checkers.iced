@@ -1,23 +1,23 @@
 
-exports.checkers = checkers = 
+exports.checkers = checkers =
   username :
     hint : "between 2 and 16 letters long"
     f : (x) -> x.length >= 2 and x.length <= 16
-  remote_username : 
+  remote_username :
     hint : "between 1 and 40 letters long"
     f : (x) -> x.length >= 1 and x.length <= 40
-  passphrase: 
+  passphrase:
     hint : "must be at least 12 letters long"
     f : (x) -> x.length >= 12
-  passphrase_short: 
+  passphrase_short:
     hint : "password cannot be empty"
     f : (x) -> x.length >= 1
-  passphrase_nls: 
+  passphrase_nls:
     hint : "must be at least 12 letters long and can't have a leading space"
     f : (x) -> x.length >= 12 and not (x.match /^\s/)
-  email : 
+  email :
     hint : "must be a valid email address"
-    f : (x) -> (x.length > 3) and x.match /^\S+@\S+\.\S+$/ 
+    f : (x) -> (x.length > 3) and x.match /^\S+@\S+\.\S+$/
   invite_code :
     hint : "invite codes are 24 digits long"
     f : (x) -> x.length is 24
@@ -25,7 +25,7 @@ exports.checkers = checkers =
     hint : "valid usernames are 4-12 letters long"
   intcheck : (lo, hi, defint) ->
     hint : "#{lo}-#{hi}"
-    f : (x) -> 
+    f : (x) ->
       if (defint? and x is "") then true
       else not(isNaN(i = parseInt(x))) and i >= lo and i <= hi
 

@@ -127,6 +127,9 @@ exports.TrackWrapper = class TrackWrapper
           unless row.is_leaf()
             sub_id = scrapers.alloc_stub(rkp.proof_type).get_sub_id(rkp.check_data_json)
             row = row.get(sub_id)
+          unless row?
+            tmp = "Missing sub ID: #{JSON.stringify rkp.proof_type}"
+            break
           if not row.is_leaf()
             tmp = "Got bad link, it wasn't a link at all (for proof type: #{rkp.proof_type})"
             break
