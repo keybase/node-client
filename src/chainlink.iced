@@ -458,7 +458,7 @@ class Untrack extends Link
   insert_into_table : ({table, index, opts}) ->
     log.debug "+ Untrack::insert_into_table"
     if not (id = @body()?.untrack?.id)? then log.warn "Mssing untrack in signature: #{@payload_json_str()}"
-    else if not (link = table.get(ST.TRACK)?.get(id))? then log.warn "Unexpected untrack of #{id} in signature chain"
+    else if not (link = table.get(ST.TRACK)?.get(id))? then log.debug "Unexpected untrack of #{id} in signature chain"
     else if not (link.is_leaf()) and not opts?.show_revoked then log.warn "Unexpected multi-follow"
     else
       links = if link.is_leaf() then [ link ]

@@ -2,6 +2,7 @@
 
 Bugfixes:
    - Address #175
+   - Address #178
 
 ## 0.7.2 (2014-09-23)
 
