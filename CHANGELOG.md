@@ -3,7 +3,7 @@
 Bugfixes:
    - Address #175
    - Address #178
-   - Address #824
+   - Address https://github.com/keybase/keybase-issues/issues/824
 
 ## 0.7.2 (2014-09-23)
 
