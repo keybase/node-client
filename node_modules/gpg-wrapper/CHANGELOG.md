@@ -1,3 +1,9 @@
+## 1.0.1 (2014-11-17)
+
+Bugfixes:
+  - Parse revoked keys in output
+    - Support for https://github.com/keybase/node-client/pull/179
+
 ## 1.0.0 (2014-09-23)
 
 Features:
