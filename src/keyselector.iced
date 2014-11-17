@@ -59,7 +59,7 @@ exports.KeySelector = class KeySelector
   query_keys : (cb) ->
     opts = { @secret, @query }
     await master_ring().index2 opts, defer err, index, warnings
-    keys = if err? then null else index.keys()
+    keys = if err? then null else (key for key in index.keys() when not key.is_revoked())
     cb err, keys
 
   #----------
