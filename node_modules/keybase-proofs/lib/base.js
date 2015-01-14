@@ -361,7 +361,7 @@
         }
       };
       if ((ekid = this.km().get_ekid()) != null) {
-        ret.key.kid = ekid.toString('hex');
+        ret.body.key.kid = ekid.toString('hex');
       }
       if ((fp = this.km().get_pgp_fingerprint()) != null) {
         ret.body.key.fingerprint = fp.toString('hex');

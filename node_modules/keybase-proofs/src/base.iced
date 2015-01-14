@@ -225,7 +225,7 @@ class Base
 
     # Can't access ekids from GnuPG. We'd have to parse the keys (possible).
     if (ekid = @km().get_ekid())?
-      ret.key.kid = ekid.toString('hex')
+      ret.body.key.kid = ekid.toString('hex')
 
     if (fp = @km().get_pgp_fingerprint())?
       ret.body.key.fingerprint = fp.toString('hex')
