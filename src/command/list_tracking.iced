@@ -21,7 +21,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS : 
+  OPTS :
     v :
       alias : 'verbose'
       action : 'storeTrue'
@@ -39,7 +39,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       help : "list people you are tracking"
       aliases : [ ]
     name = "list-tracking"
@@ -54,7 +54,7 @@ exports.Command = class Command extends Base
     sort_fn = (a,b) ->
       a = ("" + a).toLowerCase()
       b = ("" + b).toLowerCase()
-      if a < b then -1 
+      if a < b then -1
       else if a > b then 1
       else 0
     if not v? then {}
@@ -71,7 +71,7 @@ exports.Command = class Command extends Base
   condense_record : (o) ->
     rps = [] unless (rps = o.body.track.remote_proofs)?
     proofs = (v for rp in rps when (v = rp?.remote_key_proof?.check_data_json))
-    out = 
+    out =
       uid : o.body.track.id
       key : o.body.track.key.key_fingerprint?.toUpperCase()
       proofs : proofs

@@ -10,6 +10,7 @@ mods = [
   require('./revoke')
   require('./cryptocurrency')
   require('./subkey')
+  require('./sibkey')
   require('./announcement')
   require('./scrapers/twitter')
   require('./scrapers/github')

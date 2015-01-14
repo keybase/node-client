@@ -14,6 +14,7 @@ exports.constants = constants =
     cryptocurrency : "cryptocurrency"
     announcement : "announcement"
     subkey : "subkey"
+    sibkey : "sibkey"
   proof_types :
     none : 0
     keybase : 1

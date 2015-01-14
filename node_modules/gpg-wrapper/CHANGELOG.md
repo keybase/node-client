@@ -1,3 +1,9 @@
+## 1.0.2 (2015-01-14)
+
+Bugfixes:
+  - Complete the new KeyManager interface; implemented get_ekid()
+    with a stub for now.
+
 ## 1.0.1 (2014-11-17)
 
 Bugfixes:

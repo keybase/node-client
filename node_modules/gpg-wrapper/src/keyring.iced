@@ -110,9 +110,10 @@ exports.GpgKey = class GpgKey
   # The keyring object that we've wrapped in
   keyring : () -> @_keyring
 
-  # These two functions are to fulfill to key manager interface
+  # These three functions are to fulfill to key manager interface
   get_pgp_key_id : () -> @key_id_64()
   get_pgp_fingerprint : () -> @fingerprint().toLowerCase()
+  get_ekid : () -> null
 
   is_signed : () -> !!@_is_signed
 

@@ -63,6 +63,9 @@ class SocialNetworkBinding extends WebServiceBinding
     if (@check_name(@user.remote)) then null
     else new Error "Bad remote_username given: #{@user.remote}"
 
+  to_key_value_pair : () ->
+    { key : @service_name(), value : @normalize_name() }
+
 #==========================================================================
 
 # A last-minute sanity check of the URL module
@@ -95,6 +98,11 @@ class GenericWebSiteBinding extends WebServiceBinding
     return ret
 
   parse : (h) -> GenericWebSiteBinding.parse h
+
+  to_key_value_pair : () -> {
+    key : @remote_host.protocol[0...-1]
+    value : @remote_host.hostname
+  }
 
   @to_string : (o) ->
     ([ o.protocol, o.hostname ].join '//').toLowerCase()
@@ -152,6 +160,8 @@ class DnsBinding extends WebServiceBinding
           ret = null
     return ret
 
+  to_key_value_pair : () -> { key : "dns", value : @domain }
+
   parse : (h) -> DnsBinding.parse(h)
   @to_string : (o) -> o.domain
   to_string : () -> @domain
@@ -188,7 +198,7 @@ class TwitterBinding extends SocialNetworkBinding
 
   @check_name : (n) ->
     ret = if not n? or not (n = n.toLowerCase())? then false
-    else if n.match /^[a-z0-9_]{1,15}$/ then true
+    else if n.match /^[a-z0-9_]{1,20}$/ then true
     else false
     return ret
 
@@ -261,7 +271,7 @@ class HackerNewsBinding extends SocialNetworkBinding
   check_name : (n) -> HackerNewsBinding.check_name(n)
 
   # HN names are case-sensitive
-  @normalize_name : (n) -> 
+  @normalize_name : (n) ->
     if n[0] is '@' then n[1...] else n
   normalize_name : (n) ->
     n or= @user.remote

@@ -7,6 +7,7 @@ base = require './base'
 {Cryptocurrency} = require './cryptocurrency'
 {Announcement} = require './announcement'
 {Subkey} = require './subkey'
+{Sibkey} = require './sibkey'
 
 #=======================================================
 
@@ -26,7 +27,8 @@ lookup_tab = {
   "revoke"                         : Revoke,
   "cryptocurrency"                 : Cryptocurrency,
   "announcement"                   : Announcement,
-  "subkey"                         : Subkey
+  "subkey"                         : Subkey,
+  "sibkey"                         : Sibkey
 }
 
 #--------------------------------------------

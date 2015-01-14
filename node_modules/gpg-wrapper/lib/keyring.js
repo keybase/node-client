@@ -175,6 +175,10 @@
       return this.fingerprint().toLowerCase();
     };
 
+    GpgKey.prototype.get_ekid = function() {
+      return null;
+    };
+
     GpgKey.prototype.is_signed = function() {
       return !!this._is_signed;
     };
@@ -202,7 +206,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 124
+            lineno: 125
           }));
           __iced_deferrals._fulfill();
         });
@@ -257,7 +261,7 @@
                     return out = arguments[1];
                   };
                 })(),
-                lineno: 142
+                lineno: 143
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -295,7 +299,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 154
+            lineno: 155
           }));
           __iced_deferrals._fulfill();
         });
@@ -357,7 +361,7 @@
                 return err = arguments[0];
               };
             })(),
-            lineno: 184
+            lineno: 185
           }));
           __iced_deferrals._fulfill();
         });
@@ -392,7 +396,7 @@
                 return __slot_1._key_data = arguments[0];
               };
             })(_this),
-            lineno: 201
+            lineno: 202
           })));
           __iced_deferrals._fulfill();
         });
@@ -416,7 +420,7 @@
                       return out = arguments[0];
                     };
                   })(),
-                  lineno: 206
+                  lineno: 207
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -442,7 +446,7 @@
                         return uids = arguments[0];
                       };
                     })(),
-                    lineno: 219
+                    lineno: 220
                   })));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -491,7 +495,7 @@
                 return err = arguments[0];
               };
             })(),
-            lineno: 242
+            lineno: 243
           }));
           __iced_deferrals._fulfill();
         });
@@ -530,7 +534,7 @@
                     return tmp = arguments[1];
                   };
                 })(),
-                lineno: 256
+                lineno: 257
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -574,7 +578,7 @@
                     return hsk = arguments[1];
                   };
                 })(),
-                lineno: 272
+                lineno: 273
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -602,7 +606,7 @@
                       return err = arguments[0];
                     };
                   })(),
-                  lineno: 279
+                  lineno: 280
                 }));
                 __iced_deferrals._fulfill();
               })(__iced_k);
@@ -638,7 +642,7 @@
                   _this.sign_key({
                     signer: signer
                   }, esc(__iced_deferrals.defer({
-                    lineno: 290
+                    lineno: 291
                   })));
                   __iced_deferrals._fulfill();
                 })(__iced_k);
@@ -653,7 +657,7 @@
                   funcname: "GpgKey.commit"
                 });
                 _this.load(esc(__iced_deferrals.defer({
-                  lineno: 291
+                  lineno: 292
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -664,7 +668,7 @@
                     funcname: "GpgKey.commit"
                   });
                   _this.remove(esc(__iced_deferrals.defer({
-                    lineno: 292
+                    lineno: 293
                   })));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -676,7 +680,7 @@
                       funcname: "GpgKey.commit"
                     });
                     (_this.copy_to_keyring(ring)).save(esc(__iced_deferrals.defer({
-                      lineno: 294
+                      lineno: 295
                     })));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -700,7 +704,7 @@
                       _this.sign_key({
                         signer: signer
                       }, esc(__iced_deferrals.defer({
-                        lineno: 299
+                        lineno: 300
                       })));
                       __iced_deferrals._fulfill();
                     })(__iced_k);
@@ -747,7 +751,7 @@
                         return err = arguments[0];
                       };
                     })(),
-                    lineno: 315
+                    lineno: 316
                   }));
                   __iced_deferrals._fulfill();
                 })(__iced_k);
@@ -823,7 +827,7 @@
                     return out = arguments[1];
                   };
                 })(),
-                lineno: 348
+                lineno: 349
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -849,7 +853,7 @@
                       return err = arguments[0];
                     };
                   })(),
-                  lineno: 358
+                  lineno: 359
                 }));
                 __iced_deferrals._fulfill();
               })(__iced_k);
@@ -894,7 +898,7 @@
                 return fp = arguments[2];
               };
             })(),
-            lineno: 375
+            lineno: 376
           }));
           __iced_deferrals._fulfill();
         });
@@ -949,7 +953,7 @@
                     return ids = arguments[1];
                   };
                 })(),
-                lineno: 407
+                lineno: 408
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -1001,7 +1005,7 @@
             quiet: true,
             secret: secret
           }, esc(__iced_deferrals.defer({
-            lineno: 431
+            lineno: 432
           })));
           __iced_deferrals._fulfill();
         });
@@ -1019,7 +1023,7 @@
                   return fps = arguments[0];
                 };
               })(),
-              lineno: 432
+              lineno: 433
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -1055,7 +1059,7 @@
                     return keyblock = arguments[0];
                   };
                 })(),
-                lineno: 449
+                lineno: 450
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -1077,7 +1081,7 @@
                   return ring = arguments[0];
                 };
               })(),
-              lineno: 450
+              lineno: 451
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -1098,7 +1102,7 @@
                     return fp = arguments[1];
                   };
                 })(),
-                lineno: 451
+                lineno: 452
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -1116,7 +1120,7 @@
                           return e2 = arguments[0];
                         };
                       })(),
-                      lineno: 453
+                      lineno: 454
                     }));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -1161,7 +1165,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 463
+            lineno: 464
           }));
           __iced_deferrals._fulfill();
         });
@@ -1214,7 +1218,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 475
+            lineno: 476
           }));
           __iced_deferrals._fulfill();
         });
@@ -1269,7 +1273,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 489
+            lineno: 490
           }));
           __iced_deferrals._fulfill();
         });
@@ -1319,7 +1323,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 500
+            lineno: 501
           }));
           __iced_deferrals._fulfill();
         });
@@ -1352,7 +1356,7 @@
                 return __slot_1._all_id_64s = arguments[1];
               };
             })(_this),
-            lineno: 509
+            lineno: 510
           }));
           __iced_deferrals._fulfill();
         });
@@ -1398,7 +1402,7 @@
                 return res = arguments[1];
               };
             })(),
-            lineno: 527
+            lineno: 528
           }));
           __iced_deferrals._fulfill();
         });
@@ -1435,7 +1439,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 536
+            lineno: 537
           }));
           __iced_deferrals._fulfill();
         });
@@ -1475,7 +1479,7 @@
                 return index = arguments[1];
               };
             })(),
-            lineno: 549
+            lineno: 550
           }));
           __iced_deferrals._fulfill();
         });
@@ -1516,7 +1520,7 @@
                     return err = arguments[0];
                   };
                 })(),
-                lineno: 562
+                lineno: 563
               }));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -1536,7 +1540,7 @@
                     return raw = arguments[1];
                   };
                 })(),
-                lineno: 564
+                lineno: 565
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -1561,7 +1565,7 @@
                               return ret = arguments[1];
                             };
                           })(),
-                          lineno: 568
+                          lineno: 569
                         }));
                         __iced_deferrals._fulfill();
                       })(__iced_k);
@@ -1605,7 +1609,7 @@
                       return err = arguments[0];
                     };
                   })(),
-                  lineno: 579
+                  lineno: 580
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -1643,7 +1647,7 @@
                 return fp = arguments[1];
               };
             })(),
-            lineno: 585
+            lineno: 586
           })));
           __iced_deferrals._fulfill();
         });
@@ -1666,7 +1670,7 @@
                   return ret = arguments[0];
                 };
               })(),
-              lineno: 586
+              lineno: 587
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -1739,7 +1743,7 @@
               return err = arguments[0];
             };
           })(),
-          lineno: 621
+          lineno: 622
         }));
         __iced_deferrals._fulfill();
       });
@@ -1759,7 +1763,7 @@
                     return err = arguments[0];
                   };
                 })(),
-                lineno: 623
+                lineno: 624
               }));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -1842,7 +1846,7 @@
                 return fd = arguments[1];
               };
             })(),
-            lineno: 668
+            lineno: 669
           }));
           __iced_deferrals._fulfill();
         });
@@ -1864,7 +1868,7 @@
                       return e2 = arguments[0];
                     };
                   })(),
-                  lineno: 672
+                  lineno: 673
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -1888,7 +1892,7 @@
                         return e2 = arguments[0];
                       };
                     })(),
-                    lineno: 680
+                    lineno: 681
                   }));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -1952,7 +1956,7 @@
                   funcname: "RingFileBundle.touch_all"
                 });
                 _this.touch(which, f, esc(__iced_deferrals.defer({
-                  lineno: 690
+                  lineno: 691
                 })));
                 __iced_deferrals._fulfill();
               })(_next);
@@ -2026,7 +2030,7 @@
                 return made = arguments[1];
               };
             })(),
-            lineno: 736
+            lineno: 737
           }));
           __iced_deferrals._fulfill();
         });
@@ -2053,7 +2057,7 @@
                           return so = arguments[1];
                         };
                       })(),
-                      lineno: 742
+                      lineno: 743
                     }));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -2075,7 +2079,7 @@
                                     return err = arguments[0];
                                   };
                                 })(),
-                                lineno: 746
+                                lineno: 747
                               }));
                               __iced_deferrals._fulfill();
                             })(function() {
@@ -2107,7 +2111,7 @@
                         return err = arguments[0];
                       };
                     })(),
-                    lineno: 754
+                    lineno: 755
                   }));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -2134,7 +2138,7 @@
                           return err = arguments[0];
                         };
                       })(),
-                      lineno: 762
+                      lineno: 763
                     }));
                     __iced_deferrals._fulfill();
                   })(__iced_k);
@@ -2163,7 +2167,7 @@
             funcname: "AltKeyRingBase.copy_key"
           });
           k1.load(esc(__iced_deferrals.defer({
-            lineno: 769
+            lineno: 770
           })));
           __iced_deferrals._fulfill();
         });
@@ -2177,7 +2181,7 @@
               funcname: "AltKeyRingBase.copy_key"
             });
             k2.save(esc(__iced_deferrals.defer({
-              lineno: 771
+              lineno: 772
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -2243,7 +2247,7 @@
                     return files = arguments[1];
                   };
                 })(),
-                lineno: 809
+                lineno: 810
               }));
               __iced_deferrals._fulfill();
             })(function() {
@@ -2289,7 +2293,7 @@
                                 return e2 = arguments[0];
                               };
                             })(),
-                            lineno: 815
+                            lineno: 816
                           }));
                           __iced_deferrals._fulfill();
                         })(function() {
@@ -2313,7 +2317,7 @@
                                 return err = arguments[0];
                               };
                             })(),
-                            lineno: 820
+                            lineno: 821
                           }));
                           __iced_deferrals._fulfill();
                         })(function() {
@@ -2453,7 +2457,7 @@
                 return out = arguments[1];
               };
             })(),
-            lineno: 911
+            lineno: 912
           }));
           __iced_deferrals._fulfill();
         });
@@ -2486,7 +2490,7 @@
                 return err = arguments[0];
               };
             })(),
-            lineno: 918
+            lineno: 919
           }));
           __iced_deferrals._fulfill();
         });
@@ -2542,7 +2546,7 @@
                 return ret = arguments[1];
               };
             })(),
-            lineno: 939
+            lineno: 940
           }));
           __iced_deferrals._fulfill();
         });

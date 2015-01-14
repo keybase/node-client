@@ -8,7 +8,7 @@ urlmod = require 'url'
 
 #================================================================================
 
-ws_normalize = (x) -> 
+ws_normalize = (x) ->
   v = x.split(/[\t\r\n ]+/)
   v.shift() if v.length and v[0].length is 0
   v.pop() if v.length and v[-1...][0].length is 0
@@ -40,9 +40,9 @@ class BearerToken
       # Very crypto!  Not sure why this is done, but it's done
       cred = (new Buffer [ @auth.key, @auth.secret].join(":")).toString('base64')
 
-      opts = 
+      opts =
         url : "https://api.twitter.com/oauth2/token"
-        headers : 
+        headers :
           Authorization : "Basic #{cred}"
         form :
           grant_type : "client_credentials"
@@ -95,7 +95,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
   # ---------------------------------------------------------------------------
 
   _check_args : (args) ->
-    if not(args.username?) 
+    if not(args.username?)
       new Error "Bad args to Twitter proof: no username given"
     else if not (args.name?) or (args.name isnt 'twitter')
       new Error "Bad args to Twitter proof: type is #{args.name}"
@@ -160,7 +160,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
       query = {include_entities}
       if ids?
         query.user_id = ids[i...j].join ','
-      else 
+      else
         query.screen_name = screen_names[i...j].join ','
       u = urlmod.format {
         host:       "api.twitter.com"
@@ -185,8 +185,8 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
           await setTimeout defer(), cursor_wait
         else
           done = true
-        @log "| got #{json.length} more; total=#{responses.length}"    
- 
+        @log "| got #{json.length} more; total=#{responses.length}"
+
     # twitter may not obey our matching request order
     if responses?.length
       dict = {}
@@ -268,12 +268,12 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
 
   find_sig_in_tweet : ({inside, tweet_p, proof_text_check}) ->
 
-    if tweet_p? and not inside? 
+    if tweet_p? and not inside?
       inside = tweet_p.text()
       html = tweet_p.html()
     else
       html = null
-  
+
     # MK 2014/06/24
     # Map 1+ spaces to 1 space in both cases.  Also pop and shift off any leading
     # and trailing spaces.
@@ -303,7 +303,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
       $ = @libs.cheerio.load html
       #
       # only look inside the permalink tweet container
-      # 
+      #
       div = $('.permalink-tweet-container .permalink-tweet')
       if not div.length
         rc = v_codes.FAILED_PARSE
@@ -311,7 +311,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
         div = div.first()
 
         #
-        # make sure both the username and tweet id match our query, 
+        # make sure both the username and tweet id match our query,
         # in case twitter printed other tweets into the page
         # inside this container
         #
@@ -332,7 +332,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
 
   # ---------------------------------------------------------------------------
 
-  # Only the hunter needs this 
+  # Only the hunter needs this
   _get_body_api : ({url}, cb) ->
     rc = body = err = null
     await @_get_bearer_token defer err, rc, tok
@@ -340,7 +340,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
       @log "| HTTP API request for URL '#{url}'"
       args =
         url : url
-        headers : 
+        headers :
           Authorization : "Bearer #{tok}"
           method : "GET"
         json : true

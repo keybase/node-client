@@ -1,4 +1,10 @@
-## 0.7.3
+## 0.7.4
+
+Bugfixes:
+  - Bump to pgp-wrapper @1.0.2
+  - Bump to proofs @2.0.3
+
+## 0.7.3 (2014-11-17)
 
 Bugfixes:
    - Address #175

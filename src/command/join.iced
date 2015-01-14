@@ -24,7 +24,7 @@ exports.Command = class Command extends Base
   #----------
 
   OPTS :
-    e : 
+    e :
       aliases : [ 'email' ]
       help : 'the email address to signup'
     u :
@@ -38,7 +38,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       aliases : [ "signup" ]
       help : "establish a new account on keybase.io"
     name = "join"
@@ -56,14 +56,14 @@ exports.Command = class Command extends Base
         prompt : "Invitation code (leave blank if you don't have one)"
         checker : checkers.invite_code
         thrower : (k,s) -> if (s.match /^\s*$/)? then (new E.CleanCancelError(k)) else null
-      username : 
+      username :
         prompt : "Your desired username"
         checker : checkers.username
-      passphrase: 
+      passphrase:
         prompt: "Your login passphrase"
         passphrase: true
         checker: checkers.passphrase
-        confirm : 
+        confirm :
           prompt: "Repeat to confirm"
 
     if not @prompter
@@ -88,7 +88,7 @@ exports.Command = class Command extends Base
   #----------
 
   post : (cb) ->
-    args =  
+    args =
       salt : @salt.toString('hex')
       pwh : @pwh.toString('hex')
       username : @data.username
@@ -122,7 +122,7 @@ exports.Command = class Command extends Base
           @prompter.clear 'invite'
           err = null
 
-    if not err?       
+    if not err?
       @uid = body.uid
       session.set_id body.session
       session.set_csrf body.csrf_token
@@ -174,7 +174,7 @@ exports.Command = class Command extends Base
   #----------
 
   ri_prompt_for_ok : (cb) ->
-    opts = 
+    opts =
       prompt : "Would you like to be added to the invite list?"
       defval : true
     await prompt_yn opts, defer err, go
@@ -185,10 +185,10 @@ exports.Command = class Command extends Base
   #----------
 
   ri_prompt_for_data : (cb) ->
-    seq = 
+    seq =
       full_name :
         prompt : "Your name"
-      notes : 
+      notes :
         prompt : "Any comments for the team"
     prompter = new Prompter seq
     await prompter.run defer err
@@ -231,7 +231,7 @@ exports.Command = class Command extends Base
 Welcome to keybase.io! You now need to associate a public key with your
 account.  If you have a key already then:
 
-    keybase push <key-id>  # if you know the ID of the key --- OR --- 
+    keybase push <key-id>  # if you know the ID of the key --- OR ---
     keybase push           # to select from a menu
 
 If you need a public key, we'll happily generate one for you:
