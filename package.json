@@ -1,6 +1,6 @@
 {
   "name": "keybase",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "CLI interface to keybase.io",
   "repository": {
     "type": "git",
@@ -52,7 +52,7 @@
     "socks5-client": "^0.3.6",
     "socks5-http-client": "^0.1.6",
     "socks5-https-client": "^0.2.2",
-    "spotty" : "^1.0.0",
+    "spotty": "^1.0.0",
     "tablify": "0.1.5",
     "timeago": "0.1.0",
     "triplesec": ">=3.0.16"
