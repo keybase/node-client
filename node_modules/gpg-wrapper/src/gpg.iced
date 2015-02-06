@@ -3,6 +3,8 @@
 {E} = require './err'
 {parse} = require('pgp-utils').userid
 ispawn = require 'iced-spawn'
+{make_esc} = require 'iced-error'
+spotty = require 'spotty'
 
 ##=======================================================================
 
@@ -33,6 +35,15 @@ exports.find_and_set_cmd = (cmd, cb) ->
 
 ##=======================================================================
 
+_tty = null
+
+exports.pinentry_init = (cb) ->
+  await spotty.tty defer err, tmp
+  _tty = tmp
+  cb err, _tty
+
+##=======================================================================
+
 exports.GPG = class GPG
 
   #----
@@ -57,6 +68,7 @@ exports.GPG = class GPG
     @mutate_args inargs
     env = process.env
     delete env.LANGUAGE
+    env.GPG_TTY = _tty if _tty?
     inargs.name = @CMD
     inargs.eklass = E.GpgError
     inargs.opts = { env }

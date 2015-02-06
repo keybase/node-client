@@ -1,5 +1,10 @@
 
-{get_gpg_cmd,find_and_set_cmd,colgrep,GPG,set_gpg_cmd} = require '../../lib/main'
+{pinentry_init,get_gpg_cmd,find_and_set_cmd,colgrep,GPG,set_gpg_cmd} = require '../../lib/main'
+
+exports.pinentry_init = (T,cb) ->
+  await pinentry_init defer err, out
+  T.no_error err
+  cb()
 
 exports.test_assert_no_collision = (T,cb) ->
   obj = new GPG()

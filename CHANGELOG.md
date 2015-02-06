@@ -1,8 +1,9 @@
 ## 0.7.4
 
 Bugfixes:
-  - Bump to pgp-wrapper @1.0.2
+  - Bump to gpg-wrapper @1.0.3
   - Bump to proofs @2.0.3
+  - FINALLY! fix the hang on pinentry bug via node-spotty to find our TTY
 
 ## 0.7.3 (2014-11-17)
 

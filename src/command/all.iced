@@ -17,6 +17,7 @@ proxyca = require '../proxyca'
 tor = require '../tor'
 colors = require '../colors'
 {check_node_async} = require 'badnode'
+ispawn = require 'iced-spawn'
 
 ##=======================================================================
 
@@ -243,6 +244,14 @@ class Main
         log.debug "| using GPG command: #{cmd}"
         env().set_gpg_cmd cmd
       log.debug "- tested GPG command-line client -> #{err}"
+      if not err?
+        await gpgw.pinentry_init defer e2, tty
+        if e2?
+          log.debug "Warning on pinentry init: #{e2.toString()}"
+        else if tty?
+          log.debug "Setting GPG_TTY=#{tty}"
+        else
+          log.debug "No tty to set"
     cb err
 
   #----------------------------------

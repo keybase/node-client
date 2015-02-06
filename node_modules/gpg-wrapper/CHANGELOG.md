@@ -1,3 +1,8 @@
+## 1.0.3 (2015-02-06)
+
+Feature:
+  - Lookup TTY and init pinentry
+
 ## 1.0.2 (2015-01-14)
 
 Bugfixes:
