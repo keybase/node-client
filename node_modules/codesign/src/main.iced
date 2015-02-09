@@ -45,7 +45,7 @@ class Main
     tojson         = subparsers.addParser 'tojson', {addHelp:true}
 
     sign.addArgument      ['-o', '--output'],  {action: 'store', type:'string', help: 'output to a specific file'}    
-    sign.addArgument      ['-p', '--presets'], {action: 'store', type:'string', help: 'specify ignore presets, comma-separated',  defaultValue: 'git,dropbox,kb'}
+    sign.addArgument      ['-p', '--presets'], {action: 'store', type:'string', help: 'specify ignore presets, comma-separated',  defaultValue: 'git,dropbox,kb,svn'}
     sign.addArgument      ['dir'],             {nargs:  '?', action: 'store', type:'string', help: 'the directory to sign', defaultValue: '.'}
     sign.addArgument      ['-q', '--quiet'],   {action: 'storeTrue', help: 'withhold output unless an error'}
 

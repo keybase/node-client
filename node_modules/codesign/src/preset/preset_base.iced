@@ -1,6 +1,7 @@
 fs             = require 'fs'
 path           = require 'path'
 constants      = require '../constants'
+{exec}         = require 'child_process'
 
 # =============================================================================
 #
@@ -59,6 +60,16 @@ PresetBase = class PresetBase
     await fs.readFile f, {encoding: 'utf8'}, defer err, body
     if body?
       res.push line for line in body.split /[\n\r]+/
+    cb res
+
+  # ---------------------------------------------------------------------------
+
+  @command_to_array: (c, cb) ->
+    # returns an empty array if the command returns nothing
+    res = []
+    cmd = exec c
+    await cmd.stdout.on 'data', defer data
+    res.push line for line in data.split /[\n\r]+/
     cb res
 
   # ---------------------------------------------------------------------------

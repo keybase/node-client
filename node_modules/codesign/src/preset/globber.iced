@@ -119,4 +119,14 @@ class GlobberPreset extends PresetBase
 
   # -------------------------------------------------------------------------------------
 
+  @from_command: (p, c, cb) ->
+    full_path       = path.resolve p
+    working_path    = path.dirname full_path
+    await PresetBase.command_to_array c, defer glob_list
+    gp = new GlobberPreset working_path, glob_list
+
+    cb gp
+
+  # -------------------------------------------------------------------------------------
+
 module.exports = GlobberPreset

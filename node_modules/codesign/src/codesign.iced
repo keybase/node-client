@@ -7,6 +7,7 @@ constants               = require './constants'
 GitPreset               = require './preset/git'
 KbPreset                = require './preset/kb'
 DropboxPreset           = require './preset/dropbox'
+SvnPreset               = require './preset/svn'
 GlobberPreset           = require './preset/globber'
 {json_stringify_sorted} = require('iced-utils').util
 vc                      = constants.verify_codes
@@ -187,6 +188,7 @@ class CodeSign
         when 'git'      then @presets.push new GitPreset()
         when 'dropbox'  then @presets.push new DropboxPreset()
         when 'kb'       then @presets.push new KbPreset()
+        when 'svn'      then @presets.push new SvnPreset()
         when 'none'     then continue
         else throw new Error "Unknown preset: #{p}"
 
