@@ -1,4 +1,11 @@
-## 0.7.4
+## 0.7.5 (2015-02-09)
+
+Bugfixes:
+  - Fix change in dns.resolveTxt introduced in Node v0.12
+     - via keybase-proofs@2.0.13
+     - Addresses https://github.com/keybase/keybase-issues#1362
+
+## 0.7.4 (2015-02-06)
 
 Bugfixes:
   - Bump to gpg-wrapper @1.0.3
