@@ -19,6 +19,7 @@ $(BUILD_STAMP): \
 	lib/b64extract.js \
 	lib/constants.js \
 	lib/cryptocurrency.js \
+	lib/device.js \
 	lib/main.js \
 	lib/revoke.js \
 	lib/sibkey.js \

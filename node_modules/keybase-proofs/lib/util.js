@@ -53,4 +53,8 @@
 
   })();
 
+  exports.space_normalize = function(s) {
+    return s.split(/[\r\n\t ]+/).join(' ');
+  };
+
 }).call(this);

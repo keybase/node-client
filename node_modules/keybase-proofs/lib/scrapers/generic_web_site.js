@@ -87,7 +87,7 @@
         });
       })(this)((function(_this) {
         return function() {
-          rc = rc !== v_codes.OK ? rc : (_this._stripr(raw).indexOf(proof_text_check)) >= 0 ? v_codes.OK : v_codes.NOT_FOUND;
+          rc = rc !== v_codes.OK ? rc : _this._find_sig_in_raw(proof_text_check, raw) ? v_codes.OK : v_codes.NOT_FOUND;
           return cb(err, rc);
         };
       })(this));

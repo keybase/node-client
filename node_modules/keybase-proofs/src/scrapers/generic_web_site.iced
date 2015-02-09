@@ -28,7 +28,7 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
 
   # ---------------------------------------------------------------------------
 
-  get_tor_error : (args) -> 
+  get_tor_error : (args) ->
     if (args.protocol is 'http:')
       [new Error("HTTP (without TLS) isn't reliable over tor"), v_codes.TOR_SKIPPED ]
     else
@@ -38,7 +38,7 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
 
   make_url : ({protocol, hostname, pathname}) ->
     urlmod.format {
-      hostname, 
+      hostname,
       protocol,
       pathname
     }
@@ -49,8 +49,8 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
     # calls back with a v_code or null if it was ok
     await @_get_url_body {url }, defer err, rc, raw
     rc = if rc isnt v_codes.OK                             then rc
-    else if (@_stripr(raw).indexOf(proof_text_check)) >= 0 then v_codes.OK
-    else                                                        v_codes.NOT_FOUND
+    else if @_find_sig_in_raw(proof_text_check, raw)       then v_codes.OK
+    else                                                   v_codes.NOT_FOUND
     cb err, rc
 
   # ---------------------------------------------------------------------------
@@ -60,9 +60,9 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
     out = {}
     err = null
     rc = v_codes.OK
-    if not hostname? or not protocol? 
+    if not hostname? or not protocol?
       err = new Error "invalid arguments: expected a hostname and protocol"
-    else 
+    else
       for f in @FILES
         url = @make_url { hostname, protocol , pathname : f }
         await @_check_url { url , proof_text_check }, defer err, rc
@@ -73,7 +73,7 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
             human_url : url
             remote_id : url
           break
-        else if rc in [ v_codes.HTTP_400,  v_codes.HTTP_500, 
+        else if rc in [ v_codes.HTTP_400,  v_codes.HTTP_500,
                         v_codes.NOT_FOUND, v_codes.PERMISSION_DENIED ]
           continue
         else
@@ -85,7 +85,7 @@ exports.GenericWebSiteScraper = class GenericWebSiteScraper extends BaseScraper
 
   _check_api_url : ({api_url,hostname,protocol}) ->
     for f in @FILES
-      if (api_url.toLowerCase().indexOf(@make_url {hostname, protocol, pathname : f}) >= 0) 
+      if (api_url.toLowerCase().indexOf(@make_url {hostname, protocol, pathname : f}) >= 0)
         return true
     return false
 

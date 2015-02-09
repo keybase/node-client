@@ -8,6 +8,7 @@ base = require './base'
 {Announcement} = require './announcement'
 {Subkey} = require './subkey'
 {Sibkey} = require './sibkey'
+{Device} = require './device'
 
 #=======================================================
 
@@ -29,6 +30,7 @@ lookup_tab = {
   "announcement"                   : Announcement,
   "subkey"                         : Subkey,
   "sibkey"                         : Sibkey
+  "device"                         : Device
 }
 
 #--------------------------------------------

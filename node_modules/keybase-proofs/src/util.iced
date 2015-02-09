@@ -12,7 +12,7 @@ exports.json_secure_compare = json_secure_compare = (a,b) ->
 ##-----------------------------------------------------------------------
 
 # Copied from iced-utils, so as not to introduce a dependency
-# on a library that's used mainly in node. 
+# on a library that's used mainly in node.
 exports.Lock = class Lock
   constructor : ->
     @_open = true
@@ -30,5 +30,9 @@ exports.Lock = class Lock
     else
       @_open = true
   open : -> @_open
+
+##-----------------------------------------------------------------------
+
+exports.space_normalize = (s) -> s.split(/[\r\n\t ]+/).join(' ')
 
 ##-----------------------------------------------------------------------

@@ -9,6 +9,26 @@ dns = require 'dns'
 
 #================================================================================
 
+#
+# TXT records come back from node in different formats depending on node version.
+#
+#  In Node < v0.12, it's:
+#     [ 'google-site-verification=TdBjb4jFf-AMZNGvm5BcqvoksmlJ_8G22ARdJp8jLgk',
+#       'keybase-site-verification=uqzZedLr4yVILSkh6nLfctv5oxrqpp8rFLHsz-0xxy4' ]
+#
+#  In Node >= v0.12, it's:
+#     [ [ 'google-site-verification=TdBjb4jFf-AMZNGvm5BcqvoksmlJ_8G22ARdJp8jLgk' ],
+#       [ 'keybase-site-verification=uqzZedLr4yVILSkh6nLfctv5oxrqpp8rFLHsz-0xxy4' ] ]
+#
+#  This method reformats the results into Node < 0.12.0 style
+#
+txt_reformat = (v) ->
+  if v.length is 0 then v
+  else if Array.isArray(v[0]) then (sv[0] for sv in v)
+  else v
+
+#================================================================================
+
 exports.DnsScraper = class DnsScraper extends BaseScraper
 
   # ---------------------------------------------------------------------------
@@ -35,7 +55,7 @@ exports.DnsScraper = class DnsScraper extends BaseScraper
     out = {}
     if not domain?
       err = new Error "invalid arguments: expected a domain"
-    else 
+    else
       url = @make_url { domain }
       out =
         api_url   : url
@@ -83,7 +103,7 @@ exports.DnsScraper = class DnsScraper extends BaseScraper
     rc = if err?
       @log "| DNS error: #{err}"
       v_codes.DNS_ERROR
-    else if (proof_text_check in records) then v_codes.OK
+    else if (proof_text_check in txt_reformat(records)) then v_codes.OK
     else
       @log "| DNS failed; found TXT entries: #{JSON.stringify records}"
       v_codes.NOT_FOUND

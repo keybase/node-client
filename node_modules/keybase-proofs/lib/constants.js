@@ -19,7 +19,8 @@
       cryptocurrency: "cryptocurrency",
       announcement: "announcement",
       subkey: "subkey",
-      sibkey: "sibkey"
+      sibkey: "sibkey",
+      device: "device"
     },
     proof_types: {
       none: 0,

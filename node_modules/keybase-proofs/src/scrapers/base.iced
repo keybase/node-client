@@ -2,6 +2,7 @@
 {v_codes} = constants
 pkg = require '../../package.json'
 {decode} = require('pgp-utils').armor
+{space_normalize} = require '../util'
 
 #==============================================================
 
@@ -61,7 +62,13 @@ class BaseScraper
   #-------------------------------------------------------------
 
   # Convert away from MS-dos style encoding...
-  _stripr : (m) -> m.split('\r').join('')
+  _stripr : (m) ->
+    m.split('\r').join('')
+
+  #-------------------------------------------------------------
+
+  _find_sig_in_raw : (proof_text_check, raw) ->
+    return space_normalize(raw).indexOf(space_normalize(proof_text_check)) >= 0
 
   #-------------------------------------------------------------
 

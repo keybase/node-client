@@ -7,6 +7,7 @@ mods = [
   require('./base')
   require('./track')
   require('./auth')
+  require('./device')
   require('./revoke')
   require('./cryptocurrency')
   require('./subkey')
