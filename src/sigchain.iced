@@ -190,12 +190,12 @@ exports.SigChain = class SigChain
     # first try to see if the username is baked into the key, and be happy with that
     log.debug "+ read username baked into key"
     await @pubkey.read_uids_from_key esc defer uids
-    found = (email for {email} in uids).indexOf(kbem) >= 0
+    found = (email.toLowerCase() for {email} in uids).indexOf(kbem) >= 0
     log.debug "- found -> #{found}"
 
     log.debug "+ search for explicit self-signatures (found=#{found})"
     # Search for an explicit self-signature of this key
-    if not found and (link = @table?.get(ST.SELF_SIG))? and (link.self_signer() is @username)
+    if not found and (link = @table?.get(ST.SELF_SIG))? and (link.self_signer()?.toLowerCase() is @username)
       found = true
     log.debug "- found -> #{found}"
 
@@ -205,7 +205,7 @@ exports.SigChain = class SigChain
       for type in [ ST.REMOTE_PROOF, ST.TRACK ]
         tab = @table?.get(type)?.flatten() or []
         for link in tab
-          if link.self_signer() is @username
+          if link.self_signer()?.toLowerCase() is @username
             found = true
             break
         break if found

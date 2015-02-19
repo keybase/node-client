@@ -1,3 +1,8 @@
+## 0.7.6 (2015-02-19)
+
+Bugfixes:
+  - Case-insensitive email comparisons on self-signatures.
+
 ## 0.7.5 (2015-02-09)
 
 Bugfixes:
