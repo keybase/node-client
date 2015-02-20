@@ -1,3 +1,9 @@
+## 0.7.7 (2015-02-20)
+
+Bugfixes:
+  - Crasher for empty email addresses in PGP 
+     - Close https://github.com/keybase/keybase-issues/issues/1398
+
 ## 0.7.6 (2015-02-19)
 
 Bugfixes:

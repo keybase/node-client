@@ -190,7 +190,7 @@ exports.SigChain = class SigChain
     # first try to see if the username is baked into the key, and be happy with that
     log.debug "+ read username baked into key"
     await @pubkey.read_uids_from_key esc defer uids
-    found = (email.toLowerCase() for {email} in uids).indexOf(kbem) >= 0
+    found = (email.toLowerCase() for {email} in uids when email?).indexOf(kbem) >= 0
     log.debug "- found -> #{found}"
 
     log.debug "+ search for explicit self-signatures (found=#{found})"
