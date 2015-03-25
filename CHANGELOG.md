@@ -1,3 +1,8 @@
+## 0.7.8
+
+Bugfixes:
+  - Add keybase installer as a dependency (PR #189 via @dtiersch)
+
 ## 0.7.7 (2015-02-20)
 
 Bugfixes:
