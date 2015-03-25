@@ -38,6 +38,7 @@
     "iced-spawn": ">=1.0.0",
     "iced-utils": "0.1.20",
     "kbpgp": ">=1.0.2",
+    "keybase-installer": "1.0.1",
     "keybase-path": "0.0.15",
     "keybase-proofs": "^2.0.13",
     "libkeybase": "^0.0.6",
