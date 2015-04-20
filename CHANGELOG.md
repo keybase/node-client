@@ -2,6 +2,10 @@
 
 Bugfixes:
   - Add keybase installer as a dependency (PR #189 via @dtiersch)
+  - Home fixes for Windows 10
+  - New version of request
+  - Upgrade gpg-wrapper for better Arch and GPG 2.1 support (v 1.0.4)
+  - Upgrade request to 2.55.0 to solve proxy bugs (See keybase/keybase-issues#1397)
 
 ## 0.7.7 (2015-02-20)
 
