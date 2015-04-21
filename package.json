@@ -98,6 +98,7 @@
     "socks5-client",
     "socks5-http-client",
     "socks5-https-client",
+    "spotty",
     "tablify",
     "timeago",
     "triplesec"
