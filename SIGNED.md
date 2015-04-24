@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJU56VnAAoJEJgKPw0B/gTfbhMIAKGYDp6lYq5ctZ/vCe1jt5oc
-TKGAOO81hmxasihmE58dV8Drl8QDWDnJpHEyppRJ62N8BH5Y+YXhNGPK/vgGORIB
-ESN58iG1Pd6lrxYzHlObNzJjxBC6SgL8o4t3h3KFEYXmiOeRoEb9I+gA0lMCJIfg
-O6rXhBEXWENDFwAMkth34yOacKvLahpgepEjla0JQp7objmBFwMXUflIYXVSNxPg
-RUA2GyoLXUfqm6ouQOgXYnDray3y+R8gWCmQewqgZZdSNi/ub+DX6/R9k0GV0SSg
-3yV6ZHF0+J67ici9WATHH3wzcyMH8GgaJNzxGbJmzjELwAhZYnI1g8bw7ZrVLAM=
-=zdts
+iQEcBAABCgAGBQJVOoCiAAoJEJgKPw0B/gTfYbEH/2prKoKAUHcUioVPwDYEGe0R
+cIf5s4HobOGlTCSrbjYD9mF1VzQ+AXcbgwv4hERaKwWn8sUjgZnOp4Sro/J/HxSx
+iOUV+0aiA3jXcKal/IyqrRQTf17dDHxIB1jGAtTaoyMH0NSMaSVlFbqGJqc5xeMr
+zZA52BkanvVQhZHRT6kzADKw1iYnBjESdrWVHRz64iGePUUhS/VpjsQn0QvjfdOw
+aWy/x9nJgfu0snKkc7Peryk1RioWdhQ8c1jlLv/bsUm5PJSwZnxVcGLFB0A4yc3L
+qCOwOh5OMpBBomOdhIkt0cpXTVpXjv0MVzfPtPITxj1f0/P5+NC3MWZn36BgknY=
+=Vx5z
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,7 +25,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-24479           CHANGELOG.md                                  298728de726a02d95da6d427831d39efdba90be53ed4fde1c96114832d943937                                                                 
+24825           CHANGELOG.md                                  318d0e808ec10944278b6ff95e690780b629b0b77c8a018fc0f2d6d6bf86e6c6                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2054            Makefile                                      9f991497e823a1b9be86be06c9f7061bc0c001db8c5c039feb9dd4cd54f35dbf                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -117,6 +117,7 @@ size    exec  file                                            contents
 2356              version.js                                  2008982cefada8ab792f2b2fc447688c0e55f26bd9fd084b03dcbc1df1674cef                                                                 
                 node_modules/                                                                                                                                                                  
                   .bin/                                                                                                                                                                        
+                    keybase-installer                         -> ../keybase-installer/bin/main.js                                                                                              
                     semver                                    -> ../semver/bin/semver                                                                                                          
                   argparse/                                                                                                                                                                    
 2157                HISTORY.md                                70ceb72bd78b9801df9e5621544b1377b618937667088f4ee325dd8cda2ba934                                                                 
@@ -561,26 +562,26 @@ size    exec  file                                            contents
 177                   version.iced                            9ad6d080a3707b15647d707eadab9c0c2397e7c5cf5ad2f6f4eafc0f9327cf1a                                                                 
                   gpg-wrapper/                                                                                                                                                                 
 109                 .npmignore                                ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
-3797                CHANGELOG.md                              be785d692cd67b4204dae6a8d6e29408289e5090a68d73c78091028f5b7efed0                                                                 
+3894                CHANGELOG.md                              1d0224dc57b8a929a93ae89d11db200ce488b0f6350ba03dc941b8b7e967b472                                                                 
 1483                LICENSE                                   333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 502                 Makefile                                  960fe8002c2c2866c0963c9b0ed138dcb2a4feed693a3c668875935902f9b486                                                                 
 55                  README.md                                 fac7947ca164bd97f854cec88bc0266773ec378f4fb79cb1554662a4fd4079f9                                                                 
-5108                SIGNED.md                                 00a6daaff3a6359b4a4a87bc0000d7e8c4fe9f36970a8b2205ceb504d3636730                                                                 
+4762                SIGNED.md                                 e78b1274f96791e6dfa2cdd515936a25f1e674868b240d70db668a623c062504                                                                 
                     lib/                                                                                                                                                                       
 1100                  colgrep.js                              8cca2968a077b03d45b761139276f24f32b2a6948ada5fe825fcfd804105cda2                                                                 
 408                   err.js                                  ac74e7dbc52d8da10a4544bbedb78619a5407cdcdbb3893e7584fc5ca41c8e0d                                                                 
-10960                 gpg.js                                  d9c7fe74684a997fa8951c39eff378a929a23ffb526fe2ddb670fd12a9edf7ea                                                                 
+11059                 gpg.js                                  3e71dfc434d1daee56dd8f0f7e9d93651206327aff65e826190d310eebd28fc5                                                                 
 11120                 index.js                                821e84c563ead9729196d12a80f3d990cd485fbe16df6de264fdc457fd781286                                                                 
-92834                 keyring.js                              8c89bc4d9f67c6c37954f39e9dd4caed098aef5064b23eb989cf7b3c237b9b91                                                                 
+93077                 keyring.js                              4c07bae03a1a126f2af039d89a3f7ca953d48c5f9d51fdc0ac536fd317b1e154                                                                 
 387                   main.js                                 92476f33f1ce68c8f74c993c3b3d9603b9f435f44a69ec3098e552b0c4d736b8                                                                 
 3985                  parse.js                                57abc69755fc4eea76600b17082827fc23574fd7ba5b2a414cba40b89f0150a2                                                                 
-1107                package.json                              74d6e3d4c86c3810865f17b790f045fa8eed8331b085fff2d6d829ba7ee8a470                                                                 
+1107                package.json                              d276f529501929af75c9001bab37f9d6edc2f7583aaaf0f96b927e0fc5d204df                                                                 
                     src/                                                                                                                                                                       
 604                   colgrep.iced                            a3c53c57e739b9af47f7b8cdb31c3aaf3f7416c978e7905ec42bee4966bc3920                                                                 
 351                   err.iced                                db7ddbbfbe1f076ad895a83e22cac8e720f260768456dd6aa0c97e5faf7ae9e5                                                                 
-2865                  gpg.iced                                ec455cc86ccb84cebbb6e2025350484e8a60c9bb7719fa5767ad970d9b06b273                                                                 
+2942                  gpg.iced                                41ced8c0c6e399a62d90f8a464c58e463d9fbf4d99a5383dd67d17529d4bc70e                                                                 
 5740                  index.iced                              8d9d3029f836f5c608a75d010e557cc7cc7da8444b530191c9ca4282952dd8b2                                                                 
-28482                 keyring.iced                            bd5ff06ef4f4f71c22af5679f2e4b1d21a2100bb5652dfadb03a39d7cfc223bd                                                                 
+28647                 keyring.iced                            3e4d9d639ac6a205cf69ef0d67ab64a54c202bee22ba6a3cda3de0e99fbe6bea                                                                 
 225                   main.iced                               d06200c91a7f18bf1ece9ed92123ecf2362cf4592318ca23639b08356ce877ab                                                                 
 1731                  parse.iced                              f031af161d3e124ef77ed4ff2e679b84db797c2462d407be0975383c30400857                                                                 
                   iced-data-structures/                                                                                                                                                        
@@ -703,82 +704,88 @@ size    exec  file                                            contents
 6749                  util.iced                               7182d3bee726b091b20bad5c7091e241f5c1d10606f85e66892b5c3f85b80a33                                                                 
                   kbpgp/                                                                                                                                                                       
 31                  .npmignore                                18894d4475fffb5e284a7bdfb00a9633ffdd660396a780b7fc5e14f013f95783                                                                 
-9761                CHANGELOG.md                              f54a594eb3fc6dd86e76f9dbfd943affa60706898a1e4bbc9a48157144bd702c                                                                 
+14307               CHANGELOG.md                              c524c76aa740ff9f540625e9c5671c7ae8df70d913426467b0d7475fcf3f9e0e                                                                 
 1483                LICENSE                                   333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
-3109                Makefile                                  771bacfba1be35b15591ecce2c3cfb5657acfcffc9db340dfb8e4cb4af3b9815                                                                 
+3185                Makefile                                  7e580bca68bb4ee81cfe481936917ab0a1a728dac1a6950a9877ed799ca3863b                                                                 
 1095                README.md                                 9bec8f0b790ef515a12166f197f031991bc085a17525d3c0217676c301f222bd                                                                 
-44572               SIGNED.md                                 97e11ac0d78878968260e29ba1d925c1af399d88923b7d6c054eeb57f7ec543b                                                                 
+50572               SIGNED.md                                 2bb930ea40355275e202cd2de136537cb343f82e1ecdec8f35f2d49d7f4e2dde                                                                 
                     lib/                                                                                                                                                                       
 756                   asymmetric.js                           e150a379878a88c985d80b8207b2b7a82f45ed66038a0cc53570e0cf414edad6                                                                 
-5938                  basekeypair.js                          d324ac1e77fc8f4329746bb1b150c9a9a35f17ec74cae9e268b1de2b4382d760                                                                 
+6733                  basekeypair.js                          27e77cf7894d2aa3eb577ee4aeb1907604542ac28b4b9062fa0f07918787b486                                                                 
 2866                  basex.js                                96a966226288269d87b6ee79f2d806b86a00fd4bab8893af3cab65a3251d07d7                                                                 
 3372                  bn.js                                   fa9df136f1ee16210473d344650ef150c36878ee174a23b30a34bf2e2fa24148                                                                 
-4521                  const.js                                c1331f5dc6d9f40c4c4ec88bac5cb48f745d0810d9f15f4c6e03ea2c6b6bc07e                                                                 
-8627                  dsa.js                                  11ebc178a8af7b934d98de02591be2cdbd0847ce09df241538729fea67c3128b                                                                 
+4271                  const.js                                1649df9e1a8bf9a5e9a0cc3d3826fa54e5e89af3107429e735ae57e9bf0556d0                                                                 
+8801                  dsa.js                                  b5806a766eefc8f4c8101b1e893c2b08484a7831243c9fc91533806b23fbd80f                                                                 
                       ecc/                                                                                                                                                                     
-3343                    base.js                               3fa56c645290986e42bd1acf9b1ab9627ae7bb67bd73de1281e90e6662a59426                                                                 
-8640                    curves.js                             24602288cf29846f2464eb22e384855db3cd781682621dfb43029e55f27e36db                                                                 
-13562                   ecdh.js                               cfa33e3fa355bc2fd83014ae9be58f1289f07320baef5b2e6e83d2f9a7053f4b                                                                 
-9324                    ecdsa.js                              dae0bb15aa05c4569555a02f79b1e0e87197ab0e6e20beefd73bf005d105a372                                                                 
-111                     main.js                               9baeda8e8cfdce39774ce4cd7d4e7c29fcfce16c3e95212aca105e88d508a01b                                                                 
-12233                 elgamal.js                              5e1b9e5399c14051fc548258d8744ed5ded9efbb532abe4272705cc4d27af317                                                                 
+3431                    base.js                               4551998883c6467583dde0ff93500abd4a9276d90e88d71c04dbe7d4e73fe1d3                                                                 
+8680                    curves.js                             9119c9ed1c9ba45809b53ad3ba68177b98d46e989dbecf0a89602302c12fccd3                                                                 
+13765                   ecdh.js                               22be119e33e22d1ebf1db32d0dc576b26ae5e419314e274a9172dfb28ce91b94                                                                 
+9525                    ecdsa.js                              7a947c99577618631b0cb734748d1a3580c3d8b3843e592018f0dd76cd16a5d1                                                                 
+198                     main.js                               08afef77d409cd961765511c8c811174f33b0e285bcd8ccab2733a96bce694f3                                                                 
+12401                 elgamal.js                              ee9f3f6155fc30586af548e4909dc69a22c9fa2ecbbe42567de716f281a22ce7                                                                 
 3432                  elgamalse.js                            d353361baf6af878d71af8190ae80e09553ab0721640475c1f62927e78e423d4                                                                 
 1906                  hash.js                                 c34013e9fd595d49609cbf542a9eff83f046cb9944219a0b457dd2b1906af29b                                                                 
 260                   header.js                               316de1752338f4fe7c5325e3180fd61659218dfa38abd21af3f789351f3b6426                                                                 
                       keybase/                                                                                                                                                                 
-1911                    encode.js                             0c56884f3c0539b9d9e5594ad2c1db27daa346d6be52761f1940222cc7980ba4                                                                 
+1940                    encode.js                             ae57af73c6296f99601cfbe300679ea95d5691b7f26133ca9750c8cc699b3521                                                                 
+17137                   hilev.js                              f4bd7b327ebf96720e99652e3bcada477af3213a88f04b17122b34d749ad5e58                                                                 
                         packet/                                                                                                                                                                
-393                       all.js                              f7e0472fccc25f9315c4f2e5ef023ed95bd771578bff273ee4d647863fde5559                                                                 
-839                       base.js                             4c497cb6d01fb6876503e9c83f75d42e1f2c1751461ff7e331059938d8ba5eaf                                                                 
-13329                     bundle.js                           55381e7c83efbc7382740c0e3cf117c86b2af2cfabed70bbbcef286d3f44268f                                                                 
-8777                      keymaterial.js                      57f5369a99fe139f718d5fc2433082e09504ceffa5b5fc2bef371c2f6941a7d0                                                                 
-5802                      p3skb.js                            1df8e1696bdf5f4921159f4f3fe61ee86cf3d802665fa7c0902df8a24adebc33                                                                 
-6932                      signature.js                        3fbaa957de7521b30a0e059ee99408de7a0cdce668f49ea7ae41cb30d37f240a                                                                 
-918                       userid.js                           8d50af7907a66427d37cba19d456bed6e8adc3b752bd87f643bb511be4fd79c1                                                                 
-4936                    sign.js                               eee4a919b4ea106ec4fd5a5bc3726e29ad1ab162347c9bff1958e232ee07f985                                                                 
+985                       alloc.js                            0f188c8f6d7f1b84da57ef3f089b33e16477bc35e70369a5fc028e6a62b48fdf                                                                 
+1717                      base.js                             1d99c8a7725597284c502b3043f034ce749058f3f14a2de11251b0319cb16e63                                                                 
+12033                     encryption.js                       2c32c59f577c2c8675ddcf400832d995384c58d07d18c2d7091e8cc4aa2bfc32                                                                 
+6158                      p3skb.js                            f9740652913dd0d5d6ecf3e019d05983a37b267a7da2eec440449ff910558d31                                                                 
+5950                      signature.js                        85b794c429561c520843ad06de735398d8701b5952350afdf73bcef66395f521                                                                 
+2382                    util.js                               09b8e76f46098695b8a6087219b4ec68c15a01a89f1f3fb6c7d9927cb843a8cf                                                                 
 330                   keyfetch.js                             f8c05474c9e37b5d11c4ec991f20958d6f308a96703dfa939f3c85b9f6f19bc7                                                                 
-58147                 keymanager.js                           ad2a2502d60bde3e93a5e78f661a130c5efa8c48c1906464bae2f4c0a622f673                                                                 
-2641                  keyring.js                              df5afbb75be8b00a6a6326ce7615bf813a4ba65794d44bc3a4e3c7c4b9a1e437                                                                 
-2224                  keywrapper.js                           04d92f8ae35e6321cbc8a312942915f7ea72f4c710031b5246b7d0b935fb805c                                                                 
-3203                  lock.js                                 5004e3d6451418224b5d87d605e7f2339a177cf14b68b33f48e1d5d13db5af69                                                                 
-901                   main.js                                 fbabe7a53ff0d5efd64b36705152074023c394aeaa72066529cae34ae7c5577e                                                                 
+2674                  keyring.js                              ef06f5e99f89fd7b2fddc29da977f2afa62a06f8140b464629548ee00a282a11                                                                 
+2143                  keywrapper.js                           bb6ebea4634e6a7ea8f476881cf59b915b7d014cf147dfbc3a8972586d1e36c4                                                                 
+2790                  kmi.js                                  6e6af90ef924518ce72479052dd84a8419bb0fffabe4ac6af619c704c0c83f6f                                                                 
+3202                  lock.js                                 db180cdaf7f8c49696ce3f6da252f6c116249e82a4f286b9c0298a3b79802e78                                                                 
+1030                  main.js                                 ceb2d09d550632e7ae9c9266e3cbcf51424c3292de139677f736b70fa5b13270                                                                 
+                      nacl/                                                                                                                                                                    
+9504                    dh.js                                 05af22ee7b2ea3e59128e786f27801731f9f8e124ae546b164aa747ccd183af1                                                                 
+8843                    eddsa.js                              f1146b81475fd121b09d4787620e816dbf0e20afacae221f711097fe5e508474                                                                 
+142                     main.js                               861d0c5ffd642c4647e3e42d88ab759bff1aa61b68c3a8b9a94b36fdcc5488db                                                                 
                       openpgp/                                                                                                                                                                 
 2533                    armor.js                              45b5677fcbd83a729b216a3615459d5f65e3a3fd8754a2bab0c6bdae2c6f300b                                                                 
-3696                    baseburner.js                         115b95cd1fcf25da942d87a6a10859701f4870b38b43922a9d918b5625b636db                                                                 
+4847                    baseburner.js                         ee480129e1536d2819b72528d911b77d40dceed6ed11deafd549b277f0c04de6                                                                 
 3407                    buffer.js                             f35590b328b6b8671516607691f9ef0695115c7ab5d1a10459326e50eb426c8f                                                                 
-27933                   burner.js                             a8393a44fe3899bf86cd3b12f05d08739682d207c062657c27e10d7440a3bb5e                                                                 
+30078                   burner.js                             76b4b29e119fab4a3cedfdc85ebfc5badbbd619c20d63f22c0b1e49d09f686fc                                                                 
 36498                   cast5.js                              6f5dd34f8e223fa58d6cd6f0c4fb3de322e5e708eb7b0becb9cfd61005d93b62                                                                 
 2485                    cfb.js                                965f142ee47a889b3dc5284061a674145aff2cbdff910563d949e6c8e808513a                                                                 
-16826                   clearsign.js                          dfd2ed0c13735ff9771f89e6b5de9963ab807088a6e1bd0c118c19f86c6f1dc1                                                                 
-14339                   detachsign.js                         5c98c2609d4fcf69df5a21e820177669ffc5b5f93564f6aea5a3e08a274294c1                                                                 
-2302                    hilev.js                              f4d47e43acf23745b617e4041128928eb61d8fe22718336b5d88fdc138aeb28f                                                                 
-15865                   ocfb.js                               0208e5f26a16ceb6a1ad18b91f2fbdcb33cf43e0044946b5d94607a76b72a92c                                                                 
+16813                   clearsign.js                          d8a0f6aeb7822213da4c372530bad10c6f9897ac0d8bce3b691547a61b239bb9                                                                 
+15345                   detachsign.js                         ebfcca982bb06c9173656b103abbb542d471a62ae07680a3b8d3db426935581b                                                                 
+308                     hilev.js                              77d34764f00cd689c93320b021a4f833c5cdc1dbc01890258d1e77aec809f2de                                                                 
+68374                   keymanager.js                         b9906cf0d370e2abe371d61a6199a7ff12a3f23d0245208cd880bf53ce350884                                                                 
+15859                   ocfb.js                               48059a052b678e815d48e47fd863fec8606b4d5606970899ceec577b0b311884                                                                 
                         packet/                                                                                                                                                                
 238                       all.js                              b3107bcc0993a1a9848e6a08a30a32dae36323f65385cdc4df355cac3cbf91f0                                                                 
 2224                      base.js                             c7c55e94b808e996982bd9d2d00cc0aa5ae9eb74e5a3782ef0a7166c995601b0                                                                 
-12855                     compressed.js                       70a67c9d63a0614d07ff0d4fb9d07d58dd59520cd6c101f312bb2e381802bee0                                                                 
+12895                     compressed.js                       57dcd0dea5ba635ff12285d4b712ae6be86d98243be4270242a740282f634e56                                                                 
 681                       generic.js                          b71bde7d0b2327dbc2f270cd06336cd9eff38e026b69d83a33f87d043d9c672a                                                                 
-27645                     keymaterial.js                      c32b665ad3b13b64b459a69da0dbeb52ebf3481b01e1a26225f163379d4bb549                                                                 
-4425                      literal.js                          2ca583d0265f0ed685e13d17db7b5a36f753bfe35478d8a3670a15e28bb875c9                                                                 
-3812                      one_pass_sig.js                     e50b66acaaf6e4732dd32e22ba31b2b5f806064f7cee7dc46371dc3ca7fd3898                                                                 
+29436                     keymaterial.js                      969e60f604464ace95ad71db03c83315a4b0811b091956ad042978966a03bda2                                                                 
+4424                      literal.js                          9e56f1991ba15e3ff07ba67fa48180bb86ab84106b998932e7e9fcc90c2cd6f2                                                                 
+3811                      one_pass_sig.js                     3237770b19470f7fa9c7d183fdf1c062d04c029c0e70889efb897b5aff30ddc7                                                                 
 4927                      packetsigs.js                       05e94c79edb8adcba2e6da44225e9aed09f9ff8d03b15bfeb2eda123a296ec89                                                                 
-14287                     sess.js                             ffc63057577fd2a5e310ab15ae1551e73026fc038e98b953e5e146f213e60e45                                                                 
-43641                     signature.js                        144503bdca56c65e7e1c00b64de8b22010b006adc515fa3418c85b8531eee2fc                                                                 
+14279                     sess.js                             25a1ba963ebdd58e3426ff5b2948a7e7114f08f77078cb4fcd81b655283527fa                                                                 
+43986                     signature.js                        46c1f516e5ed8bba3a18a562f8ca9cdbc21c5e382cc701e19e01d139e78a9e62                                                                 
 1781                      user_attribute.js                   a8121babda05665b05e742e71aa020abedd2cf18aac20f7950363f2626d34957                                                                 
 4511                      userid.js                           3f0e71db875f73b6cf2cfca09a54fda232fcd50198e69701bf70d9fb9b6ee9d6                                                                 
 5807                    parser.js                             832fea89ecc84b4a38ef0c51a8792bebd4d4a579d99bb4465f2ec4b7a1c6c0a4                                                                 
-37649                   processor.js                          5a9afc05300787cb71dccb094a29c42717698fa1ccc8dd0c2862efe23f767a04                                                                 
-4404                    s2k.js                                7af616feea0983261ccc5e84164eccd947e505798ff3043012c444460d4b0dcd                                                                 
+38602                   processor.js                          00b56af570648a4a6d1a8444e3532ce715a40d47e78edcb0b1ab2e4fdee5d149                                                                 
+5821                    s2k.js                                3e930d4a3486d8c09cba2d9e26ac7f18d684ecfed5ddecea40fc64c823b57a7f                                                                 
+6101                    sigeng.js                             cb47e956a7b18da81e554f2fbd9ec78a08506e690ca0f20e2399f9a59a4a1aad                                                                 
 1547                    util.js                               c10cd4d3cc3e7b231bb81db7af9ea72abb925ab33c8b0ae4fc3b11a4f2ecf380                                                                 
-2097                    verifier.js                           cd08c5424b6b1d174f5c8a3686dc877c33bb8df9649492dbff6008edee85eb72                                                                 
-8403                  pad.js                                  8a5cf3bd59fbbe92b71db510315b2605b622fc6d045e45c17672558e5e4e7da7                                                                 
-17518                 primegen.js                             8f35c32cada5d57e31324d91b42d2885c0bd822c4b89ada96ac67c195c4b8f0f                                                                 
+2096                    verifier.js                           d54bad151e7e7de7b72d37a45aa840937cb177c96464a63da92a364306eb6432                                                                 
+8401                  pad.js                                  8f7f28ebaa02f4d3e089f0593048d4aab85895f431da325286b14c2b59a17a9d                                                                 
+17886                 primegen.js                             ee177ce7d29318b39d7a8a37ee36a9c527424b07eddb318dd4a4e7bdc4bcc48e                                                                 
 69080                 primes.js                               bcc3f24f9eba4985304bc69bdc152cc315278ecc8012bd2c2e3c16531fe09bf0                                                                 
-12753                 rand.js                                 e9dd9ec3154b1b2ad17cec4f40d977c9b249dac06ec28b264a055b2ef0480304                                                                 
+12743                 rand.js                                 c9af867770056bb6bafcd4774f78334c1ed52a9f873e7c54a018bad6f3ff97a0                                                                 
 2795                  rfc3394.js                              2c8e9c3ce6b0c24be2477c1f5db29608a7d489180f0ebdbe4777cfa3031acce4                                                                 
-29554                 rsa.js                                  996abd58498470421f4f0e92b53111ad7b4a9b1ef6a82a026118a5464bd1ab19                                                                 
+30995                 rsa.js                                  8085622049de5e1b2a43dd91de9c6bed59231a1a16724ca2ad623c3a39536be5                                                                 
 2420                  symmetric.js                            eec2222b60b5e827850976df0b96c2abb8f91fb691d7a0b805a30d51edd19e56                                                                 
-308                   util.js                                 09c0292aca20f6e8f32989db027b2fa9ce46a8cd26893d0550de57eb852b429c                                                                 
+2299                  ukm.js                                  c2cddcf6dcdd8a86ec6222fee90c9010c16ee9dd12d8bb80bfcda6323a0ff017                                                                 
+335                   util.js                                 3e59cf27751705fc5584f3d52e4e81b16cce2a329fba98150c6a630c354e37cc                                                                 
                     node_modules/                                                                                                                                                              
                       keybase-compressjs/                                                                                                                                                      
 5                       .npmignore                            f2ca1bb6c7e907d06dafe4687e579fce76b37e4e93b7605022da52e6ccc26fd2                                                                 
@@ -823,7 +830,7 @@ size    exec  file                                            contents
                           commander/                                                                                                                                                           
 5649                        Readme.md                         a62010074b96d15ff636d64f909ac5263a0f768b72501dfa9fc2662639420cf4                                                                 
 18787                       index.js                          e47cf45fd1da7def8119752ca4e130e66075f1dfba9b82c056d437250ae79774                                                                 
-6692                        package.json                      3bfee2aa586b8b9331753b99d7f4c2004f9026caca35097425695930b43a5c5b                                                                 
+6834                        package.json                      d5acaeaa1353eade42a2e8702a9f9623775f774582c76dc538d42b629bd3e2a4                                                                 
                         outlib/                                                                                                                                                                
 15306                     BWT.js                              b9f614c1eebfbbb7fb2301afe717e3d02d1e85d92b7a0f1bedb2b0124d73d7d0                                                                 
 9219                      BWTC.js                             9acada56035d67b43374706134f084c513f9a5625093bc1c487be1f97ccf40fd                                                                 
@@ -850,7 +857,7 @@ size    exec  file                                            contents
 1772                      Stream.js                           aa90d7df793f5d322e14c0a3d8b4a62e4a803e74839029c3f81efaf6b054a867                                                                 
 12333                     Util.js                             d5823dce6f5426af237700fcb30f7c3b1c29a97e698aca3adcb4a5e5416f4177                                                                 
 312                       freeze.js                           e1a9c8ecd9143051c0fd07f7a463259aad927de65459156b0cde5ab5fed8b6f4                                                                 
-13366                   package.json                          bdd3f2460878449cffddc6efb46b25261e100869f0cf9d562d70ec510009091e                                                                 
+13895                   package.json                          c0190361e93d32c27de08d9cab5ce7b6f8bef2b820f967085dad5859de1e7b4c                                                                 
                       keybase-ecurve/                                                                                                                                                          
 103                     .min-wd                               5b779cd77bc3f45bce80c1f7d4aeea4b11ff874e6eafebd2ebac6657c378e219                                                                 
 72                      .npmignore                            013421fd6eee4c2812a4342b3c944349b1f64ee94f3eeaa152825003731a4181                                                                 
@@ -866,81 +873,733 @@ size    exec  file                                            contents
 190                       index.js                            c5bd5761f0fdbd7a11d0755e33bc36cd15ed78b3089f9c92ac3d929ec2828cba                                                                 
 542                       names.js                            7f7d401cf0b22ffaf934aa6be8e36799bb631c771545b57e4069faf79df30c08                                                                 
 6414                      point.js                            a06693e6bd50c8673166302e4b2a18047f334a5a29a086e531cd894a53d10508                                                                 
-2007                    package.json                          44d64ff27cd60e28d5060ea7e58100ac04d6e542d4438ee2b51e70d51244099e                                                                 
-2397                package.json                              bbb715215d3c150c7746ca144abe993f120397d0e593807411d7065caa5d9e8f                                                                 
+2015                    package.json                          1503d0368392ee8dc6c531b71efa87742ef85274a6da4fda92aee1b04e99a64f                                                                 
+                      tweetnacl/                                                                                                                                                               
+28                      .npmignore                            a27808b79dcae62bc877eaccd24fdb107baac9a68e118a4d579a0bf5244489ec                                                                 
+2797                    CHANGELOG.md                          485176639d3392d83ba5af055408b6cac99892b32af78bbafa3cfa90848ed132                                                                 
+12193                   README.md                             cddba1381a75df48c2a447813856cb4c0ac1cacdf22b85f53a89f7ae85071f86                                                                 
+62942                   nacl-fast.js                          f564c5604a534ebf2aad40d7f0f2fda31dbd381a2cb29d0fb3534d2566872716                                                                 
+32998                   nacl-fast.min.js                      91cbc54108a5c51d6f8805af3b83eb0537d0ca5cfc6c94e5613a4a43a5de1adc                                                                 
+33620                   nacl.js                               1b3dff97a7d1726030d0054156ec9be7054d078266a5fd27faaa5d5515f04347                                                                 
+19557                   nacl.min.js                           3cd974b2d1243d16b51c0f0ca044cdd3d33cda61c14f24e4adc15b7a5ca45410                                                                 
+2667                    package.json                          590a3b84cd90473d40aabef29877934fae147328f697a57e692684ccfa116ea4                                                                 
+2427                package.json                              6a9396b03a6edac9c86858bfdc7aeb9d89f9d014e5e54d60c107dfddfff0007c                                                                 
                     src/                                                                                                                                                                       
 591                   asymmetric.iced                         f9819323225e9be460c5aa991b99021018f575556ddef2e326316d022ca2c5c8                                                                 
-2951                  basekeypair.iced                        52e1812d76abc1730588cccc9ec5288fc12de6f2924784da137b58dc6d97b264                                                                 
+3473                  basekeypair.iced                        bedcebf5e47c2bf1b934746d6d5e50ec2de5521fe49e50062eb707f31e60d618                                                                 
 1600                  basex.iced                              43f83bd14d28b742651a2a8d0eb23075967092e075d4dcf450c7582e791f03fc                                                                 
 3143                  bn.iced                                 7dfbb1710c85b8b6e0f687492e3ff599ff1008599eddef4be6ce67b541b93068                                                                 
-3782                  const.iced                              9471b33039f829efd15954e3af046032dced5bcf1363a1631d00645cfd541536                                                                 
-4225                  dsa.iced                                15c508a1d458210391ecfb4f970050420b54ef63bf52e6363d37c0dc4f2abb57                                                                 
+3555                  const.iced                              3d6b2208c8274ee4d2eb21c414130d0db7560556cd41751f8289ecbefed58b36                                                                 
+4311                  dsa.iced                                7d6456861a9757add5958ad50040814dabd271e5c4da6a4e59f6f1255580ce7f                                                                 
                       ecc/                                                                                                                                                                     
-1461                    base.iced                             aaf634afe85ad7c7a7346d5fccfd5b40e0ba8a570317e9cb997436f30685dff1                                                                 
-6817                    curves.iced                           365ea734e8a4b5c6572321de7c60b8f4e2e990001ba73fdd6c4b85da2d971a11                                                                 
-6950                    ecdh.iced                             287f8c25f400c7134a48b18a37d932b7d7b76e76abbb13f4738fd181f296f4a4                                                                 
-4601                    ecdsa.iced                            140d3cfce961b0a6aac6322317743af07cae3447af2597d15a9e283cb1462b42                                                                 
-36                      main.iced                             d7f3fd2473d8e369cab6608f40e767348542089c492adaae145c3a267fe9a8cd                                                                 
-4131                  elgamal.iced                            03b00e335b36c3aab73a53e284d6f3a17558ebd7fe399b13de6922824768dbc3                                                                 
+1517                    base.iced                             8f2b3fc5d25a013e30d9e0099633e7ea59b6d478aaf1800f0f99f626f54d8e81                                                                 
+6837                    curves.iced                           50515fe29555dace17af7dd6e5db3b4813244a0db3404b890e0fef5c835d8f72                                                                 
+7055                    ecdh.iced                             81651fa18f86eba4b084863f35b58e4d9db381f7fd80ac80550563a63ec89ccd                                                                 
+4719                    ecdsa.iced                            8086bdf3c018555ac6735bd9a95e0b80dc8e71256621ec25e2f98ff036dc7258                                                                 
+116                     main.iced                             6acac15b28a934fe549f25e06216df780ea5930c419b9c1caa6ffb3f4422ed57                                                                 
+4180                  elgamal.iced                            0e32fbd27baf65062cd39fa6b57536f9e059ee2d4fd2a58837840e05d71ce12b                                                                 
 2122                  elgamalse.iced                          b5da849271d4f15be1888f9208199d251f793be4ae4cb809f090f4c2f3af6e1d                                                                 
 1813                  hash.iced                               6747abfe038da664882cdcf761aa7d769b6acea8d3dd5625fafe8fa3d032bbbd                                                                 
 154                   header.iced                             07ccff9d4467fe6a2511aca238f1a191d2745b37e4232b8142516da12f1bf914                                                                 
                       keybase/                                                                                                                                                                 
-1583                    encode.iced                           b92d60d99c2d1cce7036d5ed54ad7986861d60131ef9a1c898fccdfd3da198d6                                                                 
-2177                    keymanager.iced                       66d0e4f942dea9c1c5f41362f18c2e7f018591e1d95cef12f485c93ade5fb269                                                                 
+1582                    encode.iced                           f6099f4b0d0a818851cfa9f3fb812b1f621d183090d844bd51aea4467e2c9c85                                                                 
+5738                    hilev.iced                            92a4ccb8132748bb90d5a558e331ddb1dac9285ebefd8bf8a471608e548578bd                                                                 
                         packet/                                                                                                                                                                
-145                       all.iced                            f0d9e2bd7436a7788c1f67deff5cdf8a3e4bec502bfe871ea8d0b69d00089743                                                                 
-881                       base.iced                           b90b01e4a057d4c8b47437d9489abbcb4d928ae51bea10795b055ac41cc44460                                                                 
-3880                      bundle.iced                         00b0f6c962a8929cf71c151754d90393f456e37657086939b5961eb6ff14eb83                                                                 
-3198                      keymaterial.iced                    8fff87799b7a46dd8390b27af9aaa9579d5fbd3521e0efb1246ba70f8c14b4d2                                                                 
-1952                      p3skb.iced                          2d06d4f095edafd55c95c32397f8e15d373d3684c8d8006ef13c6f820687c73e                                                                 
-3164                      signature.iced                      90597c253f39bed64520ab92a69c00ccd0dd11526655b9bf64168a5e65203dc0                                                                 
-466                       userid.iced                         b130b41ae3c94855d71d62aee9bf83b43710e9f029f5f4d89450f1ec1cc76e2f                                                                 
-1867                    sign.iced                             348ab35847af272f1ac62be1888e71550b4580ad4186b6c6029061b605ac4960                                                                 
+490                       alloc.iced                          8a44f27f6309cfe62c697f18d38e995f508414ab7ccbfd817c2682f29524b6f7                                                                 
+1313                      base.iced                           8332efcf9fc0814162fdd1f3d5692ca789df5b5aed42840b5099dafb2d0dcbb5                                                                 
+3235                      encryption.iced                     1a3f3206c4bb49e1a32ff3d9aaf2645ebf88307c0dd5ef21c6db60f93f05bbd8                                                                 
+2067                      p3skb.iced                          3eec60235a297355824f27dd4a5a7b00d7d18b6916c441da3975b9c2fb4b07e7                                                                 
+472                       parse.iced                          5f668c9867d8043ee2e34687bbeaf45f12d8ca6fb26d255e8dfff464908e5220                                                                 
+2021                      signature.iced                      914a89e2ac92ba530307bb6d089de5c27915386b6d4de549822be939e1ba80e6                                                                 
+804                     util.iced                             b4940535edbe6ada65be99803161b42f8e89bd31fc015e5f4d7b912a06f3bc9c                                                                 
 856                   keyfetch.iced                           10037e667a57ab8bd04d8239836c4d3e97ebe2fc72166020ab4f73203d6a1963                                                                 
-23223                 keymanager.iced                         2eb139e68921753a81e2b0e0217f69586f4c58e9ce1db844e3f8b38cc085e70b                                                                 
-1626                  keyring.iced                            8357f83439f997d056163b79ff315a2a46e540c24e904422588520d043c18de9                                                                 
-1475                  keywrapper.iced                         c4a522c888684a1a05b93e8faffdd3589eff9cc12fe98b62146194849dfb4128                                                                 
+1655                  keyring.iced                            8b2beea41852ca977c61b0dd937e609e86bcf75da80f4743c08ee2128df4842a                                                                 
+1448                  keywrapper.iced                         a183f52ec876209171edca3576ec3c912288bd7c57ad080c8203af2664e0f31c                                                                 
+2298                  kmi.iced                                54d6cb40550cc0894a76b92fa2be405945a87fbb6a6fbecac42d1a2d068e7b9c                                                                 
 1943                  lock.iced                               69ffa5d4715acb25f06cbf4853dc50aa4124a3be00db6677321a9cecf715d37f                                                                 
-820                   main.iced                               8942212ea84ed1dbf26ebfecfac5e1449c4ac162dda35fc8ed08c5e5f20e55d0                                                                 
+952                   main.iced                               91cfe36148e8cc67ef3312b71b05ec5caddd0e57786c3917df0e7f989abbbf2e                                                                 
+                      nacl/                                                                                                                                                                    
+4875                    dh.iced                               8ddfc6c17965488c2feaf7a0784ed306812f431b07af41c38f0746e18489e15e                                                                 
+5158                    eddsa.iced                            625577fc07e686ab5429e09e1d8522873785fec5556563c39a88531eb7161dad                                                                 
+63                      main.iced                             f3ccda806071aebe47c8dc08e989ebb489e4151a1a9939903a909c22b590ee0f                                                                 
                       openpgp/                                                                                                                                                                 
 1860                    armor.iced                            844940075a814c94776068adf27d101f1e7023554bd12954b0a3923164600dcc                                                                 
-1484                    baseburner.iced                       0b91f43b55f3818271cb22d78690023ff60928fa279aa8211cfa23c10c1f623c                                                                 
+2029                    baseburner.iced                       381ffb8f3958ea8d8cce88e2137ca2eddea921c551d8a7871af13e36332e9216                                                                 
 1972                    buffer.iced                           f7869b08373cc7f603af1056c2a0e70eef20978217a05335df08be495f05b683                                                                 
-8205                    burner.iced                           5bdc02702376e4f20cd5f40dc09695fc7c8b273010544bc1efc13f88fb9fec61                                                                 
+8485                    burner.iced                           e8bec3f515679f204fae3ddecc1ea049c0de39372799c6e72c10e30d9ada7280                                                                 
 35636                   cast5.iced                            9931b6c18476e8ee81b4597b10fe4dd95ba647e5370667cbb2505e633138b82e                                                                 
 2500                    cfb.iced                              a1a9d1aa336d99bb69de44cc77e925336fd0b2299c627290afead87d9aae204e                                                                 
 6818                    clearsign.iced                        eb741982fa621cf1ad6a6fec388b70c99730e5f0a3157e320e5555bae48e1cdc                                                                 
-3765                    detachsign.iced                       4a32f9ed8b887e590c7b670839e8ad3acec57224fdd50b563a5fca916e1f2858                                                                 
-705                     hilev.iced                            83dea830c28f5551b6c0ff492cf50de7a50ebc6242572c4f900d07a0a530cd87                                                                 
+4115                    detachsign.iced                       2833d73cef811f84fdf2a0abe1050c603c19609ece44e556683fb650e6b811b8                                                                 
+225                     hilev.iced                            47028b0600e1c25f374b337059eb13d3aaf790cd23e1000b2c1d3c4f0e7fa5e7                                                                 
+25562                   keymanager.iced                       10b7b550f0a6f5fbee530c0c0e3b527093712fd4e9a7fab5c569af1fc3b8b77c                                                                 
 9418                    ocfb.iced                             907951ce199b0e59b0e4d21b503f910aaa3a1c9bc57994d3437f333e3be902fb                                                                 
                         packet/                                                                                                                                                                
 157                       all.iced                            42724a5bfbf1329c4932e74ba60ec0cda51f4b8a1062e34d41abf6773275c09b                                                                 
 1780                      base.iced                           83a9027268769f38ef87d81eceb81a23a0e3eaf650ab54fff2a6b8c5962485a5                                                                 
-4547                      compressed.iced                     d5b9d137ba61f089ba0516a37fa71ac228b7a9411bb45139645f47de2dd55fd4                                                                 
+4560                      compressed.iced                     7999ed9368ce5ebeff9d5943aafac3215229876c7ed4b22e3f7fd33100df9970                                                                 
 322                       generic.iced                        9b39ec202835c925a3d88d5316692618c01632ed0f4b700e8a85ac71bab7acf2                                                                 
-16229                     keymaterial.iced                    4c4d3f3158b8550046e80864d25ebf9180850b3a6b77fa08309584a9f25f6469                                                                 
+17250                     keymaterial.iced                    c9d43939d00a19fc512f7f40eaeba11fb844e12eee25141105210089a1f18bfd                                                                 
 2193                      literal.iced                        f6424f833f745fdb4287d0ab0ed1a5e43e0a53e9dc3bc9b5095951d155399bbb                                                                 
 2115                      one_pass_sig.iced                   d0e2d1a35b42e9e92205ffe4651b7b650f5395a9b1f60dbe85f8c8c3cd8911b1                                                                 
 3117                      packetsigs.iced                     8ac7e620eb240a980ad75bd340fa21287e18677d3ea31c2cfab9ad91617c364e                                                                 
 5607                      sess.iced                           8867703460996686a50e30686fc976610c4f92a43e725872e99dce314ee71b63                                                                 
-21235                     signature.iced                      398dbe75e949fa14d5bb3d56b218ad261c47c83a90b586e7872d30dabf02954b                                                                 
+21540                     signature.iced                      7bc3697faeb9c5bccc237b0535924e1a849310119e8fa3cbcc9e697377f576b9                                                                 
 1322                      user_attribute.iced                 1a478736ca1a087fd544fe73afdd2028203e5ef176f3bb41faa9f75381e04611                                                                 
 2866                      userid.iced                         b86952f392b9d7dc3a5fdc8ed6b0f878a57cc9b2ba530cb7c8eb3d0a042d4e36                                                                 
-4149                    parser.iced                           54a415da348c62680a7876fe1fd8b4641c01cffe23dfd068cbe1f7b831d4c8d7                                                                 
-11009                   processor.iced                        e0643d6e149d98218fc461537f27885e8007dc97a1a1fbc7149635677659287b                                                                 
-5937                    s2k.iced                              af09de1da25cea11e0cdda54c78ba8f6ec3b13a6af6f9e6e66853cbca4c22426                                                                 
+4141                    parser.iced                           cbfbac9a6052648583d2da58f496531c8f1ca289e56806cd08a5f313a75caf01                                                                 
+11971                   processor.iced                        67b240f7f1c899eb413cdab98810f77a239f1d82cd2e1eca3c56b3c75380b622                                                                 
+6743                    s2k.iced                              d74d2e4a67ec979a23b4231533edf38111c8a12f144aeef37a77b9cfcc2680b1                                                                 
+1822                    sigeng.iced                           3d6c49f6f4d902342ea578f9665b7b96e133a0ea6e2feb3d0b2b53e1c43315ab                                                                 
 1795                    util.iced                             267788a2659c0850edc8019a71f67ab53a0913031c98920f5ad32eeddc287693                                                                 
 900                     verifier.iced                         8556d830934d55cd23f19f803861d4fdce3c948442033cd1cd6ff162484d015a                                                                 
 5161                  pad.iced                                43a0e874152dd0a789992d02374647fda1a4827a2bc7a27afd878a535833a241                                                                 
-7549                  primegen.iced                           5b8eda262d19c9c80922ac99d407ff93c76297960173e744713da9c57e7d09e4                                                                 
+7803                  primegen.iced                           c1517a1590ba1981f8ee4e1161d67ac1e93c5e26b362aabb287ebb08436bbd85                                                                 
 70135                 primes.iced                             38e3e367929ffe177be362a3a61d256d682de6dc22c5e756deb5fcf642f5aee5                                                                 
 2734                  rand.iced                               fe5a5e80f65c71df39ba45d32583584a42e44eca81f664dfbcd1002db187035b                                                                 
 3203                  rfc3394.iced                            a6d9c073dc24e82b98e2522b4c0e6cb2914504e5926029ad0aec2fc06c628163                                                                 
-11461                 rsa.iced                                cacada0257f8cb764d88825dc6f74cbc4c1fc29086a56efd7dd2428db4ada22a                                                                 
+12091                 rsa.iced                                9df1e0206ba45f07fc96420da05bcd7d8f2d9c0b3274876df1b003a42ae777c6                                                                 
 1723                  symmetric.iced                          b0dc11e16b8ef3c99663d4063c5b816d25a55557cb9645480c0a277840e3f85f                                                                 
-236                   util.iced                               c1e69b4210c85fb8f9f0bfda614f0e84f2754d9d6c8e55b9c69541760eb22b75                                                                 
-29                  test-stamp                                03ed112241a9d3b733c1f94a0b7eab319f737abb7eec885d065fb0e6319da9a2                                                                 
+626                   ukm.iced                                e8cb19d191f2fdb3bed255ec3eea9aebbb9da52871e297aa2e671df11d2204bc                                                                 
+264                   util.iced                               972b9ac382c6f22f0e0db2a0f8e834f346856bcdc37c3e495088f284b807ffb1                                                                 
+29                  test-stamp                                c7463817b6983edf645e1583d16e632eb190a0e9fb441798341b9b4897d140b4                                                                 
+                  keybase-installer/                                                                                                                                                           
+128                 .npmignore                                1bf0a9015a4168fb8465cfbefac4faab8a002bed9ca518b425bc2004db93d3dd                                                                 
+5242                CHANGELOG.md                              5b35840e29f19d2c2fa8f5232d15e11878aa8fb9cd9b68c33019ce7d48a3473d                                                                 
+1483                LICENSE                                   333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
+642                 Makefile                                  4649d03c975694813262b9b31c05a70a7af8c9e57e529ea7cb4f35e81af384d9                                                                 
+264                 README.md                                 435aa83861bd026f829d08099649976d447587ddcbd79324e8479f0fb954269b                                                                 
+144550              SIGNED.md                                 bd38e4cc2440c0e4df21e27d4748cc6a364b923ba8972a67e10f0a3d1d8f7e6e                                                                 
+                    bin/                                                                                                                                                                       
+231     x             main.js                                 3f9fbc40b1abc6cf67f660a9a0a157ebf225441f74cef867c28cdf2e7b63293e                                                                 
+330     x             main.sh                                 6990b3e22e1134de4a38222ef050f07b54d765e633a68240113f17d0762972aa                                                                 
+                    json/                                                                                                                                                                      
+10183                 keyset.json                             cb7d05526aa1353172ff5468e6d0a1f416d60f998810c22b699d2703b3669b4f                                                                 
+                    lib/                                                                                                                                                                       
+462                   base.js                                 18d7d2fe28f3bf189aa9b9499c1995b3e04ba76c26683dccc308c2ed7a66195a                                                                 
+16322                 config.js                               b187d100726cabb83017535c95971d2f9d0b43de13763358565a4471c0f34770                                                                 
+420                   constants.js                            fc4636b8d80ecc5e223b1944a6523860f7ddb235bbf188eb8cbd6695af906abc                                                                 
+4761                  get_index.js                            a7ad533dd418785288893c44f9f2f5d21e97f7349a635c21ae2d72c830b54b61                                                                 
+17963                 installer.js                            9f79864b5f1f3c9f189c597583deb024a5203a47f41a5c6a5088b675e7d301a5                                                                 
+15357                 key_install.js                          5b8d1d338897e8bdc7dd5511d979f23815393d335ef675596caccafa8ae22f7a                                                                 
+13645                 key_setup.js                            3e62af76b86ebbcf73ac58302fc5e5d78e15930af6804439037eb6850538d4ea                                                                 
+6275                  key_upgrade.js                          e0d155a6607eee3a681a1c562375acc766f853df0df413a683b8ae739c7c7572                                                                 
+114                   log.js                                  eee8f66661e404e10a8ab931f4f6e8f366e1664bf10bc79006bde40ae9527674                                                                 
+8448                  main.js                                 acb3cac555cdb7c3d9aa494149778e72ba2b8525b0b8182e9e7e863af2337cc7                                                                 
+6628                  npm.js                                  a47e00f31a36acbb684b5c73bb5e2017caf1dcf75498c09ad9e2c2b17d07e62b                                                                 
+489                   package.js                              3c716247be5bf954e0652a085266bf6baf2b1383a13f6be56cdb1f960385a978                                                                 
+9889                  request.js                              bdc0ee8d77bc31d5dcd2f653b91e0b37dfb104b6be6512607fbbf9a867028ac5                                                                 
+14503                 software_upgrade.js                     334ca8a62704af721687e7f3f7ac8022ebfa818e045a5224aa336fa7d0e30a8f                                                                 
+267                   top.js                                  7f8d2598e521426207e141834a62b718ccb6386b1368364c5914612e70e5667f                                                                 
+588                   util.js                                 1efe56b1f56c51a174bfe75fd4b7f183914d9dc15cbc60cd5c0b3ecd2d3fa1fd                                                                 
+                    node_modules/                                                                                                                                                              
+                      .bin/                                                                                                                                                                    
+                        semver                                -> ../semver/bin/semver                                                                                                          
+                      badnode/                                                                                                                                                                 
+587                     .npmignore                            abcbd5929ba2d059647bd4c6c99a74df2676bfbaaf44535e4713b53fbd14e6a8                                                                 
+1473                    LICENSE                               d0560411ddd7937e8b87d85c290c0445bd9c390aa485eeac7f838e56e7598d95                                                                 
+244                     Makefile                              7d397680c94d1b5ec2436610beb8dd4f27586306210920e31981449157824fd1                                                                 
+64                      README.md                             076d41de237604bcc439602fc664111cf6db55550759e2d7af4b00388fbc8143                                                                 
+2855                    SIGNED.md                             858593b5a955ff074e88588eb07eaf9807cc31449277aa6dd8dbfb085f357746                                                                 
+924                     index.iced                            ad88b40b8519413ab132caa403327740829216b3eb29f59ddb94662c90ae791c                                                                 
+1627                    index.js                              9ea58e70c4670f9d9c0684c95359bc43101e2550ccaf31b69188f5ab3d147f12                                                                 
+1292                    package.json                          4a9ba7776b3db007acdc0bdbcf2c1d9103300834f2b5b8ff0b232fc3587dcde6                                                                 
+                      colors/                                                                                                                                                                  
+1085                    MIT-LICENSE.txt                       bf31c5eec1df64ee686f74f571f869debdb1fa4a00ef9c6cf8c4620d478d741f                                                                 
+1299                    ReadMe.md                             9a1513b3fe500d5d26c5dd10ab04510b400e89e3186a3eef198fb681d23b861d                                                                 
+10646                   colors.js                             06f91ea96610355e8a4464bd051648c7c1e20806a8ba177a7a4bf58801f68877                                                                 
+2551                    example.html                          351886c29b07681281e930182d756101f122727762d1108ee410315e7fbc8bff                                                                 
+2423                    example.js                            e6d20c6e7928e48dd904da77141b4cf32b6771f6e6d85a3a86cd0536de5b5092                                                                 
+1096                    package.json                          c5cdba55e937c156f314aa660e1d5bed3186f8a303a3d8960c99e87481c70a11                                                                 
+2138                    test.js                               a3745a2ea3be672ff3f133edce7f6f029cd361b51b8756b3454270d66d12be64                                                                 
+                        themes/                                                                                                                                                                
+198                       winston-dark.js                     b5d633b5845dacc7ecdf233f58a71975a1c7c22713118cb3591ad943d61f6ce9                                                                 
+197                       winston-light.js                    66246d67bc87ebe9a26e5e912c33c3440cf039c96c3612311785fc8963bc9a34                                                                 
+                      gpg-wrapper/                                                                                                                                                             
+109                     .npmignore                            ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
+3606                    CHANGELOG.md                          7005816f08a0721caff716ede9db01e4dd8b8a093aa5678f66dc735fb746e91a                                                                 
+1483                    LICENSE                               333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
+502                     Makefile                              960fe8002c2c2866c0963c9b0ed138dcb2a4feed693a3c668875935902f9b486                                                                 
+55                      README.md                             fac7947ca164bd97f854cec88bc0266773ec378f4fb79cb1554662a4fd4079f9                                                                 
+4788                    SIGNED.md                             9a2c95ce2a16faa7de59181bd8163ee922ebc56a994ad0b35f4a938973eb07b1                                                                 
+                        lib/                                                                                                                                                                   
+1100                      colgrep.js                          8cca2968a077b03d45b761139276f24f32b2a6948ada5fe825fcfd804105cda2                                                                 
+408                       err.js                              ac74e7dbc52d8da10a4544bbedb78619a5407cdcdbb3893e7584fc5ca41c8e0d                                                                 
+9864                      gpg.js                              58f656e45b780600861b7d65c55a3720804ca9697f8cf996247486829f186bf5                                                                 
+11120                     index.js                            821e84c563ead9729196d12a80f3d990cd485fbe16df6de264fdc457fd781286                                                                 
+92762                     keyring.js                          fda9c5c6d615c44e6ade52b884bf672c970a4737c9a2edee3f693c77df39e61e                                                                 
+387                       main.js                             92476f33f1ce68c8f74c993c3b3d9603b9f435f44a69ec3098e552b0c4d736b8                                                                 
+3985                      parse.js                            57abc69755fc4eea76600b17082827fc23574fd7ba5b2a414cba40b89f0150a2                                                                 
+1429                    package.json                          09d5569bdcb77a8bab85ad0ca10d66ae7950e6b68299548c3f99bf9f77c688a6                                                                 
+                        src/                                                                                                                                                                   
+604                       colgrep.iced                        a3c53c57e739b9af47f7b8cdb31c3aaf3f7416c978e7905ec42bee4966bc3920                                                                 
+351                       err.iced                            db7ddbbfbe1f076ad895a83e22cac8e720f260768456dd6aa0c97e5faf7ae9e5                                                                 
+2590                      gpg.iced                            cc3921f2f7c8b56940b3a8170e587d9375e7c58c50e873134c79c969c2db5148                                                                 
+5740                      index.iced                          8d9d3029f836f5c608a75d010e557cc7cc7da8444b530191c9ca4282952dd8b2                                                                 
+28456                     keyring.iced                        091e445fbb29355b5935e19c35f5952ec315bc7029550b7a122c2e76d9038192                                                                 
+225                       main.iced                           d06200c91a7f18bf1ece9ed92123ecf2362cf4592318ca23639b08356ce877ab                                                                 
+1731                      parse.iced                          f031af161d3e124ef77ed4ff2e679b84db797c2462d407be0975383c30400857                                                                 
+                      iced-data-structures/                                                                                                                                                    
+26                      .npmignore                            4e78c851e7976619549057ac93db40a71d4f0045cb5411a484bfa4c150bb6702                                                                 
+1080                    LICENSE                               99a379caf346f0f4ccafb8ef3e33cc195cd237e3442bad9616aad1184a2f78a7                                                                 
+347                     Makefile                              7c1c8d4e116c05d44b0887097d8e00759ad4c2ff348eefc8fb364c1d8325a6e9                                                                 
+79                      README.md                             5a069f1f6a3ec327a6e95b859f9d5e83eb7afb290542528a07d2306efaabebc6                                                                 
+                        lib/                                                                                                                                                                   
+114                       index.js                            85b827cda89d0368018971992648c69d3efc9a881a8522fdec4c2e64b04bf7d6                                                                 
+1262                      list.js                             b015a7b7ebcc27f0914ff54c591d870e01e23e8448dac1a2853e84221f6e00a3                                                                 
+1395                    package.json                          e5753a050c5521beafe3be6db2ac5c52fd8ac4776a54713e52a98e6d88abbab2                                                                 
+                        src/                                                                                                                                                                   
+38                        index.iced                          a36ea9026fb114a208cc20cb20c157d356593a0a595095c49999bc9a01263092                                                                 
+1215                      list.iced                           3532a7b7150327b215232c652eaf11364868327ca804f978459235197d7e7bef                                                                 
+                      iced-error/                                                                                                                                                              
+13                      .npmignore                            16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97                                                                 
+193                     Makefile                              23c9b8634bc5ded1e2b925af63ecf89842491817000ba7fa2a4e68c6c6248cc6                                                                 
+1675                    README.md                             231664c0e663782b27f6a8290604ab1ad48f072441c2347aaa495f48232b251e                                                                 
+2405                    SIGNED.md                             b920e8e1060016a1da5f9f029d341c6276bf58cc322d1cd7aaebe40dc5b271fb                                                                 
+4026                    index.iced                            81a0d4054cbb60d4fbfaa58854ef2335d3a581781267c12b23f44632e9b95514                                                                 
+6523                    index.js                              e0f9763f0eae8ba5763e36772cf04360f4b8ff5ac329d0cac68a574e88bbe37b                                                                 
+6177                    index.map                             5cbff70c7b57c57d2ad91d2740358d50ef9bd7741aee60d8f6716568e8d57947                                                                 
+1279                    package.json                          80796828661566d06de064b6553ac250e49e63ba01a345f9c64f6f1941097710                                                                 
+                      iced-logger/                                                                                                                                                             
+109                     .npmignore                            ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
+1489                    LICENSE                               1e933ceb3f4a00ae33672d4e344f9ff26e92bc8f34bc0c7a52fd0ef257607858                                                                 
+296                     Makefile                              bbcf957dce2d62b7bb7e767b69e97c22a1118896e3eccd2061d465127eeb5a86                                                                 
+85                      README.md                             6bac611fa0fdfd8a5a2e4ea5a1f974f0f037589c66d2209721171b300a8cdba0                                                                 
+2391                    SIGNED.md                             86c6e00f4e3a70c038e97f37852eda74a15508b23be53b385fad71c1f36a6fe3                                                                 
+2976                    index.iced                            57ab21fd0aa63fbc8fe0fab1e019b83e8005accf3a3b260af8efe72673615efd                                                                 
+5218                    index.js                              fea659c4bf10bfb1215d09a85d2cb16fbf68ee7a60ef939e0a04286d80f53fc5                                                                 
+1285                    package.json                          e2c0c89f41eecb5d8904cc8aa9f82d5743489f49734edca44b69b732130197f4                                                                 
+                      iced-runtime/                                                                                                                                                            
+547                     .npmignore                            a3260451040bdf523be635eac16d28044d0064c4e8c4c444b0a49b9258851bec                                                                 
+469                     CHANGELOG.md                          9b0855fc2d72965a423495efd01bcce47954281f911f85ae723a60ab6dc6a7bf                                                                 
+1062                    LICENSE                               f5f4ff3d4bd2239d1cc4c9457ccee03a7e1fb1a6298a0b13ff002bee369bf043                                                                 
+407                     Makefile                              32e05964b75b43fd5492411f781568a8e8ea25f1ec9c12ddc795868549d231f6                                                                 
+56                      README.md                             0bd4207a9490a68de9a1b58feac0cdeff349eaa778c8a0eaf859d07873026b07                                                                 
+3215                    SIGNED.md                             3339f67831e8decafa4eca9a399e4bbf0ff9a88a14fd4c741b758cce64f8e273                                                                 
+                        lib/                                                                                                                                                                   
+948                       const.js                            4f5863bd6285c4e14639131ee041466f6a6b9c778eb4674d0646486eff65788a                                                                 
+8917                      library.js                          37ab82fb064111b42497ad8c93d3aef595fc9883cb61a4a1d424ff7ae5cb5447                                                                 
+348                       main.js                             f29a1669ebc50cbda9dec9685acfb4af2248f48b997d823b43bb28671ba8b6f4                                                                 
+5454                      runtime.js                          5d521040b0f9acb61a99842f8ad75973ba7c1799adbe9da85df3a8adf8d60982                                                                 
+1385                    package.json                          d0550b6d746226ae18292a6f15487f8e58cd3cb7702977f2033794c19c71d012                                                                 
+                        src/                                                                                                                                                                   
+815                       const.iced                          e8b6ad6483b983c28e2ac82c8f4f5458a13ec4d38e2eec21d7bea6dbf1108fad                                                                 
+3881                      library.iced                        2acf49cd6eceae202a162af11b98b4faf5cd2bcee186cad669b59a2d22643dda                                                                 
+142                       main.iced                           bb74f97e5473e7f9b5f79264f3a3ba7126a4849d97fd37c49dfdbb711120e314                                                                 
+5273                      runtime.iced                        2c45cb02f7fc17352605103720b0cace4d0c42e9f81a9bb99112ff83fb663fe6                                                                 
+                      iced-spawn/                                                                                                                                                              
+109                     .npmignore                            ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
+1262                    CHANGELOG.md                          d166bcf97a18d42a9fb07390a9cb2d7062214d965c129b057a424d18556c8830                                                                 
+1489                    LICENSE                               1e933ceb3f4a00ae33672d4e344f9ff26e92bc8f34bc0c7a52fd0ef257607858                                                                 
+395                     Makefile                              02abf7a21a3e70691d33338da881c966359adaa1a138c57d1c5815ec183acde6                                                                 
+67                      README.md                             f278a0ddb855b655bc037f249a7009a7f6f2b459b1a1ff173ed128ed53e1331d                                                                 
+3812                    SIGNED.md                             c4151462c7af89ffd2dced002e171018e36658bf29ebc94fd34ba6a6d81717db                                                                 
+                        lib/                                                                                                                                                                   
+15596                     cmd.js                              ae070a5dfa716069b0f265d49047281a3cb796f54e525f5e47a5e4df66f8ce84                                                                 
+301                       main.js                             6d422ce96c4ed5d06fa50eed665c65ecc9b8113831e0a7dc131230e57acb724f                                                                 
+4029                      stream.js                           5de24fd5e78e0da6135a858967054ba6076bc7b6780f1f12e5fe0005c1b69e03                                                                 
+1457                    package.json                          b51eb0c719ecc7a0ca760677ca42fc00a230f5a3ea928d758291587e8150dfb0                                                                 
+                        src/                                                                                                                                                                   
+6627                      cmd.iced                            2ab7a08cb365927f06fa2a5e61d3cc309ef9abf2017b8b8d6ef50ce95d6a1ce0                                                                 
+105                       main.iced                           ebfcac1e8601511a4413583b4dca40bb5162ee02ef2295b418911991efa06fc0                                                                 
+1898                      stream.iced                         db23e88641eeb10efae2e67339c3330609298592b47c6eb65b8780ceddbe7af6                                                                 
+                      iced-utils/                                                                                                                                                              
+110                     .npmignore                            71f9c0f0263e54e773253b0ff92e43970e8288db495d9638ac2bfecee2d2f43b                                                                 
+712                     CHANGELOG.md                          bd26cb85df40d114ced6bf277d322c32f1fde9c6b89ee3de1a85e3ec98f1d307                                                                 
+506                     Makefile                              ffccd2051ddad6b7c95582f8f218abcb160761fdcb24a76395a54947cb5ad77b                                                                 
+119                     README.md                             631d836cb2b1e05957d9da1eb7d7e5dd2db3ce83edc6d5f8d1f8dd84c0ca5e96                                                                 
+5103                    SIGNED.md                             5e2a92e83d5b793d21de7c4edc4a8e92a0ad7fe91503bedd31400b4313e57937                                                                 
+                        lib/                                                                                                                                                                   
+1305                      drain.js                            4ea0841d2cf07b872e72048043946a1e016ccf09c917455a2bee9c6a358dd7a9                                                                 
+360                       enum.js                             d22333c1a5e72e0978dc301447aa4e285144f49bdd08e631836e1da5c57b2877                                                                 
+11420                     fs.js                               0983493f7c1850b57d007a2d30d6d96c74da3575298f6df6d693f76330ec97fc                                                                 
+2081                      getopt.js                           07a3fd9a325b84c12a0a379a8bcbb7223a8a9c8184f91447a5921857f42144b8                                                                 
+2684                      gets.js                             3a1079865745407c40aba3349a4bf92f7440015d1e8a62b731e5ee296673243b                                                                 
+3192                      lock.js                             c61d1fc71c496ee0ec7985954fbe9c1946062e30ab68417d35e4c37113977f8f                                                                 
+19414                     lockfile.js                         c6aa2fa7e2cc2d97fbd03a1da8690fd729824cd4298ee1636841dd3053aff932                                                                 
+423                       main.js                             77891c8cd0c92c7cbd4308ba1a79f579170b02f3fed7e2749a39906db2a02ac7                                                                 
+5492                      spawn.js                            fdd6367e1ad33a04f235c02fa0fbeeff81df1ded2dfeac6571fb7236da25497d                                                                 
+10724                     util.js                             bb3c21b7459ef37e54363c84a162c3c12e2fcd6b2ab1e42bd481913380e5e9ca                                                                 
+1411                    package.json                          9a08e76a9f5f81a72123b2ecee8035ba8d401687033fafd1a0c5dae9e98c8423                                                                 
+                        src/                                                                                                                                                                   
+988                       drain.iced                          72d252ab54233c0dc16a94c55d8dc6b2227a03efab73ebf58a29d42919a910a0                                                                 
+275                       enum.iced                           189271c330eb6db654879469828332cf78ea87e210d1d7275611a2e1e1fb4d15                                                                 
+1756                      fs.iced                             205ad199023ba430ce4b6771913424f0872c90ed79afc13cc919159653e389ad                                                                 
+1229                      getopt.iced                         f04f8aa337d692cd3fa49833201961a923fb3aeef76850d9ad40c191fe4f341b                                                                 
+2081                      gets.iced                           e289a75c4d10cba1f7e156df5637b3e0989c0ebefd2842b3262988347de4787b                                                                 
+1123                      lock.iced                           00e0aad9cbe1aac2031640a78d7f6a71e05975af1850b815311f9290f9ce2fd9                                                                 
+5009                      lockfile.iced                       4965dea73b8739ab499704c8213f9d4c875f7271907e41ebd0ea90c79db35aa4                                                                 
+308                       main.iced                           de11b3ce29e469a3c111c939df9f9466a5ede914febbbfcd401a8c1842741e05                                                                 
+2621                      spawn.iced                          c8f801be169434cf2a6dd8650f12d71c3656e098d3ca6b8f3234c47b1e497997                                                                 
+7326                      util.iced                           53c7437de325cfcd4270fe61fcc12e626f242e6e2a04b2b636bdceb4d19368f3                                                                 
+                      keybase-path/                                                                                                                                                            
+547                     .npmignore                            a3260451040bdf523be635eac16d28044d0064c4e8c4c444b0a49b9258851bec                                                                 
+1482                    LICENSE                               9395652c11696e9a59ba0eac2e2cb744546b11f9a858997a02701ca91068d867                                                                 
+334                     Makefile                              46ef2af0d44ee236eaee20196dd2301b83e55517d3a163abdc5e9e40a8b0c0f3                                                                 
+57                      README.md                             eba23a2d29ac9116c43978735933bee668cc87c8e6dbe7314a706025f5086fa8                                                                 
+2591                    SIGNED.md                             6b564e067baa2ccc116af8eef687f16520fe10245aee13f989a41d278f5897e4                                                                 
+                        lib/                                                                                                                                                                   
+6891                      main.js                             b46b3306b91345fe1925b502e2c572244d68c61e51b156709b58e279f539cadb                                                                 
+1350                    package.json                          6799adbe112c52bb79a647cf4dd41c1bff4b51f14a78796bde1f020af4f52e57                                                                 
+                        src/                                                                                                                                                                   
+3538                      main.iced                           bb9510b75a3c9462b8a07f091308cab8b42a93d7667cbb4e4dd41f6776a5db81                                                                 
+                      pgp-utils/                                                                                                                                                               
+109                     .npmignore                            ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
+1487                    CHANGELOG.md                          cc232ad3765b99333d9cdba90bb54f0de00e2f87845dfc6c809cbdd94866b92a                                                                 
+1483                    LICENSE                               333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
+437                     Makefile                              a031266cdf17cdf3236a0f641bf9eb2a882bf49b5e5aaac8686e4d02e5f0c4b5                                                                 
+106                     README.md                             0d5a7f840664005562cff3e2cee8d0d2e7468e24c4380169b6516ce318602f50                                                                 
+3833                    SIGNED.md                             b207121822c5756db67c6669ca5da9325b851bf6f0f661304394c3d713b3afe3                                                                 
+                        lib/                                                                                                                                                                   
+15455                     armor.js                            b1dc8663860bcb9c228d7e29ef6ebc7a18781094178fd6d4fd87d450a18c0a09                                                                 
+187                       main.js                             c94977c724c76d803edbf6a08ddbc300a6aa930bf777fbd423eecca05f19fc54                                                                 
+814                       userid.js                           2d0fff34cdbfbe9ccc7c80cca2a5dac70328e813178a41777efa4b3b1bf63650                                                                 
+12760                     util.js                             b6dd08e6eb21c7bc844cf861ad4b2719a9a9c2a48f8b11a64b560ea83c8d6b16                                                                 
+1395                    package.json                          de55c256a4472d2c45399a3a54d7de41785b489db726d5879834c804391d15e9                                                                 
+                        src/                                                                                                                                                                   
+12767                     armor.iced                          1b6139fa13e3d3fd3e1a373c0724c0f680a362c081b0410f8ba956575176c4fb                                                                 
+103                       main.iced                           4f6935672c854424a9d7dc96d3e446d39528b76091b4d06e199c67c5511cd09e                                                                 
+843                       userid.iced                         d73e0350adfdd2a397fe6971109122db2d2017e05aa4911b64fd729144c322ae                                                                 
+7630                      util.iced                           b2267ec8b70da4d3309d2eaef2b2d45a8b0b291739b9150a3331fd019b52011d                                                                 
+                      progress/                                                                                                                                                                
+29                      .npmignore                            083b765409c2fe14fa2382834cccf719bfcdbc2ff9a90be37d229038e1d0eeae                                                                 
+884                     History.md                            6ca032ce52713be3c123ecb2194ea90087786917d1bd37c73c2c305263a94498                                                                 
+41                      Makefile                              23dd759df1f4e4903d7639f47f8cfd19812caaf390231f15971934bcde560464                                                                 
+3333                    Readme.md                             0e198a8de45a272f840f0e3a450fbd6db75673483796f56655012007528b200d                                                                 
+49                      index.js                              bad8eafc784a18555566c1c52a6e03ba72dd58ccd6d71ba06244994be87aa7d9                                                                 
+                        lib/                                                                                                                                                                   
+4555                      node-progress.js                    0904ff0d934663fda5727b706398dd1b331c98685d39286ff4b2915df644d35d                                                                 
+1230                    package.json                          5bf2b5028fec10c28fda26807f1f7f71e006c9c84c1ef7873d013a58ff09a315                                                                 
+                      request/                                                                                                                                                                 
+707                     .eslintrc                             53e0ca6410fa703ce6bb4306f23fdd23c4ac04347429aa2cc887b4ef7025bbaf                                                                 
+19                      .npmignore                            3f70bddf6e76eb83fb53e8f8e13990b759177500c3ad7ccebf2795feb0564a7a                                                                 
+533                     .travis.yml                           c131ce670fb4c623e47ace488360c43f7b3e574aebe05ffcb2cdac85a5b9a44b                                                                 
+37754                   CHANGELOG.md                          80b2addfe5530750716debe2c289989361fd9ae865aa6727b78e7fe0d357e8c6                                                                 
+1821                    CONTRIBUTING.md                       e526d5887c2358ca71c7dff8ddb15cb3934196423c66b5b2b7b13436071441f0                                                                 
+9140                    LICENSE                               d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
+31697                   README.md                             9fc9e2ed8bfc959432f9a7b573709f1a9886187271e5c5087c0f420f1ba24a10                                                                 
+940                     disabled.appveyor.yml                 5201d5f333df67c66078192e0c85b8d8eaca8070f2c3af21e52ee1737923e9fe                                                                 
+                        examples/                                                                                                                                                              
+2463                      README.md                           c291f00b121f9b30c554fabf434fd5dd56c62a05694cd7ae28d684b695e6802c                                                                 
+5242    x               index.js                              176ff6da743f5de88422c87e993f12fd62e49710755fa2f80204efab817f0cec                                                                 
+                        lib/                                                                                                                                                                   
+935                       cookies.js                          2cbb36d465eac68f9253fa9733ac9f301ed7079e8b4f36d1ea1a3b6acb3e83fc                                                                 
+144                       copy.js                             8295009e0ba6b4b7d14f3ef3996f2fea36342aaf8debb796d352ae6d9507355d                                                                 
+210                       debug.js                            685d13ab3e19724f13beb6e0d000c3cca030abdcfd2d963a59fd0286fc0b2a51                                                                 
+2080                      helpers.js                          241466f93a63b2be5be0b4fcc2d87a518e18003724f16bbf334e5f66538e6ef9                                                                 
+                        node_modules/                                                                                                                                                          
+                          aws-sign2/                                                                                                                                                           
+9140                        LICENSE                           d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
+130                         README.md                         91c276a71be3a302744159111925df77c1b24495ec539f9af13249803888c69f                                                                 
+3896                        index.js                          0e075022adc675a7a535f1b2e8b8adbfbf1d89c430521f0d81925a1295c8dd52                                                                 
+1349                        package.json                      927d22bd0a2095bdf689ae7f3121d5151d5c8990a783c92cda19efa3b50632bb                                                                 
+                          bl/                                                                                                                                                                  
+1147                        .jshintrc                         013f74283e3cd84de64ebd694f8554a26338ede29e2e26d38d01e196e0e29ab7                                                                 
+13                          .npmignore                        f1a9a09b226cf8e98a4286200c5d9ebd5c28924707ac3317947f8ecf06ab167b                                                                 
+136                         .travis.yml                       840779bed14bf71231a64f2252dae4d26699d303377bbb6cf50d0e23a9656b5e                                                                 
+1211                        LICENSE.md                        d37270e5c730a6462aa3e981b1fa7ba01c52ea5879ed11dff0c92787e9fe3bfc                                                                 
+10047                       README.md                         c907252aa8bbe9ec335c6eeafa7ac15959c0db376da95a72df2de7445fc99394                                                                 
+4949                        bl.js                             ab3c28fc3792cd29c255a6ebaad9e9cc15054de23c72ae4f5715fe7f0ac32cf2                                                                 
+                            node_modules/                                                                                                                                                      
+                              readable-stream/                                                                                                                                                 
+36                              .npmignore                    154c3296f2bad8cd8e211ddc23a63b46c41d8d12893a758ee04df448050ad7bd                                                                 
+1096                            LICENSE                       6239c6144c31e58cf925c34483606969c555574d64ffa96518ab5d7f45c75d43                                                                 
+1305                            README.md                     997c6d2c52323f38cba4c6d56ec775766f3947c8ace4c811a89295d8e4dec39d                                                                 
+52                              duplex.js                     d9ea228c522461b16bdec57c67fc8a2ba2b2b15b31e246b976ce29256479dbc3                                                                 
+                                lib/                                                                                                                                                           
+2811                              _stream_duplex.js           de52709f6e4b46b9bbf2923eb050227ef0c0ce9fc0aa059624df467708951e61                                                                 
+1727                              _stream_passthrough.js      ed7500b5d6aa0af8821b6afc8d7a77b3b18e405991f4a05230641274a12699c0                                                                 
+27120                             _stream_readable.js         cfbbc0e5266a9e8ff28bba5b8465293b62ccdebeb294f620d415d90009a73f5c                                                                 
+7396                              _stream_transform.js        a079035a08709da67f75ef792cff5a3877796f460d4a660b4e61d6e70f803701                                                                 
+10902                             _stream_writable.js         62f4c3706e0c3d9783255fe60c38ec681c8dcb507154d6a85e20ca975b1196e5                                                                 
+                                node_modules/                                                                                                                                                  
+                                  core-util-is/                                                                                                                                                
+67                                  README.md                 57072548a79553ec5a930b370f5f37f2b86f57ab39357dc63e097c7e8ba7412a                                                                 
+16278                               float.patch               742d8ed95f4f654bf356816c433f2cd7a80580229167ed76184bc12c52099c40                                                                 
+                                    lib/                                                                                                                                                       
+3040                                  util.js                 f8bd1bb95c23e25d0e6f8667104084e4f7d1706b5f4ea19ad57e6af7793f29a2                                                                 
+1346                                package.json              e5ceb8371aa2cee8008d31f8430a42241d0d7fa94e974de69d572668853fd46e                                                                 
+3012                                util.js                   b2d96a767bcdfd42c9d0fccaaa21d7c320d1f91187d79d0bbe9942db8b73d529                                                                 
+                                  inherits/                                                                                                                                                    
+749                                 LICENSE                   5ffe28e7ade7d8f10d85d5337a73fd793dac5c462fb9a28fbf8c5046c7fbca3b                                                                 
+1625                                README.md                 b33c8be1ca837d9e4c9b0e04a550feacbc101556164d3cdbb875aed6ccbb8a29                                                                 
+42                                  inherits.js               6441b86872fed2eb3180dd2d9c5b8efb331546224d082862cb8da42cbd44c967                                                                 
+672                                 inherits_browser.js       34a98a1fcd39e12adbc98cc2d6dc3d99bb5a5a83ce8e57050826e9e539b4ecb0                                                                 
+2844                                package.json              a7eb9be23adec5ae8dd222066347127e047e0c67bf8e108363cdb678bd559329                                                                 
+510                                 test.js                   f7d16c0375c02479b1f14b1f5f361b465e136ef2a796511c588b31b9c968453d                                                                 
+                                  isarray/                                                                                                                                                     
+1557                                README.md                 5601c343c9aa96449e18aca7a4562038b1d4062f4742a2c9c7f9039f1a303f72                                                                 
+                                    build/                                                                                                                                                     
+4089                                  build.js                4dea6ebb438a08b17cc6c5499a5682526de7c8f73e879d8685a2c5e38166f09a                                                                 
+470                                 component.json            f9e5ef95d8e8f65a5dcd3a200b38e5a13461ed95114dac053d908c391c12d731                                                                 
+120                                 index.js                  74ab5ec2cd52e2c1ef699859f9c7aa7a6408f7f7231576db3b0b56af1d97d966                                                                 
+2831                                package.json              f0f7bbb15e4a08b2abdb091a5c7ee3665ba208879f75ee78a10b4780fe4d52f4                                                                 
+                                  string_decoder/                                                                                                                                              
+11                                  .npmignore                4b7e7ab61fc2d8dca0b3996b8bc3bea4f4f2464d66a9804370f7329d5de3259f                                                                 
+1076                                LICENSE                   21a82bbee91262a076c2e34533d51d73475d55e889f1c42cf884c86b2a0d5773                                                                 
+498                                 README.md                 40ce2312a362b5f3c36535b414ae67425ee5b3bef1916e587e7227bf3dfbde4a                                                                 
+7796                                index.js                  80a2189c98a61ea4987ce6635df8c8685054aa274c672df4bb1cff023b06fb74                                                                 
+1323                                package.json              22520229de5f8fce8acfbbf6126b99548dc5add1512f58c6b7f7179734923277                                                                 
+1674                            package.json                  07fca7c680e8a754c2b4453878c21ca5e48b174c024504ac5318af8d78b558ab                                                                 
+57                              passthrough.js                e0187e784bb653876aff1a3a235b9f194369863b583fd6e7e789fc15b37c7c26                                                                 
+451                             readable.js                   8b264841af5fa402568b52c686e099447e13319415006dc00147cfe00eb19913                                                                 
+55                              transform.js                  8f8b0728a921ec127d314c6a7b33dd61b4e37ca0fff8a90747966b32fc11f4cd                                                                 
+54                              writable.js                   bc2e31b8280a60c2adf90ac4823a0ed7781e3eccd2b9bdc47490b995bb85dd11                                                                 
+1584                        package.json                      06cd4ab1e407139596844822ce38e022181e61b43c3bcaf05ceb6df1456af360                                                                 
+                          caseless/                                                                                                                                                            
+1173                        README.md                         719d0dc5bc0b677a762078e848c5d8df09a57ffb5bde3679d4e352b31f967c37                                                                 
+1708                        index.js                          f37c07680f051e0e0437db1e3ef36f6bdb11e6f4df1843a1cc02675c00366a6a                                                                 
+1301                        package.json                      984f510c4a808cfd4c4710e94129be2674c40ed11348e00618eb53d6de4dabca                                                                 
+987                         test.js                           4fadc64c18fc04f071af9ecaa011caffd0bc198a6ab1cfc9c40236ca536651ca                                                                 
+                          combined-stream/                                                                                                                                                     
+1085                        License                           47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547                                                                 
+4131                        Readme.md                         ef604d47525f5e491d73887b5b9b6503d6355fabac64d11059488c7a87d042c5                                                                 
+                            lib/                                                                                                                                                               
+4300                          combined_stream.js              b97f5a2e8a926848985ec30ad10542557ed58da349c4ff0c4c8c5c1e01385ed0                                                                 
+                            node_modules/                                                                                                                                                      
+                              delayed-stream/                                                                                                                                                  
+22                              .npmignore                    5a0e41eb806870c69772dbe0bee32f817b6316adb45c166242d2843f2b0dfecd                                                                 
+1085                            License                       47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547                                                                 
+57                              Makefile                      90e1ae0474085186499fe5a5c1d6ae31726175fa4e1a2158c9914be4bfc5bae6                                                                 
+4254                            Readme.md                     f328aab84e77ef89a1ba0a7efe5afb1fe4987fa5e601fab151b79b6b99c4ba87                                                                 
+                                lib/                                                                                                                                                           
+2137                              delayed_stream.js           95e8664a8369f280170ad47608a32a97862f8e5c4df7695f03a64ca1c03fc51b                                                                 
+1122                            package.json                  431eb4ed175f0548f2fba8dce63a26d93d49983f87b71ba42e1e1ebb1a9772b6                                                                 
+1508                        package.json                      fdaba3f2a36b4d692e26d6196b48c3aed166642ef438667b430085b282a8d55f                                                                 
+                          forever-agent/                                                                                                                                                       
+9140                        LICENSE                           d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
+163                         README.md                         6ccbd2dec0cf88b9b243724d410c94d690411117f3b29b7e33b6b9b95e585991                                                                 
+3653                        index.js                          6b8daa1b579b65c232977c0d5c74d1a5b806287a90fe3f2312a28ce69c1a6a89                                                                 
+1285                        package.json                      fcf3eaa726768b356ef2e103207d13b1cd0ff8a7fc55c35de2899facb014e578                                                                 
+                          form-data/                                                                                                                                                           
+1118                        License                           e5b780d4f38d1d3328e3e53186c4e62d3fa149ea6f2bacd5de5ad0c30ac85343                                                                 
+4812                        Readme.md                         a26b9f64fc774d0ecdfc37ee9a2f70a1be9c9ea30c59ab55713fa003b7ceb467                                                                 
+                            lib/                                                                                                                                                               
+9589                          form_data.js                    003f1968f8e1000873b3beb47c127edabbde72262dbd6cbbdcc282acfa9eb2fb                                                                 
+                            node_modules/                                                                                                                                                      
+                              async/                                                                                                                                                           
+38                              .travis.yml                   e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
+1063                            LICENSE                       4d3083ec594b158fd6adfdc6c9423ffe0746d2d93cebfb98f1a35b69da78051e                                                                 
+51824                           README.md                     09e44f005802d74ef71cc760575f99f5a0a67be85c2a8aa7e2ae727e91a4deb2                                                                 
+276                             component.json                658e07147ddb1458d81d21ff46271e8bd67cb36b1922701b11cf0dc4143c1eea                                                                 
+                                lib/                                                                                                                                                           
+34598   x                         async.js                    afa4bf2aa5a078dd835683a4f0ee85a7d89f90a3252b96a9cf2fbdc70e59c901                                                                 
+1382                            package.json                  c7a0567ee0e3356e1662309c657a166ac320ff77c6e5dab30c1fa6ba4bdc32ca                                                                 
+                              mime-types/                                                                                                                                                      
+800                             HISTORY.md                    4190b0625b902c77acf4933764a329ba07dac81a5c3d81e03d6592c9873abd78                                                                 
+1099                            LICENSE                       965ef284f7f4c176842ec2e87fa13e79feed777d56d7a21a5a3b38f1bb6dc288                                                                 
+2820                            README.md                     df62a202cce725cac29760e073dbb248e497e64baebf2186475b027ff293bfe7                                                                 
+1702                            index.js                      1a04312fd7781805dd4d31cba76b3d2fa15b0e8bd75c38ecedc98d6e8f9da81e                                                                 
+                                node_modules/                                                                                                                                                  
+                                  mime-db/                                                                                                                                                     
+1099                                LICENSE                   965ef284f7f4c176842ec2e87fa13e79feed777d56d7a21a5a3b38f1bb6dc288                                                                 
+2643                                README.md                 46e5248d933b0ab03e1e5d4adc29551a56b05c864854c73d2ab7796d90d7ce1a                                                                 
+138533                              db.json                   df59b5cf8dcb71678e8c45e007d86b1945cd088514ef495e0e455b22391fc7e9                                                                 
+136                                 index.js                  a2532ace32711ae90deb4ae4654c5bc4e56f0a1e21bdd15ba26334bf723dfb09                                                                 
+1977                                package.json              9c57d41e3d12ecc9afa0e9a58777eba45292caec99007909d0e0a7efcb233489                                                                 
+2009                            package.json                  e51c7bcf2deb9bafe775124a975a7f7220d00455c6da0bf1c2ae78e3abd7723a                                                                 
+1983                        package.json                      e814169892e1967c73d1d54661827966e47f37be5dfef2455d66365fdb2259d2                                                                 
+                          hawk/                                                                                                                                                                
+196                         .npmignore                        215df22a0b34e58159917c7c945c991ca2cea9301747b2df0d3d05c7ca70c3cb|5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005
+43      x                   .travis.yml                       b6e3cfd1c81b2635674fb92072831d70afcd9623e17b759b9c60f77b06e0e348|c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575
+1490    x                   LICENSE                           32bd6eee703b8bae29dd2122c1b095423ef4f13e41598e8992d3a6994b3df06e                                                                 
+315     x                   Makefile                          03c6c7c50fc6bb1d5866a9805b65dfd6bc0d05c99384c0b4cb2689d1672e8d5b                                                                 
+30291   x                   README.md                         be244fdaf91a129dde1e5253d968ec6668ed05ba67734805d3f5e883158487fa                                                                 
+                            example/                                                                                                                                                           
+2078    x                     usage.js                        9a320e656a07bda2df68c0a9ef95255da35f4a367e3c09374bf8d13ef6be4cfa                                                                 
+                            images/                                                                                                                                                            
+6945    x                     hawk.png                        5c5c23838c11d874e33204bb96f8b9aad65a862028b0bce4d1cf5c9718b65e29|3395653c85687ea5557ae9d14efa51d383c2289f2329c34b2ba8da08718353da
+71732   x                     logo.png                        93fb6484c2746b990615cb642abac73ddade35b9d2dd834365c91b9753ba969c|136fde44488513c402de5dcedf3cf2c3a9645e45582d0ff2184b7936164d9d47
+34      x                   index.js                          f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
+                            lib/                                                                                                                                                               
+22505   x                     browser.js                      2ccd4ca08ad696efe4feb83b321fa1ea121264c14b480fd767d25cb8ad33d352                                                                 
+10416   x                     client.js                       a171221fb20901a0992d23f5667d8abfeca26400b459d6b287c2031e0b629a76                                                                 
+3285    x                     crypto.js                       ed97ad030b2c7723abd91784e59aa948243b8044b10bb80c76e271ebeff6f9f5                                                                 
+366     x                     index.js                        dc34d4c12898746db27d06107a52db69a0795f33db48e3a17760a9e7f28442e2                                                                 
+17538   x                     server.js                       178294fa202c48197fe3000db15ad5e429c17f9579ab22a11ef96614784f5dcb                                                                 
+4043    x                     utils.js                        3a187a5e6e27f7e61d2d186961f829e3083f7cb7262a3a039f399a6db815186b                                                                 
+                            node_modules/                                                                                                                                                      
+                              boom/                                                                                                                                                            
+178                             .npmignore                    5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005                                                                 
+38      x                       .travis.yml                   c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575                                                                 
+1478    x                       LICENSE                       a415169b46573659273951603f906b6ab3ba4d824600babfc7df13a40f953c0a                                                                 
+316     x                       Makefile                      05055d15f7588a72c2c9c72d09d2e6b7eaa2c70bccb61ced95d8c01f92c4c079                                                                 
+328     x                       README.md                     c6e855b9793cafa37db8dcc659df140ee47a56f2e72bf59642e3ee5c89a9ff0f                                                                 
+                                images/                                                                                                                                                        
+29479   x                         boom.png                    821f1cc1676154dc3d55a3bac142461fb067c3b4cb6b178b8214e47daa328a47|6913355914e82644c9e5ca1b89e1829edb66ceb07c847eb324aa3ed72cdae3d2
+34      x                       index.js                      f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
+                                lib/                                                                                                                                                           
+4620    x                         index.js                    ef1f5132cd5a9eb08ff0687521d50703d44fe8ea9baa9ada84249aa9ac4dfac3                                                                 
+1264    x                       package.json                  0aee3cb385a63353ce9755e9409de1b47c4c4e30e1782e9f1145837d6e477c1f                                                                 
+                              cryptiles/                                                                                                                                                       
+196                             .npmignore                    215df22a0b34e58159917c7c945c991ca2cea9301747b2df0d3d05c7ca70c3cb|5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005
+43      x                       .travis.yml                   b6e3cfd1c81b2635674fb92072831d70afcd9623e17b759b9c60f77b06e0e348|c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575
+1490    x                       LICENSE                       32bd6eee703b8bae29dd2122c1b095423ef4f13e41598e8992d3a6994b3df06e                                                                 
+274     x                       Makefile                      f08146990cd5686b7db48576edc84a8d0a3315091c59a74de7f405957b7d34cf                                                                 
+171                             README.md                     73eaed7f162eaf0558755540b950824cf8a79e34397e0e14d2cbfc7a850adcaf                                                                 
+34      x                       index.js                      f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
+                                lib/                                                                                                                                                           
+1374    x                         index.js                    72ab2b5138cd2e6a87d7434aadcbff1eb87293615a97654a0bcff01a2a32a738                                                                 
+1426    x                       package.json                  1c436356544f59ca6fc4f8a9fa803705ce1c88470442589789ba23754d15c8f2                                                                 
+                              hoek/                                                                                                                                                            
+209                             .npmignore                    92183505864b9bcd80eb7c4e90cab0cc0509d6e0379ea4433be23d6d128d0674|cad92a1adfbbfd3a3e9b76063b14472e6574b8577e1cb5a009dd14f741d65bc9
+43      x                       .travis.yml                   b6e3cfd1c81b2635674fb92072831d70afcd9623e17b759b9c60f77b06e0e348|c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575
+1805    x                       LICENSE                       07e658db672b853db821931645c29983fe3fada9d9169e1cd7189f156d78212c|018ba06cd5490d9a62b9f0a2a9819211d60473c9c80d8d66fe6abd3359a6c97a
+325     x                       Makefile                      c2cfc9c202f6369b21cffeb498b3ce5c6d1e674ed28215562116f06d65900afb|03c6c7c50fc6bb1d5866a9805b65dfd6bc0d05c99384c0b4cb2689d1672e8d5b
+10663   x                       README.md                     60c4b277d99e8f08a4763409eac742a55246c6e76caf7dcac70e76297937b4b9|57aec65f6a567c62cdff16d76cea02c28ad2138b7ee0850a4e02a0d875d9df01
+                                images/                                                                                                                                                        
+37939   x                         hoek.png                    63edaabd9bb57b48718242a3cbc7dc13e64b738bfe0bf22d8381c97e705f3e06|1223c4f803c5ea8a4359d92c4729c0159a8f282d06a362a61aed0197908a2d6d
+34      x                       index.js                      f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
+                                lib/                                                                                                                                                           
+2807    x                         escape.js                   eca4ae277fcd2d9291e693b81e16883b02c93028af9e90d10484b2b9c8b495b9|bd60059dde651ded8cd34701b7479b9656b14315bb1f668c8bbd885d38c64f66
+14227   x                         index.js                    75be649840482781d13f36c0701477b28e3ce8cb5364bf352b44a7502b347521|529c32e6987e7e836490964904b71cd7de775b91a3cbe60f2e486a3b9d2df9c0
+1405    x                       package.json                  428998b02609c37e793d84207a42fad1d03d88db1d229abb8028edc42e046f1a                                                                 
+                              sntp/                                                                                                                                                            
+178                             .npmignore                    5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005                                                                 
+38      x                       .travis.yml                   c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575                                                                 
+1490    x                       LICENSE                       32bd6eee703b8bae29dd2122c1b095423ef4f13e41598e8992d3a6994b3df06e                                                                 
+274     x                       Makefile                      f08146990cd5686b7db48576edc84a8d0a3315091c59a74de7f405957b7d34cf                                                                 
+1898    x                       README.md                     efd5b96314e21c96e0c79786dba0bf3345b1fc350d47f6f54ce1ae197162e492                                                                 
+                                examples/                                                                                                                                                      
+321     x                         offset.js                   afa6b2946aaf4a11b4bef6291fe9001a4064e60b080df55e6c7ef26c51244fb5                                                                 
+627     x                         time.js                     e42e55e66a137a0d6f79ace571f693c59ef76ccc2359cc97d4730262a3ba1234                                                                 
+34      x                       index.js                      f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
+                                lib/                                                                                                                                                           
+9734    x                         index.js                    86726895243aee519d263a8c636fcfe1cbcbfec067a512643dd06bcc233c398d                                                                 
+1266    x                       package.json                  e305c158dba233686eb102d2730b23ff95867ffd37a58dfacfb08f37a1af75aa                                                                 
+1470    x                   package.json                      c923140601e17b61cf57b27ebc870f8a9e194f6e4f9774cd00f69e3226efbe50                                                                 
+                          http-signature/                                                                                                                                                      
+178                         .dir-locals.el                    b64dc78e60949cc736ec056d48f2bd57ce8227ef83d991a5082cfbd6adb810cf                                                                 
+54                          .npmignore                        5f51d039cc4fab842c2bcc4184457b58acc8e7b871f87b8caacdaa09d97abe03                                                                 
+1067                        LICENSE                           82f8e8150cc12bb0895291c63ffa618d5652daf6265f63203ce0043955066ba4                                                                 
+1722                        README.md                         0d2e8bfb4b9063ee2159861c73963153d19735754f4efb95de9d5d35f42b48a1                                                                 
+11575                       http_signing.md                   1c7c8d57842022d42fb9b5b2b56b6bd4dc71ebbe076cb38658dc44eb454eb1a2                                                                 
+                            lib/                                                                                                                                                               
+505                           index.js                        bdbaae2a9dc3f901c6c8498fec580a2291d4c45cafe3817c30404b9b07c8dcee                                                                 
+8864                          parser.js                       a114c3552846d01939a2b17ee77c0eccbd5052d5b470306fcd6ad06864568d5f                                                                 
+5219                          signer.js                       4b4b9efcebede278a9eba711d66e8c9c14709d60987ef68e11ff59dca9523fd7                                                                 
+5035                          util.js                         f17e241e2b150bdc4f979e5139f8e1185f3c10905ac671652a1098a94fdd9025                                                                 
+1408                          verify.js                       c59811f63a0b44be2c2dc190ed8bb799647e056d3a94c2ce3f4cb3abf6d74368                                                                 
+                            node_modules/                                                                                                                                                      
+                              asn1/                                                                                                                                                            
+19                              .npmignore                    eaeff0b53839d259914dc3a4d043824bde9e0ddc936fe4c3b823ead1f30ba661                                                                 
+1076                            LICENSE                       f4b6bd1a9437d0f66ff46d8f4dca185c31a069ba11e437f3b8506ec4424be9cf                                                                 
+1201                            README.md                     47e7e3c9b0c0ac404a8c4e28ae56934c29e80622b6626c26c40cc3fb90c05faf                                                                 
+                                lib/                                                                                                                                                           
+                                  ber/                                                                                                                                                         
+239                                 errors.js                 e60f19366df8802845cf7cfc2bbf59d8c4db689351e733b364719245084d99ef                                                                 
+469                                 index.js                  38a14464e790d49b26186cd32d93c5f53ddf25fc73f1e2f358ae254d25ec0ee0                                                                 
+5760                                reader.js                 bbd43ebdca86c07498c18906f4f0cbd39ffc5698f57ba47e780fbd977f3f719e                                                                 
+638                                 types.js                  87c9fbe37ac7a2c83726a952881efd6829dc3a9dc7a1e9e485a9201cd7714c13                                                                 
+7603                                writer.js                 de286f6dad2a49bb4b520e8d878e372a53c6c89fee777fa7fe08dac86e4e9142                                                                 
+320                               index.js                    4f73f0447b2923e2d2841e39ca35d992c745848e711350d4f07cbb29a8b639aa                                                                 
+1449                            package.json                  5645a17ad82d329bed45bbbd4e444ae834ea1be30865fb2940e0746e062be1b5                                                                 
+                                tst/                                                                                                                                                           
+                                  ber/                                                                                                                                                         
+4712                                reader.test.js            848c794d5b9a4202c9158b7799915f0fd88d887208ac7fec9169d566a2a94dbf                                                                 
+7737                                writer.test.js            cc7fe098ecf5016a3a6ebf7269364a5bf5f6f0490cbb9cfa031a201ecba3baea                                                                 
+                              assert-plus/                                                                                                                                                     
+3866                            README.md                     6e489126de4662d27b848b6bf76fa49018e7f3d5fc59aa0d0e222d26701fce2a                                                                 
+4787                            assert.js                     2d6de9f39798d22b41a602cf123eb10148fe3f8ea518c45b0ea440648cc7e034                                                                 
+914                             package.json                  6b9137fc1ac071b2fb2c5a5774c40853d6cbf4b9bef2cfbbdf9197647c1e21d1                                                                 
+                              ctype/                                                                                                                                                           
+1897                            CHANGELOG                     8d381452d5c4c596bf45e8fe58e69272968befd17603f08cd0342c6320035956                                                                 
+1293                            LICENSE                       3feb20f57e895f60fbd7f7c24cb689e4091ffa7bf505e9ba1e16666904be08a8                                                                 
+2890                            README                        e1c9b1b00c0b864f6e692bdca716ffe44b438383cf6a1232f19b039a87514b1f                                                                 
+10142                           README.old                    61ce667a0de7eefa6ce300b3289fadab5388db9744e5ba25497f4875b786b16e                                                                 
+5834                            ctf.js                        e15713a764268c0018228e6d5bb28a578869764a3f3aacfba129d1a1e7132c54                                                                 
+43551                           ctio.js                       49ce5a279cb81cc3cc4c0006a52125d3295835d08bf4e000458f126cbd35cb17                                                                 
+25257                           ctype.js                      a83af03233c832ec1792c74fc75a66584b2d96667700791d464eda9dac80c9bb                                                                 
+                                man/                                                                                                                                                           
+                                  man3ctype/                                                                                                                                                   
+8265                                ctio.3ctype               7f760b9a61f0747b5185d5db705db880d0970ea7d5d9317949eddf3dead71321                                                                 
+841                             package.json                  d30e09f17f4cc102657cb4b5bb01ff2be676b0eba0fb0ca8d66efa2ad747025f                                                                 
+                                tools/                                                                                                                                                         
+6240    x                         jsl.conf                    8149ee9b5f248b06fe8a67c194f40ce325ec413dc29a4517074531cfad88e33e                                                                 
+21591   x                         jsstyle                     a3488e221e1ea3bbbdb0e98bfca72dcd5b1f51d4c6d5ff2c6406a78c8c205724                                                                 
+                                tst/                                                                                                                                                           
+                                  ctf/                                                                                                                                                         
+229                                 float.json                baa9b4ac3f88f6fd143c88971c6fb2c9a7298058d44ce3f2dae65147121a0e77                                                                 
+243                                 int.json                  6f188221dbcc18cce529f124656eb5cffc34e1f8f225f6186f8dece64bcc883c                                                                 
+4449                                psinfo.json               09175b074facc027927a3b0d0ac2b7dd72010c78bad87a79c75108a9016208b2                                                                 
+488                                 struct.json               86c820d50eed2cf5e513926c301b394f9c2880691a27de766d74794cc8501f04                                                                 
+1210                                tst.fail.js               610d41d8c9d73505d417e5e6f24a2f098268b9619f5ff9d0c45d22cec99e2a65                                                                 
+325                                 tst.float.js              e0e87ae00004d65517ebfdb159ecfa0a6d20607ee66bd3bd96ca6ecf6321bc1a                                                                 
+341                                 tst.int.js                70f20ee13dcc111a66df65bbf70f6a2f9d82b6e231b18e041bfce166248ed0f7                                                                 
+370                                 tst.psinfo.js             2c2597df3f2c2d96032bace5d517d7e9d1736c776584bdc3fe29d9e9d9f93182                                                                 
+515                                 tst.struct.js             4aa95c73e0c89adffb0c32b76b304cfe1e4d7054677e1fb3fd5b1b7d95f3613d                                                                 
+366                                 tst.typedef.js            36deb26abbe34fdd529f2c9f6886f5d1690d2dc9995ccd59fca066233ec5ee13                                                                 
+286                                 typedef.json              750cf18ed853714a91b7ac365d91255dd4f69f3d4b6eddee4e126204e7ff0641                                                                 
+                                  ctio/                                                                                                                                                        
+                                    float/                                                                                                                                                     
+17048                                 tst.rfloat.js           b968f129efedd739a6986d2b09c57cd61cd3e371e0812ec42bc92d6da5f67b3d                                                                 
+22350                                 tst.wfloat.js           2ffa4a1e2dca60ef559c5810bae26f0b6d73ad00a8577b1e186d93dc2c3e7c0c                                                                 
+                                    int/                                                                                                                                                       
+16965                                 tst.64.js               120cd53cc9fef7c341488309e66bbee834454b6788d4b84b1903ede3645fc563                                                                 
+3140                                  tst.rint.js             d01498c14c2c1899d37dee4789f4736836a18664eea606271615bfb4d8b41ec5                                                                 
+1165                                  tst.wbounds.js          6676c4fede912d45736b0a9c6a6ba8cb241b466ded733d0243d75959959c9a9b                                                                 
+2559                                  tst.wint.js             d7547c8125b31b8691c57465ceb38b5ddb6b2112cb97590e2ff64de3b8ec2b4c                                                                 
+                                    uint/                                                                                                                                                      
+11695                                 tst.64.js               9d6a060d11b1ae2e7cfd9bb8f856ce3a544cb7e901552ccac8d896605c5d9586                                                                 
+2112                                  tst.roundtrip.js        cde564cafb068ce18128c7cb6190fe7f26b032d7f4fc10f81e753f30b4fb2d74                                                                 
+3016                                  tst.ruint.js            b53cd59a314ace3f25de8f161a2081c3a8d341e94ff81d83a7ecd716a42fb95b                                                                 
+4157                                  tst.wuint.js            43defa5a8238a5c37665855057e2a9711f870ec570e474384e887a0e823cf722                                                                 
+                                  ctype/                                                                                                                                                       
+1270                                tst.basicr.js             03560216783e3dfd41ca1d131312e857bcb018853118b89b191e3aa61547fd64                                                                 
+1179                                tst.basicw.js             1a8ad130173af5c1fe1c103286622b1b3a13f2998301d84e268b6c0978b662a5                                                                 
+1045                                tst.char.js               d24913d5e6255ac4265b78818ad50e24134ead862efe8364db747c5a317b68d7                                                                 
+934                                 tst.endian.js             8cca81d99ae16b6fc5b301b6bbab3d16e3e15c9074e56d5170115cbd1dd62dfe                                                                 
+603                                 tst.oldwrite.js           82124beeb81a85f8e7c95fffab532cc8ef282775fa566d3d7f45b7cbee75fa6b                                                                 
+3206                                tst.readSize.js           c09903f2f7eff3e88ddf34a967cccbe18c93dec33f38d6c76fad082d8ec3774d                                                                 
+600                                 tst.structw.js            fb0513e428fee019d1a0cd1d52e011c94e2a6b702b411658ac79269495538d10                                                                 
+716                                 tst.writeStruct.js        8076a6dd4d696767dfbc2cf4465e77d85ef58b0106afcc545f818a6a3a4a5e2a                                                                 
+3036                        package.json                      6a6d7933a33a80cfff254ed4a57dbe252764d8620d93fd3c65c38f6769d0fb41                                                                 
+                          json-stringify-safe/                                                                                                                                                 
+1310                        LICENSE                           6dca3e98ceb51bd8ee4205b354718da7952905e73f1ef30fb38bf81c12bfa40c                                                                 
+1146                        README.md                         3d190b291d138b6b0aab09b93c66b878373dc2eaaa2b02e81d9ef374c9004068                                                                 
+1209                        package.json                      055cee772fed3eeb2e1b48690e24f2592a7439d1feb998cec2cf8f001140253e                                                                 
+954                         stringify.js                      ac7e5288595d3eccf83992f11153bd19b9b4592db9c5cc3dafd2d4200c9b3c32                                                                 
+2275                        test.js                           2653c132ff4e3aa64a2bad650d5db9954512c72f8d1b3546d811a60cf4eedd30                                                                 
+                          mime-types/                                                                                                                                                          
+154                         .npmignore                        907c245662bbd5f7e88dea3dba7ee712399008926a2638e3783ff63bfa50eb6f                                                                 
+358                         .travis.yml                       8eece90dacaf2ea3405a316c1a75a232ef5a26549780e1e16287d05d3c4edb0c                                                                 
+1099                        LICENSE                           965ef284f7f4c176842ec2e87fa13e79feed777d56d7a21a5a3b38f1bb6dc288                                                                 
+143                         Makefile                          d436578282901b8e58687aa597e543aee46933f98637c5a46a434d8aaf278378                                                                 
+2511                        README.md                         5ef55e72b2119056e34e5d11f83fa4217876f7ae3c83885994b1e6dcb710004b                                                                 
+1151                        SOURCES.md                        01b757aa8a59fe2634b74da8346c71c18831438176b6268021ecb9ce29035cc8                                                                 
+453                         component.json                    5ca8e4e7620f78a0625720aff480a9ac07a472481a27fe38891c619477d561d7                                                                 
+                            lib/                                                                                                                                                               
+311                           custom.json                     3cd7f47ce58945d2f1fa46822c42b81b0af1907825b3918146197714b1aabcf0                                                                 
+1962                          index.js                        b0b0983e39f433b0164cef6707e42c580a427a5b27f3d0d423a022b2e3228478                                                                 
+71165                         mime.json                       8469d04f7ee4a1e4a6823d19c7c7dd13884c8c53830731e3527f10188b160450                                                                 
+722                           node.json                       62fb48b0b2fb235c4b33372907dd34b7886effd0c8fa61e6de49b92869f73ecb                                                                 
+1667                        package.json                      72385a99ebb8f1793ade96f27362404b3cbc3bb6688fa112bdbb1fdacc4b47f0                                                                 
+                          node-uuid/                                                                                                                                                           
+23                          .npmignore                        3f4f172d3ad42d8c5678ad58211562d0d95ee9e897f579e139076d4ba7548b71                                                                 
+1088                        LICENSE.md                        f23fc2953e7aec102eda9d9729716f670915361c6d771b9040b779b54a8dce9b                                                                 
+7209                        README.md                         2311e73b67cd7c147d8e27b54c8857c45bb055f7c515ec7a691a72a061ff0fbf                                                                 
+                            benchmark/                                                                                                                                                         
+2031                          README.md                       c8128be08107d0b9379dbccac90ae6c46a6535018c5dc72388e3efeb41d4033a                                                                 
+5822                          bench.gnu                       9551f7a9fd946726546a0ad481d5ce21561e0f6dbe4d084fb170d275f98663c7                                                                 
+1101    x                     bench.sh                        51ea41e52729c5a176abd9b62a9d8334600996d42203655875960356a91f5f2b                                                                 
+613                           benchmark-native.c              9cacf866bcbae796280b96f22b307cc4561548c49bceb8a856556a5ccf84f04b                                                                 
+2237                          benchmark.js                    edb69da99fbc597d71e43b459c8aaf0fd62c24afbd69454f8cc6effa63d138b1                                                                 
+                            bin/                                                                                                                                                               
+597     x                     uuid                            0a2da601bb8bdc38c7e145ffd6a141a4e2c57f8023c6594418f253e00cd68e67                                                                 
+473                         component.json                    feae8e0540c86014d92ac9d87677bcb272f5cc506f4a5bc600e97594446281ef                                                                 
+1515                        package.json                      e8d672db73c1f5cf683a687d4a23d6eab53410dcdc5007e0b87bfabf403bba91                                                                 
+7239                        uuid.js                           00bf5fb2eb5388e3c9b12583c0a22f65f3f9b59b215ad8b5cda4739f6f50d69b                                                                 
+                          oauth-sign/                                                                                                                                                          
+9140                        LICENSE                           d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
+107                         README.md                         2e76e7743b7ac4bb01c30a017d222df89b8970461587dd6499247011f6b84bef                                                                 
+3132                        index.js                          d26331f6cd015a47a182814f8f26e84153cbea2885a1060d6e08745024db95f7                                                                 
+1307                        package.json                      b40f1f0181d91c7919e44eda81d36b1fe3e7e27d205697147c11623f069d20d1                                                                 
+2551                        test.js                           e891ece63da7506545737d0581a266b6fcca1f429bc63b424220d3eb556d7138                                                                 
+                          qs/                                                                                                                                                                  
+13                          .jshintignore                     16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97                                                                 
+131                         .jshintrc                         e76e6f69535573db94f03b4af6fe508db327be02561df5759f98a1abb8a23eac                                                                 
+191                         .npmignore                        cad92a1adfbbfd3a3e9b76063b14472e6574b8577e1cb5a009dd14f741d65bc9                                                                 
+36                          .travis.yml                       0ea0cd2a7eaceb07ce2bd95cd213c83065b344600bac2e34a2d8ac2467604876                                                                 
+4425                        CHANGELOG.md                      542c726ed2e0119a4433ba246e92ebd2559faa27fcecbe44c8f8141c2c6f4430                                                                 
+105                         CONTRIBUTING.md                   4ddbaee835b58117a9740b1e24992e9338a0f370adc24d6d1cf91c67549c574b                                                                 
+1654    x                   LICENSE                           d2f9d2835eb09ccf673e118e4fdc372075437c1787e66c2202912fbe3e5ee9e1                                                                 
+229                         Makefile                          9431d348262e0f63e59a0cbe0eadf0faae4f92efb14383f738d5ef7834cdf3f3                                                                 
+4978    x                   README.md                         d27cc2234aeaa277ed83d60246f743123992c879135f731374f396b2bffc38ad                                                                 
+36                          index.js                          f87890b6d58f3a7e71b06299d2166c29e394be25534e469d158d26682a228376                                                                 
+                            lib/                                                                                                                                                               
+200     x                     index.js                        234a0ac59c4d5f5f333bd756c3d7939fa5637a20fd5246848aa0d31bc26fbfbe                                                                 
+3947    x                     parse.js                        57d6025fa104a8ae20c22b9f77a867c4de6560ab678e0a84fd2c5dd8f5392b8b                                                                 
+1729    x                     stringify.js                    62eb9fdf8d5f4a1f523ee6db752437aff8d02e5ff6671486ef02a17ce00dd86c                                                                 
+2400    x                     utils.js                        30796ee7b897b6d6c234a41817e1d4a2d3bcc63e02d89e79e7b1c4511f341bad                                                                 
+1349                        package.json                      61b1266c319a30716d113c64c8a27d2121b562632a00cbd7f3889749787c36f6                                                                 
+                          stringstream/                                                                                                                                                        
+96                          .npmignore                        204f2ad804a26d32bd0696901f37636ec0fb4e87d47c76fbb0d01ed65fac1609                                                                 
+43                          .travis.yml                       dc3b4379f4671f3771341b866a8b9d7ff954a65e9152056b8166747dfb343d19                                                                 
+170                         LICENSE.txt                       365b2102abca857828ef13f6ad309daaddfb1c48054bd0caf0826d47a0663377                                                                 
+1062                        README.md                         0c90f12fdf5a75830b1298ae86d2dd0a08a30159165b60ad2c6de805499c425f                                                                 
+814                         example.js                        7831af526660976186b89744e5819ebc2c1ff609c2bf25e01d8262d8d5324128                                                                 
+2225                        package.json                      2fd6be2da1a76d23bbf873a7f4c99f5e7534292e58e424e0ac61a105fe3fcdbb                                                                 
+2792                        stringstream.js                   7c28103d1902571c405bdae45775c6bec1a10a17415ea3a71e73824d9d9c015b                                                                 
+                          tough-cookie/                                                                                                                                                        
+1609                        .jshintrc                         66627ad7aaa1e1ecebd4136d3ad9031c587ba0198de41e2f85f0dbc60c611721                                                                 
+40                          .npmignore                        44a14fb8c8fe0738a9128ad4742cdadbff1a424da95d3f773b64ac8419635884                                                                 
+111                         .travis.yml                       38c0855ab72fd177ec71997485d810415493926009f90b4e3afd4f3cbef68528                                                                 
+3723                        LICENSE                           c1d74a445eabe60394615dda8e1610cb226d1d6b8a8cb805e3beebc8643ae62a                                                                 
+20215                       README.md                         af6af07fd4460c3df894afb188f5af7c98a80660ff6309e84c772947c80ae8f3                                                                 
+8782                        generate-pubsuffix.js             81e3bd69a52bd1085cea2448b98cc2a37b3936b399f25915029d8767ca2a5360                                                                 
+                            lib/                                                                                                                                                               
+31891                         cookie.js                       4b26bdad6c29bab1e5ecf9bb63d5549be968d5d92b5633eb4e645ab1cdfea342                                                                 
+3267                          memstore.js                     641971d25e1e59de95af308c87acd55e60704ed8f2b9b0474866ca89a8d9f258                                                                 
+78735                         pubsuffix.js                    aec8ad20388e49195f7aca330198a4b5d895a83ab19ddbce4d04740a44671e62                                                                 
+1140                          store.js                        cd9719fe512bf6afcfa819211fe2d487772a5c1f6ad4d0194779d99e00b3e51c                                                                 
+                            node_modules/                                                                                                                                                      
+                              punycode/                                                                                                                                                        
+1077                            LICENSE-MIT.txt               483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a                                                                 
+5988                            README.md                     66df766a0ae9b972bdabc7df98a39ad0754f9b57d590d3c2922ba58c7aec97bc                                                                 
+1906                            package.json                  af175713bbd3c8dd3c48c1238d42007d9b87bf0d4973c048d943f67cf3090d3d                                                                 
+14649                           punycode.js                   952f98168ddee35169166ce789031db4b40cd784dd3d4b1712d04cc4f761677c                                                                 
+22228                       package.json                      a3b506c5b05033f14929da1a5f95214d937cba856c3201ba0e9540e5e40cd4c9                                                                 
+70909                       public-suffix.txt                 c9f4b2cccf772a1bb8f1c7019e74c39f9618cc0a578b62f5285cbad3d7cc0ea3                                                                 
+55192                       test.js                           0041011f2f49b377401cf15d732019c389ea381a35d1e2bb3c79664ed7c51064                                                                 
+                          tunnel-agent/                                                                                                                                                        
+54                          .jshintrc                         c71d8b02a609ad09f3d853ae61eb5ecc32249288e6f47d1f1c837e70e356d0b4                                                                 
+9140                        LICENSE                           d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
+113                         README.md                         c8086e96047bc824a3eefffde0fd5838595b1320c8c5c88efbba0dc8a495feaa                                                                 
+6621                        index.js                          b336075383ed58b9487d0806eac4b5e099a7933d78e468d9339ac4c6353d4423                                                                 
+1227                        package.json                      655e5cd9ec359c98fb8649cb87429fa2f3243ac4292a4471941b5df1730b7d97                                                                 
+2494                    package.json                          33d5e856df245752919e1a89727f4f73a32c3fad542a027b0fd08998f233fd96                                                                 
+1262    x               release.sh                            68d2071c14f53b4861b5391800dc46c2517fd7bdef0ff5e7c26df4df0805376e                                                                 
+50398                   request.js                            a986479ffb5aef638deddb3cfaf8dd306cc2f541f018f9ffd95289e9ffc68b3f                                                                 
+                      semver/                                                                                                                                                                  
+7                       .npmignore                            bd0e6101c9a3570a9deb976b37b91be850841ae01cc7797c151a2d8d54529eca                                                                 
+1310                    LICENSE                               6dca3e98ceb51bd8ee4205b354718da7952905e73f1ef30fb38bf81c12bfa40c                                                                 
+492                     Makefile                              1afefff32bd9a63491237df3f81acbff9270d7f19eba2aba2948ab7bac3888c5                                                                 
+11677                   README.md                             b2829f018f32a3684d62c1bcd3e9bb0388174df0094b51296f094f6e3369623c                                                                 
+                        bin/                                                                                                                                                                   
+4092    x                 semver                              f8f286386b4b21f30e81271becbe7e41f295e6ee4f072554493d6600170e3901                                                                 
+116                     foot.js.txt                           5ac6b05ff4dc82e467535812fa467276edf1b3abe5894e5f15af63b8c5318bf9                                                                 
+23                      head.js.txt                           cfbb2af9f50e3e1e3495ab58df48df25d21f703d51af244d099762e716adffb2                                                                 
+1321                    package.json                          8641d0db86d2fc18ee89e5ea7ece9105a94fb1a8c0c45966afbd6af1a9c6ba7b                                                                 
+30626                   semver.browser.js                     c8bae25d1fe1b4b1b8bb7cdc2de665e3d4c604e187b2491ae83edd0bc92fc7ce                                                                 
+31785                   semver.js                             15f58260ca96de9cb5ca89c8130ad6ae2d8fa0ba2d195353c47bce3606361196                                                                 
+12264                   semver.min.js                         9bba5bc5c54f3bb826b09649c58b81c95c43b0456395a045c21c2ab72d373d9e                                                                 
+2065                package.json                              e0bb91bbc54b8a315f8eb30d1a93a52d69d18401b7553198453d8945370aa02a                                                                 
+                    sandbox/                                                                                                                                                                   
+327                   gen-keybase-v1.batch                    a3936fe92b8463c335b66c4369aa9e93b0c04ac41ec211d1aa75be98c8a16cb6                                                                 
+327                   gen-keybase-v2.batch                    e01176f42bcb06fea1dca9ea1a1e2f4748a6e8af39e5c32d902d07fd776a9d1a                                                                 
+143     x             gpg.sh                                  fb3ee9dd24a06c160b0b8242db8355d45a828a8f7c9e2e9ae136ae3c3d158e62                                                                 
+143     x             gpg2.sh                                 cc79ba39633de3f606fc36368ff0d5ef77153e091d01d1fd6be86f35e95a90fa                                                                 
+216                   howto.md                                04e3fd6a6c707a2ccaa156d95a16d9e995e4fb702aace5fde9e4f9cc27638895                                                                 
+397                   m1.sig                                  c4ba734dd8761e57a16df464fc91cae859ed2038888e2badbae7121c4b4a6c56                                                                 
+                      ring1/                                                                                                                                                                   
+2789                    pub                                   0642e38c764e92a87743388dbd160f4b79316104f3848032c870bb8490d29576|3d8351732484c5d71ef8118cc0b7d75b534c4640d51ea26260de46451fdc210f
+2789                    pub~                                  0642e38c764e92a87743388dbd160f4b79316104f3848032c870bb8490d29576|3d8351732484c5d71ef8118cc0b7d75b534c4640d51ea26260de46451fdc210f
+0                       sec                                   e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855                                                                 
+1200                    trust                                 127d5d52726af752fcefc53e14a9542480c496e91aeb27c706024a77a28b6279                                                                 
+                      ring2/                                                                                                                                                                   
+857                     pub                                   dee985c98c596a477f156cc439d94887004c9c25018c221f83b8951ba3d3cfd3|9fddeb03450a0d3395747df79000365d89a82f26831b54077cbc2f5da0bf3b06
+857                     pub~                                  dee985c98c596a477f156cc439d94887004c9c25018c221f83b8951ba3d3cfd3|9fddeb03450a0d3395747df79000365d89a82f26831b54077cbc2f5da0bf3b06
+0                       sec                                   e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855                                                                 
+1280                    trust                                 cb1d9d4538fac008f15ddf0ca14c96aa554705678d998da71fedb8b3d44634d1|1f512fca17f891cba2e1aa13a9fd93a73ff393e9a4af9b0675e44df98c89085a
+1309                  v1.key                                  e288796085aef3c328c8e6d8972f6e556923796fd4cbaecbe9e819d7437e5b55                                                                 
+443                   v1.revoke                               be7530be2bd465b5a4f742f1fa3920b711f055537237b8bcc1d7fa131232391a                                                                 
+                    src/                                                                                                                                                                       
+369                   base.iced                               2f6f8bf870a0f7f575f5aeaaf572fd8718455bc7c60264f1a358f60bdb206f78                                                                 
+5117                  config.iced                             9432793cd1116b681cd8426bba86c3c46adba34faa2ab303e6b045a7b06efe56                                                                 
+300                   constants.iced                          70255515c7614ed0082d80b880e4d1302bdc8f6fec33c7a318f7045e435a3925                                                                 
+1391                  get_index.iced                          d9eafbd524309ec2079ba3080612253e32f898ff914920e2d0fe64e3aa8b35dd                                                                 
+4788                  installer.iced                          5d13106240840d9da374eeca5a2cc81d09cd8b103a9a0861bf40ff435424b234                                                                 
+3639                  key_install.iced                        05d543f2bfd7ef05695cd12a89ef7bfade574957e23f54c00dc88ed3a80971c0                                                                 
+4414                  key_setup.iced                          5ea8414c5428573cb0e2d174c380489c9b856e27b1924dd8f95bbc6a5f7395f8                                                                 
+1321                  key_upgrade.iced                        612c285f467e7798367e79d774922410798ecd051fa62128cb692760e1f49e7d                                                                 
+39                    log.iced                                f845b05873505a1c6dc1c12b9054e0dad92a495ee61a7ebc2cbb6c0d9e9783b5                                                                 
+4196                  main.iced                               0eaea3bcd65d0e656395d3cd1c40d7017d0eb5c2119eebce3bba48c4f2e2d781                                                                 
+2295                  npm.iced                                86e7b344bece5f1c89d199e0d5ef8e963452ac2260538923eaabb229e7efe466                                                                 
+368                   package.iced                            0800f95262881d2b4d208d46ee0e0143fb2dd8193fe07d0f9d24d97aaf361fac                                                                 
+3816                  request.iced                            b871bcfa9d8206ffacdc52ce2a645478ea727d0061860ae822e13a49c28124f1                                                                 
+3808                  software_upgrade.iced                   8e33190aa3f5aaaf1a863d0cea23f162d461fb02787157078d9d1a3c3a364a8a                                                                 
+182                   top.iced                                bbd26738810e5d19c57fe1c5e7253a7f5335839e2da0893d48b25a9cdf76eb9b                                                                 
+549                   util.iced                               1cd1cf81ec5c2d4304f4f30ac21eb9af74983577b3505ae573dfa68ad355c586                                                                 
                   keybase-path/                                                                                                                                                                
 547                 .npmignore                                a3260451040bdf523be635eac16d28044d0064c4e8c4c444b0a49b9258851bec                                                                 
 1482                LICENSE                                   9395652c11696e9a59ba0eac2e2cb744546b11f9a858997a02701ca91068d867                                                                 
@@ -1013,10 +1672,10 @@ size    exec  file                                            contents
 1673                test_scraper.iced                         099823ea87768b45dd205bd6dc36773999730dadb26fe3844e0a05f8668bb9d1                                                                 
                   libkeybase/                                                                                                                                                                  
 46                  .npmignore                                b4022a1041ed62ea47dd3484f0bbb3d97c4f948394217c1aa6062fd2da27ce24                                                                 
-458                 CHANGELOG.md                              a43fc760e27b65a49b80f0ad5e254eff26629b953fa1fc40b2f338a458f6b502                                                                 
+686                 CHANGELOG.md                              728e446a0147220a809a12d0c11d8c68ae22de143d82e0bb9ddd9f421194dcd9                                                                 
 1484                LICENSE                                   20a8a5de57bfaf6870517c52265d4469770a23cbc1af85eb9973ce639b0abff2                                                                 
 1312                Makefile                                  73a718fbfab39e1ff8580a01b19320f152e0ddb36af82be579d3933565b62589                                                                 
-6704                SIGNED.md                                 18fbd45e18b5d31833228c04dff7246e0bcbf9f1f8b08511e92a652b6caa2303                                                                 
+7010                SIGNED.md                                 cd6d0ce43187f54ee7f665fb04a1389050e9df19db295bcd622bd71e1383994a                                                                 
                     browser/                                                                                                                                                                   
 6045                  libkeybase.js                           92b7c0f624b90754f89aa55f19a7cd6d45dc22cdac2c8e5ed9a353e26d498c89                                                                 
                     examples/                                                                                                                                                                  
@@ -1033,7 +1692,7 @@ size    exec  file                                            contents
 22194                 kvstore.js                              61ac0d0fdf1c4b48240fd5660e0ff20300896bb49f99d9acd26ba84d3ef87809                                                                 
 565                   main.js                                 d02b07bd8967c61b44d7b821e9963c55656a0ab15c8abbf925e9aae4b2175bfe                                                                 
                       merkle/                                                                                                                                                                  
-4636                    leaf.js                               55bc8b26b468766052c15ab485e13982cb61cba1b19f3e6ae46a6e1cec896461                                                                 
+5430                    leaf.js                               6d6a21ccf133b97e4ce60324be92378ebb0e065a24cf8282484cdf837d364ac3                                                                 
 3795                  uri.js                                  7b652935243bb267183eda31dd1fafe28ae177c80c563a8289d5a7257599859b                                                                 
                     node_modules/                                                                                                                                                              
                       tweetnacl/                                                                                                                                                               
@@ -1044,10 +1703,10 @@ size    exec  file                                            contents
 32998                   nacl-fast.min.js                      91cbc54108a5c51d6f8805af3b83eb0537d0ca5cfc6c94e5613a4a43a5de1adc                                                                 
 33620                   nacl.js                               1b3dff97a7d1726030d0054156ec9be7054d078266a5fd27faaa5d5515f04347                                                                 
 19557                   nacl.min.js                           3cd974b2d1243d16b51c0f0ca044cdd3d33cda61c14f24e4adc15b7a5ca45410                                                                 
-2658                    package.json                          9d8a91c42d09dd02896f37acc5a2489ab11158daddb671816d91fc000945dac8                                                                 
+2667                    package.json                          315499eceefc25c3fd3454c7f08fa9a0eeae35cb781674d02197f6abf20f08e5                                                                 
                     notes/                                                                                                                                                                     
 2129                  tweetnacl.md                            099fac68f7caebd05b6060781e7fcfb32726309bb4bd67aa35b10134a280e049                                                                 
-1131                package.json                              5ad3870dfbbbdf24c6c085562e9333ad889fdf0a058613677da50e4ba94161a8                                                                 
+1645                package.json                              032e6a9effc95167881e21f3fd9e1103b35750cfc1ee4b5ad3fbb7db90509f8b                                                                 
                     src/                                                                                                                                                                       
 4407                  assertion.iced                          fac9d95f8915318ec94dcd9f57f0f6a1b65b210429e6a5f6ac2ad8d33b97cd10                                                                 
 634                   assertion_parser.jison                  65624a141081113074e6c778af7df8fad6769d3c5b2fb96e8edcd31444f8706f                                                                 
@@ -1056,7 +1715,7 @@ size    exec  file                                            contents
 6667                  kvstore.iced                            08bbb68e83f972bc197a187202a5e5e7841acebed329dacfc923fcedfbcc598f                                                                 
 408                   main.iced                               180e0d2d76d22e9cd29875f940b3ad34986ead9abbb63ad372ac63839e61ab52                                                                 
                       merkle/                                                                                                                                                                  
-3059                    leaf.iced                             8401351328cfe79bea2019a091f411fb852be7b93d1354a766f01461db08cf45                                                                 
+3371                    leaf.iced                             e083507d9f223bd667c4a1068465461edb1fc35657c59835c230b79172694fc4                                                                 
 2971                  uri.iced                                8eef2c4ce6bc838ad3c70fdb8d535e19608671d91566ade543c332767d4d97bc                                                                 
                   merkle-tree/                                                                                                                                                                 
 547                 .npmignore                                a3260451040bdf523be635eac16d28044d0064c4e8c4c444b0a49b9258851bec                                                                 
@@ -1085,22 +1744,22 @@ size    exec  file                                            contents
 1124                readme.markdown                           2f184b9579b0b900a041d93e3c69625eedb0f16b0215df8e962aee5622de2c36                                                                 
                   pgp-utils/                                                                                                                                                                   
 109                 .npmignore                                ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
-1487                CHANGELOG.md                              cc232ad3765b99333d9cdba90bb54f0de00e2f87845dfc6c809cbdd94866b92a                                                                 
+1593                CHANGELOG.md                              ca67dfa7946608a3f981c998b419a66f00eec539a8b747a498ca8228c6a3defa                                                                 
 1483                LICENSE                                   333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 437                 Makefile                                  a031266cdf17cdf3236a0f641bf9eb2a882bf49b5e5aaac8686e4d02e5f0c4b5                                                                 
 106                 README.md                                 0d5a7f840664005562cff3e2cee8d0d2e7468e24c4380169b6516ce318602f50                                                                 
-3833                SIGNED.md                                 b207121822c5756db67c6669ca5da9325b851bf6f0f661304394c3d713b3afe3                                                                 
+3953                SIGNED.md                                 32bf2a8f4ecbb52b454a372f1e89b758eb57a73e2925fee827cb0230e35457d7                                                                 
                     lib/                                                                                                                                                                       
-15455                 armor.js                                b1dc8663860bcb9c228d7e29ef6ebc7a18781094178fd6d4fd87d450a18c0a09                                                                 
+15571                 armor.js                                632737aa37a0539de2cfc35c2715955c88e557ec823b9ad1dca34b25aecba344                                                                 
 187                   main.js                                 c94977c724c76d803edbf6a08ddbc300a6aa930bf777fbd423eecca05f19fc54                                                                 
 814                   userid.js                               2d0fff34cdbfbe9ccc7c80cca2a5dac70328e813178a41777efa4b3b1bf63650                                                                 
-12760                 util.js                                 b6dd08e6eb21c7bc844cf861ad4b2719a9a9c2a48f8b11a64b560ea83c8d6b16                                                                 
-1440                package.json                              8e36ef173d8796ad913cff3de56d984fb5bc6483c1abbe5517935467c72fc443                                                                 
+14013                 util.js                                 228a72ce37f39b634c2ebc62f0f656b4321cfc4b91ad2d192dc6f362ae223192                                                                 
+1128                package.json                              840bb2804f89d463534303da6439806953cc9ea7cc13c97b110d3957b90aa57a                                                                 
                     src/                                                                                                                                                                       
-12767                 armor.iced                              1b6139fa13e3d3fd3e1a373c0724c0f680a362c081b0410f8ba956575176c4fb                                                                 
+12835                 armor.iced                              4fb76a5afbe8030e3ca44f1e3a90a03165350d9ba508da3510692481103d3d69                                                                 
 103                   main.iced                               4f6935672c854424a9d7dc96d3e446d39528b76091b4d06e199c67c5511cd09e                                                                 
 843                   userid.iced                             d73e0350adfdd2a397fe6971109122db2d2017e05aa4911b64fd729144c322ae                                                                 
-7630                  util.iced                               b2267ec8b70da4d3309d2eaef2b2d45a8b0b291739b9150a3331fd019b52011d                                                                 
+8186                  util.iced                               070b483eea376ea113eb4970ee738eb267613dd2101deeb2c2af178510053b2a                                                                 
                   progress/                                                                                                                                                                    
 29                  .npmignore                                083b765409c2fe14fa2382834cccf719bfcdbc2ff9a90be37d229038e1d0eeae                                                                 
 884                 History.md                                6ca032ce52713be3c123ecb2194ea90087786917d1bd37c73c2c305263a94498                                                                 
@@ -1156,64 +1815,330 @@ size    exec  file                                            contents
 2524                    package.json                          efb70341dccda3d6b5712794f2014944eacc21f304d213dcb7b73ce7e314b6f9                                                                 
 2693                package.json                              f70b16d90702163d5cab7093231aa3856fa3e3c4179268a185d68b39da50529d                                                                 
                   request/                                                                                                                                                                     
-19                  .npmignore                                3f70bddf6e76eb83fb53e8f8e13990b759177500c3ad7ccebf2795feb0564a7a                                                                 
-216                 .travis.yml                               9af4f81686faca32e56dece6f247fd69301f0b2bbd15356b4ad26926ffe28588                                                                 
+1272                .eslintrc                                 1007b4519070c4647944fae662d23ea68da5ffbe9ea6bfb504a2e40f7d312879                                                                 
+28                  .npmignore                                160afaa104d32a198411771392f56dae3c0ba42601bf21dc555153c3af930fca                                                                 
+516                 .travis.yml                               ee3801bbe972b54cc534ec07cd2445d25e1b8c74cdaae3f68c59d870bea61a5f                                                                 
+45031               CHANGELOG.md                              c827118dac427c63953e9efe8e6a28782c72eeba41f202265b350813c8f4bd65                                                                 
+1821                CONTRIBUTING.md                           e526d5887c2358ca71c7dff8ddb15cb3934196423c66b5b2b7b13436071441f0                                                                 
 9140                LICENSE                                   d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
-13022               README.md                                 910bb4969c32e3dfc530cbb8e5213b63f12cbb3792a9cc2941b8561a51d85d8a                                                                 
-4896    x           index.js                                  a09c411914c2acc0aa9d08d5d151905059fe6ddc4212b273394cf8e938cf5afd                                                                 
+37192               README.md                                 453248a05a9089b92f7fabbe24e261745e9f7c98eccb315e4be23ed19272ef92                                                                 
+940                 disabled.appveyor.yml                     5201d5f333df67c66078192e0c85b8d8eaca8070f2c3af21e52ee1737923e9fe                                                                 
+                    examples/                                                                                                                                                                  
+2463                  README.md                               c291f00b121f9b30c554fabf434fd5dd56c62a05694cd7ae28d684b695e6802c                                                                 
+4070    x           index.js                                  a3044b8f406377ba2fce8cd48e59a84b6ff7dd25ab86fdd93d22229b2debce03                                                                 
                     lib/                                                                                                                                                                       
-129                   copy.js                                 1ab4679902be5bd5dffba7b279802b73d2a715eeb96ff819a2148c47caaa201e                                                                 
-185                   debug.js                                08df072b9bfac9ec0414daac734894fd3b62fc01594f7e76077c5947ef25825a                                                                 
-934                   getSafe.js                              c28303130f8bcfd88efce6120533e31cdf1788097f9e4e20dced8375a29edb67                                                                 
-92                    optional.js                             e3d8253a07fa8e17d5552337f728bb664f6c8844d39ccf8273e9e829cf0cf30d                                                                 
+4165                  auth.js                                 0a80f470d3ca07c94f10bc142a484dd576f25a18e341d0e85aa11610562a5b8e                                                                 
+935                   cookies.js                              2cbb36d465eac68f9253fa9733ac9f301ed7079e8b4f36d1ea1a3b6acb3e83fc                                                                 
+144                   copy.js                                 8295009e0ba6b4b7d14f3ef3996f2fea36342aaf8debb796d352ae6d9507355d                                                                 
+2268                  getProxyFromURI.js                      7b66ba770bef5fd5c7466f5bfcf5e15d9de58fee2d4f27934b0b879a2dcf31d5                                                                 
+4787                  har.js                                  e80eabc27f770ee6391f1ef07ad6d66f0da8aa1c961c340bda7237aae2f31a22                                                                 
+1192                  helpers.js                              5cb599648cd4cf14da4bf7dcac2c8aa7a02fbd5b11b9a3ae5db6994c5f19f07d                                                                 
+2517                  multipart.js                            62c4c4c93f128b1a02585507ec1eb1420a90ac9ac580fcb42d3a9d4310c6d979                                                                 
+3124                  oauth.js                                4e7e781ee7a43cbb3b9e1ed6a590ec44363b2c300a411962fee40f7b572fd0f4                                                                 
+4344                  redirect.js                             6cead424a6c52e2e3be17ffee49011d36ceafba1e8184a1e6d482fe3ddb3b010                                                                 
                     node_modules/                                                                                                                                                              
+                      .bin/                                                                                                                                                                    
+                        har-validator                         -> ../har-validator/bin/har-validator                                                                                            
+                        uuid                                  -> ../node-uuid/bin/uuid                                                                                                         
                       aws-sign2/                                                                                                                                                               
 9140                    LICENSE                               d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
 130                     README.md                             91c276a71be3a302744159111925df77c1b24495ec539f9af13249803888c69f                                                                 
 3896                    index.js                              0e075022adc675a7a535f1b2e8b8adbfbf1d89c430521f0d81925a1295c8dd52                                                                 
-879                     package.json                          6462293dfb0c44b59254b8942d01442ade0ee179deb281de498b636e2df6bf65                                                                 
+1038                    package.json                          6fb94f4c218115e57462d90fc76f469c27b9180e7e023ddeb76e2c4591949bdc                                                                 
+                      bl/                                                                                                                                                                      
+1147                    .jshintrc                             013f74283e3cd84de64ebd694f8554a26338ede29e2e26d38d01e196e0e29ab7                                                                 
+13                      .npmignore                            f1a9a09b226cf8e98a4286200c5d9ebd5c28924707ac3317947f8ecf06ab167b                                                                 
+136                     .travis.yml                           840779bed14bf71231a64f2252dae4d26699d303377bbb6cf50d0e23a9656b5e                                                                 
+1211                    LICENSE.md                            d37270e5c730a6462aa3e981b1fa7ba01c52ea5879ed11dff0c92787e9fe3bfc                                                                 
+10071                   README.md                             5ae906c522a09daa257eeabb6967284417fb274a736f5f9b3076f4d04a2aa2b9                                                                 
+4949                    bl.js                                 c162139a8593ae19d3fb6961b68d072914dfb445cb7dbf955182c87bef17a6a4                                                                 
+                        node_modules/                                                                                                                                                          
+                          readable-stream/                                                                                                                                                     
+36                          .npmignore                        154c3296f2bad8cd8e211ddc23a63b46c41d8d12893a758ee04df448050ad7bd                                                                 
+1096                        LICENSE                           6239c6144c31e58cf925c34483606969c555574d64ffa96518ab5d7f45c75d43                                                                 
+1305                        README.md                         997c6d2c52323f38cba4c6d56ec775766f3947c8ace4c811a89295d8e4dec39d                                                                 
+52                          duplex.js                         d9ea228c522461b16bdec57c67fc8a2ba2b2b15b31e246b976ce29256479dbc3                                                                 
+                            lib/                                                                                                                                                               
+2811                          _stream_duplex.js               de52709f6e4b46b9bbf2923eb050227ef0c0ce9fc0aa059624df467708951e61                                                                 
+1727                          _stream_passthrough.js          ed7500b5d6aa0af8821b6afc8d7a77b3b18e405991f4a05230641274a12699c0                                                                 
+27120                         _stream_readable.js             cfbbc0e5266a9e8ff28bba5b8465293b62ccdebeb294f620d415d90009a73f5c                                                                 
+7396                          _stream_transform.js            a079035a08709da67f75ef792cff5a3877796f460d4a660b4e61d6e70f803701                                                                 
+10902                         _stream_writable.js             62f4c3706e0c3d9783255fe60c38ec681c8dcb507154d6a85e20ca975b1196e5                                                                 
+                            node_modules/                                                                                                                                                      
+                              core-util-is/                                                                                                                                                    
+67                              README.md                     57072548a79553ec5a930b370f5f37f2b86f57ab39357dc63e097c7e8ba7412a                                                                 
+16278                           float.patch                   742d8ed95f4f654bf356816c433f2cd7a80580229167ed76184bc12c52099c40                                                                 
+                                lib/                                                                                                                                                           
+3040                              util.js                     f8bd1bb95c23e25d0e6f8667104084e4f7d1706b5f4ea19ad57e6af7793f29a2                                                                 
+1006                            package.json                  a958189f6e69b51fcc09a535f1affeb9e08b3735b909d2d6558f4fa059587ca0                                                                 
+3012                            util.js                       b2d96a767bcdfd42c9d0fccaaa21d7c320d1f91187d79d0bbe9942db8b73d529                                                                 
+                              inherits/                                                                                                                                                        
+749                             LICENSE                       5ffe28e7ade7d8f10d85d5337a73fd793dac5c462fb9a28fbf8c5046c7fbca3b                                                                 
+1625                            README.md                     b33c8be1ca837d9e4c9b0e04a550feacbc101556164d3cdbb875aed6ccbb8a29                                                                 
+42                              inherits.js                   6441b86872fed2eb3180dd2d9c5b8efb331546224d082862cb8da42cbd44c967                                                                 
+672                             inherits_browser.js           34a98a1fcd39e12adbc98cc2d6dc3d99bb5a5a83ce8e57050826e9e539b4ecb0                                                                 
+2548                            package.json                  40dba8e44ebfa2ddba4b699f185e5ab82e19a1351560c978a3234327440cb837                                                                 
+510                             test.js                       f7d16c0375c02479b1f14b1f5f361b465e136ef2a796511c588b31b9c968453d                                                                 
+                              isarray/                                                                                                                                                         
+1557                            README.md                     5601c343c9aa96449e18aca7a4562038b1d4062f4742a2c9c7f9039f1a303f72                                                                 
+                                build/                                                                                                                                                         
+4089                              build.js                    4dea6ebb438a08b17cc6c5499a5682526de7c8f73e879d8685a2c5e38166f09a                                                                 
+470                             component.json                f9e5ef95d8e8f65a5dcd3a200b38e5a13461ed95114dac053d908c391c12d731                                                                 
+120                             index.js                      74ab5ec2cd52e2c1ef699859f9c7aa7a6408f7f7231576db3b0b56af1d97d966                                                                 
+2908                            package.json                  6d24e1f876b0e6758adca424d741642405fd900aff2db7ffd8f5edd696e86412                                                                 
+                              string_decoder/                                                                                                                                                  
+11                              .npmignore                    4b7e7ab61fc2d8dca0b3996b8bc3bea4f4f2464d66a9804370f7329d5de3259f                                                                 
+1076                            LICENSE                       21a82bbee91262a076c2e34533d51d73475d55e889f1c42cf884c86b2a0d5773                                                                 
+498                             README.md                     40ce2312a362b5f3c36535b414ae67425ee5b3bef1916e587e7227bf3dfbde4a                                                                 
+7796                            index.js                      80a2189c98a61ea4987ce6635df8c8685054aa274c672df4bb1cff023b06fb74                                                                 
+1367                            package.json                  7b461fbee19ecbb5e2cb67b56f9f09effb0a7532944de0ddef1dcb443ad21b27                                                                 
+1718                        package.json                      573bb46552a1bf559088c0acb09fd02f7658325f3d0bdd6d3a48aada59991da3                                                                 
+57                          passthrough.js                    e0187e784bb653876aff1a3a235b9f194369863b583fd6e7e789fc15b37c7c26                                                                 
+451                         readable.js                       8b264841af5fa402568b52c686e099447e13319415006dc00147cfe00eb19913                                                                 
+55                          transform.js                      8f8b0728a921ec127d314c6a7b33dd61b4e37ca0fff8a90747966b32fc11f4cd                                                                 
+54                          writable.js                       bc2e31b8280a60c2adf90ac4823a0ed7781e3eccd2b9bdc47490b995bb85dd11                                                                 
+1655                    package.json                          45a46d945ee7278f6aef4e2c0257950838b1b7323a97344d9b6cbee340d473cc                                                                 
+                      caseless/                                                                                                                                                                
+1173                    README.md                             719d0dc5bc0b677a762078e848c5d8df09a57ffb5bde3679d4e352b31f967c37                                                                 
+1714                    index.js                              f2e79508e6a41d6afcca6234bfee444931630c04c7341e6aaff4aa8adfd06d43                                                                 
+1409                    package.json                          a6cf23bfa7838252994d051b68570878cd77f8acaeef4c67c75885b515da36e0                                                                 
+987                     test.js                               4fadc64c18fc04f071af9ecaa011caffd0bc198a6ab1cfc9c40236ca536651ca                                                                 
+                      combined-stream/                                                                                                                                                         
+1085                    License                               47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547                                                                 
+4131                    Readme.md                             ef604d47525f5e491d73887b5b9b6503d6355fabac64d11059488c7a87d042c5                                                                 
+                        lib/                                                                                                                                                                   
+4300                      combined_stream.js                  b97f5a2e8a926848985ec30ad10542557ed58da349c4ff0c4c8c5c1e01385ed0                                                                 
+                        node_modules/                                                                                                                                                          
+                          delayed-stream/                                                                                                                                                      
+22                          .npmignore                        5a0e41eb806870c69772dbe0bee32f817b6316adb45c166242d2843f2b0dfecd                                                                 
+1085                        License                           47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547                                                                 
+57                          Makefile                          90e1ae0474085186499fe5a5c1d6ae31726175fa4e1a2158c9914be4bfc5bae6                                                                 
+4254                        Readme.md                         f328aab84e77ef89a1ba0a7efe5afb1fe4987fa5e601fab151b79b6b99c4ba87                                                                 
+                            lib/                                                                                                                                                               
+2137                          delayed_stream.js               95e8664a8369f280170ad47608a32a97862f8e5c4df7695f03a64ca1c03fc51b                                                                 
+5663                        package.json                      c48d687f5b69b7f76fe307aabbe370515a38fa91535099f1a691e2e9e757b178                                                                 
+1552                    package.json                          892e34b7ac3ad5bf1e3a4da1a1b5d9a9318bde131d1fc51ddbdad43b6d4be371                                                                 
                       forever-agent/                                                                                                                                                           
 9140                    LICENSE                               d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
 163                     README.md                             6ccbd2dec0cf88b9b243724d410c94d690411117f3b29b7e33b6b9b95e585991                                                                 
-3653                    index.js                              6b8daa1b579b65c232977c0d5c74d1a5b806287a90fe3f2312a28ce69c1a6a89                                                                 
-962                     package.json                          0193d0922e10848a07bb650782ad506b34895b3015c7d751c996bd4ffd5876b2                                                                 
+4176                    index.js                              dcf8adeb662f9c160f117c50572d1000ae7173754e152bb4e118d04b92a3eb05                                                                 
+1580                    package.json                          a11557cf34345e8a207db4c91ed44924bce71df35855153ca11129409bf33747                                                                 
                       form-data/                                                                                                                                                               
 1118                    License                               e5b780d4f38d1d3328e3e53186c4e62d3fa149ea6f2bacd5de5ad0c30ac85343                                                                 
-4477                    Readme.md                             c26ba7ba15b4136414ce8b01fd2412f25f81f553b5e7fae7b0a26cf123af7406                                                                 
+4812                    Readme.md                             a26b9f64fc774d0ecdfc37ee9a2f70a1be9c9ea30c59ab55713fa003b7ceb467                                                                 
                         lib/                                                                                                                                                                   
-8663                      form_data.js                        996334e7c7bc189d4e10e6dcc23e3aba607e51dacad58fe7dfa15ff44e743572                                                                 
+9589                      form_data.js                        003f1968f8e1000873b3beb47c127edabbde72262dbd6cbbdcc282acfa9eb2fb                                                                 
                         node_modules/                                                                                                                                                          
                           async/                                                                                                                                                               
-1058                        LICENSE                           b04b9e208e566fa898c7429e4dd5b45ba3ba2f7391e5c009cf63c53d580fa9b4                                                                 
-43074                       README.md                         d0ee397ceb1814a74117d363934796392ea33448c4b3769579adbde82ebd2979                                                                 
+38                          .travis.yml                       e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
+1063                        LICENSE                           4d3083ec594b158fd6adfdc6c9423ffe0746d2d93cebfb98f1a35b69da78051e                                                                 
+51824                       README.md                         09e44f005802d74ef71cc760575f99f5a0a67be85c2a8aa7e2ae727e91a4deb2                                                                 
 276                         component.json                    658e07147ddb1458d81d21ff46271e8bd67cb36b1922701b11cf0dc4143c1eea                                                                 
                             lib/                                                                                                                                                               
-29401   x                     async.js                        665d0187f6a7c44135a6b9fceb2a234f960893a22f3ed632e53b2fe934c3e6eb                                                                 
-45537                       package.json                      87300c8f99b188517eec6bae005c2a2cffd46b224ccb2fe8a913016bfb878dbe                                                                 
-                          combined-stream/                                                                                                                                                     
-30                          .npmignore                        a652870a039f372c2e8c44468bd3266cf332e5bf72e150f131d27ebc03070a28                                                                 
-1085                        License                           47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547                                                                 
-57                          Makefile                          90e1ae0474085186499fe5a5c1d6ae31726175fa4e1a2158c9914be4bfc5bae6                                                                 
-3985                        Readme.md                         e312423a8f7126f593d70336bfe539a37f7efb9f559c947ff02c397d0b077538                                                                 
-                            lib/                                                                                                                                                               
-3999                          combined_stream.js              a057fa8be53d366e53804940a492c03904e0620a67534ca4195ea7add7365d95                                                                 
+34598   x                     async.js                        afa4bf2aa5a078dd835683a4f0ee85a7d89f90a3252b96a9cf2fbdc70e59c901                                                                 
+54637                       package.json                      ab22de1c03a01006168a1660af8fd4b53184a258265d9f9ee11af8e676dd4603                                                                 
+2027                    package.json                          889bdfeb72c9f94b20af88d935fcf6f804913227d558a1b890d157bdd5bb3cb5                                                                 
+                      har-validator/                                                                                                                                                           
+1109                    LICENSE                               247c84c97d79cb8dad751035fee79d21a10d6a349998463fe3e7005dcfba62c7                                                                 
+7844                    README.md                             3d40b01fec06a2998151515d96995c93bfaacb0eaf91be6044d3e0c0ce69b77c                                                                 
+                        bin/                                                                                                                                                                   
+1236    x                 har-validator                       fb62a1b73a059711a2f4c29c0393079a6765d53a2507310756095bf4c6e3bbeb                                                                 
+                        node_modules/                                                                                                                                                          
+                          bluebird/                                                                                                                                                            
+1085                        LICENSE                           87e85a0872a43e866c0030b8838ee51cf1bda6d4debbbbe1dd8ccb9d7276ae0c                                                                 
+29663                       README.md                         7eed88f8edf24c0876645c9f88c0f7a871a22ad2c69c2e36340151f91e5e3fcf                                                                 
+34005                       changelog.md                      4270333de92f754efc15bc64320b5299fdc74276b1690cac86a651685678609a                                                                 
+                            js/                                                                                                                                                                
+                              browser/                                                                                                                                                         
+158294                          bluebird.js                   7fb19a0de999b70bedbb66dec71d966af0a5cc146f65b2068e4576dd414ccc24                                                                 
+72793                           bluebird.min.js               a67f7169526d4fc0e8fb0935bf88fd1116a72b9341d1d28947e66ab18615dcd9                                                                 
+                              main/                                                                                                                                                            
+421                             any.js                        bbfe88f1a68351302da229bf667fbee8b264c0fd034ac4990507d4482e713161                                                                 
+1639                            assert.js                     6a44cf29c3099fe92edf844fa1537d387b4dd760a9bbacd3364856cf2e7d127f                                                                 
+5623                            async.js                      609045c72620db7264c3eae31135372cf5cd059466e853ea8d4f3d066463c0ce                                                                 
+2085                            bind.js                       ead55b1ede1568bd2fce457d33a61273e64d7be7e8de8728e3256684eb4dd746                                                                 
+294                             bluebird.js                   96ee4479c979f981d333c1bf7f5a39ab79e9e70a59a71a99d023894df691a182                                                                 
+4344                            call_get.js                   be209c30c9fc073f120a82a386a5851f55f26b8db86d81f887c6a4315b221f20                                                                 
+1398                            cancel.js                     90002a7195dedd8ab92e3724ff3fe1fb77d2a106435042ef25f3d4e6bed4e3a7                                                                 
+14993                           captured_trace.js             83dd52e26b2ea27ae59a85035945e67e3b1edefbfb68aea690f63679f203ca5d                                                                 
+2069                            catch_filter.js               6d5fc63acff873d9ac3eaa4b878943136d1fb4076169aebfbb9b460eaf497ff7                                                                 
+938                             context.js                    f0c88784d776b5cb886a7e43d6bdb3326a83ad19e8fded1b5cd4f4d77a704714                                                                 
+4626                            debuggability.js              d02043040726996e77df19e8f65c07d4f371030367bc2a6402b351f02a95f9a2                                                                 
+1273                            direct_resolve.js             8f285f1b9c6ae3770e18276588a3053cafce0ed9bcd0a43c28ce0ea742139b53                                                                 
+298                             each.js                       1beeabb62d5a93815dd4873a3340b726295afa20f9b2280a52c5c6be93358ba7                                                                 
+3618                            errors.js                     d2d1c7fc3e171767d297129465ddabf38c11b6444e07430d33c2211b2778ff9c                                                                 
+1978                            es5.js                        c510d8dab4de97c1f460d54ea79014c283841625148dc50073981300005dd42d                                                                 
+314                             filter.js                     5b52d1f2e402abca8e1e203687a3157f4b2c2a2ed1a9bee69b6c51c1b44e4992                                                                 
+2698                            finally.js                    8e0ada2b0a6088a0220303cace85d806eca3e6b2b01ffe027aba76e389fa573a                                                                 
+4701                            generators.js                 92b6d0cd424554ca0235dcaf7c5da73595346e3c32337a22f93c4f21d57441da                                                                 
+3890                            join.js                       48e3fcc785b318d8c3e2db77f197b514534de762d08011e0ccf0dc2e79d40318                                                                 
+4271                            map.js                        272c8133d6aca732f63e05d7c2c1679c5a2913a4d62f11267bbdbb714adda055                                                                 
+1336                            method.js                     cf1d43a52becff7d352ed2624d40bb782e9dab8e04c8f373690ad0bfaae114ee                                                                 
+1614                            nodeify.js                    39153c728340ae60ef4c4d5f6d71abe885d2889aa88b43798833591b809f8ce3                                                                 
+2492                            progress.js                   16107c110b272bc420c0bbf18847ce699596a8165716bc7e160afeac14b65eb9                                                                 
+22809                           promise.js                    2c34bf282ef94c3f5eb654f37884a7497b50d02a44c7bf8c009970099fb85288                                                                 
+4156                            promise_array.js              cf7eb146b8e4cf5fc83283cc6d1e6867a7859cfe1b12fce965fbd7670c2a79bd                                                                 
+3863                            promise_resolver.js           ba3cbad383c1dce046fba9d7f6e76b52ab545a017bd62b9eb3db42c5bb590343                                                                 
+11164                           promisify.js                  803f068955c53d8bbc003f897cdc4420bf27651af3b555015dc6baeb28830d36                                                                 
+2172                            props.js                      50f9e527cfced7f98b35d2f244b1d5ac50f00ed26102b819abfe5e887616610c                                                                 
+2354                            queue.js                      9759071121b961375ede922566506a232ad9854a6c60b638648ba5f4aa712196                                                                 
+1225                            race.js                       a714430dc3a5c709fcf0e71cc958d43f5561b2617251dc53128d0d5e20388a13                                                                 
+4916                            reduce.js                     32f8556436ab3b3f06eba00d13bcb51bcae2f13244624b1b6e9f130a33ad37cd                                                                 
+1291                            schedule.js                   bcb77c4bfecc3535b06a6c66c97a504dbbb9cd6a0dd176ca2831be0c5b34f7e1                                                                 
+1168                            settle.js                     8837f4411fd3f0434f5759fcb74ed4a28062ea3437c1f72f93a4c3502e600013                                                                 
+3378                            some.js                       2971d1108981e1ad1be620895ae071ccfd2dac6f05ad4cf9e1ef19bffc1aa499                                                                 
+2641                            synchronous_inspection.js     055f7bd19cdbb94971758f11617123eca907f36f941a4fbe9e7cbaf803ad6e4a                                                                 
+2505                            thenables.js                  ee53389ba3d40ff4f7daa29de40790a51cddbe9f416eab2742587e46128b3bf5                                                                 
+1602                            timers.js                     7bb0964c562f483fca950e86ca59b67c71300c943d7a72bfb1ff23da57dae406                                                                 
+6667                            using.js                      d8be361e01aa20b1816bbc32936d76d1ce6d52bdbd59f0575c150ba8dc52a9e4                                                                 
+7250                            util.js                       6d1c0f56029cf5aa70d592ec509e20ce3ab944afc573cfcf3bafbe35dc4dfcd7                                                                 
+2482                        package.json                      ca05e468573941a6ac392a692f5953efbbf6612880c22f65535a36d01b2a14f2                                                                 
+                          chalk/                                                                                                                                                               
+2544                        index.js                          5f5d70f607b65290ebca05b923da0816481d5c1afda3cbf294a7cdbba5eb2747                                                                 
+1119                        license                           6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
                             node_modules/                                                                                                                                                      
-                              delayed-stream/                                                                                                                                                  
-22                              .npmignore                    5a0e41eb806870c69772dbe0bee32f817b6316adb45c166242d2843f2b0dfecd                                                                 
-1085                            License                       47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547                                                                 
-57                              Makefile                      90e1ae0474085186499fe5a5c1d6ae31726175fa4e1a2158c9914be4bfc5bae6                                                                 
-4254                            Readme.md                     f328aab84e77ef89a1ba0a7efe5afb1fe4987fa5e601fab151b79b6b99c4ba87                                                                 
-                                lib/                                                                                                                                                           
-2137                              delayed_stream.js           95e8664a8369f280170ad47608a32a97862f8e5c4df7695f03a64ca1c03fc51b                                                                 
-5208                            package.json                  07ea2d446d2bc33f9c3602e754a3ad14d04596eaddc93f066ff451318c71032b                                                                 
-4928                        package.json                      ef1aefe2e0bb4b03fea18b60cf0be52b655dd9de0a21587361c098d9a3a45ba0                                                                 
-5799                    package.json                          0441501ce6d597470033d7df79be14e6bab033731c0ed7eb6f376737eb5eee15                                                                 
+                              .bin/                                                                                                                                                            
+                                has-ansi                      -> ../has-ansi/cli.js                                                                                                            
+                                strip-ansi                    -> ../strip-ansi/cli.js                                                                                                          
+                                supports-color                -> ../supports-color/cli.js                                                                                                      
+                              ansi-styles/                                                                                                                                                     
+1086                            index.js                      704217444566119064a3b877a83f47b664816cf7633c9fc7a7ee22dadbf192dc                                                                 
+1119                            license                       6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
+1767                            package.json                  0d894bfe617639d4df843a724460739181491f6fdf641a43d4ab6d6d0cc49ac8                                                                 
+1471                            readme.md                     e9f44c0de83a48440c0135e7f937cd001b11be587df744b03d205d1c774306d4                                                                 
+                              escape-string-regexp/                                                                                                                                            
+227                             index.js                      c444193d583d7c86c97eafa786e6e2ed9107e4f96fc33a710cefe6600bdc9e74                                                                 
+1119                            license                       6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
+1705                            package.json                  3e8513696d46bd9f395e5a0d65db4afe5992417a2712919a3ae6cdb297426ffa                                                                 
+548                             readme.md                     8ecd85ddd0bf75f449fea3abddc88d1aaf033f5bbddbc299b343d50eda9a6323                                                                 
+                              has-ansi/                                                                                                                                                        
+733     x                       cli.js                        0eabf31ee6db23b49da6db2e21db6a6d6a7d41b5768b6a51f3cb6852c670322c                                                                 
+152                             index.js                      4558bad00644f6411ae183b743ad7c90411afce61294b0e22cb0bb8674eb7b1c                                                                 
+1119                            license                       6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
+                                node_modules/                                                                                                                                                  
+                                  ansi-regex/                                                                                                                                                  
+145                                 index.js                  48276789d12c3e203b45fc66c639a6c1df4eec65685794a547aed4262a4421ba                                                                 
+1119                                license                   6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
+1877                                package.json              374010e9eccf4f7979d9990a6a473ea0cd185875de6169d83e334ba299b8426c                                                                 
+859                                 readme.md                 4349d4b83ad9acdd1b61f3dda835fb5fc2b46dce24dc853a9024daa841aee952                                                                 
+                                  get-stdin/                                                                                                                                                   
+715                                 index.js                  d8db93e6477129e839caca0889b9533462084e6b2c180c460a5055661db8622e                                                                 
+1540                                package.json              c1d9d6c0a2d626aaed58ed68568e4995d7991cac401bfb63b67bd6baf7400055                                                                 
+571                                 readme.md                 337197b8f15bbe4c358129613d4de52fa1ef94b1613fa9292c0cef9c167595ce                                                                 
+1902                            package.json                  eb42ecfe47968cb70684b71f2674535f61472d96626711522ece969a790417ff                                                                 
+681                             readme.md                     7db5e0a46c045ee901eb23473978a9a59c34255b41c9edad5e9ce415290776c9                                                                 
+                              strip-ansi/                                                                                                                                                      
+856     x                       cli.js                        6b0409e96fd2a85a4f0fd645daf3d448de613d0bf61e92f120b3402c974f185d                                                                 
+161                             index.js                      02abcd70c31523c8c34ffaa7222629ae14b12ccd425e49ffa964a5051614691c                                                                 
+                                node_modules/                                                                                                                                                  
+                                  ansi-regex/                                                                                                                                                  
+145                                 index.js                  48276789d12c3e203b45fc66c639a6c1df4eec65685794a547aed4262a4421ba                                                                 
+1119                                license                   6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
+1877                                package.json              374010e9eccf4f7979d9990a6a473ea0cd185875de6169d83e334ba299b8426c                                                                 
+859                                 readme.md                 4349d4b83ad9acdd1b61f3dda835fb5fc2b46dce24dc853a9024daa841aee952                                                                 
+1852                            package.json                  ee98d2cb3e06cc2d2b932a3901ae5d86a1e5a5bfee37720730134212aa9494e5                                                                 
+697                             readme.md                     9ed1f06b6009f2721c4e7a18836e707567309dc5132c91f7c37c8bd35167af0e                                                                 
+                              supports-color/                                                                                                                                                  
+507     x                       cli.js                        08498efbff20f1ff2b512aabe3432f2983e079a4831d7f9bfabf449c7e932be2                                                                 
+805                             index.js                      4263bf6e934f6f052cf3289c5c069ba48e7e8aa48f7ffac74ab9a28f85a10785                                                                 
+1119                            license                       6fb9754611c20f6649f68805e8c990e83261f29316e29de9e6cedae607b8634c                                                                 
+1876                            package.json                  10613d8f0990d27efcd07803d5ef53da206f15fff366d0f1fd663bb41bad21e4                                                                 
+827                             readme.md                     d9fcb6a88cefba339bc9e43ff0138c512b12d84481c3ccad1ec2ea40b9f8c048                                                                 
+1804                        package.json                      526da26cc194f29c66a4f2b534cbbca583125c1444b952a1d68cc03a4fad554d                                                                 
+5387                        readme.md                         059f86f1ec974c400ecaa1ad566bbec62e82769ba00418b98bc471d2af18cbd1                                                                 
+                          commander/                                                                                                                                                           
+6164                        History.md                        9cf3e4df7b05e12fc74c9f23601cd6a8bad1258193d82d3739b17504a8e94e6c                                                                 
+1098                        LICENSE                           04512a63dce4d2d506ad612dc0bd7681ccf6e3655f7b6eaef7dfac8323d1ec0b                                                                 
+9573                        Readme.md                         90f1dafcd0138826d6d50b981c23e40ffa5c89cdc253538884c1c31670c08fbf                                                                 
+24797                       index.js                          93f0931059ada4204489fbb18c89aa713b33cfcd9556d74bbdf1ea7a24b141f6                                                                 
+                            node_modules/                                                                                                                                                      
+                              graceful-readlink/                                                                                                                                               
+31                              .npmignore                    fcca00cce0a40974bf64bae7c5784de7bb14946df2bb41f9c919bdd8082c25bd                                                                 
+61                              .travis.yml                   1137447fdd6d6eef29501b5b3a6dc5aae2959429db5c8811351a43b8e7a537fb                                                                 
+1076                            LICENSE                       4d6f2675ada25bd07e975bef9598da979bbf126e9d4506e6fce169030b569daf                                                                 
+531                             README.md                     b77b45a3a554cd8e18e0fd13e6ee3b7697efb0545c1fed6ade1425ed899560f8                                                                 
+188                             index.js                      e24e3e3b7b73888638e25c4b3e39ae7b7e6a896a43dc1ca2c2e15cee025cd41c                                                                 
+1310                            package.json                  a9541a2cfa316a04bbce5be28903d530ab9c23520bb9145d96d43a77c1ebabe4                                                                 
+1738                        package.json                      c6a5af1c1dec4b444143427795a0773e7b95513fe24fd19f523b95f4b4407512                                                                 
+                          is-my-json-valid/                                                                                                                                                    
+30                          .npmignore                        e8d4be8d821aa4c79482f81d7f5177e7ebb96e9443e785b450ea94f4e0068b14                                                                 
+38                          .travis.yml                       e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
+1078                        LICENSE                           3fe8d55a98dbf260eace67c00cf9bc53edb46234e840098a0b93df3096b97fb6                                                                 
+4205                        README.md                         72bedcc062d8d617a5c48636df623a5e44e2be3af974fcd50689d69a383316c4                                                                 
+430                         example.js                        24b61530e39958af5226a30c772b69592899c8667b59c836141ea307389f5075                                                                 
+2342                        formats.js                        28838a7c898bb61e57d03b196bc53b563d7f5d8c6497a0342dd993112a03a0d5                                                                 
+15613                       index.js                          8a08da1bc39c58224154a92e3b5a6565c403669220bce109c5e1342c3259a828                                                                 
+                            node_modules/                                                                                                                                                      
+                              generate-function/                                                                                                                                               
+13                              .npmignore                    16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97                                                                 
+38                              .travis.yml                   e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
+1748                            README.md                     b0b8e776214928840ea6bf800bcce5ba9929105c593f5a86325835b1a21abe94                                                                 
+662                             example.js                    810c3d718d813df8744a780b33055cd1fa51b6881e92894951d7c1dc3f039a6a                                                                 
+1296                            index.js                      a320147a9d2314bf07acdab03a8f3e39b69a4369d06b71f1140640cf3addb5b9                                                                 
+1401                            package.json                  b0abd1aeceb42bb14c5ee91e34e7953a6d2a9e62af4b2e9ea4200f8c437d7e3d                                                                 
+796                             test.js                       8db73aaf0b4a4ea2362c8c26fa09f13cdf502edbfd659c591268cf6855de7af8                                                                 
+                              generate-object-property/                                                                                                                                        
+13                              .npmignore                    16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97                                                                 
+38                              .travis.yml                   e36b9b52fccb8114b8b8b13bdfbaa87342b07bda069b517ca34db9f85adaa3e3                                                                 
+1078                            LICENSE                       3fe8d55a98dbf260eace67c00cf9bc53edb46234e840098a0b93df3096b97fb6                                                                 
+473                             README.md                     b904c6f1bbf68786fd246adf2ac3c02f5cba53ade6445cebb829f1780c9597fe                                                                 
+195                             index.js                      ac8b113d7319800efb88a4d8f07ad9678b1c73b8d33462e2dad2070abf04b3df                                                                 
+                                node_modules/                                                                                                                                                  
+                                  is-property/                                                                                                                                                 
+116                                 .npmignore                d812190b32c06791f0cefda9e827d429ed1f3842466bc4c2d3261a73b0b0ae27                                                                 
+1082                                LICENSE                   e67aed7df22dc8031e4fcf5338fe91cb33e3817e5c58a99a2a2802eea9069791                                                                 
+625                                 README.md                 5d81a365b5fedd5e44ef46e74d32875ac46aec2ad881413cfc4133b742ba2d1a                                                                 
+11014                               is-property.js            4c6963cce2dc8f5fde0693a7a4f93c2d85aae03d4a21ba28388a236ecd1a51b3                                                                 
+1449                                package.json              b899b0af9c43a5bb3cafb72858945bc095179e617990894b6860b361f6f4b553                                                                 
+1485                            package.json                  d3e777decb31cc7bb247155356d77bb25d06be20c6d28009e5c1831878a57aa7                                                                 
+203                             test.js                       be3de48d8acbec1aad5b65f3dd3c6b3bd44b7e63cae5d82ec01224acc6456f3e                                                                 
+                              jsonpointer/                                                                                                                                                     
+61                              .travis.yml                   c144c4e9b23abc39bc0284718c47cda1892a71f24f98b3f9a95ebb6d579731fe                                                                 
+764                             README.md                     187bbbc38726436d89ef3ef8a984cddfe1b84204cb3052e95964abe93cd839e5                                                                 
+1629                            jsonpointer.js                571cfc72b1c0ad915ea441ff277ba2ac0eff0bbf565ccd6dc3ccae1016795c1b                                                                 
+2167                            package.json                  fb9b91cd454b501824c8458be3f3fa25a01c28281f656f50ee718107fa658b24                                                                 
+2778                            test.js                       6623fc457c91b149bdde5a97a798a0d91d1e91ebfdb20319f6bc3bbfeccdb6a9                                                                 
+                              xtend/                                                                                                                                                           
+545                             .jshintrc                     da3531289454b9a256c622c1a74771440d4f0e57092262902cefbc6830ec3a7c                                                                 
+13                              .npmignore                    16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97                                                                 
+1056                            LICENCE                       7b9a2c90ea0aceda46c0c1f4cc6d4bf2cf37c7bf0f1a7502f981dae2c8c01d71                                                                 
+49                              Makefile                      534b3147995cfcc4d6763779281b8079f688b2287304e7fbc518a4bd5b5334ce                                                                 
+725                             README.md                     86b55ca30d3c83e722a634d0ba69dc30984f4494406dc908e68c50c0bd2aac4c                                                                 
+323                             immutable.js                  e5ad673babcb07b1718e7cc40161663484d233f162390cb6d8c1094befe508dc                                                                 
+308                             mutable.js                    cf06e5e9b0a8682f122a031ac24d394570cc0d72fa884c64878c48db06322878                                                                 
+1870                            package.json                  9a1c25df7e2c71cdbd0e464f6e500fa6297535cd9394fb1e55301d90e93ea99c                                                                 
+1356                            test.js                       4b80e65e1f4ef7d61f6d8e014d8579aa40b69aed95b273aa1a2476be30a957d6                                                                 
+1633                        package.json                      6fe5e441bafd833c8150f62d77c2ee25e8c62db7b891824c13a5a9c7682dee2a                                                                 
+444                         require.js                        19c83e9a9982657c33abc93d754e6d81dfaa2973e4f3e71985d6e56192a36b12                                                                 
+2052                    package.json                          a01b4af22d8ae72c9d8c3c078e6b70208306569f0b1beccd0e131771e5222671                                                                 
+                        src/                                                                                                                                                                   
+186                       error.js                            ded81694cad8e84576e96eea4b594ff7b4a140de606f0818802a7752bca17ff5                                                                 
+801                       index.js                            b647102307c6426058b1fe047f3d78f0418218bcb3286ab744337f5428b46682                                                                 
+                          schemas/                                                                                                                                                             
+187                         cache.json                        38c5aabb238a4cc122eb02a2600e411c4ded18a1a59dbbb184e1498e816a70b5                                                                 
+348                         cacheEntry.json                   b301de1beaf967f6cc033d7bbc0d6b882c97c69d6bcc126884687ba4c3c25fb3                                                                 
+377                         content.json                      6d488052038432b4e06f53ccf25024fa491bd832d6a4f7799e976cb4b63ff0d1                                                                 
+498                         cookie.json                       01381932415f46c987af952c7226dd4fa1b3f72a09645faee242b2f94cad7026                                                                 
+230                         creator.json                      a111dedf26eed2a6bfee843fe3ac827e554ddb7c8291f7330b36b7c21b079d3d                                                                 
+870                         entry.json                        ec9b9b2d7ef3a12b836b57895166607a07a2222656c4756489223c2c82d7e7a6                                                                 
+117                         har.json                          6221911128cfbd2de2844f342cbe77a9ccbed50d9d7fc1d8421e278dad91e900                                                                 
+1752                        index.js                          039057f8d00950f725367bfc6ae037f83279c920552cd5a5a6ffe1c6cd2c75a7                                                                 
+493                         log.json                          08623ebf2a67fb40e2a2257bdead0c0fa5d5d8cfacd8f64f20d2316ff584b72c                                                                 
+577                         page.json                         ef7ae9e2aef9b96e044a70adfc9353cfec21e4b2c5f41487a390e1ee3a00f25d                                                                 
+225                         pageTimings.json                  a75eae2ce68243ae7e1c9106b74145f8ef30ad7aeefe8baedb29933f7980af48                                                                 
+654                         postData.json                     0adcfaba6e22814ed3050103a54ca1569b9a43c3857664ef9ae5013cb21eed52                                                                 
+226                         record.json                       f96e6ca241e15dcdd294ab575281d884796744b77d87666e9a9685cd58b84121                                                                 
+853                         request.json                      b7232c47ab45497a02aac1e550110551d103f05c5d1eeb77e9be22189df192f9                                                                 
+807                         response.json                     37c3e7d9ce591a47998a0643a18036511593d41d65786c46b5efaec97de646a5                                                                 
+565                         timings.json                      3bb55dc36e840f8614a2eba69db2168a23be5b89399ff3db3a8bf875a8e8d70c                                                                 
                       hawk/                                                                                                                                                                    
-178                     .npmignore                            5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005                                                                 
+195                     .npmignore                            27a11cd18683089261ef5aaf6522d091506d7cfef7fe015e9c640f7b6eea1102                                                                 
 38      x               .travis.yml                           c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575                                                                 
-1490    x               LICENSE                               32bd6eee703b8bae29dd2122c1b095423ef4f13e41598e8992d3a6994b3df06e                                                                 
-315     x               Makefile                              03c6c7c50fc6bb1d5866a9805b65dfd6bc0d05c99384c0b4cb2689d1672e8d5b                                                                 
-30468   x               README.md                             5ce010486c77d51b719c2e414a36c8e167f2acb3afafdfbe87aab1b1165040bb                                                                 
+1660    x               LICENSE                               a9d5799fb6bd9493eb13e552d18df3c6883edc4e9ea3a9ed8ad1197428d1841b                                                                 
+221     x               Makefile                              ebe5833b038cf8a448fe23a375075885244108ba89239d3324eb692f610d05f5                                                                 
+30824   x               README.md                             70b4ef322399b848c253bdfc2f6f6c8af7ad2c655767a114a25cf8fb0508db0f                                                                 
+384                     bower.json                            dbf0b59d3c5676c60da00a381847354b93370796fbd0adeccfb99ebf0e2aecf9                                                                 
+335                     component.json                        3bf561afbd0c785e0101bb40a1ee3f16aaffa7c70387beaa4017cc9766cf44d7                                                                 
                         example/                                                                                                                                                               
 2078    x                 usage.js                            9a320e656a07bda2df68c0a9ef95255da35f4a367e3c09374bf8d13ef6be4cfa                                                                 
                         images/                                                                                                                                                                
@@ -1221,73 +2146,74 @@ size    exec  file                                            contents
 71732   x                 logo.png                            93fb6484c2746b990615cb642abac73ddade35b9d2dd834365c91b9753ba969c|136fde44488513c402de5dcedf3cf2c3a9645e45582d0ff2184b7936164d9d47
 34      x               index.js                              f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
                         lib/                                                                                                                                                                   
-21803   x                 browser.js                          676562f28a591da88a792962597b78f7fa340cb371866ff6866bedfecc9a8646                                                                 
-10213   x                 client.js                           b1adb45f4345e0cf7e670b404bec02aa6a3f54fb10a8bbdf5bda62ba53ae7435                                                                 
-3040    x                 crypto.js                           d045048b2f9fb591d89760856f33881b6ae244c05eacdfcbbcc932aeed1150dc                                                                 
-366     x                 index.js                            3d46f387833164e1db4f36b0bfa87d97c64289756413ffd94a4c270fad7b1747                                                                 
-17661   x                 server.js                           7b8c79f43f88deae64230debbdd5d7e49d6ac418aee2137dea4de327f24f7d5d                                                                 
-4043    x                 utils.js                            3a187a5e6e27f7e61d2d186961f829e3083f7cb7262a3a039f399a6db815186b                                                                 
+26918   x                 browser.js                          d9cbcdc65970dadc69e22a536f0cfbdb542b5fe5fd568a0b32abaf396ef4f968                                                                 
+10207   x                 client.js                           35106919c344fdea66d5cf8cf14376bd73f94214d1d5b3af740dd87c6c97847f                                                                 
+3460    x                 crypto.js                           c683e8606742d54b7b1fd0e7e3c8733c4e487e632af66f5e8de11559aebe6f85                                                                 
+366     x                 index.js                            dc34d4c12898746db27d06107a52db69a0795f33db48e3a17760a9e7f28442e2                                                                 
+17842   x                 server.js                           9694c775f9339d4f286b70e78e39c35b9009a329155b99a1b6ffbef797c9f6d2                                                                 
+3832    x                 utils.js                            7554c944bf848ff1122e872766c820fcfae5caa6591af2d09acd3a0037983da5                                                                 
                         node_modules/                                                                                                                                                          
                           boom/                                                                                                                                                                
 178                         .npmignore                        5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005                                                                 
-38      x                   .travis.yml                       c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575                                                                 
-1478    x                   LICENSE                           a415169b46573659273951603f906b6ab3ba4d824600babfc7df13a40f953c0a                                                                 
-316     x                   Makefile                          05055d15f7588a72c2c9c72d09d2e6b7eaa2c70bccb61ced95d8c01f92c4c079                                                                 
-328     x                   README.md                         c6e855b9793cafa37db8dcc659df140ee47a56f2e72bf59642e3ee5c89a9ff0f                                                                 
+56      x                   .travis.yml                       bc762c39c60ae29a01d554faa14a8464c1ac06f1988395de911f5ccc559865f7                                                                 
+105                         CONTRIBUTING.md                   4ddbaee835b58117a9740b1e24992e9338a0f370adc24d6d1cf91c67549c574b                                                                 
+1651    x                   LICENSE                           3bb7f5f0543422b901b894d0b9b59567c4007c96bf63e21fc68d1cbcd2a2424e                                                                 
+12896   x                   README.md                         a42eef3fe57825515696f4a590c61ee2f1f9b49720d64e9db32b21e91407f684                                                                 
                             images/                                                                                                                                                            
 29479   x                     boom.png                        821f1cc1676154dc3d55a3bac142461fb067c3b4cb6b178b8214e47daa328a47|6913355914e82644c9e5ca1b89e1829edb66ceb07c847eb324aa3ed72cdae3d2
 34      x                   index.js                          f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
                             lib/                                                                                                                                                               
-4620    x                     index.js                        ef1f5132cd5a9eb08ff0687521d50703d44fe8ea9baa9ada84249aa9ac4dfac3                                                                 
-1265    x                   package.json                      b3e1f1d927d287c06cc0c44d2ea26330853fbc3f536cab238d39e9cefe77c23e                                                                 
+6206    x                     index.js                        c77e511df4c4ed50894066d7b194222dc830cd495815cda808c291e8dcf084c1                                                                 
+1553                        package.json                      a77bfcb0e8108e0208fb643e9e90ca6d001ec79ed66987cccf51be1c412847bc                                                                 
                           cryptiles/                                                                                                                                                           
-196                         .npmignore                        215df22a0b34e58159917c7c945c991ca2cea9301747b2df0d3d05c7ca70c3cb|5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005
-43      x                   .travis.yml                       b6e3cfd1c81b2635674fb92072831d70afcd9623e17b759b9c60f77b06e0e348|c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575
-1490    x                   LICENSE                           32bd6eee703b8bae29dd2122c1b095423ef4f13e41598e8992d3a6994b3df06e                                                                 
-274     x                   Makefile                          f08146990cd5686b7db48576edc84a8d0a3315091c59a74de7f405957b7d34cf                                                                 
-171                         README.md                         73eaed7f162eaf0558755540b950824cf8a79e34397e0e14d2cbfc7a850adcaf                                                                 
+178                         .npmignore                        5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005                                                                 
+38      x                   .travis.yml                       c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575                                                                 
+1660    x                   LICENSE                           901bbebd345525aaaca1fda16c0502d2acd5157d48d34a5b2e6480c3581e63cd                                                                 
+195     x                   Makefile                          5c7e0501b67f1865f7de2bae7e90a625719152df1035efef5ba9c901481fc43e                                                                 
+537                         README.md                         634ade3ff3fce90938683283216766237fbe0e9745745ca2472e47a22de48ef7                                                                 
 34      x                   index.js                          f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
                             lib/                                                                                                                                                               
-1374    x                     index.js                        72ab2b5138cd2e6a87d7434aadcbff1eb87293615a97654a0bcff01a2a32a738                                                                 
-1185    x                   package.json                      4e99be4c2f58f75d02e3d981a4d4c965b5f283f96641feaef72286adb8383019                                                                 
+1364    x                     index.js                        5c771e93e171b8a1137238523a8ea3fe903560d3eed2db40b97ef8f98372ab00                                                                 
+1529    x                   package.json                      f9b7ba3dbf89bba0e6e024d19d5a82c78c4b61748fe515ecbf3ed1561bcefdfa                                                                 
                           hoek/                                                                                                                                                                
-209                         .npmignore                        92183505864b9bcd80eb7c4e90cab0cc0509d6e0379ea4433be23d6d128d0674|cad92a1adfbbfd3a3e9b76063b14472e6574b8577e1cb5a009dd14f741d65bc9
-43      x                   .travis.yml                       b6e3cfd1c81b2635674fb92072831d70afcd9623e17b759b9c60f77b06e0e348|c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575
-1805    x                   LICENSE                           07e658db672b853db821931645c29983fe3fada9d9169e1cd7189f156d78212c|018ba06cd5490d9a62b9f0a2a9819211d60473c9c80d8d66fe6abd3359a6c97a
-325     x                   Makefile                          c2cfc9c202f6369b21cffeb498b3ce5c6d1e674ed28215562116f06d65900afb|03c6c7c50fc6bb1d5866a9805b65dfd6bc0d05c99384c0b4cb2689d1672e8d5b
-10663   x                   README.md                         60c4b277d99e8f08a4763409eac742a55246c6e76caf7dcac70e76297937b4b9|57aec65f6a567c62cdff16d76cea02c28ad2138b7ee0850a4e02a0d875d9df01
+191                         .npmignore                        cad92a1adfbbfd3a3e9b76063b14472e6574b8577e1cb5a009dd14f741d65bc9                                                                 
+56      x                   .travis.yml                       bc762c39c60ae29a01d554faa14a8464c1ac06f1988395de911f5ccc559865f7                                                                 
+105                         CONTRIBUTING.md                   4ddbaee835b58117a9740b1e24992e9338a0f370adc24d6d1cf91c67549c574b                                                                 
+1814    x                   LICENSE                           054181d7ff4c8b8fd42d6b8d23fa8fec28154011471fd80518755ec5b38e0c61                                                                 
+223     x                   Makefile                          1e8108ac65dbc05d0b20733959acd58c03448e854359cdb69145ef259a07be8f                                                                 
+15806   x                   README.md                         46b471ac2f2956af4ddd6491c58ef39e9ac7c17af63ca54d55ec1f6faf2b92ec                                                                 
                             images/                                                                                                                                                            
 37939   x                     hoek.png                        63edaabd9bb57b48718242a3cbc7dc13e64b738bfe0bf22d8381c97e705f3e06|1223c4f803c5ea8a4359d92c4729c0159a8f282d06a362a61aed0197908a2d6d
-34      x                   index.js                          f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
+35      x                   index.js                          4fe91c6ebb2d58fc683ec224b6f569190bcb3cdfffb7e44415f179ec9ea1baf9                                                                 
                             lib/                                                                                                                                                               
-2807    x                     escape.js                       eca4ae277fcd2d9291e693b81e16883b02c93028af9e90d10484b2b9c8b495b9|bd60059dde651ded8cd34701b7479b9656b14315bb1f668c8bbd885d38c64f66
-14227   x                     index.js                        75be649840482781d13f36c0701477b28e3ce8cb5364bf352b44a7502b347521|529c32e6987e7e836490964904b71cd7de775b91a3cbe60f2e486a3b9d2df9c0
-12665   x                   package.json                      8cec0bce89f0e65ade6105d1c9632fa2b047665c154c4b63dbace7627831f0ea                                                                 
+2668    x                     escape.js                       a406fccc9ac233b5db53b53c085d3b2968a9274a721033cc646a82b6a7c8b9e0                                                                 
+23079   x                     index.js                        cfa4a83e814268f7417bf2f95b7a9fa476d3ed99b101f501d6c6fbcaea58bf7c                                                                 
+1467                        package.json                      a4fd3474fd36dd9e010fdc41f45fd32a8dee16ad05f8b5d22068df0fce26488a                                                                 
                           sntp/                                                                                                                                                                
 178                         .npmignore                        5d817dc581151e29c850110c05fc58993754607f0006e01ae89f11d649d95005                                                                 
 38      x                   .travis.yml                       c400f0c36979a04b9d3d0e96eab7e330ed4d8bf4674a91e8405bc58aae400575                                                                 
-1490    x                   LICENSE                           32bd6eee703b8bae29dd2122c1b095423ef4f13e41598e8992d3a6994b3df06e                                                                 
-274     x                   Makefile                          f08146990cd5686b7db48576edc84a8d0a3315091c59a74de7f405957b7d34cf                                                                 
+1660    x                   LICENSE                           34a0d80d6799b8cd90a8416f1911fda79bd089c9b8b69f23d1c1c94f84fa0bb6                                                                 
+206     x                   Makefile                          2373d55e2b7843c59306361aee0706595f0605344d18ea03830e00013410f999                                                                 
 1898    x                   README.md                         efd5b96314e21c96e0c79786dba0bf3345b1fc350d47f6f54ce1ae197162e492                                                                 
                             examples/                                                                                                                                                          
 321     x                     offset.js                       afa6b2946aaf4a11b4bef6291fe9001a4064e60b080df55e6c7ef26c51244fb5                                                                 
 627     x                     time.js                         e42e55e66a137a0d6f79ace571f693c59ef76ccc2359cc97d4730262a3ba1234                                                                 
 34      x                   index.js                          f84b7747688f053b22b9219fb7e8b002ab79187c3802cc62b9b4e1aa0d6cdfd6                                                                 
                             lib/                                                                                                                                                               
-9734    x                     index.js                        86726895243aee519d263a8c636fcfe1cbcbfec067a512643dd06bcc233c398d                                                                 
-2901    x                   package.json                      df249b154bf9220fbf2a21293f5c8e6ac2b21652430a306ca901699aadade81b                                                                 
-32217   x               package.json                          cb90336e7d4bf3a0bad14090dec8c0b71c7129b17e2d228e674f8ea42c773ae7                                                                 
+9758    x                     index.js                        c9b2b1ef29aa275558ccc15e5a214d7f2c58d6e6ca2a87a79bb439d68e03d8a0                                                                 
+1452    x                   package.json                      83bc7c54c2131c2582cb9c41916d8d80a67601c0127451852d5e2cf887067cc2                                                                 
+1619    x               package.json                          f0b1c1611fc5e6d9dbaeb8110f4171d1cd095d9e396d5dbecfe4f49f2a75eb14                                                                 
                       http-signature/                                                                                                                                                          
 178                     .dir-locals.el                        b64dc78e60949cc736ec056d48f2bd57ce8227ef83d991a5082cfbd6adb810cf                                                                 
 54                      .npmignore                            5f51d039cc4fab842c2bcc4184457b58acc8e7b871f87b8caacdaa09d97abe03                                                                 
 1067                    LICENSE                               82f8e8150cc12bb0895291c63ffa618d5652daf6265f63203ce0043955066ba4                                                                 
-1722                    README.md                             0d2e8bfb4b9063ee2159861c73963153d19735754f4efb95de9d5d35f42b48a1                                                                 
-11575                   http_signing.md                       1c7c8d57842022d42fb9b5b2b56b6bd4dc71ebbe076cb38658dc44eb454eb1a2                                                                 
+1594                    README.md                             274c6cbbc921c95550f3c0812cecaba402b30daa492fcf70695eda3563613289                                                                 
+11581                   http_signing.md                       03172f5bceb38e57e440967e52f5d6be3ef132762d80676050f591ee4542c464                                                                 
                         lib/                                                                                                                                                                   
-505                       index.js                            bdbaae2a9dc3f901c6c8498fec580a2291d4c45cafe3817c30404b9b07c8dcee                                                                 
+544                       index.js                            8311fd0dd1f7aafd836c8449686b7d64a27d26a23a99611a783c5ea24d583635                                                                 
 8864                      parser.js                           a114c3552846d01939a2b17ee77c0eccbd5052d5b470306fcd6ad06864568d5f                                                                 
-5219                      signer.js                           4b4b9efcebede278a9eba711d66e8c9c14709d60987ef68e11ff59dca9523fd7                                                                 
-5035                      util.js                             f17e241e2b150bdc4f979e5139f8e1185f3c10905ac671652a1098a94fdd9025                                                                 
+5203                      signer.js                           5e70253ea63d924ffd7ba0de44ad28b3acf014a55c4b622ecefa03b2e5ccdad5                                                                 
+6939                      util.js                             509bd06a13b15aec78509843d897cc7156a9774e2382688c591633217469eb22                                                                 
 1408                      verify.js                           c59811f63a0b44be2c2dc190ed8bb799647e056d3a94c2ce3f4cb3abf6d74368                                                                 
                         node_modules/                                                                                                                                                          
                           asn1/                                                                                                                                                                
@@ -1302,17 +2228,18 @@ size    exec  file                                            contents
 638                             types.js                      87c9fbe37ac7a2c83726a952881efd6829dc3a9dc7a1e9e485a9201cd7714c13                                                                 
 7603                            writer.js                     de286f6dad2a49bb4b520e8d878e372a53c6c89fee777fa7fe08dac86e4e9142                                                                 
 320                           index.js                        4f73f0447b2923e2d2841e39ca35d992c745848e711350d4f07cbb29a8b639aa                                                                 
-2281                        package.json                      43231becb0146a73996e15ad4820ac16f0785877412e854ed36e27e3b19417f2                                                                 
+2857                        package.json                      d07ffa79bd5d23db1396f8adae7130d934e6bed8895347411130857b44643a9c                                                                 
                             tst/                                                                                                                                                               
                               ber/                                                                                                                                                             
 4712                            reader.test.js                848c794d5b9a4202c9158b7799915f0fd88d887208ac7fec9169d566a2a94dbf                                                                 
 7737                            writer.test.js                cc7fe098ecf5016a3a6ebf7269364a5bf5f6f0490cbb9cfa031a201ecba3baea                                                                 
                           assert-plus/                                                                                                                                                         
 3866                        README.md                         6e489126de4662d27b848b6bf76fa49018e7f3d5fc59aa0d0e222d26701fce2a                                                                 
-4787                        assert.js                         2d6de9f39798d22b41a602cf123eb10148fe3f8ea518c45b0ea440648cc7e034                                                                 
-4469                        package.json                      ce1e8b36200265bb4d7a9b9a9dbbf895446e47802a5b973884930698ad14f0ad                                                                 
+6317                        assert.js                         4fd7fed74829b3e4c31e9a0ad5ab68da4f481bf61dda50142a450776521d1290                                                                 
+1212                        package.json                      6857f8b8779db6f252cd93c67d12bd6cdaf9ed23d93e95bdec1f5095e508a274                                                                 
                           ctype/                                                                                                                                                               
-1897                        CHANGELOG                         8d381452d5c4c596bf45e8fe58e69272968befd17603f08cd0342c6320035956                                                                 
+5                           .npmignore                        cc90883c5dbcd7fa8192202e9f92c1c4b904aad2315dc852d287e7d0db61feb2                                                                 
+2057                        CHANGELOG                         dcb41f1ebc30eaf53be830b36d5b33aa087a3edefc08360dcb979be138dd2bbf                                                                 
 1293                        LICENSE                           3feb20f57e895f60fbd7f7c24cb689e4091ffa7bf505e9ba1e16666904be08a8                                                                 
 2890                        README                            e1c9b1b00c0b864f6e692bdca716ffe44b438383cf6a1232f19b039a87514b1f                                                                 
 10142                       README.old                        61ce667a0de7eefa6ce300b3289fadab5388db9744e5ba25497f4875b786b16e                                                                 
@@ -1322,115 +2249,117 @@ size    exec  file                                            contents
                             man/                                                                                                                                                               
                               man3ctype/                                                                                                                                                       
 8265                            ctio.3ctype                   7f760b9a61f0747b5185d5db705db880d0970ea7d5d9317949eddf3dead71321                                                                 
-3388                        package.json                      31e363dcf181cba2b2e77cb4d6de7d9ab64138d2e9b1228fe54eeb770adb6172                                                                 
+1059                        package.json                      9c359c009ed8cb8d4ed2634ab3179056665bf78cb1ca68963554611a4fc06d7c                                                                 
                             tools/                                                                                                                                                             
 6240    x                     jsl.conf                        8149ee9b5f248b06fe8a67c194f40ce325ec413dc29a4517074531cfad88e33e                                                                 
 21591   x                     jsstyle                         a3488e221e1ea3bbbdb0e98bfca72dcd5b1f51d4c6d5ff2c6406a78c8c205724                                                                 
-                            tst/                                                                                                                                                               
-                              ctf/                                                                                                                                                             
-229                             float.json                    baa9b4ac3f88f6fd143c88971c6fb2c9a7298058d44ce3f2dae65147121a0e77                                                                 
-243                             int.json                      6f188221dbcc18cce529f124656eb5cffc34e1f8f225f6186f8dece64bcc883c                                                                 
-4449                            psinfo.json                   09175b074facc027927a3b0d0ac2b7dd72010c78bad87a79c75108a9016208b2                                                                 
-488                             struct.json                   86c820d50eed2cf5e513926c301b394f9c2880691a27de766d74794cc8501f04                                                                 
-1210                            tst.fail.js                   610d41d8c9d73505d417e5e6f24a2f098268b9619f5ff9d0c45d22cec99e2a65                                                                 
-325                             tst.float.js                  e0e87ae00004d65517ebfdb159ecfa0a6d20607ee66bd3bd96ca6ecf6321bc1a                                                                 
-341                             tst.int.js                    70f20ee13dcc111a66df65bbf70f6a2f9d82b6e231b18e041bfce166248ed0f7                                                                 
-370                             tst.psinfo.js                 2c2597df3f2c2d96032bace5d517d7e9d1736c776584bdc3fe29d9e9d9f93182                                                                 
-515                             tst.struct.js                 4aa95c73e0c89adffb0c32b76b304cfe1e4d7054677e1fb3fd5b1b7d95f3613d                                                                 
-366                             tst.typedef.js                36deb26abbe34fdd529f2c9f6886f5d1690d2dc9995ccd59fca066233ec5ee13                                                                 
-286                             typedef.json                  750cf18ed853714a91b7ac365d91255dd4f69f3d4b6eddee4e126204e7ff0641                                                                 
-                              ctio/                                                                                                                                                            
-                                float/                                                                                                                                                         
-17048                             tst.rfloat.js               b968f129efedd739a6986d2b09c57cd61cd3e371e0812ec42bc92d6da5f67b3d                                                                 
-22350                             tst.wfloat.js               2ffa4a1e2dca60ef559c5810bae26f0b6d73ad00a8577b1e186d93dc2c3e7c0c                                                                 
-                                int/                                                                                                                                                           
-16965                             tst.64.js                   120cd53cc9fef7c341488309e66bbee834454b6788d4b84b1903ede3645fc563                                                                 
-3140                              tst.rint.js                 d01498c14c2c1899d37dee4789f4736836a18664eea606271615bfb4d8b41ec5                                                                 
-1165                              tst.wbounds.js              6676c4fede912d45736b0a9c6a6ba8cb241b466ded733d0243d75959959c9a9b                                                                 
-2559                              tst.wint.js                 d7547c8125b31b8691c57465ceb38b5ddb6b2112cb97590e2ff64de3b8ec2b4c                                                                 
-                                uint/                                                                                                                                                          
-11695                             tst.64.js                   9d6a060d11b1ae2e7cfd9bb8f856ce3a544cb7e901552ccac8d896605c5d9586                                                                 
-2112                              tst.roundtrip.js            cde564cafb068ce18128c7cb6190fe7f26b032d7f4fc10f81e753f30b4fb2d74                                                                 
-3016                              tst.ruint.js                b53cd59a314ace3f25de8f161a2081c3a8d341e94ff81d83a7ecd716a42fb95b                                                                 
-4157                              tst.wuint.js                43defa5a8238a5c37665855057e2a9711f870ec570e474384e887a0e823cf722                                                                 
-                              ctype/                                                                                                                                                           
-1270                            tst.basicr.js                 03560216783e3dfd41ca1d131312e857bcb018853118b89b191e3aa61547fd64                                                                 
-1179                            tst.basicw.js                 1a8ad130173af5c1fe1c103286622b1b3a13f2998301d84e268b6c0978b662a5                                                                 
-1045                            tst.char.js                   d24913d5e6255ac4265b78818ad50e24134ead862efe8364db747c5a317b68d7                                                                 
-934                             tst.endian.js                 8cca81d99ae16b6fc5b301b6bbab3d16e3e15c9074e56d5170115cbd1dd62dfe                                                                 
-603                             tst.oldwrite.js               82124beeb81a85f8e7c95fffab532cc8ef282775fa566d3d7f45b7cbee75fa6b                                                                 
-3206                            tst.readSize.js               c09903f2f7eff3e88ddf34a967cccbe18c93dec33f38d6c76fad082d8ec3774d                                                                 
-600                             tst.structw.js                fb0513e428fee019d1a0cd1d52e011c94e2a6b702b411658ac79269495538d10                                                                 
-716                             tst.writeStruct.js            8076a6dd4d696767dfbc2cf4465e77d85ef58b0106afcc545f818a6a3a4a5e2a                                                                 
-2626                    package.json                          e177d9188e067d9b90f29591c4c90c9a475fde92972c5b61deafb7558465a4b0                                                                 
+1701                    package.json                          1421698a5d7df8594d738db8347a998752c49cc4e68691c9eb358aba8e6d6e38                                                                 
+                      isstream/                                                                                                                                                                
+1147                    .jshintrc                             013f74283e3cd84de64ebd694f8554a26338ede29e2e26d38d01e196e0e29ab7                                                                 
+6                       .npmignore                            ae9a2868b5090b9e81953b7cd8316b3002e7cd6897320c2aa69ee71fc27be3ae                                                                 
+150                     .travis.yml                           853129eb75f6ba39a1375ac0662e976e5fa20a71ff8f88700be4a6a37ac1f5da                                                                 
+1125                    LICENSE.md                            a7a5808b700606f042c8c4b00d6291f46472b51614d9f03a309bdd9f3a9585c5                                                                 
+2424                    README.md                             861602c05359d5d5c6fdae15c8f6b9790c52480188722e0a6a84d50981e6067e                                                                 
+588                     isstream.js                           c0c3871cd08bc9ea569d1e7ed485201b348f21ee29007eef81f6666b95f22987                                                                 
+1608                    package.json                          fd7147e2d64d2c5e53b14dfb81d3b8db0e4dd919f36890ac925862acc79f4147                                                                 
+6975                    test.js                               8072e7039f80ce3618bd585a38f7c2c626e90ae84501c939dcd84e5fe2d85db3                                                                 
                       json-stringify-safe/                                                                                                                                                     
 1310                    LICENSE                               6dca3e98ceb51bd8ee4205b354718da7952905e73f1ef30fb38bf81c12bfa40c                                                                 
 1146                    README.md                             3d190b291d138b6b0aab09b93c66b878373dc2eaaa2b02e81d9ef374c9004068                                                                 
-1998                    package.json                          54ef04d1482a5d86f73ece749d7092e3015172b6a1ce732d5031d7cd48ddfb6a                                                                 
+2160                    package.json                          b8fdc8844447327f62a596ba83a679df50ae9e359c7aef381c273af7bf7a5269                                                                 
 954                     stringify.js                          ac7e5288595d3eccf83992f11153bd19b9b4592db9c5cc3dafd2d4200c9b3c32                                                                 
 2275                    test.js                               2653c132ff4e3aa64a2bad650d5db9954512c72f8d1b3546d811a60cf4eedd30                                                                 
-                      mime/                                                                                                                                                                    
-1075                    LICENSE                               f9bd83d927784353ab0299e9b621b0e253be79a0d15331dcb21cc765e432b3cd                                                                 
-2235                    README.md                             92a4d60dd02758a1fb182de00601385f11c3f916eab3de8ac90f7d42ecd3985a                                                                 
-2861                    mime.js                               3d69a93d46f6608029c8e9457c1428bc9cf9d5602099e468d44a72754a7c7f89                                                                 
-3120                    package.json                          9b03bd4e24034ee98444a106801df26131fc61d75da67665787a0b50098cb3ac                                                                 
-2748                    test.js                               58d3ad83def3b3ce34124e7bab74c2411c7b1e7cf62cc9495ec0378b5ead8fd5                                                                 
-                        types/                                                                                                                                                                 
-53009                     mime.types                          ef972fc545cbff4c0daa2b2e6b440859693b3c10435ee90f10fa6fffad800c16                                                                 
-2572                      node.types                          652ec0f7b103cb9af90caa41e7817d1662c36a24f96afda3ceee87d446b6ed97                                                                 
+                      mime-types/                                                                                                                                                              
+1541                    HISTORY.md                            fd22ebe9a30893c9e18968ed31cb0ab6647aac8929f15d601c9ce0c2d061bad4                                                                 
+1099                    LICENSE                               965ef284f7f4c176842ec2e87fa13e79feed777d56d7a21a5a3b38f1bb6dc288                                                                 
+2931                    README.md                             4eed92afbc08dcd61e74091fc81b70a044a2bb8737461f2f5bec7eeaf2177adf                                                                 
+1702                    index.js                              1a04312fd7781805dd4d31cba76b3d2fa15b0e8bd75c38ecedc98d6e8f9da81e                                                                 
+                        node_modules/                                                                                                                                                          
+                          mime-db/                                                                                                                                                             
+4435                        HISTORY.md                        fe7b3c679134e1c531dc11369cd6f845f8dbc7922499e767e1fa0fcb33ce3a55                                                                 
+1099                        LICENSE                           965ef284f7f4c176842ec2e87fa13e79feed777d56d7a21a5a3b38f1bb6dc288                                                                 
+2676                        README.md                         99f2ff5a6ac8c85fe2c7aac3feb3f5707cf2121a7ad93f31e92be808e24b10ca                                                                 
+137031                      db.json                           889751be9c14793e21eb8fc73e5e7fbb2d2c0382287970bebccf928f4de90134                                                                 
+136                         index.js                          a2532ace32711ae90deb4ae4654c5bc4e56f0a1e21bdd15ba26334bf723dfb09                                                                 
+2395                        package.json                      9e9d382e8f58658990c3218361fa080f1833b65194f54423788f2db43053c9cc                                                                 
+2158                    package.json                          a94ffa409fd99392acf845b2e1c3413a84a5c987b99407e4515719f9c4a92a14                                                                 
                       node-uuid/                                                                                                                                                               
 23                      .npmignore                            3f4f172d3ad42d8c5678ad58211562d0d95ee9e897f579e139076d4ba7548b71                                                                 
-100                     LICENSE.md                            b4b1cc4c14b5e2b7e9963f26eaf47e7f496f8f3a1d3ee226984c5e2e8e4928d8                                                                 
-6508                    README.md                             24d5ffce764d795cda623d31a8d4269e6273eebff007603a7572e40d87c8000c                                                                 
+1088                    LICENSE.md                            f23fc2953e7aec102eda9d9729716f670915361c6d771b9040b779b54a8dce9b                                                                 
+7209                    README.md                             2311e73b67cd7c147d8e27b54c8857c45bb055f7c515ec7a691a72a061ff0fbf                                                                 
                         benchmark/                                                                                                                                                             
 2031                      README.md                           c8128be08107d0b9379dbccac90ae6c46a6535018c5dc72388e3efeb41d4033a                                                                 
 5822                      bench.gnu                           9551f7a9fd946726546a0ad481d5ce21561e0f6dbe4d084fb170d275f98663c7                                                                 
 1101    x                 bench.sh                            51ea41e52729c5a176abd9b62a9d8334600996d42203655875960356a91f5f2b                                                                 
 613                       benchmark-native.c                  9cacf866bcbae796280b96f22b307cc4561548c49bceb8a856556a5ccf84f04b                                                                 
 2237                      benchmark.js                        edb69da99fbc597d71e43b459c8aaf0fd62c24afbd69454f8cc6effa63d138b1                                                                 
-473                     component.json                        feae8e0540c86014d92ac9d87677bcb272f5cc506f4a5bc600e97594446281ef                                                                 
-7497                    package.json                          bc710bfb8062dc6e3313eade73e7272e8e2281630b2b228e8f32932320500f0e                                                                 
-7207                    uuid.js                               5f08340738df09d7bae90dad82c746c81b065f1b671b5e32df95a170d9d3823d                                                                 
+                        bin/                                                                                                                                                                   
+597     x                 uuid                                0a2da601bb8bdc38c7e145ffd6a141a4e2c57f8023c6594418f253e00cd68e67                                                                 
+435                     bower.json                            09e3befddb7f9b270771540775348cbacc7106a2ecf1822e5667c576af8e767d                                                                 
+474                     component.json                        c6efd3422da7b37b7f3338627bee920658e8a52a8cb86c42d02cc26f371dd117                                                                 
+1559                    package.json                          afe3781598e08ba759b0f4fc419794c3460cf0c3f3f192c790f53e0f2246e761                                                                 
+7243                    uuid.js                               6e4f64eaed0bd9f351cfb535058e317d2c8370de262fbbff55f6d26cf35bcc6a                                                                 
                       oauth-sign/                                                                                                                                                              
 9140                    LICENSE                               d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
 107                     README.md                             2e76e7743b7ac4bb01c30a017d222df89b8970461587dd6499247011f6b84bef                                                                 
-1086                    index.js                              3f0d4b1fac0a0c4451e3129d9b266ce02bca6118256c2e7c8027200db2682737                                                                 
-884                     package.json                          91d78afcc772b93094ffe2827869c4662824d1da98c957472e1c4148773e3228                                                                 
-2016                    test.js                               238eedd91c6dab8ea0e5ee77754dfabccf1c59380fb9a4eaefb73c8820925206                                                                 
+3427                    index.js                              ed38ef5127bf36565d45a104ff21efbaa92b152f5f2c8def813ad80404545b2d                                                                 
+1414                    package.json                          4968f2a18ed86d76003762f0e7e6e3854cbd94fed2a419f007198b1e737215c3                                                                 
+2912                    test.js                               602534f7206c0ed0f11d26b9a7827987f02e4a0c325946a60d5ac585bf6ec13d                                                                 
                       qs/                                                                                                                                                                      
-207                     .gitmodules                           33836265632f0d2033dbdb68ec3b107c41f96f08b1dec84f9c4b896b7446ba27                                                                 
-77                      .npmignore                            10f13c04c67ac8be86c2a8928cd03fe2b3a172d5f5165f4187a693c5d85e10e8                                                                 
-1922                    Readme.md                             9b277008b6cc411a56ca50b6994d65717c7fece7ce079e43597e640e01bf80e6                                                                 
-7361                    index.js                              2d95a9c43ec548ede31994391df1096edc6ce2cc1357e094b6327ab57e827d70                                                                 
-2767                    package.json                          24d8b3b65fb86f950d92e4dd68eec3fbf2aeafc7417976653c3b5c9b965a9fdb                                                                 
-                      tough-cookie/                                                                                                                                                            
-3940                    .jshintrc                             7537eb1609cfa3590d96deafdeb0179c16bd1a3f1c2fff3d076f7e03b4b6c813                                                                 
-40                      .npmignore                            44a14fb8c8fe0738a9128ad4742cdadbff1a424da95d3f773b64ac8419635884                                                                 
-3723                    LICENSE                               c1d74a445eabe60394615dda8e1610cb226d1d6b8a8cb805e3beebc8643ae62a                                                                 
-18955                   README.md                             083ea03bd82f6d7137b4311c6aa69a18c2852830ea1fc9b329c081e326d03308                                                                 
-8704                    generate-pubsuffix.js                 f937349e7e8f06303dc37663f3010f2b30c0f656a19d4136a3831faa47f82aa7                                                                 
+13                      .jshintignore                         16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97                                                                 
+131                     .jshintrc                             e76e6f69535573db94f03b4af6fe508db327be02561df5759f98a1abb8a23eac                                                                 
+191                     .npmignore                            cad92a1adfbbfd3a3e9b76063b14472e6574b8577e1cb5a009dd14f741d65bc9                                                                 
+55                      .travis.yml                           ce65c5f5a9885d0b1ec6555342d0172d4816e5754242e6ec0ea540be09942401                                                                 
+4425                    CHANGELOG.md                          542c726ed2e0119a4433ba246e92ebd2559faa27fcecbe44c8f8141c2c6f4430                                                                 
+105                     CONTRIBUTING.md                       4ddbaee835b58117a9740b1e24992e9338a0f370adc24d6d1cf91c67549c574b                                                                 
+1654    x               LICENSE                               d2f9d2835eb09ccf673e118e4fdc372075437c1787e66c2202912fbe3e5ee9e1                                                                 
+229                     Makefile                              9431d348262e0f63e59a0cbe0eadf0faae4f92efb14383f738d5ef7834cdf3f3                                                                 
+5306    x               README.md                             e3841bf794e18b3302b62d4aa84ff601bbec6bb6aedeed7fd7bc9a7cfca7c7e0                                                                 
+36                      index.js                              f87890b6d58f3a7e71b06299d2166c29e394be25534e469d158d26682a228376                                                                 
                         lib/                                                                                                                                                                   
-30404                     cookie.js                           e35b1d6a8487edbab9109957dbb27d64880c143c8ab69b1b45e2f3b299278d13                                                                 
-3051                      memstore.js                         1b339f22f5c472c2eaac23b1bd124056f5e7e383c227ed4f60cf1ebd5dcd62e4                                                                 
+200     x                 index.js                            234a0ac59c4d5f5f333bd756c3d7939fa5637a20fd5246848aa0d31bc26fbfbe                                                                 
+4044    x                 parse.js                            e56fe5dcd6d574fde78d786162aef748124a2eb168e15faf62d4110b70d81940                                                                 
+2322    x                 stringify.js                        490bda2d9048d2432bf841dc8814d44c7828b07d7c0ce3bcbbdc3f089268176a                                                                 
+2400    x                 utils.js                            30796ee7b897b6d6c234a41817e1d4a2d3bcc63e02d89e79e7b1c4511f341bad                                                                 
+1393                    package.json                          3a098a698974b5657ace490be3db26e263d8fd3bbc35b02641d626770bdfc0d8                                                                 
+                      stringstream/                                                                                                                                                            
+96                      .npmignore                            204f2ad804a26d32bd0696901f37636ec0fb4e87d47c76fbb0d01ed65fac1609                                                                 
+43                      .travis.yml                           dc3b4379f4671f3771341b866a8b9d7ff954a65e9152056b8166747dfb343d19                                                                 
+170                     LICENSE.txt                           365b2102abca857828ef13f6ad309daaddfb1c48054bd0caf0826d47a0663377                                                                 
+1062                    README.md                             0c90f12fdf5a75830b1298ae86d2dd0a08a30159165b60ad2c6de805499c425f                                                                 
+814                     example.js                            7831af526660976186b89744e5819ebc2c1ff609c2bf25e01d8262d8d5324128                                                                 
+2372                    package.json                          57185723d3622ab649e62b7509dfc1939e1391cc317a34b4b5bbe0fb72e08539                                                                 
+2792                    stringstream.js                       7c28103d1902571c405bdae45775c6bec1a10a17415ea3a71e73824d9d9c015b                                                                 
+                      tough-cookie/                                                                                                                                                            
+1609                    .jshintrc                             66627ad7aaa1e1ecebd4136d3ad9031c587ba0198de41e2f85f0dbc60c611721                                                                 
+40                      .npmignore                            44a14fb8c8fe0738a9128ad4742cdadbff1a424da95d3f773b64ac8419635884                                                                 
+111                     .travis.yml                           38c0855ab72fd177ec71997485d810415493926009f90b4e3afd4f3cbef68528                                                                 
+3723                    LICENSE                               c1d74a445eabe60394615dda8e1610cb226d1d6b8a8cb805e3beebc8643ae62a                                                                 
+20215                   README.md                             af6af07fd4460c3df894afb188f5af7c98a80660ff6309e84c772947c80ae8f3                                                                 
+8782                    generate-pubsuffix.js                 81e3bd69a52bd1085cea2448b98cc2a37b3936b399f25915029d8767ca2a5360                                                                 
+                        lib/                                                                                                                                                                   
+31891                     cookie.js                           4b26bdad6c29bab1e5ecf9bb63d5549be968d5d92b5633eb4e645ab1cdfea342                                                                 
+3267                      memstore.js                         641971d25e1e59de95af308c87acd55e60704ed8f2b9b0474866ca89a8d9f258                                                                 
 78735                     pubsuffix.js                        aec8ad20388e49195f7aca330198a4b5d895a83ab19ddbce4d04740a44671e62                                                                 
+1140                      store.js                            cd9719fe512bf6afcfa819211fe2d487772a5c1f6ad4d0194779d99e00b3e51c                                                                 
                         node_modules/                                                                                                                                                          
                           punycode/                                                                                                                                                            
-15099                       LICENSE-GPL.txt                   79f07878b0db4c3c720ab19960bffef3d878b67f4b60d7d1569e30c202f87aa0                                                                 
-1076                        LICENSE-MIT.txt                   1e234f86ba3f213fbab143e195f172a40c5f943fb268c45d619ede8510b20d06                                                                 
-5724                        README.md                         6f1fb6fdf531a695847887233754369467eeacc8ca2159f8b0758f0b194b99e6                                                                 
-7480                        package.json                      f3228a1c5150b5cc5feec75ec8a046150c37eff2cd59755b13ad2c94b96792fa                                                                 
-13967                       punycode.js                       9cf83746faf2e75c25dbc0d62453e8ac56713ea0b33304719bdb0c99aa9fb172                                                                 
-2655                        punycode.min.js                   f89f76b3d7560c5134666f34c227a4a8c555f7f9c471aa7c8f51414938632591                                                                 
-20360                   package.json                          b0a5796a6d814bec5de583e01f62de8550ec4cbc10bdaf40d2a114def4b09a69                                                                 
+1077                        LICENSE-MIT.txt                   483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a                                                                 
+5988                        README.md                         66df766a0ae9b972bdabc7df98a39ad0754f9b57d590d3c2922ba58c7aec97bc                                                                 
+1950                        package.json                      ddca903443e441f29910ce1b85eafa04f353e2b3023258c5a6a3c8291eec0b6c                                                                 
+14649                       punycode.js                       952f98168ddee35169166ce789031db4b40cd784dd3d4b1712d04cc4f761677c                                                                 
+22228                   package.json                          a3b506c5b05033f14929da1a5f95214d937cba856c3201ba0e9540e5e40cd4c9                                                                 
 70909                   public-suffix.txt                     c9f4b2cccf772a1bb8f1c7019e74c39f9618cc0a578b62f5285cbad3d7cc0ea3                                                                 
-45537                   test.js                               b9dfa36bb30d24d94d6e804073571ceb05f8620f01cf7bd34c5f3095bb68d9f3                                                                 
+55192                   test.js                               0041011f2f49b377401cf15d732019c389ea381a35d1e2bb3c79664ed7c51064                                                                 
                       tunnel-agent/                                                                                                                                                            
+54                      .jshintrc                             c71d8b02a609ad09f3d853ae61eb5ecc32249288e6f47d1f1c837e70e356d0b4                                                                 
 9140                    LICENSE                               d446a8c73d7bbe4872d6524b15ae206f9a2d7eb53f8c9cb6e6c893a43acc5276                                                                 
 113                     README.md                             c8086e96047bc824a3eefffde0fd5838595b1320c8c5c88efbba0dc8a495feaa                                                                 
-6403                    index.js                              859c395899baec808ca14fc6f02abd80066715db6fd476d64088e5618dc7d06d                                                                 
-858                     package.json                          7b6e25d0cb01de35d162ceacb7c88de966f5edaae6e344e06ce0d7ce67762bba                                                                 
-14691   x           package.json                              e517ec28e7f3620ff47410a9203a20fab0366fefab0b715346ca4f353cf0f032                                                                 
-38484               request.js                                3dcfaf64ed40b368a67a86fc7b7cc6dc241bd3947f76150d59c4246568bc70c0                                                                 
+6621                    index.js                              b336075383ed58b9487d0806eac4b5e099a7933d78e468d9339ac4c6353d4423                                                                 
+1288                    package.json                          b3736a85bc8354e6e11ebd367886f427f180efe470c6b15f6b33f592fd0096ff                                                                 
+2765                package.json                              8293fdb8d81789a1b72038b5f7dd0c5933b9e4864d724608a4d7c20d4f2b7afc                                                                 
+1262    x           release.sh                                68d2071c14f53b4861b5391800dc46c2517fd7bdef0ff5e7c26df4df0805376e                                                                 
+43171               request.js                                15a9fb1bfd2735b2f33c75f1ca2b07fd76493cb9e1afdef013a21710878d0ca8                                                                 
                   semver/                                                                                                                                                                      
 7                   .npmignore                                bd0e6101c9a3570a9deb976b37b91be850841ae01cc7797c151a2d8d54529eca                                                                 
 1310                LICENSE                                   6dca3e98ceb51bd8ee4205b354718da7952905e73f1ef30fb38bf81c12bfa40c                                                                 
@@ -1839,7 +2768,7 @@ size    exec  file                                            contents
 29                  test-stamp                                ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
                 notes/                                                                                                                                                                         
 1236              refactor.md                                 a4b8cc684c519bc75265a99aea80d644b7fa97f1a5add57664dcbe2e3998fce0                                                                 
-2314            package.json                                  7e49b8b2f4005fa7b494647f7b21505abd1a9954aeb933df81af8c536e3ede1c                                                                 
+2363            package.json                                  a5d47b7cddc7739f0d63bb1a93906ec2e0d2d0436b23829b752c5e4c49d49434                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
