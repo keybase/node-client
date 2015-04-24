@@ -410,6 +410,48 @@
     return parts.join(' ');
   };
 
+  exports.format_pgp_fingerprint_2 = function(buf, opts) {
+    var hex, i, length, parts, spc;
+    if (opts == null) {
+      opts = {};
+    }
+    hex = buf.toString('hex');
+    length = (opts != null ? opts.length : void 0) || 40;
+    spc = (opts != null ? opts.space : void 0) || ' ';
+    hex = hex.toUpperCase().slice(-length);
+    if (hex.length === 40) {
+      parts = (function() {
+        var _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = hex.length; _i < _ref; i = _i += 4) {
+          _results.push(hex.slice(i, i + 4));
+        }
+        return _results;
+      })();
+      parts = (function() {
+        var _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = parts.length; _i < _ref; i = _i += 5) {
+          _results.push(parts.slice(i, i + 5).join(spc));
+        }
+        return _results;
+      })();
+      return parts.join(spc + spc);
+    } else if (hex.length > 8) {
+      parts = (function() {
+        var _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = hex.length; _i < _ref; i = _i += 4) {
+          _results.push(hex.slice(i, i + 4));
+        }
+        return _results;
+      })();
+      return parts.join(spc);
+    } else {
+      return hex;
+    }
+  };
+
   exports.fingerprint_to_key_id_64 = function(fp) {
     return fp.slice(-16);
   };

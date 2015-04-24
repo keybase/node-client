@@ -1,3 +1,8 @@
+## 1.0.4 (2015-04-15)
+
+Bugfixes:
+  - Disable use of options file for any one-shot verifications
+
 ## 1.0.3 (2015-02-06)
 
 Feature:

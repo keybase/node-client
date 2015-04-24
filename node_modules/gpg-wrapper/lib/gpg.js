@@ -230,6 +230,9 @@ _break()
       if ((inargs.stderr == null) && inargs.quiet) {
         inargs.stderr = stderr = new ispawn.BufferOutStream();
       }
+      if (inargs.no_options) {
+        inargs.args = ["--no-options"].concat(inargs.args);
+      }
       (function(_this) {
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
@@ -244,7 +247,7 @@ _break()
                 return out = arguments[1];
               };
             })(),
-            lineno: 76
+            lineno: 77
           }));
           __iced_deferrals._fulfill();
         });
@@ -288,7 +291,7 @@ _break()
                 return out = arguments[1];
               };
             })(),
-            lineno: 93
+            lineno: 94
           }));
           __iced_deferrals._fulfill();
         });
@@ -332,7 +335,7 @@ _break()
                 return n = arguments[1];
               };
             })(),
-            lineno: 111
+            lineno: 112
           }));
           __iced_deferrals._fulfill();
         });

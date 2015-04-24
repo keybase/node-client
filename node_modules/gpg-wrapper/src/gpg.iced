@@ -74,6 +74,7 @@ exports.GPG = class GPG
     inargs.opts = { env }
     inargs.log = _log if _log?
     inargs.stderr = stderr = new ispawn.BufferOutStream() if not inargs.stderr? and inargs.quiet
+    inargs.args = [ "--no-options"].concat(inargs.args) if inargs.no_options
     await ispawn.run inargs, defer err, out
     if err? and stderr?
       err.stderr = stderr.data()

@@ -33,18 +33,18 @@ exports.ASP = class ASP
     @_progress_hook = progress_hook or ((obj) -> )
     @_section       = null
 
-  section : (s) -> 
+  section : (s) ->
     @_section = s
     @
 
-  progress : (o, cb) -> 
+  progress : (o, cb) ->
     o.section = @_section if @_section
     @_progress_hook o
     if cb?
       await @delay defer err
       cb err
 
-  delay : (cb) -> 
+  delay : (cb) ->
     await setTimeout defer(), @delay
     cb @_canceler.err()
 
@@ -148,7 +148,7 @@ exports.unix_time = () -> Math.floor(Date.now()/1000)
 #=========================================================
 
 exports.json_stringify_sorted = (o, opts) ->
-    # opts: 
+    # opts:
     #  sort_fn: a comparison function for sorting keys
     #  spaces:  null for compressed JS;
     #           number for number of spaces
@@ -201,7 +201,7 @@ exports.obj_extract = obj_extract = (o, keys) ->
 
 #=========================================================
 
-exports.base64u = 
+exports.base64u =
 
   encode : (b) ->
     b.toString('base64')
@@ -231,13 +231,30 @@ exports.assert_no_nulls  = assert_no_nulls = (v) ->
 
 exports.athrow = (err, cb) -> cb err
 exports.asyncify = asyncify = (args, cb) -> cb args...
-   
+
 #=========================================================
 
 exports.format_fingerprint = (raw) ->
   hex = raw.toString('hex').toUpperCase()
   parts = (hex[i...(i+4)] for i in [0...hex.length] by 4)
   parts.join ' '
+
+#=========================================================
+
+exports.format_pgp_fingerprint_2 = (buf, opts = {}) ->
+  hex = buf.toString('hex')
+  length = opts?.length or 40
+  spc = opts?.space or ' '
+  hex = hex.toUpperCase()[(-length)...]
+  if hex.length is 40
+    parts = (hex[i...(i+4)] for i in [0...hex.length] by 4)
+    parts = (parts[i...(i+5)].join(spc) for i in [0...parts.length] by 5)
+    return parts.join (spc + spc)
+  else if hex.length > 8
+    parts = (hex[i...(i+4)] for i in [0...hex.length] by 4)
+    return parts.join spc
+  else
+    return hex
 
 #=========================================================
 
