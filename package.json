@@ -28,7 +28,7 @@
     "colors": "0.6.2",
     "deep-equal": "0.2.1",
     "framed-msgpack-rpc": "1.1.4",
-    "gpg-wrapper": ">=1.0.4",
+    "gpg-wrapper": ">=1.0.5",
     "iced-data-structures": "0.0.5",
     "iced-db": "0.0.4",
     "iced-error": "0.0.9",

@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJVLm5/AAoJEJgKPw0B/gTfXCgIAI7pfkBBAVDyjXJtT1Puzs9M
-znnu1c0IrPkxJpfDufRLCXuUjstzBqFLwtbpbENyFmrAyPOZ7XdRCsqG9tg9bWOC
-cmO0+Jqqu8hVe7svcDZovBd1Tu0ZDBLGuwyUjDxjKh8vN6iYPnH/Irb+U+fmrVBN
-DbYZL9hn37cClr0jIRI4RwgdnWPYR/3cwFii2r8/OFIkVhtv0gwiKw1MfbPV5p6k
-XzVGedduOfunnfW2EiitWdX2IYquD/5iIrgnWn74Elm0kSA+rcsiSCf5Atuv7HmV
-32hyLrUkzhuaieXzGbLdVCVKDQ97oy/rWX/8OH83AHPgbQqYL+OKNViBdW+iuxE=
-=xdNj
+iQEcBAABCgAGBQJVZcKsAAoJEJgKPw0B/gTf2h8IAKAw5yxL+Epdzva4N33htlyn
+qTrAeqmZx7F2k7yythwR6X6T9LOjZFbsDvtiyG0x5qde2JBNbHjlDFegSwuk0Bzn
+/JIvQJPBbjnuXzYzM0GGq2uQbL4h/fL+UiAs4pzz2bGS6DmZii1Uw9vQto7go42H
+0pAn2NUd+pfvN2+rknQxeUZ/fkQ5qfq+abbp5PxqR9TswyU5JQOv4en1XD1QGIuG
+AJgaEfDCmPLmitRCFrDzptx2in0WhvKj7YMj3nkIllPCTEZviwUz3lYpFs5o3ZlH
+5fR3ltHTviinrGobkvoLf0g0HMBfJs4bnUxDI8bVv2T3DlrEm6BcQWS7l68aEMg=
+=gDTa
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,7 +24,7 @@ XzVGedduOfunnfW2EiitWdX2IYquD/5iIrgnWn74Elm0kSA+rcsiSCf5Atuv7HmV
 size   exec  file                contents                                                        
              ./                                                                                  
 109            .gitignore        ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab
-3894           CHANGELOG.md      1d0224dc57b8a929a93ae89d11db200ce488b0f6350ba03dc941b8b7e967b472
+3993           CHANGELOG.md      e6c3ea260df842104b2b55228ceeaafe659a017634ec52de36eba6cd743a1a6e
 1483           LICENSE           333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d
 502            Makefile          960fe8002c2c2866c0963c9b0ed138dcb2a4feed693a3c668875935902f9b486
 55             README.md         fac7947ca164bd97f854cec88bc0266773ec378f4fb79cb1554662a4fd4079f9
@@ -33,16 +33,16 @@ size   exec  file                contents
 408              err.js          ac74e7dbc52d8da10a4544bbedb78619a5407cdcdbb3893e7584fc5ca41c8e0d
 11059            gpg.js          3e71dfc434d1daee56dd8f0f7e9d93651206327aff65e826190d310eebd28fc5
 11120            index.js        821e84c563ead9729196d12a80f3d990cd485fbe16df6de264fdc457fd781286
-93077            keyring.js      4c07bae03a1a126f2af039d89a3f7ca953d48c5f9d51fdc0ac536fd317b1e154
+93114            keyring.js      ccff6d5dafd67f73c6cb28a9989bd5d4ab01a5481586e90cd795ac3ac3cf9a87
 387              main.js         92476f33f1ce68c8f74c993c3b3d9603b9f435f44a69ec3098e552b0c4d736b8
 3985             parse.js        57abc69755fc4eea76600b17082827fc23574fd7ba5b2a414cba40b89f0150a2
-732            package.json      f81598633c7802a7dd7016f952bf11c88450d1d6cf19c4caeac04a0f075e6f7d
+732            package.json      b3d97cfe04eadac769156c5c4f633fcc214351008dc5f2d5f054e9f0176d9e77
                src/                                                                              
 604              colgrep.iced    a3c53c57e739b9af47f7b8cdb31c3aaf3f7416c978e7905ec42bee4966bc3920
 351              err.iced        db7ddbbfbe1f076ad895a83e22cac8e720f260768456dd6aa0c97e5faf7ae9e5
 2942             gpg.iced        41ced8c0c6e399a62d90f8a464c58e463d9fbf4d99a5383dd67d17529d4bc70e
 5740             index.iced      8d9d3029f836f5c608a75d010e557cc7cc7da8444b530191c9ca4282952dd8b2
-28647            keyring.iced    3e4d9d639ac6a205cf69ef0d67ab64a54c202bee22ba6a3cda3de0e99fbe6bea
+28659            keyring.iced    0614a1cbdcefadc1989f021e5ddfe3421945f353c2fcbb95195d0580b7c981a0
 225              main.iced       d06200c91a7f18bf1ece9ed92123ecf2362cf4592318ca23639b08356ce877ab
 1731             parse.iced      f031af161d3e124ef77ed4ff2e679b84db797c2462d407be0975383c30400857
                test/                                                                             

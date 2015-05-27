@@ -1,3 +1,8 @@
+## 1.0.5 (2015-05-27)
+
+Bugfixes:
+  - Trim trailing/leading whitespace when verifying sig payloads
+
 ## 1.0.4 (2015-04-15)
 
 Bugfixes:

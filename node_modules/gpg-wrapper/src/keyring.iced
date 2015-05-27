@@ -4,7 +4,7 @@
 {mkdir_p} = require('iced-utils').fs
 {prng} = require 'crypto'
 pgp_utils = require('pgp-utils')
-{fingerprint_to_key_id_64,fpeq,athrow,base64u} = pgp_utils.util
+{trim,fingerprint_to_key_id_64,fpeq,athrow,base64u} = pgp_utils.util
 {userid} = pgp_utils
 {E} = require './err'
 path = require 'path'
@@ -195,7 +195,7 @@ exports.GpgKey = class GpgKey
     esc = make_esc cb, "GpgKey::load"
     args = [
       (if @_secret then "--export-secret-key" else "--export" ),
-      "--export-options", "export-local-sigs", 
+      "--export-options", "export-local-sigs",
       "-a",
       id
     ]
@@ -384,7 +384,7 @@ exports.GpgKey = class GpgKey
     msg = if err? then "signature verification failed"
     else if @_fingerprint? and (@_fingerprint.toLowerCase() isnt fp.toLowerCase())
       "Wrong key fingerprint; was the server lying? #{@_fingerprint} != #{fp}"
-    else if ((a = out.toString('utf8')) isnt (b = payload)) then "wrong payload: #{a} != #{b} (#{a.length} v #{b.length})"
+    else if ((a = trim(out.toString('utf8'))) isnt (b = trim(payload))) then "wrong payload: #{a} != #{b} (#{a.length} v #{b.length})"
     else null
 
     # If there's an exception, we can now throw out of this function
@@ -548,7 +548,7 @@ exports.BaseKeyRing = class BaseKeyRing extends GPG
     # For now, experts have to declare their willingness to go nuclear.
     #
     gargs.no_options = true if globals().get_no_options()
-    
+
     await @run gargs, defer err, res
     cb err, res
 

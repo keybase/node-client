@@ -1,4 +1,10 @@
-## 0.7.8
+## 0.7.9 (2015-05-27)
+
+Bugifxes:
+  - Address https://github.com/keybase/keybase-issues/issues/1596
+    - Via gpg-wrapper@1.0.5
+
+## 0.7.8 (2015-04-24)
 
 Bugfixes:
   - Add keybase installer as a dependency (PR #189 via @dtiersch)
