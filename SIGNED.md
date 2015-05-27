@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABCgAGBQJVOoCiAAoJEJgKPw0B/gTfYbEH/2prKoKAUHcUioVPwDYEGe0R
-cIf5s4HobOGlTCSrbjYD9mF1VzQ+AXcbgwv4hERaKwWn8sUjgZnOp4Sro/J/HxSx
-iOUV+0aiA3jXcKal/IyqrRQTf17dDHxIB1jGAtTaoyMH0NSMaSVlFbqGJqc5xeMr
-zZA52BkanvVQhZHRT6kzADKw1iYnBjESdrWVHRz64iGePUUhS/VpjsQn0QvjfdOw
-aWy/x9nJgfu0snKkc7Peryk1RioWdhQ8c1jlLv/bsUm5PJSwZnxVcGLFB0A4yc3L
-qCOwOh5OMpBBomOdhIkt0cpXTVpXjv0MVzfPtPITxj1f0/P5+NC3MWZn36BgknY=
-=Vx5z
+iQEcBAABCgAGBQJVZcOgAAoJEJgKPw0B/gTf26EH/29UtsqntCj8Yoc/YlSQLgJZ
+UbN5M1SbxiVekupIwH0M83ikIs3bDgnxm50fo6cA3C2tqcW5a+C/HSMmnp82W7WD
+vO9lyzcEG+DORRXLnJt7TLJdwsqgQQZ9yunQ7cBufbC2PJovaqr9gdeZ3oQBeBjt
+jOAsTLuAY7yhnj1PZanjqzWqEFPWs85xXHbFpcMouLPEiVXXvwzAKkPWAD9gblp8
+Bjs3VIxvcG7buGEtkp2Hrv3pOc6wAzfPgyLxaa4qSA85aWhH1L7/8P0aBISaNVRt
+2RSUy3xyHnT3EQXuXIrcvBdzzYKteL/Q2gJzU7zZtDU9+DLGm3RjEBN3E8UF0mI=
+=Rq9e
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,7 +25,7 @@ size    exec  file                                            contents
               ./                                                                                                                                                                               
 259             .kbignore                                     95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                    88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-24825           CHANGELOG.md                                  318d0e808ec10944278b6ff95e690780b629b0b77c8a018fc0f2d6d6bf86e6c6                                                                 
+24966           CHANGELOG.md                                  ad12b1719b9a251347ef73e801c0985360c05aafc32baff27b1f4770bf763e4c                                                                 
 1483            LICENSE                                       333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2054            Makefile                                      9f991497e823a1b9be86be06c9f7061bc0c001db8c5c039feb9dd4cd54f35dbf                                                                 
 298             README.md                                     72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -562,26 +562,26 @@ size    exec  file                                            contents
 177                   version.iced                            9ad6d080a3707b15647d707eadab9c0c2397e7c5cf5ad2f6f4eafc0f9327cf1a                                                                 
                   gpg-wrapper/                                                                                                                                                                 
 109                 .npmignore                                ec278daeb8f83cac2579d262b92ee6d7d872c4d1544e881ba515d8bcc05361ab                                                                 
-3894                CHANGELOG.md                              1d0224dc57b8a929a93ae89d11db200ce488b0f6350ba03dc941b8b7e967b472                                                                 
+3993                CHANGELOG.md                              e6c3ea260df842104b2b55228ceeaafe659a017634ec52de36eba6cd743a1a6e                                                                 
 1483                LICENSE                                   333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 502                 Makefile                                  960fe8002c2c2866c0963c9b0ed138dcb2a4feed693a3c668875935902f9b486                                                                 
 55                  README.md                                 fac7947ca164bd97f854cec88bc0266773ec378f4fb79cb1554662a4fd4079f9                                                                 
-4762                SIGNED.md                                 e78b1274f96791e6dfa2cdd515936a25f1e674868b240d70db668a623c062504                                                                 
+4762                SIGNED.md                                 0a280285e151166c89f97d1b7a0678be02567fb1c211c27bdcbb3916c66a8699                                                                 
                     lib/                                                                                                                                                                       
 1100                  colgrep.js                              8cca2968a077b03d45b761139276f24f32b2a6948ada5fe825fcfd804105cda2                                                                 
 408                   err.js                                  ac74e7dbc52d8da10a4544bbedb78619a5407cdcdbb3893e7584fc5ca41c8e0d                                                                 
 11059                 gpg.js                                  3e71dfc434d1daee56dd8f0f7e9d93651206327aff65e826190d310eebd28fc5                                                                 
 11120                 index.js                                821e84c563ead9729196d12a80f3d990cd485fbe16df6de264fdc457fd781286                                                                 
-93077                 keyring.js                              4c07bae03a1a126f2af039d89a3f7ca953d48c5f9d51fdc0ac536fd317b1e154                                                                 
+93114                 keyring.js                              ccff6d5dafd67f73c6cb28a9989bd5d4ab01a5481586e90cd795ac3ac3cf9a87                                                                 
 387                   main.js                                 92476f33f1ce68c8f74c993c3b3d9603b9f435f44a69ec3098e552b0c4d736b8                                                                 
 3985                  parse.js                                57abc69755fc4eea76600b17082827fc23574fd7ba5b2a414cba40b89f0150a2                                                                 
-1107                package.json                              d276f529501929af75c9001bab37f9d6edc2f7583aaaf0f96b927e0fc5d204df                                                                 
+1118                package.json                              54fe67d9256f62af9532e724d086cd0ed5c35d8240153418634fff6d2a6831a9                                                                 
                     src/                                                                                                                                                                       
 604                   colgrep.iced                            a3c53c57e739b9af47f7b8cdb31c3aaf3f7416c978e7905ec42bee4966bc3920                                                                 
 351                   err.iced                                db7ddbbfbe1f076ad895a83e22cac8e720f260768456dd6aa0c97e5faf7ae9e5                                                                 
 2942                  gpg.iced                                41ced8c0c6e399a62d90f8a464c58e463d9fbf4d99a5383dd67d17529d4bc70e                                                                 
 5740                  index.iced                              8d9d3029f836f5c608a75d010e557cc7cc7da8444b530191c9ca4282952dd8b2                                                                 
-28647                 keyring.iced                            3e4d9d639ac6a205cf69ef0d67ab64a54c202bee22ba6a3cda3de0e99fbe6bea                                                                 
+28659                 keyring.iced                            0614a1cbdcefadc1989f021e5ddfe3421945f353c2fcbb95195d0580b7c981a0                                                                 
 225                   main.iced                               d06200c91a7f18bf1ece9ed92123ecf2362cf4592318ca23639b08356ce877ab                                                                 
 1731                  parse.iced                              f031af161d3e124ef77ed4ff2e679b84db797c2462d407be0975383c30400857                                                                 
                   iced-data-structures/                                                                                                                                                        
@@ -2768,7 +2768,7 @@ size    exec  file                                            contents
 29                  test-stamp                                ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
                 notes/                                                                                                                                                                         
 1236              refactor.md                                 a4b8cc684c519bc75265a99aea80d644b7fa97f1a5add57664dcbe2e3998fce0                                                                 
-2363            package.json                                  a5d47b7cddc7739f0d63bb1a93906ec2e0d2d0436b23829b752c5e4c49d49434                                                                 
+2363            package.json                                  4e03ae6dcd036977f90cc00dfdd516508f2c286e4d95366d000487fc8fed1fd6                                                                 
                 sql/                                                                                                                                                                           
 603               schema.sql                                  ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                           
