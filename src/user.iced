@@ -328,6 +328,9 @@ exports.User = class User
 
   #--------------
 
+  #
+  # XXX Change for sig_chain_2
+  #
   fingerprint : (upper_case = false) ->
     unless @_fingerprint?
       @_fingerprint =
@@ -491,6 +494,12 @@ exports.User = class User
   #--------------
 
   username : () -> @basics.username
+
+  #--------------
+
+  # Get this user's Public PGP key, or nil if none exists. We'll need to update this
+  # for signatures v2
+  get_pgp_public_key : () -> @public_keys?.primary?.bundle
 
   #--------------
 

@@ -45,7 +45,7 @@ class GpgKey extends keyring.GpgKey
       username : user.username(),
       is_self : user.is_self(),
       uid : user.id,
-      key_data : user?.public_keys?.primary?.bundle,
+      key_data : user?.get_pgp_public_key()
       keyring : keyring,
       fingerprint : user.fingerprint(true)
     }
