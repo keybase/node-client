@@ -19,7 +19,6 @@ util = require 'util'
 scrapemod = require './scrapers'
 {CHECK,BTC} = require './display'
 {athrow} = require('iced-utils').util
-{merkle_client} = require './merkle_client'
 bitcoyne = require 'bitcoyne'
 
 ##=======================================================================

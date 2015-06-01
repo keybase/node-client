@@ -1,5 +1,4 @@
 db = require './db'
-merkle = require 'merkle-tree'
 req = require './req'
 log = require './log'
 {E} = require './err'
@@ -10,79 +9,27 @@ log = require './log'
 keys = require './keys'
 {env} = require './env'
 C = require('./constants').constants
+pathcheck = require('libkeybase').merkle.pathcheck
 {Leaf} = require('libkeybase').merkle.leaf
+kbpgp = require 'kbpgp'
 
 #===========================================================
 
-class MerkleClient extends merkle.Base
+class MerkleClient
 
   @LATEST : "latest"
 
   #------
 
   constructor : () ->
-    super {}
-    @_root = null
     @_nodes = {}
     @_keys = {}
     @_verified = {}
 
   #------
 
-  hash_fn : (s) -> 
-    h = createHash('SHA512')
-    h.update(s)
-    ret = h.digest().toString('hex')
-    ret
-
-  #------
-
-  lookup_root : (cb) ->
-    err = hash = null
-    unless @_root
-      await req.get { endpoint : "merkle/root" }, defer err, body
-      @_root = body unless err?
-    hash = @_root.hash if @_root?
-    cb err, hash, @_root
-
-  #------
-
-  store_node : (args, cb) -> @cb_unimplemented cb
-  store_root : (args, cb) -> @cb_unimplemented cb
-
-  #------
-
-  cb_unimplemented : (cb) ->
-    cb new E.UnimplementedError "not a storage engine"
-
-  #------
-
-  lookup_node : ({key}, cb) ->
-    err = ret = null
-    unless (ret = @_nodes[key])?
-      args = { hash : key }
-      await req.get { endpoint : "merkle/block", args }, defer err, body
-      unless err?
-        ret = @_nodes[key] = body.value
-    cb err, ret
-
-  #------
-
-  verify_root_json : ({root}, cb) ->
-    esc = make_esc cb, "MerkleClient::verify_root"
-    await a_json_parse root.payload_json, esc defer json
-    err = if (a = root.hash) isnt (b = json.body?.root)
-      new E.VerifyError "Root hash mismatch: #{a} != #{b}"
-    else if (a = root.seqno) isnt (b = json.body?.seqno)
-      new E.VerifyError "Sequence # mismatch: #{a} != #{b}"
-    else if (a = root.key_fingerprint?.toLowerCase()) isnt (b = json.body?.key?.fingerprint?.toLowerCase())
-      new E.VerifyError "Fingerprint mismatch: #{a} != #{b}"
-    else if (a = root.ctime) isnt (b = json.ctime)
-      new E.VerifyError "Ctime mismatch: #{a} != #{b}"
-    else 
-      root.payload = json
-      null
-    cb err
+  lookup_path : ({uid}, cb) ->
+    req.get { endpoint : "merkle/path", args: {uid} }, cb
 
   #------
 
@@ -106,28 +53,28 @@ class MerkleClient extends merkle.Base
 
   #------
 
-  get_merkle_key : ({fingerprint}, cb) ->
+  get_merkle_pgp_key : ({fingerprint}, cb) ->
     ring = master_ring()
-    esc = make_esc cb, "MerkleCleint::get_merkle_key"
+    esc = make_esc cb, "MerkleClient::get_merkle_pgp_key"
     err = ret = null
-    log.debug "+ merkle get_merkle_key"
+    log.debug "+ merkle get_merkle_pgp_key"
     unless (ret = @_keys[fingerprint])?
       await ring.index2 {}, esc defer index
       [err, obj] = index.lookup().fingerprint.get_0_or_1 fingerprint
       if err? then # noop
-      else if obj? 
+      else if obj?
         log.debug "| merkle key already found in keyring"
         ret = ring.make_key { fingerprint }
       else
         await @find_key_data { fingerprint }, esc defer key_data
         log.debug "| doing a merkle key import for #{fingerprint}"
-        ret = ring.make_key { fingerprint, key_data } 
+        ret = ring.make_key { fingerprint, key_data }
         await ret.save esc defer()
-        # Reset ret so that we need to reload the key by fingerprint. We 
+        # Reset ret so that we need to reload the key by fingerprint. We
         # don't want to trust that the key and fingerprint actually correspond.
         ret = ring.make_key { fingerprint }
       @_keys[fingerprint] = ret if ret?
-    log.debug "- merkle get_merkle_key"
+    log.debug "- merkle get_merkle_pgp_key"
     cb err, ret
 
   #------
@@ -147,8 +94,6 @@ class MerkleClient extends merkle.Base
   #------
 
   store_this_root : ({root}, cb) ->
-    pj = root.payload_json
-    root.payload_json = null
     await db.put {
       type : C.ids.merkle_root
       key : root.hash
@@ -159,7 +104,6 @@ class MerkleClient extends merkle.Base
       }
       debug : true
     }, defer err
-    root.payload_json = pj
     cb err
 
   #------
@@ -170,44 +114,48 @@ class MerkleClient extends merkle.Base
 
   #------
 
-  verify_root : ({root}, cb) ->
-    root or= @_root
-    log.debug "+ merkle verify_root"
-    err = null
-    if not root?
-      err = new E.NotFoundError 'no root found'
-    else if @_verified[(rh = root.hash)]
-      log.debug "| no need to verify root #{rh}; already verified"
-    else
-      fingerprint = root.key_fingerprint
-      esc = make_esc cb, "Merkle::verify_root"
-      await @check_key_fingerprint { fingerprint }, esc defer()
-      await @get_merkle_key { fingerprint }, esc defer key
-      await @verify_root_json { root }, esc defer()
-      await key.verify_sig { which : "merkle root", sig : root.sig, payload : root.payload_json  }, esc defer()
-      await @rollback_check { root }, esc defer()      
-      @_verified[rh] = true
-    log.debug "- merkle verify_root"
-    cb err
+  get_merkle_key_manager : ( {path_response}, cb ) ->
+    esc = make_esc cb, "MerkleClient::get_merkle_key_manager"
+    fingerprint = null
+    for kid, blob of path_response.root.sigs
+      if blob.fingerprint?
+        fingerprint = blob.fingerprint
+        break
+    if not fingerprint?
+      await athrow (new Error("Didn't find a PGP fingerprint among the merkle sigs.")), esc defer()
+    await @check_key_fingerprint {fingerprint}, esc defer()
+    await @get_merkle_pgp_key { fingerprint }, esc defer pgp_key
+    await pgp_key.load esc defer()  # key_data() will be empty if load() is not called
+    armored = pgp_key.key_data()
+    await kbpgp.KeyManager.import_from_armored_pgp {armored}, esc defer key_manager
+    cb null, key_manager
 
   #------
 
-  find_and_verify : ( { key }, cb) ->
-    log.debug "+ merkle find_and_verify: #{key}"
-    err = root = leaf = null
-    await @find { key }, defer err, val, root
-    log.debug "| find -> #{JSON.stringify val}"
+  get_root_with_parsed_payload : ({root_from_server}, cb) ->
+    esc = make_esc cb, "MerkleClient::get_root_with_parsed_payload"
+    # Older code edited the format of the root blob that ended up on disk. This
+    # method maintains compatibility with that.
+    root_clone = {}
+    root_clone[k] = v for k, v of root_from_server
+    await a_json_parse root_clone.payload_json, esc defer payload
+    root_clone.payload_json = null
+    root_clone.payload = payload
+    cb null, root_clone
 
-    if err? then # noop
-    else if not val? then err = new E.NotFoundError "No value #{key} found in merkle tree"
-    else [err,leaf] = Leaf.parse val
+  #------
 
-    unless err?
-      await @verify_root {root}, defer err
-
-    log.debug "- merkle find_and_verify -> #{err}"
-
-    cb err, leaf, root
+  find_and_verify : ( { uid }, cb) ->
+    esc = make_esc cb, "MerkleClient::find_and_verify"
+    log.debug "+ merkle find_and_verify: #{uid}"
+    await @lookup_path { uid }, esc defer path_response
+    await @get_merkle_key_manager {path_response}, esc defer km
+    await pathcheck {server_reply: path_response, km}, esc defer pathcheck_result
+    if pathcheck_result.uid != uid
+      await athrow (new Error "Expected uid #{uid} does not match merkle response uid #{pathcheck_result.uid}"), defer()
+    await @get_root_with_parsed_payload { root_from_server: path_response.root }, esc defer root
+    await @rollback_check { root }, esc defer()
+    cb null, pathcheck_result.leaf, root
 
 #===========================================================
 

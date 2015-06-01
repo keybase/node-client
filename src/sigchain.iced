@@ -333,7 +333,7 @@ exports.SigChain = class SigChain
     lst = @true_last()
     log.debug "+ sigchain check_merkle_tree"
     if lst?
-      await merkle_client().find_and_verify { key : @uid }, defer err, val, merkle_root
+      await merkle_client().find_and_verify { @uid }, defer err, val, merkle_root
       unless err?
         {seqno, payload_hash} = val.get_public()
         if (a = seqno) isnt (b = lst.seqno())
