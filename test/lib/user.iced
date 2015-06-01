@@ -24,6 +24,7 @@ keypool = require './keypool'
 {gist_api} = require './github'
 fs = require 'fs'
 {Rendezvous} = require('iced-coffee-script').iced
+kbpgp = require 'kbpgp'
 
 #==================================================================
 
@@ -54,7 +55,7 @@ exports.User = class User
   @generate : (base) ->
     base or= randhex(3)
     opts =
-      username : "test_#{base}"
+      username : "t_#{base}_#{randhex(6)}"
       password : randhex(6)
       email    : "test+#{base}@test.keybase.io"
       homedir  : path.join(config().scratch_dir(), "home_#{base}")
@@ -67,7 +68,9 @@ exports.User = class User
     esc = make_esc tmpcb, "User::check_if_exists"
     await fs.stat @homedir, esc defer()
     await fs.stat @keyring_dir(), esc defer()
-    await fs.stat path.join(@homedir, ".config", "keybase", "config.json"), esc defer()
+    await fs.readFile path.join(@homedir, ".config", "keybase", "config.json"), esc defer file
+    await a_json_parse file, esc defer @config
+    @username = @config.user.name
     cb true
 
   #-----------------
@@ -76,7 +79,7 @@ exports.User = class User
     esc = make_esc cb, "User::init"
     await @make_homedir esc defer()
     await @make_keyring esc defer()
-    await @grab_key esc defer()
+    await @gen_key esc defer()
     await @write_config esc defer()
     @_state.init = true
     cb null
@@ -145,9 +148,25 @@ exports.User = class User
 
   #-----------------
 
-  grab_key : (cb) ->
+  gen_key : (cb) ->
     esc = make_esc cb, "User::grab_key"
-    await keypool.grab esc defer tmp
+    F = kbpgp.const.openpgp.key_flags
+    nbits = 1024
+    args = {
+      primary : {
+        flags : F.certify_keys | F.sign_data | F.auth
+        nbits : nbits
+      }
+      subkeys : [{
+        flags : F.encrypt_comm | F.encrypt_stroage
+        nbits : nbits
+      }]
+      userid : "Alice Tester <alice@test.com>"
+    }
+    await kbpgp.KeyManager.generate args, esc defer km
+    await km.sign {}, esc defer()
+    await km.export_pgp_private {}, esc defer key_data
+    @key = @keyring.make { key_data, secret : true }
     await tmp.load esc defer()
     @key = tmp.copy_to_keyring @keyring
     await @key.save esc defer()
