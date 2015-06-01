@@ -1,7 +1,7 @@
 {BaseScraper} = require './base'
 {constants} = require '../constants'
 {v_codes} = constants
-{decode} = require('pgp-utils').armor
+{decode_sig} = require('kbpgp').ukm
 urlmod = require 'url'
 {make_ids} = require '../base'
 urlmod = require 'url'
@@ -73,7 +73,7 @@ exports.DnsScraper = class DnsScraper extends BaseScraper
 
   # Given a validated signature, check that the payload_text_check matches the sig.
   _validate_text_check : ({signature, proof_text_check }) ->
-    [err, msg] = decode signature
+    [err, msg] = decode_sig { armored: signature }
     if not err?
       {med_id} = make_ids msg.body
       if proof_text_check.indexOf(med_id) < 0

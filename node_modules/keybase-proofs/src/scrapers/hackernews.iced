@@ -2,7 +2,7 @@
 {constants} = require '../constants'
 {v_codes} = constants
 {make_ids,proof_text_check_to_med_id} = require '../base'
-{decode} = require('pgp-utils').armor
+{decode_sig} = require('kbpgp').ukm
 
 #================================================================================
 
@@ -61,7 +61,7 @@ exports.HackerNewsScraper = class HackerNewsScraper extends BaseScraper
 
   # Given a validated signature, check that the payload_text_check matches the sig.
   _validate_text_check : ({signature, proof_text_check }) ->
-    [err, msg] = decode signature
+    [err, msg] = decode_sig { armored: signature }
     if not err?
       {med_id} = make_ids msg.body
       if med_id isnt proof_text_check

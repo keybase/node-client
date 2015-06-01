@@ -24,19 +24,19 @@ exports.Base = class Base
   _put : ({key,value},cb) -> @unimplemented('_put', cb)
   _get : ({key}, cb) -> @unimplemented("_get", cb)
   _resolve : ({name}, cb) -> @unimplemented("_resolve", cb)
-  _link : ({name,key}, cb) -> @unimplemented('_link', cb) 
+  _link : ({name,key}, cb) -> @unimplemented('_link', cb)
   _unlink : ({name}, cb) -> @unimplemented('_unlink', cb)
   _unlink_all : ({key}, cb) -> @unimplemented('_unlink_all', cb)
   _remove : ({key}, cb) -> @unimplemented('_remove', cb)
 
   #=========================
 
-  make_kvstore_key : ( {type, key } ) -> 
+  make_kvstore_key : ( {type, key } ) ->
     type or= key[-2...]
     [ type, key ].join(":").toLowerCase()
   make_lookup_name : ( {type, name} ) -> [ type, name ].join(":").toLowerCase()
 
-  unmake_kvstore_key : ( {key}) -> 
+  unmake_kvstore_key : ( {key}) ->
     parts = key.split(":")
     { type : parts[0], key : parts[1...].join(":") }
 
@@ -44,22 +44,22 @@ exports.Base = class Base
 
   #=========================
 
-  link : ({type, name, key}, cb) -> 
-    @_link { 
-      name : @make_lookup_name({ type, name }), 
-      key : @make_kvstore_key({ key, type }) 
+  link : ({type, name, key}, cb) ->
+    @_link {
+      name : @make_lookup_name({ type, name }),
+      key : @make_kvstore_key({ key, type })
     }, cb
   unlink : ({type, name}, cb) -> @_unlink { name : @make_lookup_name({ type, name }) }, cb
   unlink_all : ({type, key}, cb) -> @_unlink_all { key : @make_kvstore_key({type, key}) }, cb
   get : ({type,key}, cb) -> @_get { key : @make_kvstore_key({type, key}) }, cb
-  resolve : ({type, name}, cb) -> 
+  resolve : ({type, name}, cb) ->
     await @_resolve { name : @make_lookup_name({type,name})}, defer err, key
     if not err? and key?
       { key } = @unmake_kvstore_key { key }
     cb err, key
 
   #=========================
-  
+
   put : ({type, key, value, name, names}, cb) ->
     esc = make_esc cb, "BaseKvStore::put"
     kvsk = @make_kvstore_key {type,key}
@@ -103,15 +103,19 @@ exports.Base = class Base
 
 ##=======================================================================
 
+# Use this interface if you want to store objects in a Flat key-value store,
+# without secondary indices.  In this case, "linking" multiple names to one
+# value is just a @_put{} link any other, and there is no ability to _unlink_all.
+# This layout is what we used for the original node client.
 exports.Flat = class Flat extends Base
 
-  make_kvstore_key : ({type,key}) -> 
+  make_kvstore_key : ({type,key}) ->
     "kv:" + super { type, key }
 
   make_lookup_name : ({type,name}) ->
     "lo:" + super { type, name }
 
-  unmake_kvstore_key : ( {key}) -> 
+  unmake_kvstore_key : ( {key}) ->
     parts = key.split(":")
     { type : parts[1], key : parts[2...].join(":") }
 
@@ -142,7 +146,7 @@ exports.Memory = class Memory extends Base
 
   constructor : () ->
     super
-    @data = 
+    @data =
       lookup : {}
       rlookup : {}
       kv : {}
@@ -207,7 +211,7 @@ exports.Memory = class Memory extends Base
 exports.FlatMemory = class FlatMemory extends Flat
 
   constructor : () ->
-    super 
+    super
     @kv = {}
 
   open : (opts, cb) -> cb null

@@ -1,7 +1,6 @@
 {BaseScraper} = require './base'
 {constants} = require '../constants'
 {v_codes} = constants
-{decode} = require('pgp-utils').armor
 
 #================================================================================
 

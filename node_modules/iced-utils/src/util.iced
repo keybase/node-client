@@ -243,3 +243,17 @@ exports.dict_merge = (args...) ->
 
 #=========================================================
 
+# output a buffer in XXD output (like the unix utility)
+exports.xxd = xxd = (buf, opts = {}) ->
+  q = opts.q or 8 # number of quarters per line
+  p = opts.p or 7 # amount of padding in line prefixes
+  buf = buf.toString 'hex'
+  quartets = (buf[i...(i+4)] for i in [0...buf.length] by 4)
+  lines = (quartets[i...(i+q)].join(' ') for i in [0...quartets.length] by q)
+  pad = (s, n) -> ('0' for [0...(n - s.length)]).join('') + s
+  v = for line, i in lines
+    pad((i*2*q).toString(16), p) + ": " + line
+  v.join("\n")
+
+#=========================================================
+

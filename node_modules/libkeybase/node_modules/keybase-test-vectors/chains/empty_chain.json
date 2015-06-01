@@ -1,0 +1,17 @@
+{
+    "_comment": "The 'ralph' key has ralph@keybase.io signed into it. The 'steve' key does not. This is for testing key ownership when the sigchain in empty.",
+    "username": "ralph",
+    "uid": "bf65266d0d8df3ad5d1b367f578e6819",
+    "chain": [],
+    "keys": [
+        "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: GnuPG v2\n\nmI0EVXnWkQEEALmSERRK4+fbTg5C28GOXxpiI/IfQZDFmJfWzNKNW6CrX1uj4o8G\nu3292bU5meCRCJstd09LFaELOASbknUOiXFQcnuzpY7J9Ou8uqxKcOYxi4xWjXih\nK8KQfL4khBIpB+7B0tp16qalqbd1+V2wIAJzmNdkY+cFGeXZE45gr+i3ABEBAAG0\nGHJhbHBoIDxyYWxwaEBrZXliYXNlLmlvPoi5BBMBCAAjBQJVedaRAhsDBwsJCAcD\nAgEGFQgCCQoLBBYCAwECHgECF4AACgkQUGs4lh8OKGN+TgQAhTSvOZV+8me6UuIc\ntBJTsZzAkzWsP3QpdSZ6zUyZ40yA5WMZMpnQb+6kd3xzo/tkm9imTK2xLtoCj52d\n3QZRN3BOqweetaiWng6sgIkMZc8EaQp68bPeVhtcAYU0Y/I9Jcim6d2nSXQcwuph\na3RWghsf37A9CfXlbZl36PvQ2ko=\n=qGhY\n-----END PGP PUBLIC KEY BLOCK-----\n",
+        "-----BEGIN PGP PUBLIC KEY BLOCK-----\nVersion: GnuPG v2\n\nmI0EVXnWyQEEAMUSBo5Q/X3et/ExeX6UHvsH9Wv5IoaEmMqdT7zSxaphcFS+vo5E\n63QQrokfIUKZeMDmWjI65SNVNhpWng5mhrkz/bRql0pdikhwXnALLVnwT+0J/Spl\nyWiQKVfZ6pqz2anto56/rlhLui7oTLnG7q2CttIaAp1aaMzaHwMH4iW1ABEBAAG0\nBXN0ZXZliLkEEwEIACMFAlV51skCGwMHCwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIX\ngAAKCRA0feCGaTASHtOGA/4u7MAY2z3UzVKzH4XxYknep4hD+75HH6TY1fCUHBcS\nAfVptSna59alV37JJtsBQhmNowyIqvNeUSl3VcN2oOBvJwxGyPhoh6Roxj+4phhO\nPGH9dzzaZVQVSYMBMU8Wuf9OsEM/2k7Wo2oes9XLiNVBqYNwvk6Q2BupT77FyzDI\ntg==\n=zpuJ\n-----END PGP PUBLIC KEY BLOCK-----\n",
+        "0120a4dabfb39e2bc635eadc861b72d9f9512dfe4261562822433d261718235d5b6f0a"
+    ],
+    "label_kids": {
+        "ralph": "0101de638c5bee00e1b473b5f3fa7065e55cde33e88d230a2cd253da5d78a1c5a8910a",
+        "steve": "0101d17f13d98d9a21e3fcc2ba30ef38fe1ca0e805950839f7ecfb8b77ad5d128e4f0a",
+        "nonexistent": "0101deadbeef0000000000000000000000000000000000000000000000000000000000",
+        "naclkey": "0120a4dabfb39e2bc635eadc861b72d9f9512dfe4261562822433d261718235d5b6f0a"
+    }
+}

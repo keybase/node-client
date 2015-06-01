@@ -3,7 +3,7 @@
 {constants} = require '../constants'
 {Lock} = require '../util'
 {v_codes} = constants
-{decode} = require('pgp-utils').armor
+{decode_sig} = require('kbpgp').ukm
 urlmod = require 'url'
 
 #================================================================================
@@ -257,7 +257,7 @@ exports.TwitterScraper = class TwitterScraper extends BaseScraper
 
   # Given a validated signature, check that the proof_text_check matches the sig.
   _validate_text_check : ({signature, proof_text_check }) ->
-    [err, msg] = decode signature
+    [err, msg] = decode_sig { armored: signature }
     if not err?
       {short_id} = make_ids msg.body
       if proof_text_check.indexOf(" " + short_id + " ")  < 0

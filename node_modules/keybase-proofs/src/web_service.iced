@@ -291,5 +291,6 @@ exports.GenericWebSiteBinding = GenericWebSiteBinding
 exports.CoinbaseBinding = CoinbaseBinding
 exports.DnsBinding = DnsBinding
 exports.HackerNewsBinding = HackerNewsBinding
+exports.SocialNetworkBinding = SocialNetworkBinding
 
 #==========================================================================

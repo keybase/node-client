@@ -1,7 +1,7 @@
 {constants} = require '../constants'
 {v_codes} = constants
 pkg = require '../../package.json'
-{decode} = require('pgp-utils').armor
+{decode_sig} = require('kbpgp').ukm
 {space_normalize} = require '../util'
 
 #==============================================================
@@ -54,8 +54,9 @@ class BaseScraper
 
   # Given a validated signature, check that the payload_text_check matches the sig.
   _validate_text_check : ({signature, proof_text_check }) ->
-    [err, msg] = decode signature
-    if not err? and ("\n\n" + msg.payload + "\n") isnt proof_text_check
+    [err, msg] = decode_sig { armored: signature }
+    # PGP sigs need some newline massaging here, but NaCl sigs don't.
+    if not err? and ("\n\n" + msg.payload + "\n") isnt proof_text_check and msg.payload isnt proof_text_check
       err = new Error "Bad payload text_check"
     return err
 

@@ -1,6 +1,7 @@
 
 mods =
   merkle_leaf : require '../files/30_merkle_leaf.iced'
+  sig_chain : require '../files/31_sigchain.iced'
 
 {BrowserRunner} = require('iced-test')
 

@@ -30,9 +30,13 @@ module.exports = getopt = (argv, { flags }) ->
       if (name = arg[2...]) in flags
         out.opts[name] = true
         i++
+      else if name.indexOf("=") > 1
+        v = name.split /\=/
+        out.opts[v[0]] = v[1...].join("=")
+        i += 1
       else
         out.opts[name] = argv[i+1]
-        i +=2 
+        i +=2
     else if arg[1] in flags
       for ch in arg[1...]
         out.opts[ch] = true
