@@ -52,26 +52,40 @@ exports.User = class User
 
   #---------------
 
+  @homedir : (x) -> path.join(config().scratch_dir(), "home_#{x}")
+
+  #---------------
+
   @generate : (base) ->
     base or= randhex(3)
     opts =
       username : "t_#{base}_#{randhex(6)}"
       password : randhex(6)
       email    : "test+#{base}@test.keybase.io"
-      homedir  : path.join(config().scratch_dir(), "home_#{base}")
+      homedir  : User.homedir base
     new User opts
 
   #-----------------
 
-  check_if_exists : (cb) ->
-    tmpcb = (err) -> cb false
-    esc = make_esc tmpcb, "User::check_if_exists"
+  @load_or_gen : (base, cb) ->
+    u = new User { homedir : User.homedir(base) }
+    await u.load_user defer err
+    if err?
+      u = User.generate base
+    cb u, err?
+
+  #-----------------
+
+  load_user : (cb) ->
+    err = null
+    esc = make_esc cb, "User::check_if_exists"
     await fs.stat @homedir, esc defer()
     await fs.stat @keyring_dir(), esc defer()
     await fs.readFile path.join(@homedir, ".config", "keybase", "config.json"), esc defer file
     await a_json_parse file, esc defer @config
-    @username = @config.user.name
-    cb true
+    unless (@username = @config?.user?.name)?
+      err = new Error "half-baked user; no valid name in configuration file"
+    cb err
 
   #-----------------
 
@@ -149,7 +163,7 @@ exports.User = class User
   #-----------------
 
   gen_key : (cb) ->
-    esc = make_esc cb, "User::grab_key"
+    esc = make_esc cb, "User::gen_key"
     F = kbpgp.const.openpgp.key_flags
     nbits = 1024
     args = {
@@ -161,14 +175,12 @@ exports.User = class User
         flags : F.encrypt_comm | F.encrypt_stroage
         nbits : nbits
       }]
-      userid : "Alice Tester <alice@test.com>"
+      userid : "#{@username} <#{@email}>"
     }
     await kbpgp.KeyManager.generate args, esc defer km
     await km.sign {}, esc defer()
     await km.export_pgp_private {}, esc defer key_data
-    @key = @keyring.make { key_data, secret : true }
-    await tmp.load esc defer()
-    @key = tmp.copy_to_keyring @keyring
+    @key = @keyring.make_key { key_data, secret : true }
     await @key.save esc defer()
     cb null
 

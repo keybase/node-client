@@ -6,13 +6,13 @@ log = require '../../lib/log'
 keypool = require '../lib/keypool'
 
 exports.init = (T,cb) ->
-  user = User.generate 'alice'
-  await user.check_if_exists defer tmp
-  found = tmp
-  if found
-    log.info "Found 'alice', won't try to remake her"
-  else
+  await User.load_or_gen 'alice', defer u, is_new
+  if is_new
     log.info "Alice wasn't found!"
+  else
+    log.info "Found 'alice', won't try to remake her"
+  user = u
+  found = not is_new
   cb()
 
 exports.generate = (T,cb) ->
@@ -20,11 +20,7 @@ exports.generate = (T,cb) ->
   cb()
 
 exports.init_user = (T,cb) ->
-  if found
-    await keypool.grab defer err, key
-    T.no_error err
-    T.assert key, "grabbing Alice's key from pool"
-  else
+  unless found
     await user.init defer err
     T.no_error err
   cb()
