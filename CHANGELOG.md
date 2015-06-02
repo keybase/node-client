@@ -1,3 +1,11 @@
+## 0.8.0
+
+Bugfixes:
+  - Fix the fragile test suite.  Works better if you have to crash it
+    and restart. The major improvements are random usernames, and random
+    keys.  Generate the keys in JavaScript, which is faster than doing so in
+    gpg.
+
 ## 0.7.9 (2015-05-27)
 
 Bugifxes:
