@@ -12,7 +12,7 @@ exports.gist_api = gist_api = (d, gist, cb) ->
       "keybase.md" :
         content : gist
   opts = 
-    body : JSON.stringify form
+    body : form
     uri : "https://api.github.com/gists"
     method : "POST"
     json: true

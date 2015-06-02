@@ -57,11 +57,13 @@ exports.User = class User
   #---------------
 
   @generate : (base) ->
+    suffix = randhex 4
     base or= randhex(3)
+    username = base + suffix
     opts =
-      username : "t_#{base}_#{randhex(6)}"
+      username : username
       password : randhex(6)
-      email    : "test+#{base}@test.keybase.io"
+      email    : "test+#{username}@test.keybase.io"
       homedir  : User.homedir base
     new User opts
 
@@ -180,7 +182,7 @@ exports.User = class User
     await kbpgp.KeyManager.generate args, esc defer km
     await km.sign {}, esc defer()
     await km.export_pgp_private {}, esc defer key_data
-    @key = @keyring.make_key { key_data, secret : true }
+    @key = @keyring.make_key { key_data, secret : true, fingerprint : km.get_pgp_fingerprint_str() }
     await @key.save esc defer()
     cb null
 
