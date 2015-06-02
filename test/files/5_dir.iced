@@ -1,15 +1,15 @@
 fs      = require 'fs'
 path    = require 'path'
-{users} = require '../lib/user'
+{User} = require '../lib/user'
 {prng}  = require 'crypto'
 
 alice = bob = charlie = null
 
 exports.init = (T,cb) ->
-  bob     = users().lookup_or_gen 'bob'
-  alice   = users().lookup_or_gen 'alice'
-  charlie = users().lookup_or_gen 'charlie'
-  cb()
+  tmp = {}
+  await User.load_many { names : [ 'alice', 'bob', 'charlie'], res : tmp }, defer err
+  {alice,bob,charlie} = tmp
+  cb err
 
 ctext = null
 

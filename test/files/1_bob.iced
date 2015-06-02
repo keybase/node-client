@@ -1,7 +1,6 @@
 
 {User} = require '../lib/user'
 log = require '../../lib/log'
-keypool = require '../lib/keypool'
 
 exports.signup_bob = (T,cb) ->
   await signup T, 'bob', defer()
@@ -12,13 +11,10 @@ exports.signup_charlie = (T,cb) ->
   cb()
 
 signup = (T,name,cb) ->
-  u = User.generate name
+  await User.load_or_gen name, defer u, is_new
   T.assert u, "#{name} was generated"
-  await u.check_if_exists defer found
-  if found
+  if not is_new
     log.info "#{name} found; not remaking them"
-    await keypool.grab defer err, key
-    T.no_error err
     await u.login defer err
     T.no_error err
     await u.load_status defer err

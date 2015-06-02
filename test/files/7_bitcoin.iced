@@ -1,11 +1,12 @@
 
-{users,User} = require '../lib/user'
-alice = users().lookup 'test_alice'
-bob = users().lookup 'test_bob'
+{User} = require '../lib/user'
+alice = bob = null
 
 exports.init = (T,cb) ->
-  bob = users().lookup_or_gen 'bob'
-  cb()
+  tmp = {}
+  await User.load_many { names : ['alice', 'bob' ], res : tmp }, defer err
+  {alice,bob} = tmp
+  cb err
 
 addresses = [
   "1R818scEUSQYyLPFLQB6V1HRPqmj5j7bs", # For Stephanie...

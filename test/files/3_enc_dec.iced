@@ -1,13 +1,13 @@
 
-{users} = require '../lib/user'
+{User} = require '../lib/user'
 
 alice = bob = charlie = null
 
 exports.init = (T,cb) ->
-  bob = users().lookup 'test_bob'
-  alice = users().lookup 'test_alice'
-  charlie = users().lookup "test_charlie"
-  cb()
+  tmp = {}
+  await User.load_many { names : ['alice', 'bob', 'charlie'], res : tmp }, defer err
+  {alice,bob,charlie} = tmp
+  cb err
 
 msg = """
 The golden smithies of the Emperor!

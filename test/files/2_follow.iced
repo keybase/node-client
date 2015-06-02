@@ -1,25 +1,28 @@
 
-{users,User} = require '../lib/user'
-alice = users().lookup 'test_alice'
-bob = users().lookup 'test_bob'
+{User} = require '../lib/user'
+users = {}
+
+exports.init = (T,cb) ->
+  await User.load_many { names : ['alice', 'bob'], res : users }, defer err
+  cb err
 
 exports.id_0 = (T,cb) ->
-  await bob.id alice, defer err
+  await users.bob.id users.alice, defer err
   T.no_error err
   cb()
 
 exports.follow_0 = (T,cb) ->
-  await bob.follow alice, {remote : true }, defer err
+  await users.bob.follow users.alice, {remote : true }, defer err
   T.no_error err
   cb()
 
 exports.unfollow_1 = (T,cb) ->
-  await bob.unfollow alice, defer err
+  await users.bob.unfollow users.alice, defer err
   T.no_error err
   cb()
 
 exports.follow_1 = (T,cb) ->
-  await bob.follow alice, {remote : true }, defer err
+  await users.bob.follow users.alice, {remote : true }, defer err
   T.no_error err
   cb()
 

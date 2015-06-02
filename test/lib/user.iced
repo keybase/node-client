@@ -25,6 +25,7 @@ keypool = require './keypool'
 fs = require 'fs'
 {Rendezvous} = require('iced-coffee-script').iced
 kbpgp = require 'kbpgp'
+{base32} = require '../../lib/basex'
 
 #==================================================================
 
@@ -33,6 +34,7 @@ strip = (x) -> if (m = x.match /^(\s*)([\S\s]*?)(\s*)$/) then m[2] else x
 #==================================================================
 
 randhex = (len) -> prng(len).toString('hex')
+rand_b32 = (len) -> base32.encode prng len
 
 #==================================================================
 
@@ -57,9 +59,9 @@ exports.User = class User
   #---------------
 
   @generate : (base) ->
-    suffix = randhex 4
+    suffix = rand_b32 4
     base or= randhex(3)
-    username = base + suffix
+    username = base + "_" + suffix
     opts =
       username : username
       password : randhex(6)
@@ -69,11 +71,32 @@ exports.User = class User
 
   #-----------------
 
-  @load_or_gen : (base, cb) ->
+  @load_many : ( {names, res}, cb) -> 
+    err = null
+    for name in names
+      await User.load name, defer err, user
+      if err?
+        err = new Error "Cannot load user #{name}: #{err.toString()}"
+        break
+      res[name] = user
+    cb err
+
+  #-----------------
+
+  @load : (base, cb) ->
     u = new User { homedir : User.homedir(base) }
     await u.load_user defer err
-    if err?
-      u = User.generate base
+    if err? then u = null
+    else
+      await u.load_status defer err
+      u = null if err?
+    cb err, u
+
+  #-----------------
+
+  @load_or_gen : (base, cb) ->
+    await User.load base, defer err, u
+    u = User.generate base if err?
     cb u, err?
 
   #-----------------
