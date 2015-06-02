@@ -15,9 +15,11 @@ log = require './log'
 {athrow,akatch} = require('iced-utils').util
 IS = constants.import_state
 {PackageJson} = require('./package')
-{assertion} = require 'libkeybase'
+{assertion, ParsedKeys, SIG_ID_SUFFIX} = require 'libkeybase'
 tor = require './tor'
 colors = require './colors'
+kbpgp = require 'kbpgp'
+{merkle_client} = require './merkle_client'
 
 ##=======================================================================
 
@@ -36,7 +38,7 @@ exports.User = class User
   @cache : {}
   @server_cache : {}
 
-  @FIELDS : [ "basics", "public_keys", "id", "sigs", "private_keys", "logged_in" ]
+  @FIELDS : [ "basics", "public_keys", "id", "merkle_data", "private_keys", "logged_in" ]
 
   #--------------
 
@@ -47,6 +49,7 @@ exports.User = class User
     @sig_chain = null
     @_is_self = false
     @_have_secret_key = false
+    @parsed_keys = null
 
   #--------------
 
@@ -116,13 +119,12 @@ exports.User = class User
   load_sig_chain_from_storage : (cb) ->
     err = null
     log.debug "+ load sig chain from local storage"
-    @last_sig = @sigs?.last or { seqno : 0 }
-    if (ph = @last_sig.payload_hash)?
+    if (ph = @merkle_data?.payload_hash)?
       log.debug "| loading sig chain w/ payload hash #{ph}"
-      await SigChain.load @id, ph, defer err, @sig_chain
+      await SigChain.load @id, @username(), ph, defer err, @sig_chain
     else
       log.debug "| No payload hash tail pointer found"
-      @sig_chain = new SigChain @id
+      @sig_chain = new SigChain @id, @username()
     log.debug "- loaded sig chain from local storage"
     cb err
 
@@ -130,7 +132,7 @@ exports.User = class User
 
   load_full_sig_chain : (cb) ->
     log.debug "+ load full sig chain"
-    sc = new SigChain @id
+    sc = new SigChain @id, @username()
     await sc.update null, defer err
     @sig_chain = sc unless err?
     log.debug "- loaded full sig chain"
@@ -138,14 +140,12 @@ exports.User = class User
 
   #--------------
 
-  update_sig_chain : (remote, cb) ->
-    seqno = remote?.sigs?.last?.seqno
-    log.debug "+ update sig chain; seqno=#{seqno}"
-    @sigs or= {}
-    await @sig_chain.update seqno, defer err, did_update
+  update_sig_chain : (remote_seqno, cb) ->
+    log.debug "+ update sig chain; remote_seqno=#{remote_seqno}"
+    await @sig_chain.update remote_seqno, defer err, did_update
     if did_update
-      @sigs.last = @sig_chain.last().export_to_user()
-      log.debug "| update sig_chain last link to #{JSON.stringify @sigs}"
+      last = @sig_chain.last().export_to_user()
+      log.debug "| update sig_chain last link to #{JSON.stringify last}"
       @_dirty = true
     log.debug "- updated sig chain"
     cb err
@@ -161,14 +161,13 @@ exports.User = class User
 
     if not b? or a > b
       err = new E.VersionRollbackError "Server version-rollback suspected: Local #{a} > #{b}"
-    else if (not a?) or (a < b) or (session.logged_in() && not(@logged_in))
-      log.debug "| version update needed: #{a} vs. #{b} (logged_in=#{@logged_in})"
+    else
+      # Always update fields, irrespective of whether the id_version has
+      # actually increased, because the server format might've changed.
       @update_fields remote
-    else if a isnt b
-      err = new E.CorruptionError "Bad ids on user objects: #{a.id} != #{b.id}"
 
     if not err?
-      await @update_sig_chain remote, defer err
+      await @update_sig_chain remote.merkle_data?.seqno, defer err
 
     log.debug "- finished update"
 
@@ -252,10 +251,10 @@ exports.User = class User
     if (self and tor.strict())
       log.warn "Tor strict mode: #{colors.bold('not')} syncing your profile with the server"
     else
-      await User.load_from_server {self, secret, username}, esc defer remote
-
-    if require_public_key and not remote.public_keys?.primary?
-      await athrow new Error("user doesn't have a public key"), esc defer()
+      fetched_from_server = true
+      local_id_version = local?.basics?.id_version
+      local_seqno = local?.merkle_data?.seqno
+      await User.load_from_server {self, secret, username, local_id_version, local_seqno}, esc defer remote
 
     changed = true
     force_store = false
@@ -274,15 +273,25 @@ exports.User = class User
 
     await athrow err, esc defer() if err?
 
-    if (self and tor.strict())
-      log.debug "| Skipping merkle-tree check for your profile in strict Tor mode"
+    if require_public_key and not user.public_keys?.primary?
+      await athrow new Error("user doesn't have a public key"), esc defer()
+
+    if not user.public_keys?.all_bundles?
+      await athrow new Error("User key bundles missing."), esc defer()
+    await ParsedKeys.parse { bundles_list: user.public_keys.all_bundles }, esc defer user.parsed_keys
+
+    # Verify the user's sigchain, if it's non-empty, including checking for
+    # consistency with what we have from the Merkle tree.
+    # TODO: Enable verification caching.
+    if not user.sig_chain.last()?
+      log.debug "| #{username}: sigchain is empty, skipping verify"
     else
+      log.debug "+ #{username}: verifying signatures"
+      await user.verify {}, esc defer()
+      log.debug "- #{username}: verified signatures"
 
-      # This might noop or just warn depending on the user's preferences
-      await user.check_merkle_tree esc defer()
-
-      # Finally we can store... If we actually fetched anything, which
-      # didn't happen in the case of (self and tor.strict())
+    # If we fetched from the server, store the new data to disk.
+    if fetched_from_server
       await user.store force_store, esc defer()
 
     log.debug "- #{username}: loaded user"
@@ -293,23 +302,62 @@ exports.User = class User
 
   #--------------
 
-  @load_from_server : ({self, secret, username}, cb) ->
+  @load_from_server : ({self, secret, username, local_id_version, local_seqno}, cb) ->
+    esc = make_esc cb, "User::load_from_server"
     log.debug "+ #{username}: load user from server"
+
+    # If we've loaded the user before in this process, the result is cached in
+    # memory. Short circuit and return that.
     if (ret = User.server_cache[username])?
       log.debug "| hit server cache"
+      cb null, ret
+      return
+
+    # Load the user's Merkle tip.
+    await merkle_client().find_and_verify {username}, esc defer leaf, root, server_id_version
+
+    # If the user's Merkle leaf exists (meaning they have an eldest key at all,
+    # i.e. not a newly-created empty user), check it against past Merkle tree
+    # data and maybe short circuit.
+    if leaf?
+      server_seqno = leaf.get_public().seqno
+      if server_id_version == local_id_version and server_seqno == local_seqno
+        log.debug "| id_version (#{local_id_version}) and seqno (#{local_seqno}) haven't changed."
+        # Nothing new to load. Short-circuit.
+        cb null, null
+        return
+      else if server_id_version < local_id_version
+        cb new Error("Server id version (#{server_id_version}) rolled back from local (#{local_id_version})")
+        return
+      else if server_seqno < local_seqno
+        cb new Error("Server seqno (#{server_seqno}) rolled back from local (#{local_seqno})")
+        return
+      merkle_data =
+        seqno: leaf.get_public().seqno
+        # The Merkle tree gives a short sig_id. Add the common suffix.
+        sig_id: leaf.get_public().sig_id + SIG_ID_SUFFIX
+        payload_hash: leaf.get_public().payload_hash
+        eldest_kid: leaf.get_eldest_kid()
     else
-      args =
-        endpoint : "user/lookup"
-        args : {username }
-        need_cookie : (self and secret)
-      await req.get args, defer err, body
-      ret = null
-      unless err?
-        ret = new User body.them
-        ret.set_logged_in()
-        User.server_cache[username] = ret
+      # No Merkle leaf exists, because user has no key history.
+      merkle_data = null
+
+    # Load the full user from the server.
+    args =
+      endpoint : "user/lookup"
+      args : {username }
+      need_cookie : (self and secret)
+    await req.get args, esc defer body
+    ret = new User body.them
+    ret.set_logged_in()
+
+    # Attach merkle-tree info to the user. This will get saved when we store
+    # the user on disk.
+    ret.merkle_data = merkle_data
+
+    User.server_cache[username] = ret
     log.debug "- #{username}: loaded user from server"
-    cb err, ret
+    cb null, ret
 
   #--------------
 
@@ -398,31 +446,6 @@ exports.User = class User
 
   #--------------
 
-  # Check that the end of this user's sig chain shows up in the current merkle
-  # root (as it should!)
-  check_merkle_tree : (cb) ->
-
-    # Checking the Merkle tree for this user means getting the current
-    # root, descending the tree for the user, and then ensuring that the
-    # root points to the end of the user's chain tail.
-    err = null
-    mode = env().get_merkle_checks()
-    explain = "Likely this is a bug or transient error; but the server could be compromised"
-
-    if not mode.is_none()
-      await @sig_chain.check_merkle_tree defer err
-      if not err? then # noop
-      else if mode.is_strict()
-        log.error "Failed to match user's signature with sitewide state"
-        log.error explain
-      else
-        log.warn "When checking #{@username()}: #{err}"
-        log.warn explain
-        err = null
-    cb err
-
-  #--------------
-
   _load_me_2 : ({secret, maybe_secret, install_key, verify_opts }, cb) ->
     esc = make_esc cb, "User::_load_me_2"
     @set_is_self true
@@ -448,10 +471,6 @@ exports.User = class User
       await athrow err, esc defer()
     else
       do_install = false
-
-    log.debug "+ #{un}: verifying user and signatures"
-    await @verify (verify_opts or {}), esc defer()
-    log.debug "- #{un}: verified users and signatures"
 
     if do_install
       await @key.commit {}, esc defer()
@@ -524,8 +543,15 @@ exports.User = class User
 
   # Also serves to compress the public signatures into a usable table.
   verify : (opts, cb) ->
-    await @sig_chain.verify_sig { opts, @key }, defer err
-    cb err
+    esc = make_esc cb, "User::verify"
+    if not @merkle_data?
+      tor_msg = ""
+      if tor.strict()
+        tor_msg = " Disable tor strict mode."
+      cb new Error("Can't verify sigchain without Merkle leaf values." + tor_msg)
+      return
+    await @sig_chain.verify_sig { opts, @key, @parsed_keys, @merkle_data }, esc defer()
+    cb null
 
   #--------------
 

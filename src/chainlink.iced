@@ -151,36 +151,6 @@ exports.Link = class Link
 
   #--------------------
 
-  verify_sig : ({which, pubkey}, cb) ->
-    pubkey.verify_sig { which, sig : @sig(), payload: @payload_json_str() }, cb
-
-  #--------------------
-
-  _perform_revocations : ({table, index}) ->
-    ids = []
-    if (r = @body()?.revoke)?
-      ids.push(r.sig_id) if r.sig_id?
-      ids = ids.concat(r.sig_ids) if r.sig_ids?
-    if ids.length
-      log.debug "+ Link::_perform_revocations #{JSON.stringify(ids)}"
-      for id in ids
-        @_perform_revocation { id, table, index }
-      log.debug "- Link::_perform_revocations"
-
-  #--------------------
-
-  _perform_revocation : ({id, table, index}) ->
-    log.debug "+ Link::_perform_revocation #{id}"
-    if not (link = index[id])?
-      log.warn "Cannot revoke signature '#{id}' since we haven't seen it"
-    else if link.is_revoked()
-      log.debug "Signature is already revoked: #{id}"
-    else
-      link.revoke()
-    log.debug "- Link::_perform_revocation #{id}"
-
-  #--------------------
-
   insert_into_table : () ->
     log.warn "unhandled public sig type: #{@sig_type()}"
 
@@ -231,7 +201,6 @@ class RemoteProof extends Link
 
   insert_into_table : ({table, index, opts}) ->
     log.debug "+ RemoteProof::insert_into_table"
-    @_perform_revocations { index }
     S = constants.proof_state
     states = [ S.OK, S.TEMP_FAILURE, S.LOOKING ]
     states.push S.PERM_FAILURE if opts?.show_perm_failures
@@ -250,9 +219,8 @@ class RemoteProof extends Link
 
   #-----------
 
-  check_remote_proof : ({skip, pubkey, type, warnings, proof_vec}, cb) ->
-
-    username = pubkey.username()
+  check_remote_proof : ({skip, type, warnings, proof_vec}, cb) ->
+    username = @self_signer()
 
     esc = make_esc cb, "SigChain::Link::check_remote_proof'"
 
@@ -261,8 +229,6 @@ class RemoteProof extends Link
       await athrow err, esc defer()
 
     log.debug "+ #{username}: checking remote #{type_s} proof"
-
-    await @verify_sig { which : "#{username}@#{type_s}", pubkey }, esc defer()
 
     if not skip and not @api_url()
       await @refresh defer e2
@@ -424,7 +390,6 @@ class Cryptocurrency extends Link
 
   insert_into_table : ({table, index, opts }) ->
     log.debug "+ Cryptocurrency::insert_into_table #{@sig_id()}"
-    @_perform_revocations { index }
     if not (id = @body()?.cryptocurrency?.address)?
       log.warn "Missing Cryptocurrency address"
       log.debug "Full JSON in signature:"
@@ -447,7 +412,6 @@ class Revoke extends Link
 
   insert_into_table : ({index}) ->
     log.debug "+ Revoke::insert_into_table"
-    @_perform_revocations { index }
     log.debug "- Revoke::insert_into_table"
 
 ##=======================================================================

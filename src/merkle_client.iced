@@ -28,8 +28,14 @@ class MerkleClient
 
   #------
 
-  lookup_path : ({uid}, cb) ->
-    req.get { endpoint : "merkle/path", args: {uid} }, cb
+  lookup_path : ({uid, username}, cb) ->
+    if not uid? and not username?
+      cb new Error "lookup_path: one of uid or username must be specified"
+      return
+    if uid? and username?
+      cb new Error "lookup_path: only one of uid (#{uid}) and username (#{username}) can be specified"
+      return
+    req.get { endpoint : "merkle/path", args: {uid, username} }, cb
 
   #------
 
@@ -145,17 +151,19 @@ class MerkleClient
 
   #------
 
-  find_and_verify : ( { uid }, cb) ->
+  find_and_verify : ( { uid, username }, cb) ->
     esc = make_esc cb, "MerkleClient::find_and_verify"
-    log.debug "+ merkle find_and_verify: #{uid}"
-    await @lookup_path { uid }, esc defer path_response
+    log.debug "+ merkle find_and_verify: uid #{uid}, username #{username}"
+    await @lookup_path { uid, username }, esc defer path_response
     await @get_merkle_key_manager {path_response}, esc defer km
     await pathcheck {server_reply: path_response, km}, esc defer pathcheck_result
-    if pathcheck_result.uid != uid
-      await athrow (new Error "Expected uid #{uid} does not match merkle response uid #{pathcheck_result.uid}"), defer()
+    if uid? and pathcheck_result.uid != uid
+      await athrow (new Error "Expected uid #{uid} does not match merkle response uid #{pathcheck_result.uid}"), esc defer()
+    if username? and pathcheck_result.username != username
+      await athrow (new Error "Expected username #{username} does not match merkle response username #{pathcheck_result.username}"), esc defer()
     await @get_root_with_parsed_payload { root_from_server: path_response.root }, esc defer root
     await @rollback_check { root }, esc defer()
-    cb null, pathcheck_result.leaf, root
+    cb null, pathcheck_result.leaf, root, path_response.id_version
 
 #===========================================================
 

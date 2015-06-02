@@ -23,12 +23,13 @@ scrapemod = require './scrapers'
 bitcoyne = require 'bitcoyne'
 {Link,LinkTable} = require('./chainlink')
 {Proof,ProofSet} = require('libkeybase').assertion
+libkeybase = require 'libkeybase'
 
 ##=======================================================================
 
 exports.SigChain = class SigChain
 
-  constructor : (@uid, @_links = []) ->
+  constructor : (@uid, @username, @_links = []) ->
     @_lookup = {}
     @_index_links @_links
     @_true_last = null
@@ -45,7 +46,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  @load : (uid, curr, cb) ->
+  @load : (uid, username, curr, cb) ->
     log.debug "+ #{uid}: load signature chain"
     links = []
     err = null
@@ -64,26 +65,13 @@ exports.SigChain = class SigChain
         log.debug "| -> reached the chain end"
         curr = null
     unless err?
-      ret = new SigChain uid, links.reverse()
-      if (err = ret.check_chain true)? then ret = null
+      ret = new SigChain uid, username, links.reverse()
     log.debug "- #{uid}: loaded signature chain"
     cb err, ret
 
   #-----------
 
   last_seqno : () -> if (l = @last())? then l.seqno() else null
-
-  #-----------
-
-  check_chain : (first, links) ->
-    links or= @_links
-    prev = null
-    i =  0
-    for link in links
-      if (prev? and (prev isnt link.prev())) or (not prev? and first and link.prev())
-        return new E.CorruptionError "Bad chain link in #{link.seqno()}: #{prev} != #{link.prev()}"
-      prev = link.id
-    return null
 
   #-----------
 
@@ -100,8 +88,6 @@ exports.SigChain = class SigChain
       await asyncify link.verify(), esc defer()
       new_links.push link
       did_update = true
-    await asyncify (@check_chain (@_links.length is 0), new_links), esc defer()
-    await asyncify (@check_chain false, (@_links[-1...].concat new_links[0..0])), esc defer()
     @_links = @_links.concat new_links
     @_new_links = new_links
     @_index_links new_links
@@ -159,70 +145,7 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  # Limit the chain to only those links signed by the key used in the last link
-  _limit : () ->
-    c = []
-    log.debug "| input chain with #{n = @_links.length} link#{if n isnt 1 then 's' else ''}"
-    for i in [(@_links.length-1)..0]
-      if (l = @_links[i]).fingerprint()?.toLowerCase() is @fingerprint then c.push l
-      else break
-    c = c.reverse()
-    if c.length isnt @_links.length
-      log.debug "| Limited to #{n = c.length} link#{if n isnt 1 then 's' else ''}"
-    @_links = c
-
- #--------------
-
-  _verify_sig : (cb) ->
-    err = null
-    await l.verify_sig { which : @username, @pubkey }, defer err if (l = @last())?
-    cb err
-
-  #-----------
-
-  _verify_userid : (cb) ->
-    esc = make_esc cb, "_verify_userid"
-
-    log.debug "+ _verify_userid for #{@username}"
-    found = false
-    kbem = make_email @username
-
-    # first try to see if the username is baked into the key, and be happy with that
-    log.debug "+ read username baked into key"
-    await @pubkey.read_uids_from_key esc defer uids
-    found = (email.toLowerCase() for {email} in uids when email?).indexOf(kbem) >= 0
-    log.debug "- found -> #{found}"
-
-    log.debug "+ search for explicit self-signatures (found=#{found})"
-    # Search for an explicit self-signature of this key
-    if not found and (link = @table?.get(ST.SELF_SIG))? and (link.self_signer()?.toLowerCase() is @username)
-      found = true
-    log.debug "- found -> #{found}"
-
-    log.debug "+ search for a free-rider on a track signature (found=#{found})"
-    # Search for a freerider in an otherwise useful signature
-    if not found
-      for type in [ ST.REMOTE_PROOF, ST.TRACK ]
-        tab = @table?.get(type)?.flatten() or []
-        for link in tab
-          if link.self_signer()?.toLowerCase() is @username
-            found = true
-            break
-        break if found
-    log.debug "- found -> #{found}"
-
-    if not err? and not found
-      msg = if env().is_me @username
-        "You haven't signed your own key! Try `keybase push --update`"
-      else "user '#{@username}' hasn't signed their own key"
-      err = new E.VerifyError msg
-
-    log.debug "- _verify_userid for #{@username} -> #{err}"
-    cb err
-
-  #-----------
-
-  _compress : (opts) ->
+  _compress : ({verified_links, opts}) ->
 
     log.debug "+ compressing signature chain"
 
@@ -230,7 +153,7 @@ exports.SigChain = class SigChain
     index = {}
     seq = {}
 
-    for link in @_links when link.fingerprint() is @fingerprint
+    for link in verified_links
       index[link.sig_id()] = link
       seq[link.seqno()] = link
       link.insert_into_table { table : out, index, opts }
@@ -274,21 +197,36 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  verify_sig : ({key, opts}, cb) ->
+  verify_sig : ({opts, key, parsed_keys, merkle_data}, cb) ->
     esc = make_esc cb, "SigChain::verify_sig"
-    @username = username = key.username()
     @pubkey = key
-    log.debug "+ #{username}: verifying sig"
-    if (@fingerprint = key.fingerprint()?.toLowerCase())? and @last()?.fingerprint()?
-      @_true_last = @last()
-      @_limit()
-      @_compress (opts or {})
-      await @_verify_sig esc defer()
-    else
-      log.debug "| Skipped since no fingerprint found in key or no links in chain"
-    await @_verify_userid esc defer()
+    log.debug "+ #{@username}: verifying sig"
+    sig_blobs = (link.obj for link in @_links)
+    {eldest_kid} = merkle_data
+    await libkeybase.SigChain.replay {sig_blobs, parsed_keys, @uid, @username, eldest_kid}, esc defer lkb_sig_chain
 
-    log.debug "- #{username}: verified sig"
+    # Check against seqno and sig_id from the Merkle tree.
+    last_lkb_link = lkb_sig_chain.get_links()[-1...][0]
+    if last_lkb_link.sig_id != merkle_data.sig_id
+      cb new Error "Last sig id (#{last_lkb_link.sig_id}) doesn't match the Merkle tree (#{merkle_data.sig_id})"
+      return
+    if last_lkb_link.seqno != merkle_data.seqno
+      cb new Error "Last seqno (#{last_lkb_link.seqno}) doesn't match the Merkle tree (#{merkle_data.seqno})"
+      return
+
+    # Get the set of good seqnos from the verified sigchain.
+    seqnos = {}
+    for lkb_chain_link in lkb_sig_chain.get_links()
+      seqnos[lkb_chain_link.seqno] = true
+
+    # Filter our links based on that set.
+    verified_links = (link for link in @_links when seqnos[link.seqno()])
+
+    # Build the ID table.
+    opts = opts or {}
+    @_compress {opts, verified_links}
+
+    log.debug "- #{@username}: verified sig"
     cb null
 
   #-----------
@@ -328,27 +266,6 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_merkle_tree : (cb) ->
-    err = null
-    lst = @true_last()
-    log.debug "+ sigchain check_merkle_tree"
-    if lst?
-      await merkle_client().find_and_verify { @uid }, defer err, val, merkle_root
-      unless err?
-        {seqno, payload_hash} = val.get_public()
-        if (a = seqno) isnt (b = lst.seqno())
-          err = new E.BadSeqnoError "bad sequence in root: #{a} != #{b}"
-        else if (a = payload_hash) isnt (b = lst.id)
-          err = new E.BadPayloadHash "bad payload hash in root: #{a} != #{b}"
-        else
-          @_merkle_root = merkle_root
-    else
-      log.debug "| no signatures for #{@uid}, so won't find in merkle tree; skipping check"
-    log.debug "- sigchain check_merkle_tree"
-    cb err
-
-  #-----------
-
   display_cryptocurrency_addresses : (opts, cb) ->
     esc = make_esc cb, "SigChain::display_cryptocurrency_addresses"
     if (tab = @table?.get(ST.CRYPTOCURRENCY)?.to_dict())?
@@ -371,9 +288,9 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_remote_proofs : ({username, skip, pubkey, assertions}, cb) ->
+  check_remote_proofs : ({skip, pubkey, assertions}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
-    log.debug "+ #{pubkey.username()}: checking remote proofs (skip=#{skip})"
+    log.debug "+ #{@username}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
 
     msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint pubkey.fingerprint()}")
@@ -394,15 +311,15 @@ exports.SigChain = class SigChain
         links = v.flatten()
 
         for link in links
-          await link.check_remote_proof { skip, pubkey, type, warnings, proof_vec }, esc defer()
+          await link.check_remote_proof { skip, type, warnings, proof_vec }, esc defer()
           n++
     else
       log.debug "| No remote proofs found"
 
     if assertions?
-      await @check_assertions { pubkey, proof_vec, username, assertions }, esc defer()
+      await @check_assertions { pubkey, proof_vec, @username, assertions }, esc defer()
 
-    log.debug "- #{pubkey.username()}: checked remote proofs"
+    log.debug "- #{@username}: checked remote proofs"
     cb null, warnings, n
 
 ##=======================================================================
