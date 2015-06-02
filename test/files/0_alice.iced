@@ -3,7 +3,6 @@
 user = null
 found = false
 log = require '../../lib/log'
-keypool = require '../lib/keypool'
 
 exports.init = (T,cb) ->
   await User.load_or_gen 'alice', defer u, is_new

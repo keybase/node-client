@@ -18,7 +18,6 @@ log = require '../../lib/log'
 gpgw = require 'gpg-wrapper'
 {AltKeyRing} = gpgw.keyring
 {run} = require 'iced-spawn'
-keypool = require './keypool'
 {Engine} = require 'iced-expect'
 {tweet_api} = require './twitter'
 {gist_api} = require './github'
