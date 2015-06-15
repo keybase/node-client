@@ -252,9 +252,7 @@ exports.User = class User
       log.warn "Tor strict mode: #{colors.bold('not')} syncing your profile with the server"
     else
       fetched_from_server = true
-      local_id_version = local?.basics?.id_version
-      local_seqno = local?.merkle_data?.seqno
-      await User.load_from_server {self, secret, username, local_id_version, local_seqno}, esc defer remote
+      await User.load_from_server {self, secret, username, local_user: local}, esc defer remote
 
     changed = true
     force_store = false
@@ -302,7 +300,7 @@ exports.User = class User
 
   #--------------
 
-  @load_from_server : ({self, secret, username, local_id_version, local_seqno}, cb) ->
+  @load_from_server : ({self, secret, username, local_user}, cb) ->
     esc = make_esc cb, "User::load_from_server"
     log.debug "+ #{username}: load user from server"
 
@@ -319,11 +317,15 @@ exports.User = class User
     # If the user's Merkle leaf exists (meaning they have an eldest key at all,
     # i.e. not a newly-created empty user), check it against past Merkle tree
     # data and maybe short circuit.
+    local_id_version = local_user?.basics?.id_version
+    local_seqno = local_user?.merkle_data?.seqno
     if leaf?
       server_seqno = leaf.get_public().seqno
-      if server_id_version == local_id_version and server_seqno == local_seqno
-        log.debug "| id_version (#{local_id_version}) and seqno (#{local_seqno}) haven't changed."
+      if (server_id_version == local_id_version and
+          server_seqno == local_seqno and
+          local_user._format_up_to_date {})
         # Nothing new to load. Short-circuit.
+        log.debug "| id_version (#{local_id_version}) and seqno (#{local_seqno}) haven't changed."
         cb null, null
         return
       else if server_id_version < local_id_version
@@ -358,6 +360,14 @@ exports.User = class User
     User.server_cache[username] = ret
     log.debug "- #{username}: loaded user from server"
     cb null, ret
+
+  #--------------
+
+  _format_up_to_date : ({}) ->
+    # Check for new server fields that might be missing in old cached data.
+    if not @public_keys?.all_bundles?
+      return false
+    return true
 
   #--------------
 
