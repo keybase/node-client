@@ -278,15 +278,12 @@ exports.User = class User
       await athrow new Error("User key bundles missing."), esc defer()
     await ParsedKeys.parse { bundles_list: user.public_keys.all_bundles }, esc defer user.parsed_keys
 
-    # Verify the user's sigchain, if it's non-empty, including checking for
-    # consistency with what we have from the Merkle tree.
+    # Verify the user's sigchain, even if it's empty. This at least checks
+    # ownership of an eldest PGP key.
     # TODO: Enable verification caching.
-    if not user.sig_chain.last()?
-      log.debug "| #{username}: sigchain is empty, skipping verify"
-    else
-      log.debug "+ #{username}: verifying signatures"
-      await user.verify {}, esc defer()
-      log.debug "- #{username}: verified signatures"
+    log.debug "+ #{username}: verifying signatures"
+    await user.verify {}, esc defer()
+    log.debug "- #{username}: verified signatures"
 
     # If we fetched from the server, store the new data to disk.
     if fetched_from_server
@@ -555,11 +552,18 @@ exports.User = class User
   verify : (opts, cb) ->
     esc = make_esc cb, "User::verify"
     if not @merkle_data?
-      tor_msg = ""
-      if tor.strict()
-        tor_msg = " Disable tor strict mode."
-      cb new Error("Can't verify sigchain without Merkle leaf values." + tor_msg)
-      return
+      if @sig_chain.last()?
+        # Sigs without a Merkle leaf are unverifiable. Error out.
+        tor_msg = ""
+        if tor.strict()
+          tor_msg = " Disable tor strict mode."
+        cb new Error("Can't verify sigchain without Merkle leaf values." + tor_msg)
+        return
+      else
+        # If we have no Merkle leaf *and* no signatures, this user is totally
+        # empty. Just short circuit.
+        cb null
+        return
     await @sig_chain.verify_sig { opts, @key, @parsed_keys, @merkle_data }, esc defer()
     cb null
 
