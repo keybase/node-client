@@ -89,10 +89,9 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   on_loggedout_verify : (cb) ->
-    esc = make_esc cb, "TrackSubSub::on_decrypt"
+    esc = make_esc cb, "TrackSubSub::on_loggedout_verify"
     await User.load { username : @args.them }, esc defer @them
     @them.reference_public_key { keyring : @tmp_keyring }
-    await @them.verify {}, esc defer()
     cb null
 
   #----------
@@ -104,7 +103,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     @them.reference_public_key { keyring : @tmp_keyring }
     await User.load_me {maybe_secret : true}, esc defer @me
     await @check_not_self esc defer()
-    await @them.verify {}, esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     cb null
 
@@ -150,7 +148,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @resolve_them esc defer()
     await User.load { username : @args.them, require_public_key : true }, esc defer @them
     await @make_quarantined_keyring esc defer()
-    await @them.verify {}, esc defer()
     await @check_remote_proofs false, esc defer warnings # err isn't a failure here
     await @them.display_cryptocurrency_addresses {}, esc defer()
     log.debug "- id"
@@ -239,7 +236,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     else if not ckres.local
       await @make_quarantined_keyring esc defer()
 
-    await @them.verify {}, esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer accept
 
