@@ -203,7 +203,9 @@ exports.SigChain = class SigChain
     log.debug "+ #{@username}: verifying sig"
     sig_blobs = (link.obj for link in @_links)
     {eldest_kid} = merkle_data
-    await libkeybase.SigChain.replay {sig_blobs, parsed_keys, @uid, @username, eldest_kid}, esc defer lkb_sig_chain
+    await libkeybase.SigChain.replay(
+      {sig_blobs, parsed_keys, @uid, @username, eldest_kid, sig_cache: SigCache},
+      esc(defer(lkb_sig_chain)))
 
     # Check against seqno and sig_id from the Merkle tree.
     last_lkb_link = lkb_sig_chain.get_links()[-1...][0]
@@ -324,3 +326,15 @@ exports.SigChain = class SigChain
 
 ##=======================================================================
 
+# The libkeybase sigchain implementation accepts a cache object to speed up
+# signature checking.
+class SigCache
+  @get : ({sig_id}, cb) ->
+    esc = make_esc cb, "SigCache::get"
+    await db.get { type: "sig_cache", key: sig_id, json: false }, esc defer payload_buffer
+    cb null, payload_buffer
+
+  @put : ({sig_id, payload_buffer}, cb) ->
+    esc = make_esc cb, "SigCache::put"
+    await db.put { type: "sig_cache", key: sig_id, value: payload_buffer, json: false }, esc defer()
+    cb null

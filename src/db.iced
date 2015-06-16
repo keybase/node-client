@@ -86,10 +86,10 @@ class DB
 
   #-----
 
-  put : ({type, key, value, name, names, debug}, cb) ->
+  put : ({type, key, value, name, names, debug, json}, cb) ->
     kvsk = make_kvstore_key {type,key}
     log.debug "| DB put value #{kvsk}" if debug
-    await @db.put { key : kvsk, value }, defer err, obj
+    await @db.put { key : kvsk, value, json }, defer err, obj
     unless err?
       {hkey} = obj
       names  = [ name ] if name? and not names?
@@ -130,9 +130,9 @@ class DB
 
   #-----
 
-  get : ({type, key}, cb) ->
+  get : ({type, key, json}, cb) ->
     k = make_kvstore_key { type, key }
-    await @find1 { key : k }, defer err, value
+    await @find1 { key : k, json }, defer err, value
     cb err, value
 
   #-----
