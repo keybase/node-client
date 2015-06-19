@@ -49,7 +49,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   constructor : ({@args, @opts, @tmp_keyring, @batch, @track_local, @ran_keypull, @assertions}) ->
     @opts or= {}
-    @qring = null
 
   #----------------------
 
@@ -91,7 +90,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   on_loggedout_verify : (cb) ->
     esc = make_esc cb, "TrackSubSub::on_loggedout_verify"
     await User.load { username : @args.them }, esc defer @them
-    @them.reference_public_key { keyring : @tmp_keyring }
     cb null
 
   #----------
@@ -100,7 +98,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     esc = make_esc cb, "TrackSubSub::on_decrypt"
     await @keypull esc defer()
     await User.load { username : @args.them }, esc defer @them
-    @them.reference_public_key { keyring : @tmp_keyring }
     await User.load_me {maybe_secret : true}, esc defer @me
     await @check_not_self esc defer()
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
@@ -120,20 +117,6 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  qring_cleanup : (cb) ->
-    if @qring?
-      await @qring.nuke defer e
-      log.warning "Error deleting quarantied keyring: #{e.message}" if e?
-    cb()
-
-  #----------
-
-  make_quarantined_keyring : (cb) ->
-    await @them.make_quarantined_keyring defer err, @qring
-    cb err
-
-  #----------
-
   resolve_them : (cb) ->
     await User.resolve_user_name { username : @args.them }, defer err, @args.them, @assertion
     cb err
@@ -141,13 +124,11 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
   #----------
 
   id : (cb) ->
-    cb = chain_err cb, @qring_cleanup.bind(@)
     esc = make_esc cb, "TrackSubSub:id"
     log.debug "+ id"
     accept = false
     await @resolve_them esc defer()
     await User.load { username : @args.them, require_public_key : true }, esc defer @them
-    await @make_quarantined_keyring esc defer()
     await @check_remote_proofs false, esc defer warnings # err isn't a failure here
     await @them.display_cryptocurrency_addresses {}, esc defer()
     log.debug "- id"
@@ -205,17 +186,16 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
 
   #----------
 
-  save_their_key : (cb) ->
-    err = null
-    if (k = @them?.key)?
-      await k.copy_to_keyring(master_ring()).save defer err
-    cb err
+  save_their_keys : (cb) ->
+    esc = make_esc cb, "TrackSubSub::save_their_keys"
+    for key in @them.gpg_keys
+      await key.copy_to_keyring(master_ring()).save esc defer()
+    cb null
 
   #----------
 
   run : (cb) ->
 
-    cb = chain_err cb, @qring_cleanup.bind(@)
     esc = make_esc cb, "TrackSubSub::run"
     log.debug "+ run"
 
@@ -228,19 +208,14 @@ exports.TrackSubSubCommand = class TrackSubSubCommand
     await @resolve_them esc defer()
     await User.load { username : @args.them, ki64 : @args.them_ki64, require_public_key : true }, esc defer @them
 
-    # First see if we already have the key, in which case we don't
-    # need to reimport it.
-    await @them.check_key {secret : false, store : true }, esc defer ckres
-    if not ckres.remote
-      await athrow (new E.NoRemoteKeyError "#{@args.them} doesn't have a public key"), esc defer()
-    else if not ckres.local
-      await @make_quarantined_keyring esc defer()
-
     await TrackWrapper.load { tracker : @me, trackee : @them }, esc defer @trackw
     await @all_prompts esc defer accept
 
+    # First see if we already have the key, in which case we don't
+    # need to reimport it.
+    await @them.check_key {secret : false, store : true }, esc defer ckres
     if accept and not ckres.local
-      await @save_their_key esc defer()
+      await @save_their_keys esc defer()
 
     log.debug "- run"
 

@@ -109,11 +109,12 @@ exports.KeyPull = class KeyPull
 
     esc = make_esc cb, "KeyPull::public_pull"
     await TmpKeyRing.make esc defer tmp_keyring
-    await @me.import_public_key { keyring : tmp_keyring }, esc defer()
+    await @me.import_public_keys { keyring : tmp_keyring }, esc defer()
     await @me.check_remote_proofs {}, esc defer warnings, n_proofs
     await @prompt_ok warnings.warnings().length, n_proofs, esc defer()
-    await @me.key.commit {}, esc defer()
-    log.info "Pulled public key (#{format_fingerprint @me.fingerprint(true)})"
+    for key in @me.gpg_keys
+      await key.commit {}, esc defer()
+      log.info "Pulled public key (#{format_fingerprint key.fingerprint().toString('hex').toUpperCase()})"
     log.debug "- KeyPull::public_pull"
     cb null
 

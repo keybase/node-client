@@ -209,12 +209,13 @@ exports.SigChain = class SigChain
 
     # Check against seqno and sig_id from the Merkle tree.
     last_lkb_link = lkb_sig_chain.get_links()[-1...][0]
-    if last_lkb_link.sig_id != merkle_data.sig_id
-      cb new Error "Last sig id (#{last_lkb_link.sig_id}) doesn't match the Merkle tree (#{merkle_data.sig_id})"
-      return
-    if last_lkb_link.seqno != merkle_data.seqno
-      cb new Error "Last seqno (#{last_lkb_link.seqno}) doesn't match the Merkle tree (#{merkle_data.seqno})"
-      return
+    if last_lkb_link?
+      if last_lkb_link.sig_id != merkle_data.sig_id
+        cb new Error "Last sig id (#{last_lkb_link.sig_id}) doesn't match the Merkle tree (#{merkle_data.sig_id})"
+        return
+      if last_lkb_link.seqno != merkle_data.seqno
+        cb new Error "Last seqno (#{last_lkb_link.seqno}) doesn't match the Merkle tree (#{merkle_data.seqno})"
+        return
 
     # Get the set of good seqnos from the verified sigchain.
     seqnos = {}
@@ -229,7 +230,7 @@ exports.SigChain = class SigChain
     @_compress {opts, verified_links}
 
     log.debug "- #{@username}: verified sig"
-    cb null
+    cb null, lkb_sig_chain.get_sibkeys({})
 
   #-----------
 
@@ -277,12 +278,11 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_assertions : ({pubkey, username, assertions, proof_vec}, cb) ->
+  check_assertions : ({gpg_keys, username, assertions, proof_vec}, cb) ->
     err = null
-    proof_vec.push(
-      ( new Proof { key : "fingerprint", value : pubkey.fingerprint() })
-      ( new Proof { key : "keybase", value : username })
-    )
+    for key in gpg_keys
+      proof_vec.push(new Proof({key: "fingerprint", value: key.fingerprint().toString('hex')}))
+    proof_vec.push(new Proof({ key : "keybase", value : username }))
     proof_set = new ProofSet proof_vec
     unless assertions.match_set proof_set
       err = new E.FailedAssertionError "Assertion set failed"
@@ -290,15 +290,16 @@ exports.SigChain = class SigChain
 
   #-----------
 
-  check_remote_proofs : ({skip, pubkey, assertions}, cb) ->
+  check_remote_proofs : ({skip, gpg_keys, assertions}, cb) ->
     esc = make_esc cb, "SigChain::check_remote_proofs"
     log.debug "+ #{@username}: checking remote proofs (skip=#{skip})"
     warnings = new Warnings()
 
-    msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint pubkey.fingerprint()}")
-    log.lconsole "error", log.package().INFO, msg
-    n = 0
+    for key in gpg_keys
+      msg = CHECK + " " + colors.green("public key fingerprint: #{format_fingerprint key.fingerprint().toString('hex')}")
+      log.lconsole "error", log.package().INFO, msg
 
+    n = 0
 
     # Keep track of all assertions in this key-value vector.
     proof_vec = []
@@ -319,7 +320,7 @@ exports.SigChain = class SigChain
       log.debug "| No remote proofs found"
 
     if assertions?
-      await @check_assertions { pubkey, proof_vec, @username, assertions }, esc defer()
+      await @check_assertions { gpg_keys, proof_vec, @username, assertions }, esc defer()
 
     log.debug "- #{@username}: checked remote proofs"
     cb null, warnings, n

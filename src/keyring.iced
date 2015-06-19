@@ -37,17 +37,63 @@ class GpgKey extends keyring.GpgKey
 
   #-------------
 
-  # Make a key object from a User object
-  @make_from_user : ({user, secret, keyring}) ->
+  # Make a single GpgKey object from a User object. Looks through the given gpg
+  # keyring for secret keys belonging to the user and picks the first available
+  # one.
+  @make_secret_from_user : ({user, keyring}, cb) ->
+    for key_manager in user.sibkeys
+      # Skip NaCl keys.
+      if key_manager.get_type() != 'pgp'
+        continue
+      secret_key_candidate = @_make_from_user_and_material {
+        user
+        secret: true
+        keyring
+        bundle: key_manager.armored_pgp_public
+        fingerprint : key_manager.get_pgp_fingerprint().toString('hex')
+      }
+      # Check whether key material is available.
+      await secret_key_candidate.find defer err
+      # If we found the key, return it.
+      if not err?
+        cb null, secret_key_candidate
+        return
+      # If not, loop and try the next key.
+    # Loop exited without finding a key.
+    cb new E.NoLocalKeyError "No GPG secret key available for user #{user.username()}"
+
+  #-------------
+
+  # Makes a public (secret=false) GpgKey object for every key a user has.
+  @make_all_public_from_user : ({user, keyring}) ->
+    keys = []
+    for key_manager in user.sibkeys
+      # Skip NaCl keys.
+      if key_manager.get_type() != 'pgp'
+        continue
+      keys.push @_make_from_user_and_material {
+        user
+        secret: false
+        keyring
+        bundle: key_manager.armored_pgp_public
+        fingerprint : key_manager.get_pgp_fingerprint().toString('hex')
+      }
+    return keys
+
+  #-------------
+
+  # Make a key object from a User object, the supplied PGP bundle, and the
+  # supplied PGP fingerprint.
+  @_make_from_user_and_material : ({user, secret, keyring, bundle, fingerprint}) ->
     new GpgKey {
       user : user ,
       secret : secret,
       username : user.username(),
       is_self : user.is_self(),
       uid : user.id,
-      key_data : user?.public_keys?.primary?.bundle,
+      key_data : bundle,
       keyring : keyring,
-      fingerprint : user.fingerprint(true)
+      fingerprint : fingerprint,
     }
 
 ##=======================================================================
@@ -57,8 +103,11 @@ for k,v of keyring
 
 #--------
 
-exports.BaseKeyRing.prototype.make_key_from_user = (user, secret) ->
-  return GpgKey.make_from_user { user, secret, keyring : @ }
+exports.BaseKeyRing.prototype.make_all_public_gpg_keys_from_user = ({user}) ->
+  return GpgKey.make_all_public_from_user { user, keyring : @ }
+
+exports.BaseKeyRing.prototype.make_secret_gpg_key_from_user = ({user}, cb) ->
+  return GpgKey.make_secret_from_user { user, keyring : @ }, cb
 
 #--------
 

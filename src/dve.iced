@@ -76,7 +76,7 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
     esc = make_esc cb, "handle_track"
     log.debug "+ handle track"
     await @tssc.all_prompts esc defer accept
-    await @tssc.save_their_key esc defer() if accept
+    await @tssc.save_their_keys esc defer() if accept
     log.debug "- handle track"
     cb null
 

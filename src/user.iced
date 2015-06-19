@@ -49,6 +49,8 @@ exports.User = class User
     @sig_chain = null
     @_is_self = false
     @_have_secret_key = false
+    @sibkeys = []
+    @gpg_keys = []
 
   #--------------
 
@@ -71,7 +73,6 @@ exports.User = class User
 
   #--------------
 
-  public_key_bundle : () -> @public_keys?.primary?.bundle
   private_key_bundle : () -> @private_keys?.primary?.bundle
 
   #--------------
@@ -270,7 +271,7 @@ exports.User = class User
 
     await athrow err, esc defer() if err?
 
-    if require_public_key and not user.public_keys?.primary?
+    if require_public_key and not user.merkle_data?.eldest_kid?
       await athrow new Error("user doesn't have a public key"), esc defer()
 
     if not user.public_keys?.all_bundles?
@@ -316,7 +317,8 @@ exports.User = class User
     local_id_version = local_user?.basics?.id_version
     local_seqno = local_user?.merkle_data?.seqno
     if leaf?
-      server_seqno = leaf.get_public().seqno
+      pub = leaf.get_public()
+      server_seqno = pub?.seqno
       if (server_id_version == local_id_version and
           server_seqno == local_seqno and
           local_user._format_up_to_date {})
@@ -330,12 +332,17 @@ exports.User = class User
       else if server_seqno < local_seqno
         cb new Error("Server seqno (#{server_seqno}) rolled back from local (#{local_seqno})")
         return
-      merkle_data =
-        seqno: leaf.get_public().seqno
+      if pub?
+        seqno = pub.seqno
         # The Merkle tree gives a short sig_id. Add the common suffix.
-        sig_id: leaf.get_public().sig_id + SIG_ID_SUFFIX
-        payload_hash: leaf.get_public().payload_hash
+        sig_id = pub.sig_id + SIG_ID_SUFFIX
+        payload_hash = pub.payload_hash
+      merkle_data = {
+        seqno,
+        sig_id,
+        payload_hash,
         eldest_kid: leaf.get_eldest_kid()
+      }
     else
       # No Merkle leaf exists, because user has no key history.
       merkle_data = null
@@ -385,7 +392,7 @@ exports.User = class User
   fingerprint : (upper_case = false) ->
     unless @_fingerprint?
       @_fingerprint =
-        lc : @public_keys?.primary?.key_fingerprint?.toLowerCase()
+        lc : @default_key()?.fingerprint().toString('hex')
       @_fingerprint.uc = @_fingerprint.lc?.toUpperCase()
     return @_fingerprint[if upper_case then 'uc' else 'lc']
 
@@ -454,22 +461,26 @@ exports.User = class User
 
   _load_me_2 : ({secret, maybe_secret, install_key, verify_opts }, cb) ->
     esc = make_esc cb, "User::_load_me_2"
+    un = @username()
     @set_is_self true
     load_secret = secret or maybe_secret
-    @key = master_ring().make_key_from_user @, load_secret
-    un = @username()
-
-    log.debug "+ #{un}: checking #{if load_secret then 'secret' else 'public'} key"
-    await @key.find defer err
-    log.debug "- #{un}: checked #{if load_secret then 'secret' else 'public'} key"
+    if load_secret
+      await master_ring().make_secret_gpg_key_from_user {user: @}, defer err, @key
+    else
+      # Just pick one available public key, for backwards compatibility.
+      @key = @default_key()
+      log.debug "+ #{un}: checking public key"
+      await @key.find defer err
+      log.debug "- #{un}: checked public key"
 
     if not err? and load_secret
       @set_have_secret_key true
     else if err? and (err instanceof E.NoLocalKeyError) and maybe_secret
-      @key = master_ring().make_key_from_user @, false
-      log.debug "+ #{un}: check try 2, fallback to public"
+      # Fall back to same as above.
+      @key = @default_key()
+      log.debug "+ #{un}: checking public key"
       await @key.find defer err
-      log.debug "- #{un}: check try 2, fallback to public"
+      log.debug "- #{un}: checked public key"
 
     if err? and (err instanceof E.NoLocalKeyError) and install_key
       do_install = true
@@ -491,8 +502,12 @@ exports.User = class User
     log.debug "+ #{@username()}: check public key"
     if @fingerprint()?
       ret.remote = (not(secret) or @private_key_bundle()?)
-      key = master_ring().make_key_from_user @, secret
-      await key.find defer err
+      if secret
+        await master_ring().make_secret_gpg_key_from_user {user: @}, defer err, key
+      else
+        key = @default_key()
+        await key.find defer err
+
       if not err?
         ret.local = true
         @key = key if store
@@ -519,17 +534,13 @@ exports.User = class User
 
   #--------------
 
-  reference_public_key : ({keyring}, cb) ->
-    @key = keyring.make_key_from_user @, false
-
-  #--------------
-
-  import_public_key : ({keyring}, cb) ->
-    log.debug "+ Import public key from #{keyring.to_string()}"
-    @key = keyring.make_key_from_user @, false
-    await @key.save defer err
-    log.debug "- Import public key from #{keyring.to_string()}"
-    cb err, @key
+  import_public_keys : ({keyring}, cb) ->
+    esc = make_esc cb, "User::import_public_keys"
+    log.debug "+ Import public keys from #{keyring.to_string()}"
+    for key in @gpg_keys
+      await key.save esc defer()
+    log.debug "- Import public keys from #{keyring.to_string()}"
+    cb null
 
   #--------------
 
@@ -540,7 +551,7 @@ exports.User = class User
   #--------------
 
   check_remote_proofs : (opts, cb) ->
-    opts.pubkey = @key
+    opts.gpg_keys = @gpg_keys
     opts.username = @username()
     await @sig_chain.check_remote_proofs opts, defer err, warnings, n_proofs
     cb err, warnings, n_proofs
@@ -563,8 +574,16 @@ exports.User = class User
         # empty. Just short circuit.
         cb null
         return
-    await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer()
+    await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer @sibkeys
+    @gpg_keys = master_ring().make_all_public_gpg_keys_from_user {user: @}
     cb null
+
+  #--------------
+
+  # BACKWARDS COMPATIBILITY for parts of the code that still think there's only
+  # one key.
+  default_key : () ->
+    @gpg_keys[0]
 
   #--------------
 
@@ -627,63 +646,10 @@ exports.User = class User
   #--------------
 
   remove_key : (cb) ->
-    (master_ring().make_key_from_user @, false).remove cb
-
-  #--------------
-
-  # Import this user's key into a quarantined keyring, so we can
-  # run some tests on it before we accept it into our main keyring.
-  make_quarantined_keyring : (cb) ->
-    ret = err = null
-
-    cleanup = (cb) ->
-      if err? and ret?
-        await ret.nuke defer e2
-        log.warn "Error in deleting quarantined keyring: #{e2.message}" if e2?
-      cb()
-
-    cb = chain_err cb, cleanup
-    esc = make_esc cb, "make_quarantined_keyring"
-    log.debug "+ make_quarantined_keyring for #{@username()}"
-    await QuarantinedKeyRing.make esc defer tmp
-    ret = tmp
-    key = ret.make_key_from_user @, false
-    await key.save esc defer()
-    await ret.list_fingerprints esc defer fps
-
-    err = if fps.length is 0 then new E.ImportError "Import failed: no fingerprint came out!"
-    else if fps.length > 1 then new E.CorruptionError "Import failed: found >1 fingerprints!"
-    else if (a = @fingerprint())? and not fpeq(a, (b = fps[0]))
-      new E.BadFingerprintError "Bad fingerprint: #{a} != #{b}; server lying?"
-    else
-      ret.set_fingerprint fps[0]
-      @key = key
-      null
-
-    log.debug "- make_quarantined_keyring -> #{err}"
-    cb err, ret
-
-  #--------------
-
-  # Make a new temporary keyring; initialize it with the user's current
-  # public key and/or private key, depending on the passed options.  If we fail
-  # halfway through, make sure we nuke and clean up after ourselves.
-  new_tmp_keyring : ({secret}, cb) ->
-    tmp = err = null
-    log.debug "+ new_tmp_keyring for #{@username()} (secret=#{secret})"
-    await TmpKeyRing.make defer err, tmp
-    unless err?
-      k = master_ring().make_key_from_user @, secret
-      await k.load defer err2
-      unless err2?
-        k2 = k.copy_to_keyring tmp
-        await k2.save defer err2
-      if err2?
-        err = err2
-        await tmp.nuke defer err3
-        tmp = null
-    log.debug "- new_tmp_keyring -> #{err}"
-    cb err, tmp
+    esc = make_esc cb, "User::remove_key"
+    for key in @gpg_keys
+      await key.remove esc defer()
+    cb null
 
   #--------------
 

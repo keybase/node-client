@@ -49,13 +49,12 @@ exports.Command = class Command extends Base
   #----------
 
   do_encrypt : (cb) ->
-    tp = @them.fingerprint true
-    ti = @them.key_id_64()
     args = [
       "--encrypt",
-      "-r", tp,
       "--trust-mode", "always"
     ]
+    for key in @them.gpg_keys
+      args = args.concat "-r", key.fingerprint().toString('hex')
     if @argv.sign
       sign_key = if @is_self then @them else @tssc.me
       args.push( "--sign", "-u", (sign_key.fingerprint true) )
