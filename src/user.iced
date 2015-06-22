@@ -49,7 +49,6 @@ exports.User = class User
     @sig_chain = null
     @_is_self = false
     @_have_secret_key = false
-    @parsed_keys = null
 
   #--------------
 
@@ -276,13 +275,13 @@ exports.User = class User
 
     if not user.public_keys?.all_bundles?
       await athrow new Error("User key bundles missing."), esc defer()
-    await ParsedKeys.parse { key_bundles: user.public_keys.all_bundles }, esc defer user.parsed_keys
+    await ParsedKeys.parse { key_bundles: user.public_keys.all_bundles }, esc defer parsed_keys
 
     # Verify the user's sigchain, even if it's empty. This at least checks
     # ownership of an eldest PGP key.
     # TODO: Enable verification caching.
     log.debug "+ #{username}: verifying signatures"
-    await user.verify {}, esc defer()
+    await user.verify {parsed_keys}, esc defer()
     log.debug "- #{username}: verified signatures"
 
     # If we fetched from the server, store the new data to disk.
@@ -549,7 +548,7 @@ exports.User = class User
   #--------------
 
   # Also serves to compress the public signatures into a usable table.
-  verify : (opts, cb) ->
+  verify : ({opts, parsed_keys}, cb) ->
     esc = make_esc cb, "User::verify"
     if not @merkle_data?
       if @sig_chain.last()?
@@ -564,7 +563,7 @@ exports.User = class User
         # empty. Just short circuit.
         cb null
         return
-    await @sig_chain.verify_sig { opts, @key, @parsed_keys, @merkle_data }, esc defer()
+    await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer()
     cb null
 
   #--------------
