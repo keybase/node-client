@@ -1,0 +1,38 @@
+{
+    "chain": [
+        {
+            "seqno": 1,
+            "prev": null,
+            "sig": "g6Rib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgyakGGaFdDQpMpW0GuYDIxls3tgVRHwtOgq71fwfPBCUKp3BheWxvYWTFASt7ImJvZHkiOnsia2V5Ijp7Imhvc3QiOiJrZXliYXNlLmlvIiwia2lkIjoiMDEyMGM5YTkwNjE5YTE1ZDBkMGE0Y2E1NmQwNmI5ODBjOGM2NWIzN2I2MDU1MTFmMGI0ZTgyYWVmNTdmMDdjZjA0MjUwYSIsInVpZCI6Ijc0YzM4Y2Y3Y2ViOTQ3ZjU2MzIwNDVkOGNhNWQ0ODE5IiwidXNlcm5hbWUiOiJtYXgzMiJ9LCJ0eXBlIjoiZWxkZXN0IiwidmVyc2lvbiI6MX0sImN0aW1lIjoxNDM1MDk1NzQxLCJleHBpcmVfaW4iOjMxNDQ5NjAwMCwicHJldiI6bnVsbCwic2VxX3R5cGUiOjEsInNlcW5vIjoxLCJ0YWciOiJzaWduYXR1cmUifaNzaWfEQCj9Ka+PuO9jiy9SAB5inJjKHkB4oq00QExNDIG1u1TW42CPC1VUk+v/A6zAnUVon+Vp+EYSmwC+Izr8+xg49QCoc2lnX3R5cGUgo3RhZ80CAqd2ZXJzaW9uAQ==",
+            "payload_hash": "57e3d3757262e4b0692c6c1ccc0a57443aa314af8ec7f7d21760a024148951cf",
+            "sig_id": "29cba60382bc5c81244acf8cc40cbe2ff14cf35f7b471fb16a5ccf42d15694ef0f",
+            "payload_json": "{\"body\":{\"key\":{\"host\":\"keybase.io\",\"kid\":\"0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a\",\"uid\":\"74c38cf7ceb947f5632045d8ca5d4819\",\"username\":\"max32\"},\"type\":\"eldest\",\"version\":1},\"ctime\":1435095741,\"expire_in\":314496000,\"prev\":null,\"seq_type\":1,\"seqno\":1,\"tag\":\"signature\"}",
+            "kid": "0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a",
+            "ctime": 1435095741
+        },
+        {
+            "seqno": 2,
+            "prev": "57e3d3757262e4b0692c6c1ccc0a57443aa314af8ec7f7d21760a024148951cf",
+            "sig": "g6Rib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgyakGGaFdDQpMpW0GuYDIxls3tgVRHwtOgq71fwfPBCUKp3BheWxvYWTFAoJ7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwYzlhOTA2MTlhMTVkMGQwYTRjYTU2ZDA2Yjk4MGM4YzY1YjM3YjYwNTUxMWYwYjRlODJhZWY1N2YwN2NmMDQyNTBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwYzlhOTA2MTlhMTVkMGQwYTRjYTU2ZDA2Yjk4MGM4YzY1YjM3YjYwNTUxMWYwYjRlODJhZWY1N2YwN2NmMDQyNTBhIiwidWlkIjoiNzRjMzhjZjdjZWI5NDdmNTYzMjA0NWQ4Y2E1ZDQ4MTkiLCJ1c2VybmFtZSI6Im1heDMyIn0sInN1YmtleSI6eyJraWQiOiIwMTIxMWIyM2ZlZmM3Yzg5NTFlMzQzNTgwMTJlZWNkYTNmNzg5YjkyNTAwYTc0OWMzMTg0NzI1YWEwYTU2MmU0OWY2NjBhIiwicGFyZW50X2tpZCI6IjAxMjBjOWE5MDYxOWExNWQwZDBhNGNhNTZkMDZiOTgwYzhjNjViMzdiNjA1NTExZjBiNGU4MmFlZjU3ZjA3Y2YwNDI1MGEiLCJyZXZlcnNlX3NpZyI6bnVsbH0sInR5cGUiOiJzdWJrZXkiLCJ2ZXJzaW9uIjoxfSwiY3RpbWUiOjE0MzUwOTU3NDEsImV4cGlyZV9pbiI6MzE0NDk2MDAwLCJwcmV2IjoiNTdlM2QzNzU3MjYyZTRiMDY5MmM2YzFjY2MwYTU3NDQzYWEzMTRhZjhlYzdmN2QyMTc2MGEwMjQxNDg5NTFjZiIsInNlcV90eXBlIjoxLCJzZXFubyI6MiwidGFnIjoic2lnbmF0dXJlIn2jc2lnxEDopHjQ1+pUxyQ65K9Z4c77uhVWhF21+UmHqJqV+1E/nMX822yTus5QqAPgfZPC4lc7vBsmdcV7rWsrXrN6qC8JqHNpZ190eXBlIKN0YWfNAgKndmVyc2lvbgE=",
+            "payload_hash": "df9bc2d737831dd3c5ea6e8f0e66a33ced4371e76afbe6dec3dba2c28e65f3a1",
+            "sig_id": "fc147293e3f476c1e37038bf90dc49233d3b51ff31479abbab3c286fdea954900f",
+            "payload_json": "{\"body\":{\"key\":{\"eldest_kid\":\"0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a\",\"host\":\"keybase.io\",\"kid\":\"0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a\",\"uid\":\"74c38cf7ceb947f5632045d8ca5d4819\",\"username\":\"max32\"},\"subkey\":{\"kid\":\"01211b23fefc7c8951e34358012eecda3f789b92500a749c3184725aa0a562e49f660a\",\"parent_kid\":\"0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a\",\"reverse_sig\":null},\"type\":\"subkey\",\"version\":1},\"ctime\":1435095741,\"expire_in\":314496000,\"prev\":\"57e3d3757262e4b0692c6c1ccc0a57443aa314af8ec7f7d21760a024148951cf\",\"seq_type\":1,\"seqno\":2,\"tag\":\"signature\"}",
+            "kid": "0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a",
+            "ctime": 1435095741
+        }
+    ],
+    "_comment": "DELETED A SUBKEY KID HERE",
+    "keys": [
+        "0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a"
+    ],
+    "uid": "74c38cf7ceb947f5632045d8ca5d4819",
+    "username": "max32",
+    "label_kids": {
+        "e": "0120c9a90619a15d0d0a4ca56d06b980c8c65b37b605511f0b4e82aef57f07cf04250a",
+        "s": "01211b23fefc7c8951e34358012eecda3f789b92500a749c3184725aa0a562e49f660a"
+    },
+    "label_sigs": {
+        "e": "29cba60382bc5c81244acf8cc40cbe2ff14cf35f7b471fb16a5ccf42d15694ef0f",
+        "s": "fc147293e3f476c1e37038bf90dc49233d3b51ff31479abbab3c286fdea954900f"
+    }
+}

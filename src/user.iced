@@ -276,7 +276,7 @@ exports.User = class User
 
     if not user.public_keys?.all_bundles?
       await athrow new Error("User key bundles missing."), esc defer()
-    await ParsedKeys.parse { bundles_list: user.public_keys.all_bundles }, esc defer user.parsed_keys
+    await ParsedKeys.parse { key_bundles: user.public_keys.all_bundles }, esc defer user.parsed_keys
 
     # Verify the user's sigchain, even if it's empty. This at least checks
     # ownership of an eldest PGP key.
