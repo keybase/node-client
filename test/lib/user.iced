@@ -43,7 +43,7 @@ assert_kb_ok = (rc) ->
 
 #==================================================================
 
-exports.User = class User
+exports.User = User = class User
 
   constructor : ({@username, @email, @password, @homedir}) ->
     @keyring = null
@@ -509,3 +509,18 @@ _users = new Users
 exports.users = users = () -> _users
 
 #==================================================================
+
+exports.signup = (T, name, args, cb) ->
+  await User.load_or_gen name, defer u, is_new
+  T.assert u, "#{name} was generated"
+  if not is_new
+    log.info "#{name} found; not remaking them"
+    await u.login defer err
+    T.no_error err
+    await u.load_status defer err
+    T.no_error err
+  else
+    log.info "#{name} not found; remaking them "
+    await u.full_monty T, args, defer err
+    T.no_error err
+  cb u
