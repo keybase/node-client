@@ -637,7 +637,8 @@ exports.User = class User
     out =
       basics : filter @basics, [ "id_version", "last_id_change", "username" ]
       id : @id
-      key : filter pkp, [ "kid", "key_fingerprint" ]
+      key :
+        kid : @merkle_data?.eldest_kid
       seq_tail : @sig_chain?.true_last()?.to_track_obj()
       remote_proofs : @sig_chain?.remote_proofs_to_track_obj()
       ctime : unix_time()
