@@ -1,3 +1,24 @@
+## 0.8.2
+
+Bugfixes:
+  - Use a version of libkeybase that doesn't bundle the test vectors, to reduce
+    package size.
+
+## 0.8.1
+
+Bugfixes:
+  - Stop complaining for users with broken chain link ctimes.
+
+## 0.8.0
+
+Features:
+  - Handle users with multiple keys, for the future.
+Bugfixes:
+  - Fix the fragile test suite.  Works better if you have to crash it
+    and restart. The major improvements are random usernames, and random
+    keys.  Generate the keys in JavaScript, which is faster than doing so in
+    gpg.
+
 ## 0.8.0
 
 Bugfixes:
