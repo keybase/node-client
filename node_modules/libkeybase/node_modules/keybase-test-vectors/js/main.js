@@ -8,7 +8,6 @@ exports.chain_test_inputs['bad_uid_chain.json'] = require('../chains/bad_uid_cha
 exports.chain_test_inputs['bad_username_chain.json'] = require('../chains/bad_username_chain.json');
 exports.chain_test_inputs['example_revokes_chain.json'] = require('../chains/example_revokes_chain.json');
 exports.chain_test_inputs['expired_key_chain.json'] = require('../chains/expired_key_chain.json');
-exports.chain_test_inputs['mismatched_ctime_chain.json'] = require('../chains/mismatched_ctime_chain.json');
 exports.chain_test_inputs['mismatched_fingerprint_chain.json'] = require('../chains/mismatched_fingerprint_chain.json');
 exports.chain_test_inputs['mismatched_kid_chain.json'] = require('../chains/mismatched_kid_chain.json');
 exports.chain_test_inputs['missing_kid_chain.json'] = require('../chains/missing_kid_chain.json');

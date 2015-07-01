@@ -42,26 +42,31 @@ exports.test_chain_link_format = (T, cb) ->
     T.assert err.code == node_sigchain.E.code.BAD_LINK_FORMAT, "wrong error type"
   cb()
 
+exports.test_check_buffers_equal = (T, cb) ->
+  # Test coverage for check_buffers_equal, which can never fail under normal
+  # circumstances.
+  await node_sigchain.check_buffers_equal (new Buffer('0')), (new Buffer('1')), defer err
+  T.assert err?
+  cb()
+
 exports.test_sig_cache = (T, cb) ->
   # We accept a sig_cache parameter to skip verifying signatures that we've
   # verified before. Exercise that code.
   esc = make_esc cb, "test_sig_cache"
   {chain, keys, username, uid, label_kids} = tv.chain_test_inputs["ralph_chain.json"]
 
-  # Create a fake sig_cache and populate it with the last sig in ralph's chain.
-  # (The first sig is not in ralph's most recent subchain.)
+  # Create a fake sig_cache.
   store = {}
   sig_cache =
     get: ({sig_id}, cb) ->
       cb null, store[sig_id]
     put: ({sig_id, payload_buffer}, cb) ->
+      T.assert(sig_id? and payload_buffer?,
+               "Trying to cache something bad: #{sig_id}, #{payload_buffer}")
       store[sig_id] = payload_buffer
       cb null
-  last_sig_id = chain[chain.length-1].sig_id
-  last_payload = new Buffer chain[chain.length-1].payload_json, "utf8"
-  await sig_cache.put {sig_id: last_sig_id, payload_buffer: last_payload}, esc defer()
 
-  # Replay the sigchain and make sure everything works.
+  # Replay the sigchain the first time.
   await node_sigchain.ParsedKeys.parse {key_bundles: keys}, esc defer parsed_keys
   await node_sigchain.SigChain.replay {
     sig_blobs: chain
@@ -71,6 +76,24 @@ exports.test_sig_cache = (T, cb) ->
     username
     eldest_kid: label_kids.second_eldest
   }, esc defer sigchain
+
+  # Confirm that there's stuff in the cache.
+  T.equal chain.length, Object.keys(store).length, "All the chain link sigs should be cached."
+
+  # Replay it again with the full cache to exercise the cache hit code path.
+  await node_sigchain.ParsedKeys.parse {key_bundles: keys}, esc defer parsed_keys
+  await node_sigchain.SigChain.replay {
+    sig_blobs: chain
+    parsed_keys
+    sig_cache
+    uid
+    username
+    eldest_kid: label_kids.second_eldest
+  }, esc defer sigchain
+
+  # Confirm the cache hasn't grown.
+  T.equal chain.length, Object.keys(store).length, "Cache should be the same size it was before."
+
   cb()
 
 exports.test_all_sigchain_tests = (T, cb) ->

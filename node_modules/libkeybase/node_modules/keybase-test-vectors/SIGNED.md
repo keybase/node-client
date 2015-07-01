@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJVid57AAoJEHGHa2itSC0yqioIAMXQpB4b6LaOUVWcLWiDLOmD
-23HJqhxv1dUzJZJAzEzWdGgOFjOJOVCnn+AccSzqynTxf0frKa/9sCjXdep0ikYe
-szXreH0i8nkgQN+OVl2i7zxO6JZ6bLTJNyDT+f/tDFc/JYUywjwPI0DXc48uOEdl
-T0BU0uudqzF290GdyidczJ40+jPrVaplUiYUGAs80F0LdR9WMd16JLOSqsagnUw8
-gw2ym3KyJF39toEhATIR+rsB5tN3NPDtjjKuapBl0SrBLaYYswr1hXNFql+57M8d
-wsQ6bcNetherJT62zJU6+a5ZkdDkf0IUd6SxNNZs7c00q2robhY+1Ur/JuQ5yeM=
-=Q9HH
+iQEcBAABAgAGBQJVlENbAAoJEHGHa2itSC0yvIoH/i4LxAxJe/I/NwNh5lk58iA9
+THQABMLTGiPCP04Q0kVSfpCdg7XoR9xiK5FZZae76DqlXs+KSNIVGPSH8+gEKaon
+gttZG1HqrJZkP6Z521+unBf91YCo3s2157uEOWI7fbzl0sRN8az2ooS5pDEMIGnK
+4Wlk9AVqtyXVmF2tPb8tKIppU6fY2IC/6YRRu30er1EZRy0sZNmCJ3O5MSDGWB7e
+iQGH86wxhwVLJCqBpRBTr8n0VjlJeOuYb7cfhYrG21iPeyPdc9Yhii0H8I25UA+P
+E/rZkH41gm5yaF+ONW9KHyabvt12TXneg3TdgUgx1cnjm1kzcAOvCSt8WV878mw=
+=dyHY
 -----END PGP SIGNATURE-----
 
 ```
@@ -23,7 +23,7 @@ wsQ6bcNetherJT62zJU6+a5ZkdDkf0IUd6SxNNZs7c00q2robhY+1Ur/JuQ5yeM=
 ```
 size    exec  file                                          contents                                                        
               ./                                                                                                            
-6663            chain_tests.json                            6eda0af0df7497a4b09b646b50e2049ca891c66c9c6f45292cd552ed36d5bb89
+6208            chain_tests.json                            ad7466a7ab6390bb4ae1290b2648f685a5e6accdfdd608d5a3317dbe53c1a79f
                 chains/                                                                                                     
 6051              bad_prev_chain.json                       53f930afd490f739b57d1de35bfb18c0e3dc9e4163a1eb898fce8bdcc98f6842
 6051              bad_reverse_signature_chain.json          06940369198a81f6f89bc86dcfd21261b54d397d0ce1cb53b8ec36c522b16ed1
@@ -48,7 +48,6 @@ size    exec  file                                          contents
 170443            jack_chain_missing_first_link.json        c107107129b9013c0974ca7f83732c905557635df2da8e31ff2a0fbe36b8a395
 168376            jack_chain_substitute_first_link.json     ec3d87af3c5c39ead8215fb23fad34647a76dccdd9ae0394acc91fc984979f28
 3343              melvin_chain.json                         4e4dd7b2bf1f834eaa72423700752aa0229c56f531d73aeb8c45710c3d31e7d1
-6051              mismatched_ctime_chain.json               47e9d2aa2dc77dd8827fb3109581131ec5b853ff5024b282ac2215c73c0af680
 8244              mismatched_fingerprint_chain.json         d49b5b9b19b84b287d7d3baadca941acf102e553acb13dfbc046ac53841f8c21
 8280              mismatched_kid_chain.json                 8b238dd8ddf942341a3b1f213f2b0052e1e519a73e37ff3590e06fdbe11bce11
 7375              missing_kid_chain.json                    a5959e4f56b209c9d8071b924115747a31c5e5091b5b4c06d5d694bbf1af591a
@@ -59,10 +58,10 @@ size    exec  file                                          contents
 1607              simple_chain.json                         138d7ac6ba3dff9d210e90101156cc399de6d070eb742eecf10ee2cc9e32b890
 1600    x       generate.py                                 c779ea5e69a2af581c42fb288b10dd2810c93326cf68d6bcedc19efe44c3f595
                 go/                                                                                                         
-708015            testvectors.go                            0497310621a9e841312fca0fe0c1567a58f4d9b4f44145b33aee7654a6c6efd8
+701473            testvectors.go                            f6ba1e1ab3b068ca3e1a8e4aa82f06dce840d42f1c2399619f9d9dfabab62206
                 js/                                                                                                         
-2368              main.js                                   90b906836c93e61a13542473489dde5a04ec48f7429934a973ef9a9cd14d365f
-322             package.json                                4b785e916dc3a63db61cefb1895e35f5b3ffcd355da0e4929bcf0c94264065ba
+2259              main.js                                   60ccf9d8ea4eb70abc124a02ffc209cf5c326414ad06050a6ef9c5424cad6531
+322             package.json                                c9f00e30900ddc742451d1b319a6530b6e7f72d9b9821c1bebb9008279d9af3d
 ```
 
 #### Ignore

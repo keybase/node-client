@@ -43,12 +43,6 @@
       "err_type": "REVERSE_SIG_VERIFY_FAILED"
     },
 
-    "test_error_mismatched_ctime": {
-      "_comment": "We need to use the server-provided ctime to unbox a signature (PGP key expiry is checked at the signature level, although NaCl expiry is checked as we replay the chain). We always need to check back after unboxing to make sure the internal ctime matches what the server said. This test exercises that check.",
-      "input": "mismatched_ctime_chain.json",
-      "err_type": "CTIME_MISMATCH"
-    },
-
     "test_error_mismatched_kid": {
       "_comment": "We need to use the server-provided KID to unbox a signature. We always need to check back after unboxing to make sure the internal KID matches the one we actually used. This test exercises that check. NOTE: I generated this chain by hacking some code into kbpgp to modify the payload right before it was signed.",
       "input": "mismatched_kid_chain.json",

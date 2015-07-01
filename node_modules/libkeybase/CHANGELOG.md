@@ -1,3 +1,8 @@
+## 1.2.1 (2015-07-01)
+
+Bugfixes:
+  - Stop using server ctime at all. Sometimes the server is wrong.
+
 ## 1.2.0 (2015-06-23)
 
 Features:
