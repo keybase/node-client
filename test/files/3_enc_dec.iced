@@ -32,7 +32,7 @@ exports.alice_follow_bob = (T,cb) ->
   T.no_error err
   cb err
 
-exports.u0_encrypt_for_u1 = (T,cb) ->
+exports.alice_encrypt_for_bob = (T,cb) ->
   args = [ "encrypt", bob.username ]
   await alice.keybase { args , stdin : msg, quiet : true } , defer err, out
   T.no_error err
@@ -57,7 +57,7 @@ exports.charlie_decrypt_from_alice = (T,cb) ->
   cb()
 
 exports.alice_encrypt_for_charlie_with_sig = (T,cb) ->
-  args = [ "encrypt", "--batch", "--sign" ].concat [ charlie.username ]
+  args = [ "encrypt", "--batch", "--sign" ].concat(charlie.assertions()).concat [ charlie.username ]
   await alice.keybase { args, stdin : msg, quiet : true }, defer err, out
   T.no_error err
   T.assert out, "got back a PGP message"
