@@ -1,9 +1,11 @@
 fs      = require 'fs'
 path    = require 'path'
+child_process = require 'child_process'
 {User, signup} = require '../lib/user'
 {prng}  = require 'crypto'
 {make_esc} = require 'iced-error'
 kbpgp = require 'kbpgp'
+libkeybase = require 'libkeybase'
 
 # These tests are for exercising compatibility with the Go client. In
 # particular, we want to interact with users who have new-style sigchains, with
@@ -31,6 +33,27 @@ me = null
 exports.init = (T,cb) ->
   await signup T, "multi", {}, defer _me
   me = _me
+  cb()
+
+exports.cache_test = (T, cb) ->
+  # Make sure we're caching signatures properly by getting some debug info
+  # about how many unboxes we do. libkeybase provides a global counter of all
+  # unboxes, and we've added some code to the node client to write that counter
+  # to a file pointed to by KEYBASE_DEBUG_UNBOX_COUNT_FILE.
+
+  # First, clear any existing cache.
+  cache_path = path.join me.homedir, '.local/share/keybase/keybase.idb'
+  await child_process.exec "rm -rf #{cache_path}", defer()
+  # Now set the debug file var and run an id.
+  count_file = path.join me.homedir, 'debug_unbox_count'
+  process.env.KEYBASE_DEBUG_UNBOX_COUNT_FILE = count_file
+  await me.keybase {args: ["id", "t_frank"]}, defer err, out
+  unbox_count = fs.readFileSync(count_file).toString()
+  T.equal "5", unbox_count, "expecting 5 unboxes"
+  # Do it again. This time there should be no unboxes.
+  await me.keybase {args: ["id", "t_frank"]}, defer err, out
+  unbox_count = fs.readFileSync(count_file).toString()
+  T.equal "0", unbox_count, "expecting no more unboxes"
   cb()
 
 encrypt_test = ({T, recipient, assertions, subkeys}, cb) ->

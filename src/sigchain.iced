@@ -15,6 +15,7 @@ request = require 'request'
 colors = require './colors'
 deq = require 'deep-equal'
 util = require 'util'
+fs = require 'fs'
 {env} = require './env'
 scrapemod = require './scrapers'
 {CHECK,BTC} = require './display'
@@ -228,6 +229,12 @@ exports.SigChain = class SigChain
     # Build the ID table.
     opts = opts or {}
     @_compress {opts, verified_links}
+
+    # If an env var is set, write some debugging info about how
+    # many unboxes we did.
+    debug_file = process.env.KEYBASE_DEBUG_UNBOX_COUNT_FILE
+    if debug_file?
+      await fs.writeFile debug_file, "#{libkeybase.debug.unbox_count}", defer()
 
     log.debug "- #{@username}: verified sig"
     cb null, lkb_sig_chain.get_sibkeys({})
