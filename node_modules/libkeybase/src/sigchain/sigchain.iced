@@ -1,4 +1,4 @@
-{athrow, a_json_parse} = require('iced-utils').util
+{bufeq_secure,athrow, a_json_parse} = require('iced-utils').util
 {make_esc} = require 'iced-error'
 kbpgp = require('kbpgp')
 proofs = require('keybase-proofs')
@@ -165,7 +165,7 @@ exports.check_link_payload_format = check_link_payload_format = ({payload}, cb) 
 # circumstances, so we need a test to explicitly make it fail.
 exports.check_buffers_equal = check_buffers_equal = (verified_buffer, unverified_buffer, cb) ->
   err = null
-  if not verified_buffer.equals(unverified_buffer)
+  if not bufeq_secure(verified_buffer,unverified_buffer)
     msg = """Payload mismatch!
              Verified:
              #{verified_buffer.toString('hex')}
