@@ -19,6 +19,10 @@
 
   exports.SIG_ID_SUFFIX = SIG_ID_SUFFIX = "0f";
 
+  exports.debug = {
+    unbox_count: 0
+  };
+
   exports.ParsedKeys = ParsedKeys = ParsedKeys = (function() {
     ParsedKeys.parse = function(_arg, cb) {
       var bundle, default_eldest_kid_for_testing, esc, key_bundles, key_manager, kid, kid_str, kids_to_key_managers, parsed_keys, ___iced_passed_deferral, __iced_deferrals, __iced_k;
@@ -57,7 +61,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "ParsedKeys.parse"
                 });
                 kbpgp.ukm.import_armored_public({
@@ -68,7 +72,7 @@
                       return key_manager = arguments[0];
                     };
                   })(),
-                  lineno: 19
+                  lineno: 24
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -116,7 +120,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+            filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
             funcname: "ChainLink.parse"
           });
           _this._unbox_payload({
@@ -131,7 +135,7 @@
                 return payload_hash = arguments[2];
               };
             })(),
-            lineno: 43
+            lineno: 48
           })));
           __iced_deferrals._fulfill();
         });
@@ -140,20 +144,20 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "ChainLink.parse"
             });
             check_link_payload_format({
               payload: payload
             }, esc(__iced_deferrals.defer({
-              lineno: 45
+              lineno: 50
             })));
             __iced_deferrals._fulfill();
           })(function() {
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "ChainLink.parse"
               });
               _this._check_payload_against_server_kid({
@@ -161,21 +165,21 @@
                 payload: payload,
                 parsed_keys: parsed_keys
               }, esc(__iced_deferrals.defer({
-                lineno: 48
+                lineno: 53
               })));
               __iced_deferrals._fulfill();
             })(function() {
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "ChainLink.parse"
                 });
                 _this._check_reverse_signatures({
                   payload: payload,
                   parsed_keys: parsed_keys
                 }, esc(__iced_deferrals.defer({
-                  lineno: 50
+                  lineno: 55
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -206,11 +210,11 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "ChainLink._unbox_payload"
               });
               athrow(new E.NonexistentKidError("link signed by nonexistent kid " + kid), esc(__iced_deferrals.defer({
-                lineno: 62
+                lineno: 67
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -224,7 +228,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "ChainLink._unbox_payload"
             });
             sig_eng.get_body_and_unverified_payload({
@@ -236,7 +240,7 @@
                   return unverified_buffer = arguments[1];
                 };
               })(),
-              lineno: 68
+              lineno: 73
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -246,7 +250,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "ChainLink._unbox_payload"
               });
               a_json_parse(payload_json, esc(__iced_deferrals.defer({
@@ -255,7 +259,7 @@
                     return payload = arguments[0];
                   };
                 })(),
-                lineno: 72
+                lineno: 77
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -265,7 +269,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                      filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                       funcname: "ChainLink._unbox_payload"
                     });
                     sig_cache.get({
@@ -276,7 +280,7 @@
                           return verified_buffer = arguments[0];
                         };
                       })(),
-                      lineno: 76
+                      lineno: 81
                     })));
                     __iced_deferrals._fulfill();
                   })(__iced_k);
@@ -286,10 +290,11 @@
               })(function() {
                 (function(__iced_k) {
                   if (typeof verified_buffer === "undefined" || verified_buffer === null) {
+                    exports.debug.unbox_count++;
                     (function(__iced_k) {
                       __iced_deferrals = new iced.Deferrals(__iced_k, {
                         parent: ___iced_passed_deferral,
-                        filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                        filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                         funcname: "ChainLink._unbox_payload"
                       });
                       key_manager.make_sig_eng().unbox(sig_blob.sig, __iced_deferrals.defer({
@@ -299,7 +304,7 @@
                             return verified_buffer = arguments[1];
                           };
                         })(),
-                        lineno: 80
+                        lineno: 86
                       }), {
                         now: ctime_seconds
                       });
@@ -310,11 +315,11 @@
                           (function(__iced_k) {
                             __iced_deferrals = new iced.Deferrals(__iced_k, {
                               parent: ___iced_passed_deferral,
-                              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                               funcname: "ChainLink._unbox_payload"
                             });
                             athrow(new E.VerifyFailedError(err.message), esc(__iced_deferrals.defer({
-                              lineno: 83
+                              lineno: 89
                             })));
                             __iced_deferrals._fulfill();
                           })(__iced_k);
@@ -327,14 +332,14 @@
                             (function(__iced_k) {
                               __iced_deferrals = new iced.Deferrals(__iced_k, {
                                 parent: ___iced_passed_deferral,
-                                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                                 funcname: "ChainLink._unbox_payload"
                               });
                               sig_cache.put({
                                 sig_id: sig_id,
                                 payload_buffer: verified_buffer
                               }, esc(__iced_deferrals.defer({
-                                lineno: 85
+                                lineno: 91
                               })));
                               __iced_deferrals._fulfill();
                             })(__iced_k);
@@ -351,11 +356,11 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                      filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                       funcname: "ChainLink._unbox_payload"
                     });
                     check_buffers_equal(verified_buffer, unverified_buffer, esc(__iced_deferrals.defer({
-                      lineno: 90
+                      lineno: 96
                     })));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -401,11 +406,11 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                    filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                     funcname: "ChainLink._check_reverse_signatures"
                   });
                   athrow(new E.NonexistentKidError("link reverse-signed by nonexistent kid " + kid), esc(__iced_deferrals.defer({
-                    lineno: 113
+                    lineno: 119
                   })));
                   __iced_deferrals._fulfill();
                 })(__iced_k);
@@ -417,7 +422,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "ChainLink._check_reverse_signatures"
                 });
                 sibkey_proof.reverse_sig_check({
@@ -429,7 +434,7 @@
                       return err = arguments[0];
                     };
                   })(),
-                  lineno: 115
+                  lineno: 121
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -438,11 +443,11 @@
                     (function(__iced_k) {
                       __iced_deferrals = new iced.Deferrals(__iced_k, {
                         parent: ___iced_passed_deferral,
-                        filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                        filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                         funcname: "ChainLink._check_reverse_signatures"
                       });
                       athrow(new E.ReverseSigVerifyFailedError(err.message), esc(__iced_deferrals.defer({
-                        lineno: 117
+                        lineno: 123
                       })));
                       __iced_deferrals._fulfill();
                     })(__iced_k);
@@ -467,11 +472,11 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                      filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                       funcname: "ChainLink._check_reverse_signatures"
                     });
                     athrow(new E.NonexistentKidError("link delegates nonexistent subkey " + kid), esc(__iced_deferrals.defer({
-                      lineno: 122
+                      lineno: 128
                     })));
                     __iced_deferrals._fulfill();
                   })(__iced_k);
@@ -535,10 +540,10 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced"
+              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced"
             });
             athrow(new E.BadLinkFormatError("UID wrong length: " + uid.length), esc(__iced_deferrals.defer({
-              lineno: 159
+              lineno: 165
             })));
             __iced_deferrals._fulfill();
           })(__iced_k);
@@ -576,11 +581,11 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain.replay"
               });
               athrow(new Error("eldest_kid parameter is required"), esc(__iced_deferrals.defer({
-                lineno: 204
+                lineno: 210
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -624,14 +629,14 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                    filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                     funcname: "SigChain.replay"
                   });
                   sigchain._add_new_link({
                     sig_blob: sig_blob,
                     sig_cache: sig_cache
                   }, esc(__iced_deferrals.defer({
-                    lineno: 209
+                    lineno: 215
                   })));
                   __iced_deferrals._fulfill();
                 })(_next);
@@ -642,11 +647,11 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain.replay"
               });
               sigchain._enforce_eldest_key_ownership({}, esc(__iced_deferrals.defer({
-                lineno: 212
+                lineno: 218
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -741,7 +746,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+            filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
             funcname: "SigChain._add_new_link"
           });
           ChainLink.parse({
@@ -754,7 +759,7 @@
                 return link = arguments[0];
               };
             })(),
-            lineno: 269
+            lineno: 275
           })));
           __iced_deferrals._fulfill();
         });
@@ -763,13 +768,13 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "SigChain._add_new_link"
             });
             _this._check_link_belongs_here({
               link: link
             }, esc(__iced_deferrals.defer({
-              lineno: 273
+              lineno: 279
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -785,13 +790,13 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain._add_new_link"
               });
               _this._check_key_is_valid({
                 link: link
               }, esc(__iced_deferrals.defer({
-                lineno: 291
+                lineno: 297
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -803,26 +808,26 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "SigChain._add_new_link"
                 });
                 _this._delegate_keys({
                   link: link
                 }, esc(__iced_deferrals.defer({
-                  lineno: 299
+                  lineno: 305
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                    filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                     funcname: "SigChain._add_new_link"
                   });
                   _this._revoke_keys_and_sigs({
                     link: link
                   }, esc(__iced_deferrals.defer({
-                    lineno: 300
+                    lineno: 306
                   })));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -977,11 +982,11 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain._enforce_eldest_key_ownership"
               });
               athrow(new E.NonexistentKidError("no key for eldest kid " + _this._eldest_kid), esc(__iced_deferrals.defer({
-                lineno: 409
+                lineno: 415
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -996,11 +1001,11 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "SigChain._enforce_eldest_key_ownership"
                 });
                 athrow(new E.KeyOwnershipError("key " + _this._eldest_kid + " is not self-signing"), esc(__iced_deferrals.defer({
-                  lineno: 413
+                  lineno: 419
                 })));
                 __iced_deferrals._fulfill();
               })(__iced_k);
@@ -1020,11 +1025,11 @@
             }
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "SigChain._enforce_eldest_key_ownership"
             });
             athrow(new E.KeyOwnershipError("key " + _this._eldest_kid + " is not owned by " + expected_email), esc(__iced_deferrals.defer({
-              lineno: 421
+              lineno: 427
             })));
             __iced_deferrals._fulfill();
           });

@@ -66,6 +66,9 @@ exports.test_sig_cache = (T, cb) ->
       store[sig_id] = payload_buffer
       cb null
 
+  # Zero the unbox counter (in case other tests have run earlier).
+  node_sigchain.debug.unbox_count = 0
+
   # Replay the sigchain the first time.
   await node_sigchain.ParsedKeys.parse {key_bundles: keys}, esc defer parsed_keys
   await node_sigchain.SigChain.replay {
@@ -80,6 +83,9 @@ exports.test_sig_cache = (T, cb) ->
   # Confirm that there's stuff in the cache.
   T.equal chain.length, Object.keys(store).length, "All the chain link sigs should be cached."
 
+  # Assert the new value of the unbox counter.
+  T.equal chain.length, node_sigchain.debug.unbox_count, "unboxed ralph's links"
+
   # Replay it again with the full cache to exercise the cache hit code path.
   await node_sigchain.ParsedKeys.parse {key_bundles: keys}, esc defer parsed_keys
   await node_sigchain.SigChain.replay {
@@ -93,6 +99,9 @@ exports.test_sig_cache = (T, cb) ->
 
   # Confirm the cache hasn't grown.
   T.equal chain.length, Object.keys(store).length, "Cache should be the same size it was before."
+
+  # Assert the unbox counter hasn't moved.
+  T.equal chain.length, node_sigchain.debug.unbox_count, "no further unboxing"
 
   cb()
 

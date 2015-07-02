@@ -7,6 +7,11 @@ ie = require('iced-error')
 UID_LEN = 32
 exports.SIG_ID_SUFFIX = SIG_ID_SUFFIX = "0f"
 
+# For testing that caches are working properly. (Use a wrapper object instead
+# of a simple counter because main.iced copies things.)
+exports.debug =
+  unbox_count: 0
+
 exports.ParsedKeys = ParsedKeys = class ParsedKeys
   @parse : ({key_bundles}, cb) ->
     # We only take key bundles from the server, either hex NaCl public keys, or
@@ -76,6 +81,7 @@ class ChainLink
     if sig_cache?
       await sig_cache.get {sig_id}, esc defer verified_buffer
     if not verified_buffer?
+      exports.debug.unbox_count++
       await key_manager.make_sig_eng().unbox(
         sig_blob.sig,
         defer(err, verified_buffer),
