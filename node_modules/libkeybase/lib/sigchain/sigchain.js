@@ -61,7 +61,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "ParsedKeys.parse"
                 });
                 kbpgp.ukm.import_armored_public({
@@ -120,7 +120,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+            filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
             funcname: "ChainLink.parse"
           });
           _this._unbox_payload({
@@ -144,7 +144,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "ChainLink.parse"
             });
             check_link_payload_format({
@@ -157,7 +157,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "ChainLink.parse"
               });
               _this._check_payload_against_server_kid({
@@ -172,7 +172,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "ChainLink.parse"
                 });
                 _this._check_reverse_signatures({
@@ -210,7 +210,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "ChainLink._unbox_payload"
               });
               athrow(new E.NonexistentKidError("link signed by nonexistent kid " + kid), esc(__iced_deferrals.defer({
@@ -228,7 +228,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "ChainLink._unbox_payload"
             });
             sig_eng.get_body_and_unverified_payload({
@@ -250,7 +250,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "ChainLink._unbox_payload"
               });
               a_json_parse(payload_json, esc(__iced_deferrals.defer({
@@ -269,7 +269,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                      filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                       funcname: "ChainLink._unbox_payload"
                     });
                     sig_cache.get({
@@ -294,7 +294,7 @@
                     (function(__iced_k) {
                       __iced_deferrals = new iced.Deferrals(__iced_k, {
                         parent: ___iced_passed_deferral,
-                        filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                        filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                         funcname: "ChainLink._unbox_payload"
                       });
                       key_manager.make_sig_eng().unbox(sig_blob.sig, __iced_deferrals.defer({
@@ -315,7 +315,7 @@
                           (function(__iced_k) {
                             __iced_deferrals = new iced.Deferrals(__iced_k, {
                               parent: ___iced_passed_deferral,
-                              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                               funcname: "ChainLink._unbox_payload"
                             });
                             athrow(new E.VerifyFailedError(err.message), esc(__iced_deferrals.defer({
@@ -332,7 +332,7 @@
                             (function(__iced_k) {
                               __iced_deferrals = new iced.Deferrals(__iced_k, {
                                 parent: ___iced_passed_deferral,
-                                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                                 funcname: "ChainLink._unbox_payload"
                               });
                               sig_cache.put({
@@ -356,7 +356,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                      filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                       funcname: "ChainLink._unbox_payload"
                     });
                     check_buffers_equal(verified_buffer, unverified_buffer, esc(__iced_deferrals.defer({
@@ -406,7 +406,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                    filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                     funcname: "ChainLink._check_reverse_signatures"
                   });
                   athrow(new E.NonexistentKidError("link reverse-signed by nonexistent kid " + kid), esc(__iced_deferrals.defer({
@@ -422,7 +422,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "ChainLink._check_reverse_signatures"
                 });
                 sibkey_proof.reverse_sig_check({
@@ -443,7 +443,7 @@
                     (function(__iced_k) {
                       __iced_deferrals = new iced.Deferrals(__iced_k, {
                         parent: ___iced_passed_deferral,
-                        filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                        filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                         funcname: "ChainLink._check_reverse_signatures"
                       });
                       athrow(new E.ReverseSigVerifyFailedError(err.message), esc(__iced_deferrals.defer({
@@ -472,7 +472,7 @@
                   (function(__iced_k) {
                     __iced_deferrals = new iced.Deferrals(__iced_k, {
                       parent: ___iced_passed_deferral,
-                      filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                      filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                       funcname: "ChainLink._check_reverse_signatures"
                     });
                     athrow(new E.NonexistentKidError("link delegates nonexistent subkey " + kid), esc(__iced_deferrals.defer({
@@ -540,7 +540,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced"
+              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced"
             });
             athrow(new E.BadLinkFormatError("UID wrong length: " + uid.length), esc(__iced_deferrals.defer({
               lineno: 165
@@ -581,7 +581,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain.replay"
               });
               athrow(new Error("eldest_kid parameter is required"), esc(__iced_deferrals.defer({
@@ -629,7 +629,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                    filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                     funcname: "SigChain.replay"
                   });
                   sigchain._add_new_link({
@@ -647,7 +647,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain.replay"
               });
               sigchain._enforce_eldest_key_ownership({}, esc(__iced_deferrals.defer({
@@ -746,7 +746,7 @@
         return (function(__iced_k) {
           __iced_deferrals = new iced.Deferrals(__iced_k, {
             parent: ___iced_passed_deferral,
-            filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+            filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
             funcname: "SigChain._add_new_link"
           });
           ChainLink.parse({
@@ -768,7 +768,7 @@
           (function(__iced_k) {
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "SigChain._add_new_link"
             });
             _this._check_link_belongs_here({
@@ -790,7 +790,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain._add_new_link"
               });
               _this._check_key_is_valid({
@@ -808,7 +808,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "SigChain._add_new_link"
                 });
                 _this._delegate_keys({
@@ -821,7 +821,7 @@
                 (function(__iced_k) {
                   __iced_deferrals = new iced.Deferrals(__iced_k, {
                     parent: ___iced_passed_deferral,
-                    filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                    filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                     funcname: "SigChain._add_new_link"
                   });
                   _this._revoke_keys_and_sigs({
@@ -846,7 +846,7 @@
       err = null;
       if (link.uid !== this._uid) {
         err = new E.WrongUidError("Link doesn't refer to the right uid, expected: " + link.uid + " got: " + this._uid);
-      } else if (link.username !== this._username) {
+      } else if (link.username.toLowerCase() !== this._username.toLowerCase()) {
         err = new E.WrongUsernameError("Link doesn't refer to the right username, expected: " + link.username + " got: " + this._username);
       } else if (link.seqno !== this._next_seqno) {
         err = new E.WrongSeqnoError("Link sequence number is wrong, expected: " + this._next_seqno + " got: " + link.seqno);
@@ -982,7 +982,7 @@
             (function(__iced_k) {
               __iced_deferrals = new iced.Deferrals(__iced_k, {
                 parent: ___iced_passed_deferral,
-                filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                 funcname: "SigChain._enforce_eldest_key_ownership"
               });
               athrow(new E.NonexistentKidError("no key for eldest kid " + _this._eldest_kid), esc(__iced_deferrals.defer({
@@ -1001,7 +1001,7 @@
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
-                  filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+                  filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
                   funcname: "SigChain._enforce_eldest_key_ownership"
                 });
                 athrow(new E.KeyOwnershipError("key " + _this._eldest_kid + " is not self-signing"), esc(__iced_deferrals.defer({
@@ -1025,7 +1025,7 @@
             }
             __iced_deferrals = new iced.Deferrals(__iced_k, {
               parent: ___iced_passed_deferral,
-              filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced",
+              filename: "/Users/max/src/keybase/libkeybase-js/src/sigchain/sigchain.iced",
               funcname: "SigChain._enforce_eldest_key_ownership"
             });
             athrow(new E.KeyOwnershipError("key " + _this._eldest_kid + " is not owned by " + expected_email), esc(__iced_deferrals.defer({

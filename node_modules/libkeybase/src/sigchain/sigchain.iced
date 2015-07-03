@@ -314,7 +314,7 @@ exports.SigChain = class SigChain
       err = new E.WrongUidError(
         "Link doesn't refer to the right uid,
         expected: #{link.uid} got: #{@_uid}")
-    else if link.username isnt @_username
+    else if link.username.toLowerCase() isnt @_username.toLowerCase()
       err = new E.WrongUsernameError(
         "Link doesn't refer to the right username,
         expected: #{link.username} got: #{@_username}")

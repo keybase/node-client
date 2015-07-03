@@ -1,3 +1,8 @@
+## 1.2.6 (2015-07-02)
+
+Bugfixes:
+  - Case-insensitive username comparisons (keybase/keybase-issues#1654)
+
 ## 1.2.5 (2015-07-02)
 
 Features:

@@ -1,3 +1,8 @@
+## 0.8.5 (2015-07-02)
+
+Bugfix:
+  - https://github.com/keybase/keybase-issues/issues/1654
+
 ## 0.8.4 (2015-07-02)
 
 Bugfixes:
