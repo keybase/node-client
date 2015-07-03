@@ -1,3 +1,9 @@
+## 0.8.6 (2015-07-03)
+
+Bugfix:
+  - Don't expire subkeys if they were valid at the time of the
+    signature in question.  Found bug with (`keybase id bcrypt`)
+
 ## 0.8.5 (2015-07-02)
 
 Bugfix:
