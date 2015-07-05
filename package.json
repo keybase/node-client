@@ -1,6 +1,6 @@
 {
   "name": "keybase",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "CLI interface to keybase.io",
   "repository": {
     "type": "git",
