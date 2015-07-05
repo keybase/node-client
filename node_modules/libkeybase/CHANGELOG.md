@@ -1,3 +1,9 @@
+## 1.2.9 (2015-07-05)
+
+Bugfix:
+  - Workaround for bad username -> UID conversion
+   - Fixes: keybase/keybase#1655
+
 ## 1.2.8 (2015-07-03)
 
 Bugfix:
