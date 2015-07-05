@@ -1,3 +1,13 @@
+## 0.8.8 (2015-07-05)
+
+Bugfix:
+  - Address: https://github.com/keybase/keybase-issues/issues/1656
+    - Generate fix: not always last writer wins on PGP public key bundles
+      if there were multiple updates, since import subkeys might have
+      disappeared.
+    - Upgrade to libkeybase @ 1.2.11
+    - Upgrade to kbpgp @ 2.0.26
+
 ## 0.8.7 (2015-07-05)
 
 Bugfix:

@@ -12,6 +12,29 @@ exports.SIG_ID_SUFFIX = SIG_ID_SUFFIX = "0f"
 exports.debug =
   unbox_count: 0
 
+exports.StackedKeyManager = class StackedKeyManager
+
+  constructor : ({km}) ->
+    @_index = {}
+    @push km if km?
+
+  push : (km) ->
+    for key_id in km.get_all_pgp_key_ids()
+      @_index[key_id] = km
+
+  make_sig_eng : () -> new kbpgp.SignatureEngine { km : @ }
+
+  find_pgp_key : (key_id) -> 
+    if (km = @_index[key_id])? then km.find_pgp_key(key_id) else null
+
+  fetch : (key_ids, ops, cb) ->
+    for key_id,i in key_ids
+      if (km = @_index[key_id])?
+        cb null, km, i
+        return
+    msg = (k.toString('hex') for k in key_ids).join(",")
+    cb (new Error "No key found for any of the key_ids in {#{msg}}"), null, 0
+
 exports.ParsedKeys = ParsedKeys = class ParsedKeys
   @parse : ({key_bundles}, cb) ->
     # We only take key bundles from the server, either hex NaCl public keys, or
@@ -20,27 +43,44 @@ exports.ParsedKeys = ParsedKeys = class ParsedKeys
     # us.
     esc = make_esc cb, "ParsedKeys.parse"
     kids_to_key_managers = {}
+    kids_to_stacked_key_managers = {}
     default_eldest_kid_for_testing = null
     opts = { time_travel : true }
     for bundle in key_bundles
       await kbpgp.ukm.import_armored_public {armored: bundle, opts}, esc defer key_manager
       kid = key_manager.get_ekid()
       kid_str = kid.toString "hex"
+
+      # Last-writer wins; so if there were multiple uploads for the same
+      # key fingerprint, we only see the last one
       kids_to_key_managers[kid_str] = key_manager
+
+      # Stacked Key Managers allow for a history of uploaded PGP key bundles,
+      # especially important if multiple key bundles with the same Key ID
+      # were uploaded, but we need subkeys from some of the older ones.
+      if key_manager.get_type() isnt 'pgp'
+      else if (skm = kids_to_stacked_key_managers[kid_str])?
+        skm.push key_manager
+      else
+        kids_to_stacked_key_managers[kid_str] = new StackedKeyManager { km: key_manager }
+
       default_eldest_kid_for_testing or= kid_str
-    parsed_keys = new ParsedKeys {kids_to_key_managers}
+    parsed_keys = new ParsedKeys {kids_to_key_managers, kids_to_stacked_key_managers}
     cb null, parsed_keys, default_eldest_kid_for_testing
 
-  constructor : ({kids_to_key_managers}) ->
+  constructor : ({kids_to_key_managers, kids_to_stacked_key_managers}) ->
     # ParsedKeys should only be used as a map from KIDs to KeyManagers. It MUST
     # NOT be interpreted as a set of valid KIDs for a user, because it's
     # computed from untrusted data. To forestall that mistake, we keep the map
     # _private and only expose the get_key_manager() method.
     @_kids_to_key_managers = kids_to_key_managers
+    @_kids_to_stacked_key_managers = kids_to_stacked_key_managers
 
   get_key_manager : (kid) ->
     @_kids_to_key_managers[kid]
 
+  get_stacked_key_manager : (kid) -> 
+    @_kids_to_stacked_key_managers[kid] or @_kids_to_key_managers[kid]
 
 class ChainLink
   @parse : ({sig_blob, parsed_keys, sig_cache}, cb) ->
@@ -64,7 +104,7 @@ class ChainLink
     # that this is the same as the KID listed in the payload.
     kid = sig_blob.kid
     # Get the key_manager and sig_eng we need from the ParsedKeys object.
-    key_manager = parsed_keys.get_key_manager kid
+    key_manager = parsed_keys.get_stacked_key_manager kid
     if not key_manager?
       await athrow (new E.NonexistentKidError "link signed by nonexistent kid #{kid}"), esc defer()
     sig_eng = key_manager.make_sig_eng()

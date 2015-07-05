@@ -1,3 +1,11 @@
+## 1.2.11 (2015-07-05)
+
+Bugfixes:
+  - We need to keep track of all historical key managers for some
+    PGP key bundles, in case subkeys were added or deleted. 
+     - Needs kbpgp v2.0.26
+     - See https://github.com/keybase/keybase-issues/issues/1656 for bug
+
 ## 1.2.10 (2015-07-05)
 
 Bugfix:
