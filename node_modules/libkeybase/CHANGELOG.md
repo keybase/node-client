@@ -1,3 +1,8 @@
+## 1.2.10 (2015-07-05)
+
+Bugfix:
+  - Remove debugging from the previous
+
 ## 1.2.9 (2015-07-05)
 
 Bugfix:

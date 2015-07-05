@@ -401,9 +401,6 @@
               username: username,
               lc: false
             });
-            console.log("XXXX " + (err != null ? err.toString() : void 0));
-            console.log(username);
-            console.log(username_cased);
             return __iced_k((err != null) && (username_cased != null) && (username_cased !== username) && (username_cased.toLowerCase() === username) ? err = _this._verify_username_hash({
               uid: uid,
               username: username_cased

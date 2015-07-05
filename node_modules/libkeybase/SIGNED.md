@@ -3,19 +3,19 @@
 -----BEGIN PGP SIGNATURE-----
 Comment: GPGTools - http://gpgtools.org
 
-iQIcBAABCAAGBQJVmSgcAAoJEGBSsq0xpmMcEfMP/0KAYCS9yTONE9nKcghVgWrh
-IJOfgQnLA8wYVi0/xRSKdVBJQJOo2UTuSb1brbjaxCNcrWxbe53RrDJkc/w2mC5Y
-E+o6AYv0ORHnZ5DbXg0UbOBOyOj4gLpGr2hRTq/qCME/133sjqkMcGKDRkeX/UOu
-zjqddTfMqalQkc812mnxrJ/EbNx65tHgMWmbs3lGPNVRIRUOnPQAgRv+NpKaEW0R
-5XkGy9+OmLUK7aa8+ec/NlFINXb0aaUSrY9/vuS80dN2HTR/17spku4+VotPdhk/
-oa7ZwmchqQWvtH7tX0EhnnkJ/0YrD2w2ZHXNyGubmQgst4WI6Q7HDC1FUeiqind2
-aJOR5mcr44rQNL4z/boThjCzA/t25cGXRAcS4Lm+K/AiHwxqCZjWH8PEY5uucUck
-xSnmUSndO9X3h5/OMyssCB7MqbVu50rF++dVIokbCSQx6aJV4/Wk7CV0TZ9togaY
-eV0BBclxCAn9zR3h/2BD7rl/UH13880m1fyvftkwL9W22BC9KBSUtYWZxVeDbtnQ
-94fnAqdajUSEzmgySTCc1kPS9nM5PGpW71qSXIXKUQ1gyOL87QBezuCWe0YZoeCu
-YuGLWodsopzvWPDzCWAa19WULFHyRZqNVDw2MqeVbH2gE2XKyZDoi4lON8OfujPC
-AN1OByopl3lyJpBN9X7H
-=1yTN
+iQIcBAABCAAGBQJVmS8XAAoJEGBSsq0xpmMc5fAP/icez+RzGJs1fkn5ZeZytxhV
+qCqjDnzBTeeTCUSzFRTUJAUs7l9y4izZZ5GeHs7ZYmNxVjJqyDT1R3aeTqReVQV+
+xwuokFdQOV5Zn0tdHuEQAz9hGMudYX6Buw9RUmYno2Ly7TTx4BWKnYvHzNK01Mz5
+JHOOOqrPWNUI8jmWe6zWBpxDh1LZBfXMfIBIUafzldFCbdo7+xRCpkf7uyuLKQpP
+Wk6Y72uI4UGevlHOUWjamCvY7N3sDTjd7aUSPN6F/sxvRE9fZQhyk3z+uaTTx9gS
+xj9USqfn2/qKD5rDIaUYQlZoRngPsoZosuFtbWjr4b8U2zh8aS6IQmogY6X54Gp6
+r8EXLdzbwBr43Lix2Gj117DTe4BqW+frI/5Sc0cB5DbVtogEAAMe08B4GZnW+m+l
+6/Ol+e6qaIy8FbKQv+PQ4GvlHq5Y381Sb2sQF1RqskJqqgl0TOacAjQMy8hPXd5b
+R2VU/h6zwTe+++GIL42fS0xS0MUpArUxX65lKTPwd/lmVhKIg8sJz4pmMt99jSTK
+DhsG+YEHhmrk7l66dqxF+rG6tU27KbQMj+1DyyLrBbNbj2DRLG+VxtC+QvXm4Oqc
+4seXAz0BuIRhnuMwGKAG5ANWxZYzRakbJ4apOTalhsNDQSASTIRRhJstno7jwdQ5
+dKIX+J+hyHvIw5fBz6J1
+=3cEO
 -----END PGP SIGNATURE-----
 
 ```
@@ -30,7 +30,7 @@ AN1OByopl3lyJpBN9X7H
 size    exec  file                            contents                                                        
               ./                                                                                              
 67              .gitignore                    5e89d4014d03a0f7f21f1429ab57b662f835214ac9bc4512285fed2982011191
-1947            CHANGELOG.md                  f1125bccffb69d98b075828c9a3584091913b5ce91e18e8e4082131bec1d99b4
+2019            CHANGELOG.md                  871ac8ed2eaad68c1f9aebb98a621a38b02cbcd42b8fea6384cfc43aee22356e
 1484            LICENSE                       20a8a5de57bfaf6870517c52265d4469770a23cbc1af85eb9973ce639b0abff2
 1353            Makefile                      d7f684e836240e402e48f131cf4a8fe5efb722156cb8587f5e25288cfb812f2d
 109             README.md                     f2dd5d8192cff83f9c44a3e56779977bfe82725df259970a5c2d5396e6f87e13
@@ -51,12 +51,12 @@ size    exec  file                            contents
 625               main.js                     c046e0c31a2b087f1dc56a373b46f16691ce3065d4cd0c9ca0fa5c62bfb233c0
                   merkle/                                                                                     
 5430                leaf.js                   6d6a21ccf133b97e4ce60324be92378ebb0e065a24cf8282484cdf837d364ac3
-17143               pathcheck.js              7b2cf7d9219608f22b34fc1aa57156bda95e12c9e093f9e60427b38642bd662f
+16991               pathcheck.js              781c7078bfa40c5196036c8a886e7ff217f6bb7111ff2c30df61e2184400af2b
                   sigchain/                                                                                   
 42953               sigchain.js               e5aa1e257b1083405f507dc8171a09474f50f53acd84312baea7d8050de1f14e
                 notes/                                                                                        
 2129              tweetnacl.md                099fac68f7caebd05b6060781e7fcfb32726309bb4bd67aa35b10134a280e049
-1108            package.json                  f1a877c58e602c6dae3f8968ebd1ca30904c2fd593aa195bc34a6d87f08e52b1
+1109            package.json                  6cc452b2065b291f45c07461948b6bd5f07f344b3cb6b3c9b32bac608209c3bc
                 src/                                                                                          
 4407              assertion.iced              fac9d95f8915318ec94dcd9f57f0f6a1b65b210429e6a5f6ac2ad8d33b97cd10
 634               assertion_parser.jison      65624a141081113074e6c778af7df8fad6769d3c5b2fb96e8edcd31444f8706f
