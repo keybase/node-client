@@ -1,3 +1,10 @@
+## 0.8.7 (2015-07-05)
+
+Bugfix:
+  - We had a server-side bug in username->UID conversion, in which
+    usernames weren't toLowerCased()'d before hashing. Works around it.
+    - See bug: https://github.com/keybase/keybase-issues/issues/1655 
+
 ## 0.8.6 (2015-07-03)
 
 Bugfix:
