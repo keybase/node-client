@@ -16,16 +16,16 @@ libkeybase = require 'libkeybase'
 # the recipient's keys, and that the implicit `id` passes against fingerprint
 # assertions.
 
-frank_assertions = 'fingerprint://CD59215942691491 && fingerprint://D55DC088769D9ECD'
+frank_assertions = 'fingerprint://C6759000770E0C4D && fingerprint://DEFA06E52543544F'
 frank_subkeys = [
-  '6C73B0FE19AFFD34'
-  '897C73A9F116B425'
+  '5BDED63232F876C7'
+  '15B45E78C3852457'
 ]
 
-george_assertions = 'fingerprint://B9F004D1DB8867DB && fingerprint://B666072556732C93'
+george_assertions = 'fingerprint://84C091DD53BF666B && fingerprint://604556E877D86C22'
 george_subkeys = [
-  'B5FC0B1866F4132F'
-  'FC4CA7C9BDD7C348'
+  'A7F041D5A5F18962'
+  'B7C24335E23D3320'
 ]
 
 me = null
