@@ -37,6 +37,11 @@ class GpgKey extends keyring.GpgKey
 
   #-------------
 
+  get_ekid : () ->
+    return @_ekid
+
+  #-------------
+
   # Make a single GpgKey object from a User object. Looks through the given gpg
   # keyring for secret keys belonging to the user and picks the first available
   # one.
@@ -51,6 +56,7 @@ class GpgKey extends keyring.GpgKey
         keyring
         bundle: key_manager.armored_pgp_public
         fingerprint : key_manager.get_pgp_fingerprint().toString('hex')
+        ekid: key_manager.get_ekid()
       }
       # Check whether key material is available.
       await secret_key_candidate.find defer err
@@ -77,6 +83,7 @@ class GpgKey extends keyring.GpgKey
         keyring
         bundle: key_manager.armored_pgp_public
         fingerprint : key_manager.get_pgp_fingerprint().toString('hex')
+        ekid: key_manager.get_ekid()
       }
     return keys
 
@@ -84,8 +91,8 @@ class GpgKey extends keyring.GpgKey
 
   # Make a key object from a User object, the supplied PGP bundle, and the
   # supplied PGP fingerprint.
-  @_make_from_user_and_material : ({user, secret, keyring, bundle, fingerprint}) ->
-    new GpgKey {
+  @_make_from_user_and_material : ({user, secret, keyring, bundle, fingerprint, ekid}) ->
+    ret = new GpgKey {
       user : user ,
       secret : secret,
       username : user.username(),
@@ -95,6 +102,8 @@ class GpgKey extends keyring.GpgKey
       keyring : keyring,
       fingerprint : fingerprint,
     }
+    ret._ekid = ekid
+    return ret
 
 ##=======================================================================
 

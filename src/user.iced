@@ -609,6 +609,7 @@ exports.User = class User
     ret = null
     await @load_public_key {}, defer err
     unless err?
+      arg.eldest_kid = @merkle_data.eldest_kid
       arg.km = @key
       arg.merkle_root = @merkle_root()
       arg.client = (new PackageJson()).track_obj()

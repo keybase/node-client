@@ -28,7 +28,7 @@ url_reencode = (url) ->
 
 class BaseSigGen
 
-  constructor : ({@km, @client, @supersede, @merkle_root, @revoke_sig_ids}) ->
+  constructor : ({@km, @eldest_kid, @client, @supersede, @merkle_root, @revoke_sig_ids}) ->
 
   #---------
 
@@ -57,7 +57,8 @@ class BaseSigGen
           uid : session.get_uid()
           username : env().get_username()
       @client,
-      @merkle_root
+      @merkle_root,
+      @eldest_kid,
     }
     # Recent addition --- any signature can carry a revocation with it...
     arg.revoke = { sig_ids } if (sig_ids = @revoke_sig_ids)?
@@ -180,8 +181,9 @@ exports.KeybasePushProofGen = class KeybasePushProofGen extends BaseSigGen
 
 exports.CryptocurrencySigGen = class CryptocurrencySigGen extends BaseSigGen
 
-  constructor : ({km, @cryptocurrency, revoke_sig_ids, client, merkle_root}) ->
-    super { km, client, merkle_root, revoke_sig_ids }
+  constructor : (args) ->
+    {@cryptocurrency} = args
+    super args
 
   _make_binding_eng : (arg) ->
     arg.cryptocurrency = @cryptocurrency
@@ -195,8 +197,9 @@ exports.CryptocurrencySigGen = class CryptocurrencySigGen extends BaseSigGen
 
 exports.AnnouncementSigGen = class AnnouncementSigGen extends BaseSigGen
 
-  constructor : ({km, @announcement, revoke_sig_ids, client, merkle_root}) ->
-    super { km, client, merkle_root, revoke_sig_ids }
+  constructor : (args) ->
+    {@announcement} = args
+    super args
 
   _make_binding_eng : (arg) ->
     arg.announcement = @announcement
@@ -210,8 +213,9 @@ exports.AnnouncementSigGen = class AnnouncementSigGen extends BaseSigGen
 
 exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
-  constructor : ({km,@prev,@seqno,@uid,@track,client,merkle_root}) ->
-    super { km, client, merkle_root }
+  constructor : (args) ->
+    {@prev, @seqno, @uid, @track} = args
+    super args
 
   _get_announce_number : (cb) -> cb null
 
@@ -228,8 +232,9 @@ exports.TrackerProofGen = class TrackerProofGen extends BaseSigGen
 
 exports.UntrackerProofGen = class UntrackerProofGen extends BaseSigGen
 
-  constructor : ({km,@uid,@untrack,@seqno,@prev,client,merkle_root}) ->
-    super { km, client, merkle_root }
+  constructor : (args) ->
+    {@uid, @untrack, @seqno, @prev} = args
+    super args
 
   _get_announce_number : (cb) -> cb null
 
