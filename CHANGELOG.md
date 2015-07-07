@@ -1,3 +1,10 @@
+## 0.8.9
+ 
+Bugfix:
+  - Cleaner fix for the preceding bug:
+    - Upgrade to libkeybase @ 1.2.12
+    - Upgrade to kbpgp @ 2.0.27
+
 ## 0.8.8 (2015-07-05)
 
 Bugfix:
