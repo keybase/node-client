@@ -161,7 +161,7 @@ exports.Command = class Command extends Base
 
   check_no_key : (cb) ->
     esc = make_esc cb, "check_no_key"
-    await User.load { username : env().get_username() }, esc defer @me
+    await User.load { username : env().get_username(), self: true }, esc defer @me
     await @me.check_key { secret : false }, esc defer ckres
     err = null
     if @argv.update and ckres.remote

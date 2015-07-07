@@ -282,7 +282,7 @@ exports.User = class User
     # ownership of an eldest PGP key.
     # TODO: Enable verification caching.
     log.debug "+ #{username}: verifying signatures"
-    await user.verify {parsed_keys}, esc defer()
+    await user._verify {parsed_keys, self}, esc defer()
     log.debug "- #{username}: verified signatures"
 
     # If we fetched from the server, store the new data to disk.
@@ -559,10 +559,12 @@ exports.User = class User
   #--------------
 
   # Also serves to compress the public signatures into a usable table.
-  verify : ({opts, parsed_keys}, cb) ->
+  _verify : ({opts, parsed_keys, self}, cb) ->
     esc = make_esc cb, "User::verify"
+    has_links = @sig_chain.last()?
+    # Handle cases where Merkle data might be missing.
     if not @merkle_data?
-      if @sig_chain.last()?
+      if has_links
         # Sigs without a Merkle leaf are unverifiable. Error out.
         tor_msg = ""
         if tor.strict()
@@ -574,6 +576,16 @@ exports.User = class User
         # empty. Just short circuit.
         cb null
         return
+    # Skip verification when you're loading yourself but you don't have any
+    # actual sigchain links yet. This is because you might have a
+    # non-self-signing PGP key that you can't prove ownership of yet, which
+    # would make libkeybase.sigchain freak out. That's the right response for
+    # other people, but you need to allow it for yourself so that you can sign
+    # your first link.
+    if self and not has_links
+      cb null
+      return
+    # If none of the above special cases apply, verify the chain!
     await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer @sibkeys
     @gpg_keys = master_ring().make_all_public_gpg_keys_from_user {user: @}
     cb null
