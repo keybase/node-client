@@ -463,6 +463,12 @@ exports.User = class User
     esc = make_esc cb, "User::_load_me_2"
     un = @username()
     @set_is_self true
+
+    # If the user has no keys at all, short-circuit.
+    if @sibkeys.length == 0
+      cb null
+      return
+
     load_secret = secret or maybe_secret
     if load_secret
       await master_ring().make_secret_gpg_key_from_user {user: @}, defer err, @key

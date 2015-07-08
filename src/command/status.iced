@@ -53,8 +53,8 @@ exports.Command = class Command extends Base
           name : un
       if me?
         obj.user.key = 
-          key_id : me.key_id_64().toUpperCase()
-          fingerprint : format_fingerprint me.fingerprint(true)
+          key_id : me.key_id_64()?.toUpperCase()
+          fingerprint : if me.fingerprint()? then format_fingerprint me.fingerprint(true)
         if (rp = me.list_remote_proofs())?
           obj.user.proofs = rp
         if (d = me.list_cryptocurrency_addresses())?
