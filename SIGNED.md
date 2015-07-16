@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJVnUHvAAoJEHGHa2itSC0yGvoH/0Lia6Tz7SpCbv5CVXFwhglG
-H95mvqQ+jzMb2Z/yFMNjstOkFSQEADkwhlmE1i5SNhQVby8sEpGXLDWpMxeMOOJ7
-YG2t/aYx3BPoEkTlaCj4quAGwCLNDDlN3vVIfavu9XDaOPi2WXYCjQBMLJy7787H
-ZyvUSJgoaMIR9cNYZn+8Be8Eu9C7pBEE3QfNQv5hrTOap2agX8ZcNIb9Jekh9LuQ
-erW9qPk9gZqO5T3ocxUYOSNW7Pb73RU/r9OFCJZel6ycHciPVeoACoNTV7Kgsofa
-9UO5TWcI0tBOVm0oW3IHqb/WVMzUn/pkhKiuYKBouzFUg9FOCvArw9tnuGKL6go=
-=TUlQ
+iQEcBAABAgAGBQJVp8/qAAoJEHGHa2itSC0yI28H/imYScarTgqvKR+0ykMSu79J
+vi0y98WDBeO+ksoUPE/ev1SZH3risZwHN8nPFgMVvcIXDp6uxzIW6Ycd4jGBUvjD
+1Ut61xUYcXSGz/LBjQDMtI7XvjyEXR3ZD9BxddRQ8VX1m/jrwk4WtxBT1hM6fR5K
+ZOHe1fBBgw3jUzOhXd1nQJtqTnmmx2fVtT/axmFE97jjhQZtMggkr1FHdfKsKhz2
+DOkwFukfly8B3MbTDjMi9vp6zz8Q7/ujk2+QQOxOS/GPx6J3RiY4hgtIjwbwXb1o
+8jkKoIJuu+RPYWVEywwt7CvE1u0ktRIKk7jkykuZ9CQorjrkKljNxb1z+GOiceo=
+=vUEt
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,7 +25,7 @@ size    exec  file                                             contents
               ./                                                                                                                                                                                
 259             .kbignore                                      95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                     88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-26735           CHANGELOG.md                                   263bce5b500304791fa3188b104da6599b44cd5b468dd056ccfdc1da338da8c7                                                                 
+26866           CHANGELOG.md                                   156f88158803c7869a2c0ec3c08f403e5330500d9c91696a1a8564934e59bd6e                                                                 
 1483            LICENSE                                        333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2054            Makefile                                       9f991497e823a1b9be86be06c9f7061bc0c001db8c5c039feb9dd4cd54f35dbf                                                                 
 298             README.md                                      72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -70,7 +70,7 @@ size    exec  file                                             contents
 9189                revoke_sig.js                              726edc01c702cee053ec8283c3967cf776b7198cbaa9440b5510140c99e8c91f                                                                 
 7950                search.js                                  5a2fadd93b5f7f117e2014251f555e15ff16198b15535efa08b2dba71a564578                                                                 
 7292                sign.js                                    3d54180cd7e669c2c1ed2d67d9b020b52bc3f829f79c168c5ad7db96f5cc61dc                                                                 
-5867                status.js                                  979e20634d20c4e91d80e618ba5d87d1a7667ea057d755b9b69133ba7cd5689c                                                                 
+5942                status.js                                  745800de1abd3430bf3e1aa59e24f8839b458989aa76bd57f956f7f45a1e72be                                                                 
 4744                switch.js                                  1430b2044c577280fbf68a637c94da5d01ef4357921ab79a6be1a295d3396b5c                                                                 
 2726                track.js                                   85254bbeb982023db050843423c96ef28f3be46eee96393b809edcf3b2e5e2de                                                                 
 13201               untrack.js                                 cf189b4f9923157379a1a5877cd07680279cdeefd3e23c1ea8bf215d4069c88e                                                                 
@@ -112,7 +112,7 @@ size    exec  file                                             contents
 1569              tor.js                                       8d279d577a160cb739e2025c8392d83561ae59bf2d82237ee6282315b7003f7f                                                                 
 38350             tracksubsub.js                               c6d18b0bd6218232598b5149946a1a9a89b5fab491a28880029a3e629409d231                                                                 
 17642             trackwrapper.js                              dc1e28f1fb97b979341214702321ad34adb7378c16bfeddfa019a215d1ca6f15                                                                 
-68070             user.js                                      2cc1d270340b6f1ad6f130adf9ea0137e534b0512e9483ab8b8bd2a0017e7d11                                                                 
+68056             user.js                                      eb46c9badc5fda813653dc9df18f248b977f50acb421ef126e6f41ddc5417ceb                                                                 
 2541              util.js                                      21f4b32465bea3c8696e85daa20af3383683af4f031fdb51b527207f54887fe5                                                                 
 2356              version.js                                   2008982cefada8ab792f2b2fc447688c0e55f26bd9fd084b03dcbc1df1674cef                                                                 
                 node_modules/                                                                                                                                                                   
@@ -2933,7 +2933,7 @@ size    exec  file                                             contents
 29                  test-stamp                                 ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
                 notes/                                                                                                                                                                          
 1236              refactor.md                                  a4b8cc684c519bc75265a99aea80d644b7fa97f1a5add57664dcbe2e3998fce0                                                                 
-2366            package.json                                   9bc0140e3c21a8c945b980cff68992d4b4c7d51d04707ec53ec424ae48d36d75                                                                 
+2367            package.json                                   7ab1fe9fbff4d342c4df3cebf82d66688de4a6c90cb0e9e08970c748d8cf4e59                                                                 
                 sql/                                                                                                                                                                            
 603               schema.sql                                   ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                            
@@ -2988,7 +2988,7 @@ size    exec  file                                             contents
 3241                revoke_sig.iced                            7c9ed316b960bce4a2bb30af0baa4e9ec3eb7acece388599a1f374e25a686e1c                                                                 
 3105                search.iced                                3a1a4c0ddd39685602b5be206426493884202f8eec4f2ee36f05035327eefe2a                                                                 
 2539                sign.iced                                  cbfb444921c2a416470465cc9268551edfe1648d28e1704239b6834c3c8d6f0f                                                                 
-2517                status.iced                                05609663b363e8a0edc53d52f12ee23a88208756f6062007cb6d9a5644f7dc3c                                                                 
+2544                status.iced                                9e2fd74c76bb5f6e28554274b4ecbadad2279d11e792564ed07c03765cc1adda                                                                 
 1527                switch.iced                                17b21c2ac58ac9458b8fbec8405aa6299b39b6e957ee0c73534c1bb5a19bc883                                                                 
 972                 track.iced                                 ac278ce70860fabdd8789dd66d6e788233b8807916de1e13e310071d68eee498                                                                 
 2931                untrack.iced                               1f8f0e4325d1d9808e75c9b14da6b9c4e5392bb505728fa1495e5958c53f4ba3                                                                 
@@ -3030,7 +3030,7 @@ size    exec  file                                             contents
 1083              tor.iced                                     c048b1b5009247ac091de52096e278452b826719c7d8f2618a8907664b262be9                                                                 
 8166              tracksubsub.iced                             da08938ed392de34996918e1b17758fe8e1054ed8391fde32230793defc4ddd2                                                                 
 8401              trackwrapper.iced                            b809e064898b0d248b0b026c792a5ee262c713701ed6cb8f7ca0c233d67960d0                                                                 
-21191             user.iced                                    e09d058ff8afbfcf75eb5402cd1de9b8b39bf27583e3fb45169ce28ef3abf591                                                                 
+21121             user.iced                                    38a0baf32546e94bbb2c2f37096cfc25b284c19856122be134a08a3420281b06                                                                 
 2148              util.iced                                    6b6418c5d5d7580afdc561f55fb16a062c6dd1361cfafae29f22cc38d09cfeb2                                                                 
 903               version.iced                                 cb9a39f89e7e00bce7922f3108bc5e852ffcd6ed38c5688ac0f089c9572d3358                                                                 
 ```
