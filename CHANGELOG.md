@@ -1,5 +1,11 @@
+## 0.8.10
+
+Bugfix:
+  - Fix `keybase status` when the user has no key.
+  - Fix id commands like `keybase id twitter://malgorithms`.
+
 ## 0.8.9
- 
+
 Bugfix:
   - Cleaner fix for the preceding bug:
     - Upgrade to libkeybase @ 1.2.12
