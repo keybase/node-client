@@ -424,11 +424,6 @@ exports.User = class User
         username = body.them[0].basics.username
         ass_out = uri
 
-        # Prime the cache for other subsequent lookups for this user.
-        user = new User body.them[0]
-        user.set_logged_in()
-        User.server_cache[username] = user
-
     log.debug "- resolved to #{username}"
     cb err, username, ass_out
 

@@ -48,12 +48,23 @@ exports.cache_test = (T, cb) ->
   count_file = path.join me.homedir, 'debug_unbox_count'
   process.env.KEYBASE_DEBUG_UNBOX_COUNT_FILE = count_file
   await me.keybase {args: ["id", "t_frank"]}, defer err, out
+  T.no_error err
   unbox_count = fs.readFileSync(count_file).toString()
   T.equal "5", unbox_count, "expecting 5 unboxes"
   # Do it again. This time there should be no unboxes.
   await me.keybase {args: ["id", "t_frank"]}, defer err, out
+  T.no_error err
   unbox_count = fs.readFileSync(count_file).toString()
   T.equal "0", unbox_count, "expecting no more unboxes"
+  cb()
+
+exports.colon_slash_slash_test = (T, cb) ->
+  # My changes to user loading broke commands of the form
+  #   keybase id foo://bar
+  # Exercise those to make sure they stay unbroken, in this case using
+  # t_alice's PGP fingerprint.
+  await me.keybase {args: ["id", "fingerprint://9C7927C0BDFDADF9"]}, defer err, out
+  T.no_error err
   cb()
 
 encrypt_test = ({T, recipient, assertions, subkeys}, cb) ->
@@ -64,6 +75,7 @@ encrypt_test = ({T, recipient, assertions, subkeys}, cb) ->
   [err, msg] = kbpgp.armor.decode armored
   T.no_error err
   [err, packets] = kbpgp.parser.parse msg.body
+  T.no_error err
   recipient_key_ids = []
   for packet in packets
     if packet.key_id?
