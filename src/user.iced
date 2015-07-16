@@ -577,17 +577,17 @@ exports.User = class User
         # empty. Just short circuit.
         cb null
         return
-    # Skip verification when you're loading yourself but you don't have any
-    # actual sigchain links yet. This is because you might have a
-    # non-self-signing PGP key that you can't prove ownership of yet, which
-    # would make libkeybase.sigchain freak out. That's the right response for
-    # other people, but you need to allow it for yourself so that you can sign
-    # your first link.
     if self and not has_links
-      cb null
-      return
-    # If none of the above special cases apply, verify the chain!
-    await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer @sibkeys
+      # Skip verification when you're loading yourself but you don't have any
+      # actual sigchain links yet. This is because you might have a
+      # non-self-signing PGP key that you can't prove ownership of yet, which
+      # would make libkeybase.sigchain freak out. That's the right response for
+      # other people, but you need to allow it for yourself so that you can
+      # sign your first link.
+      @sibkeys = [parsed_keys.get_key_manager @merkle_data.eldest_kid]
+    else
+      # If none of the above special cases apply, verify the chain!
+      await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer @sibkeys
     @gpg_keys = master_ring().make_all_public_gpg_keys_from_user {user: @}
     cb null
 
