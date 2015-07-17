@@ -15,7 +15,7 @@ log = require './log'
 {athrow,akatch} = require('iced-utils').util
 IS = constants.import_state
 {PackageJson} = require('./package')
-{assertion, ParsedKeys, SIG_ID_SUFFIX} = require 'libkeybase'
+libkeybase = require 'libkeybase'
 tor = require './tor'
 colors = require './colors'
 kbpgp = require 'kbpgp'
@@ -276,7 +276,7 @@ exports.User = class User
 
     if not user.public_keys?.all_bundles?
       await athrow new Error("User key bundles missing."), esc defer()
-    await ParsedKeys.parse { key_bundles: user.public_keys.all_bundles }, esc defer parsed_keys
+    await libkeybase.ParsedKeys.parse { key_bundles: user.public_keys.all_bundles }, esc defer parsed_keys
 
     # Verify the user's sigchain, even if it's empty. This at least checks
     # ownership of an eldest PGP key.
@@ -335,7 +335,7 @@ exports.User = class User
       if pub?
         seqno = pub.seqno
         # The Merkle tree gives a short sig_id. Add the common suffix.
-        sig_id = pub.sig_id + SIG_ID_SUFFIX
+        sig_id = pub.sig_id + libkeybase.SIG_ID_SUFFIX
         payload_hash = pub.payload_hash
       merkle_data = {
         seqno,
@@ -413,7 +413,7 @@ exports.User = class User
     log.debug "+ resolving username #{username}"
     esc = make_esc cb, "resolve_user_name"
     err = null
-    await akatch (() -> assertion.URI.parse { s : username, strict : false }), esc defer uri
+    await akatch (() -> libkeybase.assertion.URI.parse { s : username, strict : false }), esc defer uri
     unless uri.is_keybase()
       await req.get { endpoint : "user/lookup", args : uri.to_lookup_query() }, esc defer body
       if body.them.length is 0
@@ -562,32 +562,30 @@ exports.User = class User
   # Also serves to compress the public signatures into a usable table.
   _verify : ({opts, parsed_keys, self}, cb) ->
     esc = make_esc cb, "User::verify"
-    has_links = @sig_chain.last()?
-    # Handle cases where Merkle data might be missing.
-    if not @merkle_data?
-      if has_links
-        # Sigs without a Merkle leaf are unverifiable. Error out.
-        tor_msg = ""
-        if tor.strict()
-          tor_msg = " Disable tor strict mode."
-        cb new Error("Can't verify sigchain without Merkle leaf values." + tor_msg)
-        return
+    @sibkeys = []
+    @gpg_keys = []
+
+    # If there is no eldest key, then this is a new account or it just did a
+    # total account reset. Short-circuit.
+    if not @merkle_data?.eldest_kid?
+      cb null
+      return
+
+    # Verify the chain!
+    # XXX: In the one case of a KeyOwnershipError for the user's *own*
+    # sigchain, suppress the error. This can come up if you've uploaded a PGP
+    # key that doesn't include your identity in it, but you haven't signed any
+    # links yet. This is a tricky case to get right, so make sure to think
+    # about it / test it when changing this code.
+    await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, defer err, @sibkeys
+    if err?
+      if self and (err instanceof libkeybase.E.KeyOwnershipError)
+        log.warn "You have not proven ownership of your key. Run `keybase push --update`."
+        @sibkeys = [parsed_keys.get_key_manager @merkle_data.eldest_kid]
       else
-        # If we have no Merkle leaf *and* no signatures, this user is totally
-        # empty. Just short circuit.
-        cb null
+        cb err
         return
-    if self and not has_links
-      # Skip verification when you're loading yourself but you don't have any
-      # actual sigchain links yet. This is because you might have a
-      # non-self-signing PGP key that you can't prove ownership of yet, which
-      # would make libkeybase.sigchain freak out. That's the right response for
-      # other people, but you need to allow it for yourself so that you can
-      # sign your first link.
-      @sibkeys = [parsed_keys.get_key_manager @merkle_data.eldest_kid]
-    else
-      # If none of the above special cases apply, verify the chain!
-      await @sig_chain.verify_sig { opts, @key, parsed_keys, @merkle_data }, esc defer @sibkeys
+
     @gpg_keys = master_ring().make_all_public_gpg_keys_from_user {user: @}
     cb null
 
