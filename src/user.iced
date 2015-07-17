@@ -627,7 +627,7 @@ exports.User = class User
       arg.merkle_root = @merkle_root()
       arg.client = (new PackageJson()).track_obj()
       ret = new klass arg
-    cb null, ret
+    cb err, ret
 
   #--------------
 
