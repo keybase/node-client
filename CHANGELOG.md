@@ -1,3 +1,9 @@
+## 0.8.11
+
+Bugfix:
+  - Several bugs related to accounts with no signatures, or which have
+    been recently reset (a la `keybase revoke`).
+
 ## 0.8.10
 
 Bugfix:
