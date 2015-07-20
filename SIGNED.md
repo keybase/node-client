@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJVp8/qAAoJEHGHa2itSC0yI28H/imYScarTgqvKR+0ykMSu79J
-vi0y98WDBeO+ksoUPE/ev1SZH3risZwHN8nPFgMVvcIXDp6uxzIW6Ycd4jGBUvjD
-1Ut61xUYcXSGz/LBjQDMtI7XvjyEXR3ZD9BxddRQ8VX1m/jrwk4WtxBT1hM6fR5K
-ZOHe1fBBgw3jUzOhXd1nQJtqTnmmx2fVtT/axmFE97jjhQZtMggkr1FHdfKsKhz2
-DOkwFukfly8B3MbTDjMi9vp6zz8Q7/ujk2+QQOxOS/GPx6J3RiY4hgtIjwbwXb1o
-8jkKoIJuu+RPYWVEywwt7CvE1u0ktRIKk7jkykuZ9CQorjrkKljNxb1z+GOiceo=
-=vUEt
+iQEcBAABAgAGBQJVrUpeAAoJEHGHa2itSC0y2mIIALh9X2EhMgCt4G+KRtnvHeCv
+q4PndE1Dol7IPv8rhPTxfYLis2t/BiaHlnqZayCoPPqwhvFEfc6O0748rGizHmwz
+Vsw5m0+1lhW1xvJgRx+vqEftzWuZJIA+c2NAlA8xkjXxvo/vF4qx/n4pkbOnbP2s
+43ZwpAtPAOyJsDdaJiQowxtA2xJWNbej4U31VycRvTcopwL8QvJremuUaRYSFdQg
+RQ32UJJ/u/zKhCAPNlC2QWckvhgBIuims6Xb6XrTXwTvMNnsZP0faKnu89K2hg4b
+TbYwWnzSdIXbfIzGauypPljP1k2ys95WlXycnS+B6aEyMVEB9wu2GS7Ho5+Kvmw=
+=/4wj
 -----END PGP SIGNATURE-----
 
 ```
@@ -25,7 +25,7 @@ size    exec  file                                             contents
               ./                                                                                                                                                                                
 259             .kbignore                                      95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                     88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-26866           CHANGELOG.md                                   156f88158803c7869a2c0ec3c08f403e5330500d9c91696a1a8564934e59bd6e                                                                 
+27006           CHANGELOG.md                                   a0a8cbf2a847e67b4bb947f98bad72391b9b4ab791d26d81011f1b5876ead151                                                                 
 1483            LICENSE                                        333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2054            Makefile                                       9f991497e823a1b9be86be06c9f7061bc0c001db8c5c039feb9dd4cd54f35dbf                                                                 
 298             README.md                                      72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -112,7 +112,7 @@ size    exec  file                                             contents
 1569              tor.js                                       8d279d577a160cb739e2025c8392d83561ae59bf2d82237ee6282315b7003f7f                                                                 
 38350             tracksubsub.js                               c6d18b0bd6218232598b5149946a1a9a89b5fab491a28880029a3e629409d231                                                                 
 17642             trackwrapper.js                              dc1e28f1fb97b979341214702321ad34adb7378c16bfeddfa019a215d1ca6f15                                                                 
-68056             user.js                                      eb46c9badc5fda813653dc9df18f248b977f50acb421ef126e6f41ddc5417ceb                                                                 
+68097             user.js                                      14eb8bfe626a07052fe6cb8c7c666f1bf7a052a52b2766f6be4275b2c6b80efd                                                                 
 2541              util.js                                      21f4b32465bea3c8696e85daa20af3383683af4f031fdb51b527207f54887fe5                                                                 
 2356              version.js                                   2008982cefada8ab792f2b2fc447688c0e55f26bd9fd084b03dcbc1df1674cef                                                                 
                 node_modules/                                                                                                                                                                   
@@ -2933,7 +2933,7 @@ size    exec  file                                             contents
 29                  test-stamp                                 ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
                 notes/                                                                                                                                                                          
 1236              refactor.md                                  a4b8cc684c519bc75265a99aea80d644b7fa97f1a5add57664dcbe2e3998fce0                                                                 
-2367            package.json                                   7ab1fe9fbff4d342c4df3cebf82d66688de4a6c90cb0e9e08970c748d8cf4e59                                                                 
+2367            package.json                                   57bfec50707f289ae42e4119fb0d611ac6a43ecaaf2dce38cad203d2761a8e1f                                                                 
                 sql/                                                                                                                                                                            
 603               schema.sql                                   ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                            
@@ -3030,7 +3030,7 @@ size    exec  file                                             contents
 1083              tor.iced                                     c048b1b5009247ac091de52096e278452b826719c7d8f2618a8907664b262be9                                                                 
 8166              tracksubsub.iced                             da08938ed392de34996918e1b17758fe8e1054ed8391fde32230793defc4ddd2                                                                 
 8401              trackwrapper.iced                            b809e064898b0d248b0b026c792a5ee262c713701ed6cb8f7ca0c233d67960d0                                                                 
-21121             user.iced                                    38a0baf32546e94bbb2c2f37096cfc25b284c19856122be134a08a3420281b06                                                                 
+20939             user.iced                                    a2e43e8c6bfdb4631f5dc24732f27a8ba18ea62890d8530f87fc60265c78fedc                                                                 
 2148              util.iced                                    6b6418c5d5d7580afdc561f55fb16a062c6dd1361cfafae29f22cc38d09cfeb2                                                                 
 903               version.iced                                 cb9a39f89e7e00bce7922f3108bc5e852ffcd6ed38c5688ac0f089c9572d3358                                                                 
 ```
