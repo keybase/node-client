@@ -1,3 +1,9 @@
+## 0.8.12
+
+Bugfix:
+  - Pull in a fix from kbpgp for calculating key creation times.
+    (keybase/keybase-issues#1686)
+
 ## 0.8.11
 
 Bugfix:
