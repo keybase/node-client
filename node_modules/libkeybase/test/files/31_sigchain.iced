@@ -51,7 +51,8 @@ exports.test_check_buffers_equal = (T, cb) ->
 
 exports.test_sig_cache = (T, cb) ->
   # We accept a sig_cache parameter to skip verifying signatures that we've
-  # verified before. Exercise that code.
+  # verified before. Exercise that code. (Piggybacking on that, use a fake log
+  # to exercise that code too.)
   esc = make_esc cb, "test_sig_cache"
   {chain, keys, username, uid, label_kids} = tv.chain_test_inputs["ralph_chain.json"]
 
@@ -66,6 +67,9 @@ exports.test_sig_cache = (T, cb) ->
       store[sig_id] = payload_buffer
       cb null
 
+  # Create a fake log.
+  log = (() -> null)
+
   # Zero the unbox counter (in case other tests have run earlier).
   node_sigchain.debug.unbox_count = 0
 
@@ -78,6 +82,7 @@ exports.test_sig_cache = (T, cb) ->
     uid
     username
     eldest_kid: label_kids.second_eldest
+    log
   }, esc defer sigchain
 
   # Confirm that there's stuff in the cache.
