@@ -205,7 +205,7 @@ exports.SigChain = class SigChain
     sig_blobs = (link.obj for link in @_links)
     {eldest_kid} = merkle_data
     await libkeybase.SigChain.replay(
-      {sig_blobs, parsed_keys, @uid, @username, eldest_kid, sig_cache: SigCache},
+      {sig_blobs, parsed_keys, @uid, @username, eldest_kid, sig_cache: SigCache, log: log.debug},
       esc(defer(lkb_sig_chain)))
 
     # Check against seqno and sig_id from the Merkle tree.
