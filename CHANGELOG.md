@@ -1,3 +1,8 @@
+## 0.8.13
+
+Bugfix:
+  - Pull in another fix from kbpgp, reverting previous.
+
 ## 0.8.12
 
 Bugfix:
