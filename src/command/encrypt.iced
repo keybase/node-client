@@ -82,7 +82,11 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::run"
     batch = (not @argv.message and not @argv.file?)
 
-    # We tetnatively resolve usernames of the form twitter://foo to
+    if not env().is_configured()
+      cb new Error "You can't sign messages when you aren't logged in."
+      return
+
+    # We tentatively resolve usernames of the form twitter://foo to
     # foo_keybase, but we still need to assert it's the right person
     # later on.
     await User.resolve_user_name { username : @argv.them[0] }, esc defer them_un, assertions
