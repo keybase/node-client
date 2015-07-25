@@ -1,3 +1,9 @@
+## 1.2.13 (2015-07-25)
+
+Bugfix:
+  - Merge PGP primary keys via kbpgp @v2.0.33
+    - Close keybase/keybase-issues#1707
+
 ## 1.2.13 (2015-07-21)
 
 Features:

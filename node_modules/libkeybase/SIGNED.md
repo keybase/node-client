@@ -1,15 +1,21 @@
-##### Signed by https://keybase.io/oconnor663
+##### Signed by https://keybase.io/max
 ```
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Comment: GPGTools - https://gpgtools.org
 
-iQEcBAABAgAGBQJVrnA3AAoJEHGHa2itSC0yTmsIAJBbAN5O3a2kx16H8O+a6K18
-XfS3NiojW0jeMBsqfROWgzy80An3iAKMjFMFD4jbYJbxBEpCSKMbkMVjC3FtWKIn
-//8x/vKrp9T5Jb6AKdDtTsG2P5Bli38VG0WLnvIWhXuaAaSYYPHYP7RtcwOQ7+Kw
-Q5p+dMdurWa/6ZAdqLHQtCZzSbfPCRh7gkpQ03rrAMwa6DaIHa/LEVsnNXk7n1mn
-wX7BSzaj0vYcBrKupreCcZxLdwMm/1JkPTNgKocCHk9uq7P57nxZuOsUp3LXYIp+
-qkHfN8vfz8AkztgspAOWVFb9y5pD8nEWH4crRU9FvcmRK6B7u/ITifOang05kv8=
-=7cZG
+iQIcBAABCgAGBQJVs5VQAAoJEGBSsq0xpmMcCBIP/26bdaWGpU9zIEu/ND1Lwhz5
+RcJdT5cTLFRVfvwt2Psa4N9C/Wpf9wG6BewS4fsZyZULtku7P5rMF3KSrTlMEWbU
+lqdUSLY9INGHFXWFD2Ok3oRz8uu/s9fV5px9lcWhxDt3rl4Wo1ZQnRqXZIL0fg4q
+Ebk8qWFgc6ugeqfqRSMPV+glNn8Lm8eGNbnz2WTECx03yDVXDCUpq8ZAo/Vx5ocv
+miIWfgDCW9LJQufseQv3pQGXAOxR89g42Ghc3irs/gG4o1ay+OdV7Z5CbwmDTlIC
+Dzfrr1nKng61j9jBpNq4qzF1nTQxTkiD2cr43AgODBe4h6+1Q7axfw/ntMGucxaC
+Fw8elb6n4qb+td66DAlFLXIj9Aga3ho49jb9dH3IIvEwrsY42xDA+0hs3/pOGNGk
+Y5eHyBBsVDPKS6AKhIYO3s6EK2d9Ap6MfRUIQSXodIPkxhOIIxwZqO2UtWB0Ndb7
+6d2EgxmAchMKsURgl4wg2Ry2cO71Tq6q0krjZlC7pZoz3NOuGgZd4zj0cNwoKiIH
+k5JPg8eG/URs7tuoMq1gP99VeoRFLvKe6aoYkmd5ohRD3L5wC/A3Y0NP4q+I7l5t
+ym5sqcTnMp/OHwUDlX1b9fcXS8Chxo6oUsjgQl3JlBOuegkNdprPzYsHmIY386At
+nWQDeI+8INY3LTVvdLnl
+=wVTq
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,7 +30,7 @@ qkHfN8vfz8AkztgspAOWVFb9y5pD8nEWH4crRU9FvcmRK6B7u/ITifOang05kv8=
 size    exec  file                            contents                                                        
               ./                                                                                              
 67              .gitignore                    5e89d4014d03a0f7f21f1429ab57b662f835214ac9bc4512285fed2982011191
-2322            CHANGELOG.md                  9e249a44b4c236ebbee7fd2f05ec066750e1d9a618fd47fd60be779b81f31830
+2441            CHANGELOG.md                  02e77ab039806eb05d4d22261688d97f94d9076e062ebffb771766afc9693ee0
 1484            LICENSE                       20a8a5de57bfaf6870517c52265d4469770a23cbc1af85eb9973ce639b0abff2
 1353            Makefile                      d7f684e836240e402e48f131cf4a8fe5efb722156cb8587f5e25288cfb812f2d
 109             README.md                     f2dd5d8192cff83f9c44a3e56779977bfe82725df259970a5c2d5396e6f87e13
@@ -47,10 +53,10 @@ size    exec  file                            contents
 5430                leaf.js                   6d6a21ccf133b97e4ce60324be92378ebb0e065a24cf8282484cdf837d364ac3
 16991               pathcheck.js              781c7078bfa40c5196036c8a886e7ff217f6bb7111ff2c30df61e2184400af2b
                   sigchain/                                                                                   
-43766               sigchain.js               5967074547e725f676f943a313e4033fe6194b333cee612e6d26ff5e9acdcb4e
+44084               sigchain.js               b0619a3f6da1439073086ab2a3f940aa08e77f5401f3becf060050a356904ef5
                 notes/                                                                                        
 2129              tweetnacl.md                099fac68f7caebd05b6060781e7fcfb32726309bb4bd67aa35b10134a280e049
-1109            package.json                  9eea275e27872ffc14777df0110b1bb45938462f8463f08f24cd9d257f549a12
+1109            package.json                  1abe5ce5b45b094efeabf520d1fc24d70a53359f2f50aa2d2176b00a1564c1b6
                 src/                                                                                          
 4407              assertion.iced              fac9d95f8915318ec94dcd9f57f0f6a1b65b210429e6a5f6ac2ad8d33b97cd10
 634               assertion_parser.jison      65624a141081113074e6c778af7df8fad6769d3c5b2fb96e8edcd31444f8706f
@@ -62,7 +68,7 @@ size    exec  file                            contents
 3371                leaf.iced                 e083507d9f223bd667c4a1068465461edb1fc35657c59835c230b79172694fc4
 4470                pathcheck.iced            23650aa2a4db7497e55b23c3f0ff0cdefeb60ff8f0363a6f4a1348405e9f5cc8
                   sigchain/                                                                                   
-21276               sigchain.iced             e587d2d9584068ee3840b15fef208099fb5de411fa11ebb8427075f787e9f2bc
+21275               sigchain.iced             7e174c856107d25cb525f527837fba175187feb00bb89b68cefc349844b046d2
                 test/                                                                                         
                   browser/                                                                                    
 287                 index.html                e31387cfd94034901e89af59f0ad29a3e2f494eb7269f1806e757be21b3cf33e
