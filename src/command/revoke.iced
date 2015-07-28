@@ -69,12 +69,11 @@ exports.Command = class Command extends Base
 
   show_key : (cb) ->
     esc = make_esc cb, "show_key"
-    username = env().get_username()
-    await User.load { username }, esc defer me
+    await User.load_me {}, esc defer me
     fp = me.fingerprint(true)
     err = null
     if fp?
-      log.warn "Loaded keys for #{username}@#{constants.canonical_host}"
+      log.warn "Loaded keys for #{env().get_username()}@#{constants.canonical_host}"
       log.warn "  Key fingerprint: #{format_fingerprint fp}"
       await master_ring().gpg { args : [ "-k", fp ] }, defer err_public
       await master_ring().gpg { args : [ "-K", fp ] }, defer err_secret
