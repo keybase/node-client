@@ -1,21 +1,15 @@
-##### Signed by https://keybase.io/max
+##### Signed by https://keybase.io/oconnor663
 ```
 -----BEGIN PGP SIGNATURE-----
-Comment: GPGTools - https://gpgtools.org
+Version: GnuPG v2
 
-iQIcBAABCgAGBQJVs5gaAAoJEGBSsq0xpmMc88sQAKV4mwF3TJsvPxff0Jul1ayf
-xqHvl9CxsE9u8DQD/NB0DTO4zUyeRNmairZh6OYp3oqhZxzgQFotbGwHDSJq3i2e
-/ekygyJhu82QPZ2PiHxEspN25qgBPG9no+TLthRxuYSQnysaKSwotK8cDcBuq579
-W7untcpXECUqv2DeWQbvblRqGZgiIqLcOROofyi3KKiAyIyLXjEGQTKj7k0uYSO2
-qJyy0L/ilEf8r07WApnq+d12avjFRnpCLFbK/lU9kl8nWIhS+0dKnyBctn+aZ7V+
-xmSVhQUiR6JuL42g4/1rbD+AekXd845Q2yeXdproytYWLkJvB4MIwbZyEDaIt/Wu
-WHSZ5ivHNgY6B4nyXvq4dKKPfhqwseVMwWSUfwVX19/UbuAQYKXYIYEDxczHJDBV
-B1SWeZq6k4kAl5kXbxnL8efnv53k8H13g7OeuVaj8K34VNh7DRsnpDFY3n5BcSur
-aibJbEzwn2qHyf3k5ERkjLwZwtne2mITTV23jm3qF2/GCEuxr1XDv5ZjdH34EBkl
-TPWXoTmcJOnWj3KkBx6zaPCLKeYd1DE6liX4dEcURV9S/Dnv1zGSSgjEHnVpvHY3
-MX+ljPWEzhhw2YrUr9uABSyF/e3KqWrYeNjlDLYTtYirA+Oq7UkzGueuVBxNx+zs
-/WMwWH6Dv0CJYxcmT2Pf
-=0DPg
+iQEcBAABAgAGBQJVt5fgAAoJEHGHa2itSC0ybY8H/iFmEOkSFGQvF9KH1bPZxTAd
+3163MArDb0Ks8dfE2yU+efb25nSlrYEf5sN6O5iQemfqNLFygsYVwp2tN39GTQ8K
+oLCV/XYs7zf3/KVRanD4uV6goBxKedw35gdB44pLjLLw9CdHWHadyuzEFw/bDXVT
+93L82pnlCXkQMo2Owexl6IX1R1/pb8QKqw2D3DYsMw2qji8uM8XP6bLonxMEc67d
+5h6ZAkU7P2E+gO82xrRYImBFAPAV8mFLsE9NRGLz5fthkCoIQ3ATRMxQ6+uPCdEo
+H5KY4o7QLymnae3lA9Pz61lu9/OBn41StCANqFGvqaDIZBiwLbI8fUZWM98jlps=
+=Qtwk
 -----END PGP SIGNATURE-----
 
 ```
@@ -31,7 +25,7 @@ size    exec  file                                             contents
               ./                                                                                                                                                                                
 259             .kbignore                                      95d5f2c9f7ea23e75ef280faa48ffd8a31205a6479cd0dced5c32d0320727a18                                                                 
 21              .npmignore                                     88f94844f9ad06cef6b238c45c43d7fb5698f6cd5bcbf1a9ec8c209e34084a23                                                                 
-27201           CHANGELOG.md                                   f5db903b540327bda081de926db9cdffc26d92c36a1d3cbb8bc875c7ed6adb6e                                                                 
+27337           CHANGELOG.md                                   dd044c58e951e9e9da2179ed231c5c1cd7fa191f44befa86b16a41595dad5455                                                                 
 1483            LICENSE                                        333be7050513d91d9e77ca9acb4a91261721f0050209636076ed58676bfc643d                                                                 
 2054            Makefile                                       9f991497e823a1b9be86be06c9f7061bc0c001db8c5c039feb9dd4cd54f35dbf                                                                 
 298             README.md                                      72e5a9fdfd4eb169afd96ced21b4f5078143a552bce1c0349996172523736693                                                                 
@@ -72,7 +66,7 @@ size    exec  file                                             contents
 6884                push.js                                    41f4dc0ad21ac35402aff12b0dc33a77d78d30c7b2b7178dce19faa41d9cd7a5                                                                 
 25229               push_and_keygen.js                         7edadfaee41c23c7c8732bb82b1b458ad32106fb04c9b43107efd00c748bf9a4                                                                 
 4690                reset.js                                   21499138a5a86ef662d228430cc94ddd624d1b8a66bb360a357a8670c9e9ec5f                                                                 
-10548               revoke.js                                  ac38b79fbf974f221f920d00150bccc1b4795d2d67a1910aaa2fe7b3a09d16d3                                                                 
+10375               revoke.js                                  972cfa956d58f8c78a91279a5744cc721e0ae966647a363315a687bde19244b2                                                                 
 9189                revoke_sig.js                              726edc01c702cee053ec8283c3967cf776b7198cbaa9440b5510140c99e8c91f                                                                 
 7950                search.js                                  5a2fadd93b5f7f117e2014251f555e15ff16198b15535efa08b2dba71a564578                                                                 
 7292                sign.js                                    3d54180cd7e669c2c1ed2d67d9b020b52bc3f829f79c168c5ad7db96f5cc61dc                                                                 
@@ -2939,7 +2933,7 @@ size    exec  file                                             contents
 29                  test-stamp                                 ec927358ca598fb2d4e71388e0603ba5058f58f1c8834ef917e4cebd0bc7381f                                                                 
                 notes/                                                                                                                                                                          
 1236              refactor.md                                  a4b8cc684c519bc75265a99aea80d644b7fa97f1a5add57664dcbe2e3998fce0                                                                 
-2367            package.json                                   447e423695e212ea2c5234bb0a62a3f7d5479b4c4841c0abc55e6367210c3254                                                                 
+2367            package.json                                   2e076d995113116dfcc216d229012302612c9af5e13fc398e2ccbb553cbe6540                                                                 
                 sql/                                                                                                                                                                            
 603               schema.sql                                   ed47b2d6b66b002fe1abcc8f5ff80473446a52910b143c4d6532b37036c6db6b                                                                 
                 src/                                                                                                                                                                            
@@ -2990,7 +2984,7 @@ size    exec  file                                             contents
 2466                push.iced                                  c370d55117d16fab62b52ad8e35b85cf736cd0a06ad273a019c6a195725a89f3                                                                 
 5269                push_and_keygen.iced                       fb19f846f01fa7ffb9359f04770899ab5c5e1334e03f800f2685fd39c09dea10                                                                 
 1473                reset.iced                                 1b4cac3ac7e7a8dc3b1166676ed62242d546a7b0a7af59ae34148e5a94fde4bf                                                                 
-2709                revoke.iced                                8ae0930335231edda9d006d6428d6e84d1654a1c358a11b0491f2208b34d1d82                                                                 
+2678                revoke.iced                                7b6fc2bbe4531d3642157bd50c040e1cd99463309d65e5ee9a158159511d7f06                                                                 
 3241                revoke_sig.iced                            7c9ed316b960bce4a2bb30af0baa4e9ec3eb7acece388599a1f374e25a686e1c                                                                 
 3105                search.iced                                3a1a4c0ddd39685602b5be206426493884202f8eec4f2ee36f05035327eefe2a                                                                 
 2539                sign.iced                                  cbfb444921c2a416470465cc9268551edfe1648d28e1704239b6834c3c8d6f0f                                                                 
