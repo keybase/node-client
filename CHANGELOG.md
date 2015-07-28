@@ -1,3 +1,13 @@
+## 0.8.15
+
+Bugfix:
+  - Fix `keybase revoke` when the user has an unproven PGP key.
+
+## 0.8.14
+
+Bugfix:
+  - keybase/keybase-issues#1707
+
 ## 0.8.13
 
 Bugfix:
