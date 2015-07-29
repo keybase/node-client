@@ -82,7 +82,7 @@ exports.Command = class Command extends Base
     esc = make_esc cb, "Command::run"
     batch = (not @argv.message and not @argv.file?)
 
-    if not env().is_configured()
+    if @argv.sign and not env().is_configured()
       cb new Error "You can't sign messages when you aren't logged in."
       return
 
