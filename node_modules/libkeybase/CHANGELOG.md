@@ -1,4 +1,9 @@
-## 1.2.13 (2015-07-25)
+## 1.2.15 (2015-07-25)
+
+Changes:
+  - Update kbpgp, use merge_public_omitting_revokes().
+
+## 1.2.14 (2015-07-25)
 
 Bugfix:
   - Merge PGP primary keys via kbpgp @v2.0.33
