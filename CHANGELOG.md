@@ -1,3 +1,11 @@
+## 0.8.16
+
+Bugfix:
+  - Dropping revoked subkeys with merging PGP key versions:
+    https://github.com/keybase/kbpgp/issues/83
+  - Some PGP keys failing to import:
+    https://github.com/keybase/kbpgp/issues/80
+
 ## 0.8.15
 
 Bugfix:
