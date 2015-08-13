@@ -183,6 +183,35 @@
       })(this);
     };
 
+    Leaf.prototype.seqno_and_prev_assertion = function(typ) {
+      return (function(_this) {
+        return function(rows) {
+          var chain_tail;
+          chain_tail = (function() {
+            switch (typ) {
+              case C.seqno_types.PUBLIC:
+                return this.pub;
+              case C.seqno_types.SEMIPRIVATE:
+                return this.semipriv;
+              default:
+                return null;
+            }
+          }).call(_this);
+          if (rows.length === 0) {
+            if (chain_tail === null || chain_tail.length === 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (rows.length === 1 && (chain_tail != null)) {
+            return (chain_tail.seqno === rows[0].seqno) && (chain_tail.payload_hash === rows[0].payload_hash);
+          } else {
+            return false;
+          }
+        };
+      })(this);
+    };
+
     return Leaf;
 
   })();

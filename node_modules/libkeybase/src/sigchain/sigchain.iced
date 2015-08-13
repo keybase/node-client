@@ -33,7 +33,8 @@ exports.ParsedKeys = ParsedKeys = class ParsedKeys
         # an old subkey that was used to sign an old link. To handle these
         # cases, we merge all versions of a PGP key together into a single key
         # manager. (One of the many tricky corner cases with PGP :p)
-        existing.merge_public_omitting_revokes key_manager
+        # We also merge userids to help prove key ownership.
+        existing.merge_everything key_manager
       else
         kids_to_key_managers[kid_str] = key_manager
 
@@ -437,12 +438,13 @@ exports.SigChain = class SigChain
     if not eldest_km?
       # Server-reported eldest key is simply missing.
       await athrow (new E.NonexistentKidError "no key for eldest kid #{@_eldest_kid}"), esc defer()
-    if not eldest_km.userids?
+    userids = eldest_km.get_userids_mark_primary()
+    if not userids?
       # Server-reported key doesn't self-sign any identities (probably because
       # it's a NaCl key and not a PGP key).
       await athrow (new E.KeyOwnershipError "key #{@_eldest_kid} is not self-signing"), esc defer()
     expected_email = @_username + "@keybase.io"
-    for identity in eldest_km.userids
+    for identity in userids
       if identity.get_email() == expected_email
         # Found a matching identity. This key is good.
         cb null

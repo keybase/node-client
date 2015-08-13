@@ -1,3 +1,10 @@
+## 0.8.17
+
+Bugfix:
+  - Updated kbpgp and libkeybase to address:
+    - Brainpool curves: https://github.com/keybase/keybase-issues/issues/1333
+    - UserID merging: https://github.com/keybase/keybase-issues/issues/1730
+
 ## 0.8.16
 
 Bugfix:

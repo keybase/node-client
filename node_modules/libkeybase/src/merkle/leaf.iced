@@ -107,4 +107,19 @@ exports.Leaf = class Leaf
 
     return true
 
+  seqno_and_prev_assertion : (typ) -> (rows) =>
+    chain_tail = switch typ
+      when C.seqno_types.PUBLIC then @pub
+      when C.seqno_types.SEMIPRIVATE then @semipriv
+      else null
+
+    # Case 0 is a null length
+    if rows.length is 0
+      if chain_tail is null or chain_tail.length is 0 then true
+      else false
+    else if rows.length is 1 and chain_tail?
+      (chain_tail.seqno is rows[0].seqno) and (chain_tail.payload_hash is rows[0].payload_hash )
+    else
+      false
+
 #===========================================================

@@ -83,7 +83,7 @@
                 kid = key_manager.get_ekid();
                 kid_str = kid.toString("hex");
                 if ((existing = kids_to_key_managers[kid_str]) != null) {
-                  existing.merge_public_omitting_revokes(key_manager);
+                  existing.merge_everything(key_manager);
                 } else {
                   kids_to_key_managers[kid_str] = key_manager;
                 }
@@ -143,7 +143,7 @@
                 return payload_hash = arguments[2];
               };
             })(),
-            lineno: 59
+            lineno: 60
           })));
           __iced_deferrals._fulfill();
         });
@@ -158,7 +158,7 @@
             check_link_payload_format({
               payload: payload
             }, esc(__iced_deferrals.defer({
-              lineno: 61
+              lineno: 62
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -173,7 +173,7 @@
                 payload: payload,
                 parsed_keys: parsed_keys
               }, esc(__iced_deferrals.defer({
-                lineno: 64
+                lineno: 65
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -187,7 +187,7 @@
                   payload: payload,
                   parsed_keys: parsed_keys
                 }, esc(__iced_deferrals.defer({
-                  lineno: 66
+                  lineno: 67
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -222,7 +222,7 @@
                 funcname: "ChainLink._unbox_payload"
               });
               athrow(new E.NonexistentKidError("link signed by nonexistent kid " + kid), esc(__iced_deferrals.defer({
-                lineno: 78
+                lineno: 79
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -248,7 +248,7 @@
                   return unverified_buffer = arguments[1];
                 };
               })(),
-              lineno: 84
+              lineno: 85
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -267,7 +267,7 @@
                     return payload = arguments[0];
                   };
                 })(),
-                lineno: 88
+                lineno: 89
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -288,7 +288,7 @@
                           return verified_buffer = arguments[0];
                         };
                       })(),
-                      lineno: 92
+                      lineno: 93
                     })));
                     __iced_deferrals._fulfill();
                   })(__iced_k);
@@ -312,7 +312,7 @@
                             return verified_buffer = arguments[1];
                           };
                         })(),
-                        lineno: 97
+                        lineno: 98
                       }), {
                         now: ctime_seconds
                       });
@@ -327,7 +327,7 @@
                               funcname: "ChainLink._unbox_payload"
                             });
                             athrow(new E.VerifyFailedError(err.message), esc(__iced_deferrals.defer({
-                              lineno: 100
+                              lineno: 101
                             })));
                             __iced_deferrals._fulfill();
                           })(__iced_k);
@@ -347,7 +347,7 @@
                                 sig_id: sig_id,
                                 payload_buffer: verified_buffer
                               }, esc(__iced_deferrals.defer({
-                                lineno: 102
+                                lineno: 103
                               })));
                               __iced_deferrals._fulfill();
                             })(__iced_k);
@@ -368,7 +368,7 @@
                       funcname: "ChainLink._unbox_payload"
                     });
                     check_buffers_equal(verified_buffer, unverified_buffer, esc(__iced_deferrals.defer({
-                      lineno: 107
+                      lineno: 108
                     })));
                     __iced_deferrals._fulfill();
                   })(function() {
@@ -418,7 +418,7 @@
                     funcname: "ChainLink._check_reverse_signatures"
                   });
                   athrow(new E.NonexistentKidError("link reverse-signed by nonexistent kid " + kid), esc(__iced_deferrals.defer({
-                    lineno: 130
+                    lineno: 131
                   })));
                   __iced_deferrals._fulfill();
                 })(__iced_k);
@@ -442,7 +442,7 @@
                       return err = arguments[0];
                     };
                   })(),
-                  lineno: 132
+                  lineno: 133
                 }));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -455,7 +455,7 @@
                         funcname: "ChainLink._check_reverse_signatures"
                       });
                       athrow(new E.ReverseSigVerifyFailedError(err.message), esc(__iced_deferrals.defer({
-                        lineno: 134
+                        lineno: 135
                       })));
                       __iced_deferrals._fulfill();
                     })(__iced_k);
@@ -484,7 +484,7 @@
                       funcname: "ChainLink._check_reverse_signatures"
                     });
                     athrow(new E.NonexistentKidError("link delegates nonexistent subkey " + kid), esc(__iced_deferrals.defer({
-                      lineno: 139
+                      lineno: 140
                     })));
                     __iced_deferrals._fulfill();
                   })(__iced_k);
@@ -551,7 +551,7 @@
               filename: "/home/jacko/libkeybase-js/src/sigchain/sigchain.iced"
             });
             athrow(new E.BadLinkFormatError("UID wrong length: " + uid.length), esc(__iced_deferrals.defer({
-              lineno: 176
+              lineno: 177
             })));
             __iced_deferrals._fulfill();
           })(__iced_k);
@@ -595,7 +595,7 @@
                 funcname: "SigChain.replay"
               });
               athrow(new Error("eldest_kid parameter is required"), esc(__iced_deferrals.defer({
-                lineno: 225
+                lineno: 226
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -648,7 +648,7 @@
                     sig_cache: sig_cache,
                     log: log
                   }, esc(__iced_deferrals.defer({
-                    lineno: 231
+                    lineno: 232
                   })));
                   __iced_deferrals._fulfill();
                 })(_next);
@@ -663,7 +663,7 @@
                 funcname: "SigChain.replay"
               });
               sigchain._enforce_eldest_key_ownership({}, esc(__iced_deferrals.defer({
-                lineno: 234
+                lineno: 235
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -772,7 +772,7 @@
                 return link = arguments[0];
               };
             })(),
-            lineno: 292
+            lineno: 293
           })));
           __iced_deferrals._fulfill();
         });
@@ -788,7 +788,7 @@
             _this._check_link_belongs_here({
               link: link
             }, esc(__iced_deferrals.defer({
-              lineno: 297
+              lineno: 298
             })));
             __iced_deferrals._fulfill();
           })(function() {
@@ -811,7 +811,7 @@
               _this._check_key_is_valid({
                 link: link
               }, esc(__iced_deferrals.defer({
-                lineno: 316
+                lineno: 317
               })));
               __iced_deferrals._fulfill();
             })(function() {
@@ -831,7 +831,7 @@
                   link: link,
                   log: log
                 }, esc(__iced_deferrals.defer({
-                  lineno: 325
+                  lineno: 326
                 })));
                 __iced_deferrals._fulfill();
               })(function() {
@@ -845,7 +845,7 @@
                     link: link,
                     log: log
                   }, esc(__iced_deferrals.defer({
-                    lineno: 326
+                    lineno: 327
                   })));
                   __iced_deferrals._fulfill();
                 })(function() {
@@ -987,7 +987,7 @@
     };
 
     SigChain.prototype._enforce_eldest_key_ownership = function(_arg, cb) {
-      var eldest_km, esc, expected_email, identity, ___iced_passed_deferral, __iced_deferrals, __iced_k;
+      var eldest_km, esc, expected_email, identity, userids, ___iced_passed_deferral, __iced_deferrals, __iced_k;
       __iced_k = __iced_k_noop;
       ___iced_passed_deferral = iced.findDeferral(arguments);
       _arg;
@@ -1007,7 +1007,7 @@
                 funcname: "SigChain._enforce_eldest_key_ownership"
               });
               athrow(new E.NonexistentKidError("no key for eldest kid " + _this._eldest_kid), esc(__iced_deferrals.defer({
-                lineno: 438
+                lineno: 439
               })));
               __iced_deferrals._fulfill();
             })(__iced_k);
@@ -1017,8 +1017,9 @@
         });
       })(this)((function(_this) {
         return function() {
+          userids = eldest_km.get_userids_mark_primary();
           (function(__iced_k) {
-            if (eldest_km.userids == null) {
+            if (userids == null) {
               (function(__iced_k) {
                 __iced_deferrals = new iced.Deferrals(__iced_k, {
                   parent: ___iced_passed_deferral,
@@ -1026,7 +1027,7 @@
                   funcname: "SigChain._enforce_eldest_key_ownership"
                 });
                 athrow(new E.KeyOwnershipError("key " + _this._eldest_kid + " is not self-signing"), esc(__iced_deferrals.defer({
-                  lineno: 442
+                  lineno: 444
                 })));
                 __iced_deferrals._fulfill();
               })(__iced_k);
@@ -1034,11 +1035,10 @@
               return __iced_k();
             }
           })(function() {
-            var _i, _len, _ref1;
+            var _i, _len;
             expected_email = _this._username + "@keybase.io";
-            _ref1 = eldest_km.userids;
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              identity = _ref1[_i];
+            for (_i = 0, _len = userids.length; _i < _len; _i++) {
+              identity = userids[_i];
               if (identity.get_email() === expected_email) {
                 cb(null);
                 return;
@@ -1050,7 +1050,7 @@
               funcname: "SigChain._enforce_eldest_key_ownership"
             });
             athrow(new E.KeyOwnershipError("key " + _this._eldest_kid + " is not owned by " + expected_email), esc(__iced_deferrals.defer({
-              lineno: 450
+              lineno: 452
             })));
             __iced_deferrals._fulfill();
           });
