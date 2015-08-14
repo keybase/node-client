@@ -1,3 +1,8 @@
+## 0.8.18
+
+Bugfix:
+  - Update kbpgp again, for https://github.com/keybase/keybase-issues/issues/1736
+
 ## 0.8.17
 
 Bugfix:
