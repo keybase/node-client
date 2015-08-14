@@ -70,7 +70,7 @@ exports.User = User = class User
 
   #-----------------
 
-  @load_many : ( {names, res}, cb) -> 
+  @load_many : ( {names, res}, cb) ->
     err = null
     for name in names
       await User.load name, defer err, user
@@ -460,7 +460,7 @@ exports.User = User = class User
     if config().preserve
       log.warn "Not deleting key / preserving due to command-line flag"
     else
-      await @keybase { args : [ "revoke", "--force" ], quiet : true }, defer err
+      await @keybase { args : [ "remove-key", "--force" ], quiet : true }, defer err
       @_state.revoked = true unless err?
     cb err
 
