@@ -1,3 +1,8 @@
+## 1.2.18 (2015-09-11)
+
+Feature:
+  - Respect PGP key hashes in the sigchain.
+
 ## 1.2.17 (2015-08-13)
 
 Changes:

@@ -111,7 +111,7 @@ class Win32 extends Base
     if ret? then ret = (if opts.array then @split(ret) else ret)
     else if not opts.null_ok
       err = if not (e = process.env.TEMP)? then new Error "No env.TEMP variable found"
-      else if (p = @split(e)).length is 0 then new Error "Malformed env.TEMP variable"
+      else if (p = @split(e.replace(/[/\\]$/,''))).length is 0 then new Error "Malformed env.TEMP variable"
       else if not (p.pop().match /^te?mp$/i) then new Error "TEMP didn't end in \\Temp"
       else
         if lst(p).toLowerCase() is "local" and not opts.local
