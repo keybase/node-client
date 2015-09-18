@@ -1,0 +1,43 @@
+iced> createHash('sha256').update("""{"body":{"key":{"eldest_kid":"010179c28cac38659e4119ebb385e703f488915d63399a46abb2d0f44851835281540a","fingerprint":"6f2f8d5fde046f22b87491e3653cf869fabfcb90","host":"keybase.io","key_id":"653cf869fabfcb90","kid":"010179c28cac38659e4119ebb385e703f488915d63399a46abb2d0f44851835281540a","uid":"33d6ed2df7e25cb985071d4028aa0119","username":"proservices"},"type":"web_service_binding","version":1},"ctime":1442353190,"expire_in":157680000,"prev":null,"seqno":1,"tag":"signature"}""").digest().toString('hex')
+'3803be27ec0c61b3fdcd8b9b7c78de3df73766736ef00727267858d34a039c7d'
+iced> createHash('sha256').update("""{"body":{"key":{"eldest_kid":"010179c28cac38659e4119ebb385e703f488915d63399a46abb2d0f44851835281540a","fingerprint":"6f2f8d5fde046f22b87491e3653cf869fabfcb90","host":"keybase.io","key_id":"653cf869fabfcb90","kid":"010179c28cac38659e4119ebb385e703f488915d63399a46abb2d0f44851835281540a","uid":"33d6ed2df7e25cb985071d4028aa0119","username":"proservices"},"type":"web_service_binding","version":1},"ctime":1442353190,"expire_in":157680000,"prev":null,"seqno":1,"tag":"signature"}\n""").digest().toString('hex')
+'a05c5533c3a0be260c2c61d3e026c7f0ed9f050cf7fb1b3375561e9b74900f39'
+
+
+debug: |||||| libkeybase: replaying signature 1: 70c4026afec66312456b6820492b7936bff42b58ca7a035729462700677ef4190f
+debug: |||||| libkeybase: chain link parsed, type 'web_service_binding'
+debug: |||||| libkeybase: link not in the current subchain -- skipping ahead
+debug: |||||| libkeybase: replaying signature 2: e026622f98786452f8e75168941f6137de99a15034e9c9399e846e7aa2dda50b0f
+debug: |||||| libkeybase: chain link parsed, type 'web_service_binding'
+error: Previous payload hash doesn't match, expected: a05c5533c3a0be260c2c61d3e026c7f0ed9f050cf7fb1b3375561e9b74900f39 got: 3803be27ec0c61b3fdcd8b9b7c78de3df73766736ef00727267858d34a039c7d
+
+chainlink 2:
+
+sig: -----BEGIN PGP MESSAGE-----
+Comment: GPGTools - https://gpgtools.org
+
+owGtUm1QVFUYXlBLdlo+I5sBaboBMrU49/ueu1KSIuiq4fA5qbXdj3OXOwt7191l
+WUJsFkoF2ySC0YkNy+2HilgiDtGk0BQJATs1ZFMyiRm7DDpLM+UHMabdZehHTT87
+f877vud5nvO877wtumUabRTMmZcXBkZbokZneU3pwqXEOoRXxFrEUIdY4OIFK0Xo
+cJossogYEBRDMYYVcCBwAgFoioUkhrGQ5wlAQQYlJBIAFqNEmiBYliNpjudxEZVI
+ElAYICgcYBSJcogekWSrGdptdtnqVGVpCZeASEkiREk1xnnAkCwGCZoiBAnQrMTx
+ksCzqEqsUBwRhmqO5xxwrayoNTUxLdr7D/z/7Lt6UY4gRBqKuCgxEKfUjwCFMphI
+ojjgOFQVjgAd0G7lqqCKttkVNXHJAnQg9XpkKY7Mdglglp0V1fw/SZWyVRHhv6jO
+WlvkrQbypqWyiZetojpLleyCdoesWBEDpiIFpxyRwUgSJ1lAYKgegW6bbIcmOYKg
+GBqg6tGr5qAr0hFAdxM8xBkooAKN8YQkCiLgWZ4RGCBCQm2VYGiaIWgooSiDMzjN
+AAqIBMmhBCswIhJpbI9VQQy46pMzq5oO2WzlnNV2iNRrm6JTl2uitJqHVkRHtkyj
+jYn/e/XAn3EPdvSV/FioUzb4RjqGlLbK7KSCT7/f3P0EFog7OL3yxXupWecL5Qwq
+tLnMMzs1vU/ZOFl4aF3Z2nHvrzHuzivp606vcVi1j0ysfOdYm+4b0+rklqMz4dhd
+Ynt4mDx8p7xo7OGOvOItNUc7Pil4oPH87Jq/+pKui/6Su79lNDPe29AyHrj6ViAl
+etUNPTPWnBQ+iFxL7c1hjvecmVtm9s2svnG2ZcDLJPXUnynI8P0ERwbrAvnnkxpn
+LE+XGo9RX5UHko07plYUr6nwZADfc0ZH1N1+Q+6tPEdnzBcVKcH20ZnkhZxWROvh
+zxVNvtK0d3304Zr3T3wmPN5R/+aTZ9G+mLyT+bd3J8+kP9MV1Ea5T7WlPjryxpir
+sF9sC3Yn0kXh3/ELty5evpAQnJ544ePtv021617dHgd0tc01qKv45eP7t1nLLFkJ
+PemDmUO5+XhT59ZNk36N7pfpPX1bXy9Z1XDtw+utT9kqEgp/+DbhA7//tffKk7zZ
+eu2pynFX7D0LtnPDZCj2ROmB9nhPf3bznNt/7qPBm/Oh1lCzJYu+3Dt0Z9vy3MDF
+onBVic9z4Miz14fGMr3+jcpNdl/awOnkql13Z/ku49zemkPv3sbThpt8abbg54m6
+3qyyyamvgfv5t0PzfyT2+lOOfDdx/7HpS1dwZTgYM9+o6W7sXG8KNMafbNi531j9
+Fw==
+=8kUm
+-----END PGP MESSAGE-----
+   payload_json: {"body":{"key":{"eldest_kid":"010179c28cac38659e4119ebb385e703f488915d63399a46abb2d0f44851835281540a","fingerprint":"6f2f8d5fde046f22b87491e3653cf869fabfcb90","host":"keybase.io","key_id":"653cf869fabfcb90","kid":"010179c28cac38659e4119ebb385e703f488915d63399a46abb2d0f44851835281540a","uid":"33d6ed2df7e25cb985071d4028aa0119","username":"proservices"},"service":{"name":"github","username":"linodeproservices"},"type":"web_service_binding","version":1},"ctime":1442498310,"expire_in":157680000,"prev":"3803be27ec0c61b3fdcd8b9b7c78de3df73766736ef00727267858d34a039c7d","seqno":2,"tag":"signature"}

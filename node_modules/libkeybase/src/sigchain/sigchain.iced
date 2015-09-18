@@ -3,9 +3,78 @@
 kbpgp = require('kbpgp')
 proofs = require('keybase-proofs')
 ie = require('iced-error')
+{trim} = require('pgp-utils').util
 
 UID_LEN = 32
 exports.SIG_ID_SUFFIX = SIG_ID_SUFFIX = "0f"
+
+
+
+# On 15 Sep 2015, a day that will live in infamy, some users made bad
+# sigchain additions due to a code error that was stripping out
+# whitespace from json payloads, writing those payloads to the DB, and then
+# offering those payloads back out for subsequent signatures. We address that
+# issue here by subtracting that dropped newline out right before we hash.
+# We should potentially have a whitelist here for sigids that are affected:
+bad_whitespace_sig_ids = {
+  "595a73fc649c2c8ccc1aa79384e0b3e7ab3049d8df838f75ef0edbcb5bbc42990f" : true
+  "e256078702afd7a15a24681259935b48342a49840ab6a90291b300961669790f0f" : true
+  "30831001edee5e01c3b5f5850043f9ef7749a1ed8624dc703ae0922e1d0f16dd0f" : true
+  "88e6c581dbccbf390559bcb30ca21548ba0ec4861ec2d666217bd4ed4a4a8c3f0f" : true
+  "4db0fe3973b3a666c7830fcb39d93282f8bc414eca1d535033a5cc625eabda0c0f" : true
+  "9ba23a9a1796fb22b3c938f1edf5aba4ca5be7959d9151895eb6aa7a8d8ade420f" : true
+  "df0005f6c61bd6efd2867b320013800781f7f047e83fd44d484c2cb2616f019f0f" : true
+  "a32692af33e559e00a40aa3bb4004744d2c1083112468ed1c8040eaacd15c6eb0f" : true
+  "3e61901f50508aba72f12740fda2be488571afc51d718d845e339e5d1d1b531d0f" : true
+  "de43758b653b3383aca640a96c7890458eadd35242e8f8531f29b606890a14ea0f" : true
+  "b9ee3b46c97d48742a73e35494d3a373602460609e3c6c54a553fc4d83b659e40f" : true
+  "0ff29c1d036c3f4841f3f485e28d77351abb3eeeb52d2f8d802fd15e383d9a5f0f" : true
+  "eb1a13c6b6e42bb7470e222b51d36144a25ffc4fbc0b32e9a1ec11f059001bc80f" : true
+  "9c189d6d644bad9596f78519d870a685624f813afc1d0e49155073d3b0521f970f" : true
+  "aea7c8f7726871714e777ac730e77e1905a38e9587f9504b739ff9b77ef2d5cc0f" : true
+  "ac6e225b8324c1fcbe814382e198495bea801dfeb56cb22b9e89066cc52ab03b0f" : true
+  "3034e8b7d75861fc28a478b4992a8592b5478d4cbc7b87150d0b59573d731d870f" : true
+  "140f1b7b7ba32f34ad6302d0ed78692cf1564760d78c082965dc3b8b5f7e27f10f" : true
+  "833f27edcf54cc489795df1dc7d9f0cbea8253e1b84f5e82749a7a2a4ffc295c0f" : true
+  "110a64513b4188eca2af6406a8a6dbf278dfce324b8879b5cb67e8626ff2af180f" : true
+  "3042dbe45383b0c2eafe13a73da35c4e721be026d7908dfcef6eb121d95b75b10f" : true
+  "50ba350ddc388f7c6fdba032a7d283e4caa0ca656f92f69257213222dd7deeaf0f" : true
+  "803854b4074d668e1761ee9c533c0fc576bd0404cf26ff7545e14512f3b9002f0f" : true
+  "2e08f0b9566e15fa1f9e67b236e5385cdb38d57ff51d7ab3e568532867c9f8890f" : true
+  "cb97f4b62f2e817e8db8c6193440214ad20f906571e4851db186869f0b4c0e310f" : true
+  "a5c4a30d1eaaf752df424bf813c5a907a5cf94fd371e280d39e0a3d078310fba0f" : true
+  "c7d26afbc1957ecca890d8d9001a9cc4863490161720ad76a2aedeb8c2d50df70f" : true
+  "b385c0c76d790aba156ff68fd571171fc7cb85f75e7fc9d1561d7960d8875acb0f" : true
+  "47d349b8bb3c8457449390ca2ed5e489a70ad511ab3edb4c7f0af27eed8c65d30f" : true
+  "2785b24acd6869e1e7d38a91793af549f3c35cd0729127d200b66f8c0ffba59b0f" : true
+  "503df567f98cf5910ba44cb95e157e656afe95d159a15c7df4e88ac6016c948f0f" : true
+  "2892863758cdaf9796fb36e2466093762efda94e74eb51e3ab9d6bec54064b8a0f" : true
+  "e1d60584995e677254f7d913b3f40060b5500241d6de0c5822ba1282acc5e08b0f" : true
+  "031b506b705926ea962e59046bfe1720dcf72c85310502020e2ae836b294fcde0f" : true
+  "1454fec21489f17a6d78927af1c9dca4209360c6ef6bfa569d8b62d32e668ea30f" : true
+  "ba68052597a3782f64079d7d9ec821ea9785c0868e44b597a04c9cd8bf634c1e0f" : true
+  "db8d59151b2f78c82c095c9545f1e4d39947a0c0bcc01b907e0ace14517d39970f" : true
+  "e088beccfee26c5df39239023d1e4e0cbcd63fd50d0bdc4bf2c2ba25ef1a8fe40f" : true
+  "8182f385c347fe57d3c46fe40e8df0e2d6cabdac38f490417b313050249be9dc0f" : true
+  "2415e1c77b0815661452ea683e366c6d9dfd2008a7dbc907004c3a33e56cf6190f" : true
+  "44847743878bd56f5cd74980475e8f4e95d0d6ec1dd8722fd7cfc7761698ec780f" : true
+  "70c4026afec66312456b6820492b7936bff42b58ca7a035729462700677ef4190f" : true
+  "7591a920a5050de28faad24b5fe3336f658b964e0e64464b70878bfcf04537420f" : true
+  "10a45e10ff2585b03b9b5bc449cb1a7a44fbb7fcf25565286cb2d969ad9b89ae0f" : true
+  "062e6799f211177023bc310fd6e4e28a8e2e18f972d9b037d24434a203aca7240f" : true
+  "db9a0afaab297048be0d44ffd6d89a3eb6a003256426d7fd87a60ab59880f8160f" : true
+  "58bf751ddd23065a820449701f8a1a0a46019e1c54612ea0867086dbd405589a0f" : true
+}
+
+bad_hash_trimmed_body = {
+  "062e6799f211177023bc310fd6e4e28a8e2e18f972d9b037d24434a203aca7240f" : true
+  "10a45e10ff2585b03b9b5bc449cb1a7a44fbb7fcf25565286cb2d969ad9b89ae0f" : true
+  "44847743878bd56f5cd74980475e8f4e95d0d6ec1dd8722fd7cfc7761698ec780f" : true
+  "58bf751ddd23065a820449701f8a1a0a46019e1c54612ea0867086dbd405589a0f" : true
+  "70c4026afec66312456b6820492b7936bff42b58ca7a035729462700677ef4190f" : true
+  "7591a920a5050de28faad24b5fe3336f658b964e0e64464b70878bfcf04537420f" : true
+  "db9a0afaab297048be0d44ffd6d89a3eb6a003256426d7fd87a60ab59880f8160f" : true
+}
 
 # For testing that caches are working properly. (Use a wrapper object instead
 # of a simple counter because main.iced copies things.)
@@ -130,7 +199,6 @@ class ChainLink
     await sig_eng.get_body_and_unverified_payload(
       {armored: sig_blob.sig}, esc defer sig_body, unverified_buffer)
     sig_id = kbpgp.hash.SHA256(sig_body).toString("hex") + SIG_ID_SUFFIX
-    payload_hash = kbpgp.hash.SHA256(unverified_buffer).toString("hex")
     payload_json = unverified_buffer.toString('utf8')
     await a_json_parse payload_json, esc defer payload
     ctime_seconds = payload.ctime
@@ -153,6 +221,15 @@ class ChainLink
     # particularly in PGP.
     await check_buffers_equal verified_buffer, unverified_buffer, esc defer()
     # Success!
+
+    # See comment above about bad whitespace sigs from 15 Sep 2015
+    hash_input = verified_buffer
+    if bad_whitespace_sig_ids[sig_id] and ((sig_blob.payload_json + "\n") is verified_buffer.toString())
+      hash_input = new Buffer sig_blob.payload_json, 'utf8'
+    else if bad_hash_trimmed_body[sig_id]
+      hash_input = new Buffer (trim sig_blob.payload_json), 'utf8'
+    payload_hash = kbpgp.hash.SHA256(hash_input).toString("hex")
+
     cb null, payload, sig_id, payload_hash
 
   @_check_payload_against_server_kid : ({sig_blob, payload, key_state}, cb) ->

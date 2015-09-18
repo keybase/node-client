@@ -1,3 +1,8 @@
+## 1.2.19 (2015-09-18)
+
+Bugfix:
+  - Workaround keybase/keybase-issues#1765 signature corruption
+
 ## 1.2.18 (2015-09-11)
 
 Feature:

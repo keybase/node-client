@@ -9,7 +9,7 @@ make_defer_return = (obj, defer_args, id, trace_template, multi) ->
   for k,v of trace_template
     trace[k] = v
   trace[C.lineno] = defer_args?[C.lineno]
-  
+
   ret = (inner_args...) ->
     defer_args?.assign_fn?.apply(null, inner_args)
     if obj
@@ -27,7 +27,7 @@ make_defer_return = (obj, defer_args, id, trace_template, multi) ->
 
 #### Tick Counter
 #  count off every mod processor ticks
-# 
+#
 __c = 0
 
 tick_counter = (mod) ->
@@ -54,19 +54,19 @@ warn = (m) ->
 #===============================================================
 
 ####
-# 
+#
 # trampoline --- make a call to the next continuation...
 #   we can either do this directly, or every 500 ticks, from the
 #   main loop (so we don't overwhelm ourselves for stack space)..
-# 
+#
 exports.trampoline = trampoline = (fn) ->
   if not tick_counter 500
     fn()
-  else if process?
+  else if process?.nextTick?
     process.nextTick fn
   else
     setTimeout fn
-    
+
 #===============================================================
 
 #### Deferrals
@@ -104,14 +104,14 @@ exports.Deferrals = class Deferrals
       trampoline ( () => @_call trace )
 
   #----------
-    
+
   defer : (args) ->
     @count++
     self = this
     return make_defer_return self, args, null, @trace
 
 #===============================================================
-    
+
 #### findDeferral
 #
 # Search an argument vector for a deferral-generated callback
@@ -122,7 +122,7 @@ exports.findDeferral = findDeferral = (args) ->
   null
 
 #===============================================================
-    
+
 #### Rendezvous
 #
 # More flexible runtime behavior, can wait for the first deferral
@@ -142,9 +142,9 @@ exports.Rendezvous = class Rendezvous
       @rv._defer_with_id @id, defer_args, @multi
 
   # Public interface
-  # 
+  #
   # The public interface has 3 methods --- wait, defer and id
-  # 
+  #
   wait: (cb) ->
     if @completed.length
       x = @completed.shift()
@@ -196,7 +196,7 @@ exports.stackWalk = stackWalk = (cb) ->
 #### exceptionHandler
 #
 # An exception handler that triggers the above iced stack walk
-# 
+#
 
 exports.exceptionHandler = exceptionHandler = (err, logger) ->
   logger = console.error unless logger
@@ -209,15 +209,15 @@ exports.exceptionHandler = exceptionHandler = (err, logger) ->
 #==========================================================================
 
 #### catchExceptions
-# 
+#
 # Catch all uncaught exceptions with the iced exception handler.
 # As mentioned here:
 #
-#    http://debuggable.com/posts/node-js-dealing-with-uncaught-exceptions:4c933d54-1428-443c-928d-4e1ecbdd56cb 
-# 
+#    http://debuggable.com/posts/node-js-dealing-with-uncaught-exceptions:4c933d54-1428-443c-928d-4e1ecbdd56cb
+#
 # It's good idea to kill the service at this point, since state
 # is probably horked. See his examples for more explanations.
-# 
+#
 exports.catchExceptions = (logger) ->
   process?.on 'uncaughtException', (err) ->
     exceptionHandler err, logger

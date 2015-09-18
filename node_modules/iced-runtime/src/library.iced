@@ -9,13 +9,13 @@ exports.iced = iced = require('./runtime')
 #
 #   This class contains non-essential but convenient runtime libraries
 #   for iced programs
-# 
+#
 
 #===============================================================
 
 # The `timeout` connector, which allows us to compose timeouts with
 # existing event-based calls
-#  
+#
 _timeout = (cb, t, res, tmp) ->
   rv = new iced.Rendezvous
   tmp[0] = rv.id(true).defer(arr...)
@@ -24,7 +24,7 @@ _timeout = (cb, t, res, tmp) ->
   res[0] = which if res
   cb.apply(null, arr)
 
-exports.timeout = (cb, t, res) ->    
+exports.timeout = (cb, t, res) ->
   tmp = []
   _timeout cb, t, res, tmp
   tmp[0]
@@ -42,7 +42,7 @@ _iand = (cb, res, tmp) ->
   cb()
 
 # this function takes as input two values: a callback, and a place
-# to store a result. It returns a new callback. 
+# to store a result. It returns a new callback.
 exports.iand = (cb, res) ->
   tmp = []
   _iand cb, res, tmp
@@ -68,10 +68,10 @@ exports.ior = (cb, res) ->
 #===============================================================
 
 ####
-# 
+#
 # Pipeliner -- a class for firing a follow of network calls in a pipelined
 #   fashion, so that only so many of them are outstanding at once.
-# 
+#
 exports.Pipeliner = class Pipeliner
 
   #-------------------------------
@@ -82,20 +82,20 @@ exports.Pipeliner = class Pipeliner
     @queue = []
     @n_out = 0
     @cb = null
-    
+
     # This is a hack to work with the desugaring of
     # 'defer' output by the coffee compiler. Same as in rendezvous
     @[C.deferrals] = this
-    
+
     # Rebind "defer" to "_defer"; We can't do this directly since the
     # compiler would pick it up
     @["defer"] = @_defer
-    
+
   #-------------------------------
 
   # Call this to wait in a queue until there is room in the window
   waitInQueue : (cb) ->
-  
+
     # Wait until there is room in the window.
     while @n_out >= @window
       await (@cb = defer())
@@ -103,11 +103,11 @@ exports.Pipeliner = class Pipeliner
     # Lanuch a computation, so mark that there's one more
     # guy outstanding.
     @n_out++
-      
+
     # Delay if that was asked for...
     if @delay
       await setTimeout defer(), @delay
-      
+
     cb()
 
   #-------------------------------
@@ -137,7 +137,7 @@ exports.Pipeliner = class Pipeliner
 
   #-------------------------------
 
-  # This function, Pipeliner._defer, has to return a 
+  # This function, Pipeliner._defer, has to return a
   # callback to its caller.  It does this with the same trick above.
   # The helper function _defer() does the heavy lifting, returning
   # its callback to us as the first slot in tmp[0].

@@ -34,7 +34,7 @@
     "iced-error": "0.0.9",
     "iced-lock": "^1.0.1",
     "iced-logger": "0.0.5",
-    "iced-runtime": ">=0.0.1",
+    "iced-runtime": ">=1.0.3",
     "iced-spawn": ">=1.0.0",
     "iced-utils": "0.1.22",
     "kbpgp": ">=2.0.46",
