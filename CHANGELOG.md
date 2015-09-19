@@ -1,16 +1,30 @@
-## 0.8.18
+## 0.8.20
+
+Bugfix:
+  - Fix bug with 0.8.19 in the case of a user who hasn't self-signed a PGP key
+    uploaded via the web site.
+
+## 0.8.19 (2015-09-18)
+
+Bugfix:
+  - Workaround for: https://github.com/keybase/keybase-issues/issues/1765
+
+Enhancements:
+  - Support for full PGP uploading
+
+## 0.8.18 (2015-08-14)
 
 Bugfix:
   - Update kbpgp again, for https://github.com/keybase/keybase-issues/issues/1736
 
-## 0.8.17
+## 0.8.17 (2015-08-13)
 
 Bugfix:
   - Updated kbpgp and libkeybase to address:
     - Brainpool curves: https://github.com/keybase/keybase-issues/issues/1333
     - UserID merging: https://github.com/keybase/keybase-issues/issues/1730
 
-## 0.8.16
+## 0.8.16 (2015-07-30)
 
 Bugfix:
   - Dropping revoked subkeys with merging PGP key versions:
@@ -18,40 +32,40 @@ Bugfix:
   - Some PGP keys failing to import:
     https://github.com/keybase/kbpgp/issues/80
 
-## 0.8.15
+## 0.8.15 (2015-07-28)
 
 Bugfix:
   - Fix `keybase revoke` when the user has an unproven PGP key.
 
-## 0.8.14
+## 0.8.14 (2015-07-25)
 
 Bugfix:
   - keybase/keybase-issues#1707
 
-## 0.8.13
+## 0.8.13 (2015-07-24)
 
 Bugfix:
   - Pull in another fix from kbpgp, reverting previous.
 
-## 0.8.12
+## 0.8.12 (2015-07-21)
 
 Bugfix:
   - Pull in a fix from kbpgp for calculating key creation times.
     (keybase/keybase-issues#1686)
 
-## 0.8.11
+## 0.8.11 (2015-07-20)
 
 Bugfix:
   - Several bugs related to accounts with no signatures, or which have
     been recently reset (a la `keybase revoke`).
 
-## 0.8.10
+## 0.8.10 (2015-07-16)
 
 Bugfix:
   - Fix `keybase status` when the user has no key.
   - Fix id commands like `keybase id twitter://malgorithms`.
 
-## 0.8.9
+## 0.8.9 (2015-07-08)
 
 Bugfix:
   - Cleaner fix for the preceding bug:
