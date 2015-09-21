@@ -581,7 +581,7 @@ exports.User = class User
     if err?
       if self and (err instanceof libkeybase.E.KeyOwnershipError)
         log.warn "You have not proven ownership of your key. Run `keybase push --update`."
-        @sibkeys = [parsed_keys.get_key_manager @merkle_data.eldest_kid]
+        @sibkeys = [parsed_keys.get_merged_pgp_key_manager @merkle_data.eldest_kid]
       else
         cb err
         return
