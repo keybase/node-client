@@ -3,6 +3,8 @@
 Bugfix:
   - Fix bug with 0.8.19 in the case of a user who hasn't self-signed a PGP key
     uploaded via the web site.
+  - Special cases users who signed incorrect prev hashes due to a temporary
+    server bug that stripped whitespace from payloads.
 
 ## 0.8.19 (2015-09-18)
 

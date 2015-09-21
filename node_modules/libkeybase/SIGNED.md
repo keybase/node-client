@@ -1,15 +1,15 @@
-##### Signed by https://keybase.io/max
+##### Signed by https://keybase.io/oconnor663
 ```
 -----BEGIN PGP SIGNATURE-----
-Comment: GPGTools - https://gpgtools.org
+Version: GnuPG v2
 
-iQEcBAABCgAGBQJV/CmbAAoJEJgKPw0B/gTfa+oIAI9sBzFJsaugCjHLPLpvwarB
-cPB303C28lTWu+Qrkr1d2a29DfcVYzZnACdT9cT9HTeBmqGURtnf4hnULsxmPr3K
-I4v8MOU+AXqkelIBOgOknccm/qxXgr8x1zZQy9OyNWRLxkYIiPn34Na2pH3EYDSq
-04e2gPtkHV8E4xlDS9hJU3v9uTjMZIPUZakKc6SkSczDnAc7yXpPmDfqWBNkIOtX
-YvcZhL16JNDkcGwFbWy67akiLoL7uP7ygfsjDfmcb71VNGQgQBg+lU353D/ZjOQ+
-p3t2Bb+GIf+lHHWpoibzam1ADJJ/Gxgz5qTozWNND4IDLSx3bgEuOIhIyWwzPmw=
-=NcBf
+iQEcBAABAgAGBQJWAG/4AAoJEHGHa2itSC0yUjAH/jAkfNuiA1joi5oOwtaMtQ0U
+LqN7iI997QBMahaA1FRY7hK1mnKvW6XkslGooiNcL/thIHeHitXo0NdQW1gXtfVF
+haDYXl9iq8SPL+MA9DF970Mg0hIj44FB5QpnVEeR3ldy90IIuqowOEq3xXQZOz1k
+nL0cFP2kdMB8WqAtshydROIwDAXKuRlmcXfQub2amGmaOlz8zXCnY2/Pz6id7U48
+5l40pooN+aaOp6VO/M+7iVGvOMtknASlfUR0wXYjNIY0z6QYxXno1xsIlowWgwFa
+oRpENp3riwSINQHtOBadh0d5O7AKxSnhXRxVBNvpxLpsds2137G7LrMzvpa6tis=
+=Xiqo
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,7 +24,7 @@ p3t2Bb+GIf+lHHWpoibzam1ADJJ/Gxgz5qTozWNND4IDLSx3bgEuOIhIyWwzPmw=
 size    exec  file                            contents                                                        
               ./                                                                                              
 67              .gitignore                    5e89d4014d03a0f7f21f1429ab57b662f835214ac9bc4512285fed2982011191
-2854            CHANGELOG.md                  f6d79dcfb261a83e8d34e1ff2487c404f02a527b433e642ebe43538dfc3ff627
+3053            CHANGELOG.md                  8fc299a7c43d45037fa26ca42ceb56dde53693955b92a4c021ae10b711bc711e
 1484            LICENSE                       20a8a5de57bfaf6870517c52265d4469770a23cbc1af85eb9973ce639b0abff2
 1353            Makefile                      d7f684e836240e402e48f131cf4a8fe5efb722156cb8587f5e25288cfb812f2d
 109             README.md                     f2dd5d8192cff83f9c44a3e56779977bfe82725df259970a5c2d5396e6f87e13
@@ -48,10 +48,10 @@ size    exec  file                            contents
 6356                leaf.js                   b22f0873a9f0e9adb00be96549f25a637af02dff88b34e8392d9d46f4835c0c3
 16991               pathcheck.js              781c7078bfa40c5196036c8a886e7ff217f6bb7111ff2c30df61e2184400af2b
                   sigchain/                                                                                   
-56460               sigchain.js               0a1ad1b6d96671a8e7585a25461629eb21574ad26a4e42a3d418b25f08b45621
+56345               sigchain.js               4ab6b2ae3540a009b5bd9649b0ef1b2438c8161118f70e93aeaa456afc1aee6b
                 notes/                                                                                        
 2129              tweetnacl.md                099fac68f7caebd05b6060781e7fcfb32726309bb4bd67aa35b10134a280e049
-1109            package.json                  fda6c92f17314fa9d4f3b7ad7e883b6bf2a96aff714595d3d71b3be27a997cda
+1138            package.json                  1cfb56dc2cb017f69904894cc08255380c49b9349d71131a208e3a5af9b48139
                 src/                                                                                          
 4407              assertion.iced              fac9d95f8915318ec94dcd9f57f0f6a1b65b210429e6a5f6ac2ad8d33b97cd10
 634               assertion_parser.jison      65624a141081113074e6c778af7df8fad6769d3c5b2fb96e8edcd31444f8706f
@@ -63,7 +63,7 @@ size    exec  file                            contents
 3857                leaf.iced                 5de4556aff8642d7bdfc39cb0edff1acbeb693ce040faa272fb4cf8fe3b6092d
 4470                pathcheck.iced            23650aa2a4db7497e55b23c3f0ff0cdefeb60ff8f0363a6f4a1348405e9f5cc8
                   sigchain/                                                                                   
-29428               sigchain.iced             fc5fd11ca8cd8463e86ea01a12874881a774491bb62da569e942ca6cf12569c2
+29347               sigchain.iced             5b28e246739e581a418fb603874c7f705db5092a6c4b75eef232d8f689dc960f
                 test/                                                                                         
                   browser/                                                                                    
 287                 index.html                e31387cfd94034901e89af59f0ad29a3e2f494eb7269f1806e757be21b3cf33e
