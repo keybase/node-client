@@ -482,6 +482,23 @@ exports.GithubProofGen = class GithubProofGen extends SocialNetworkProofGen
 
 #===========================================
 
+exports.BitbucketProofGen = class BitbucketProofGen extends SocialNetworkProofGen
+  _binding_klass : () -> proofs.BitbucketBinding
+  _remote_service_name : () -> "bitbucket"
+  imperative_verb : () -> "post a snippet with"
+  display_name : () -> "Bitbucket"
+  instructions : () ->
+    "Please #{colors.bold 'publicly'} post the following snippet, and name the file #{colors.bold colors.red 'keybase.md'}:"
+
+  make_retry_msg : (status) ->
+    switch status
+      when proofs.constants.v_codes.PERMISSION_DENIED
+        "Permission denied! Make sure your snippet is public"
+      else
+        super()
+
+#===========================================
+
 exports.HackerNewsProofGen = class HackerNewsProofGen extends SocialNetworkProofGen
   _binding_klass : () -> proofs.HackerNewsBinding
   _remote_service_name : () -> "hackernews"

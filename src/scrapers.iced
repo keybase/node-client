@@ -55,7 +55,7 @@ class Base
   #-------------------
 
   validate : (arg, cb) ->
-    if tor.enabled() 
+    if tor.enabled()
       [err, rc] = @_scraper.get_tor_error(arg)
     unless err?
       await @_scraper.validate arg, defer err, rc
@@ -91,6 +91,16 @@ exports.Github = class Github extends SocialNetwork
   constructor : () ->
   get_scraper_klass : () -> proofs.GithubScraper
   which : () -> "github"
+
+#==============================================================
+
+exports.Bitbucket = class Bitbucket extends SocialNetwork
+  constructor : () ->
+  get_scraper_klass : () ->
+    ret = proofs.BitbucketScraper
+    console.log ret
+    ret
+  which : () -> "bitbucket"
 
 #==============================================================
 
@@ -177,6 +187,7 @@ exports.alloc_stub = alloc_stub = (type) ->
     when PT.dns              then Dns
     when PT.reddit           then Reddit
     when PT.hackernews       then HackerNews
+    when PT.bitbucket        then Bitbucket
     else null
   if klass then new klass {}
   else null

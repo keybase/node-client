@@ -15,7 +15,7 @@ req = require '../req'
 
 ##=======================================================================
 
-SERVICES = [ "github", "twitter", "reddit", "hackernews"  ]
+SERVICES = [ "github", "twitter", "reddit", "hackernews", "bitbucket"  ]
 
 ##=======================================================================
 
@@ -23,7 +23,7 @@ exports.Command = class Command extends Base
 
   #----------
 
-  OPTS : 
+  OPTS :
     v :
       alias : 'verbose'
       action : 'storeTrue'
@@ -41,7 +41,7 @@ exports.Command = class Command extends Base
   #----------
 
   add_subcommand_parser : (scp) ->
-    opts = 
+    opts =
       help : "search all users"
       aliases : [ ]
     name = "search"
@@ -65,7 +65,7 @@ exports.Command = class Command extends Base
   reformat_results : (list) ->
     ret = []
     for entry in list when (c = entry.components)?
-      obj = 
+      obj =
         username : c.username.val
         key : c.key_fingerprint?.val.replace(/\s+/g, "")
       for svc in SERVICES

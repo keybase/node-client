@@ -30,7 +30,7 @@ exports.ProofBase = class Command extends Base
   #----------
 
   @OPTS :
-    f : 
+    f :
       alias : 'force'
       action : 'storeTrue'
       help : "don't stop for any prompts"
@@ -41,7 +41,7 @@ exports.ProofBase = class Command extends Base
     {name,config,OPTS} = @command_name_and_opts()
     sub = scp.addParser name, config
     add_option_dict sub, OPTS
-    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service; can be one of: {twitter,github,web,dns,reddit,coinbase,hackernews}" }
+    sub.addArgument [ "service" ], { nargs : 1, help: "the name of service; can be one of: {twitter,github,web,dns,reddit,coinbase,hackernews,bitbucket}" }
     sub.addArgument [ "remote_name"], { nargs : "?", help : "username or hostname at that service" }
     return config.aliases.concat [ name ]
 
@@ -58,7 +58,7 @@ exports.ProofBase = class Command extends Base
 
   #----------
 
-  normalize_remote_name : (cb) -> 
+  normalize_remote_name : (cb) ->
     await @stub.normalize_name @remote_name, defer err, @remote_name_normalized
     cb err
 
