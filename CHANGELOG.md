@@ -1,4 +1,9 @@
-## 0.8.20
+## 0.8.21 (2015-10-02)
+
+bugfix:
+  - Import another PGP expiration time fix from kbpgp (keybase/kbpgp#101)
+
+## 0.8.20 (2015-09-21)
 
 Bugfix:
   - Fix bug with 0.8.19 in the case of a user who hasn't self-signed a PGP key
