@@ -1,4 +1,9 @@
-## 1.2.20
+## 1.2.21 (2015-10-05)
+
+Bugfix:
+  - Ignore broken reverse-sigs (https://github.com/keybase/libkeybase-js/issues/5)
+
+## 1.2.20 (2015-09-21)
 
 Bugfix:
   - missing dependency in package.json

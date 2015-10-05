@@ -1,3 +1,8 @@
+## 0.8.22 (2015-10-05)
+
+bugfix:
+  - Import broken reverse-sig fix from libkeybase (libkeybase-js/issues#5)
+
 ## 0.8.21 (2015-10-02)
 
 bugfix:

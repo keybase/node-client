@@ -76,6 +76,16 @@ bad_whitespace_sig_ids = {
   "db9a0afaab297048be0d44ffd6d89a3eb6a003256426d7fd87a60ab59880f8160f" : true
 }
 
+# We had an incident where a Go client using an old reverse-sig format got some
+# links into a public chain. (Sorry Fred!) Skip reverse signature checking for
+# this fixed set of links.
+known_buggy_reverse_sigs = {
+  "2a0da9730f049133ce728ba30de8c91b6658b7a375e82c4b3528d7ddb1a21f7a0f": true,
+  "eb5c7e7d3cf8370bed8ab55c0d8833ce9d74fd2c614cf2cd2d4c30feca4518fa0f": true,
+  "0f175ef0d3b57a9991db5deb30f2432a85bc05922bbe727016f3fb660863a1890f": true,
+  "48267f0e3484b2f97859829503e20c2f598529b42c1d840a8fc1eceda71458400f": true
+};
+
 # For testing that caches are working properly. (Use a wrapper object instead
 # of a simple counter because main.iced copies things.)
 exports.debug =
@@ -179,8 +189,10 @@ class ChainLink
     # Make sure the KID from the server matches the payload, and that any
     # payload PGP fingerprint also matches the KID.
     await @_check_payload_against_server_kid {sig_blob, payload, key_state}, esc defer()
-    # Check any reverse signatures.
-    await @_check_reverse_signatures {payload, key_state}, esc defer()
+    # Check any reverse signatures. For links where we skip this step, we will
+    # ignore their contents later.
+    if not known_buggy_reverse_sigs[sig_id]
+      await @_check_reverse_signatures {payload, key_state}, esc defer()
     # The constructor takes care of all the payload parsing that isn't failable.
     cb null, new ChainLink {kid: sig_blob.kid, sig_id, payload, payload_hash}
 
@@ -447,6 +459,15 @@ exports.SigChain = class SigChain
         # feature in the future.
         cb new E.NotLatestSubchainError("Found a later subchain with eldest kid #{link.eldest_kid}")
         return
+
+    # Links with bad reverse sigs still have to have valid payload hashes and
+    # seqnos, but their contents are ignored, and their signing keys might not
+    # be valid sibkeys (because the delegating links of those sibkeys might
+    # also have been bad). Short-circuit here, after checking the link position
+    # but before checking the validity of the signing key.
+    if known_buggy_reverse_sigs[link.sig_id]
+      cb null
+      return
 
     # Finally, make sure that the key that signed this link was actually valid
     # at the time the link was signed.

@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAABAgAGBQJWAG/4AAoJEHGHa2itSC0yUjAH/jAkfNuiA1joi5oOwtaMtQ0U
-LqN7iI997QBMahaA1FRY7hK1mnKvW6XkslGooiNcL/thIHeHitXo0NdQW1gXtfVF
-haDYXl9iq8SPL+MA9DF970Mg0hIj44FB5QpnVEeR3ldy90IIuqowOEq3xXQZOz1k
-nL0cFP2kdMB8WqAtshydROIwDAXKuRlmcXfQub2amGmaOlz8zXCnY2/Pz6id7U48
-5l40pooN+aaOp6VO/M+7iVGvOMtknASlfUR0wXYjNIY0z6QYxXno1xsIlowWgwFa
-oRpENp3riwSINQHtOBadh0d5O7AKxSnhXRxVBNvpxLpsds2137G7LrMzvpa6tis=
-=Xiqo
+iQEbBAABAgAGBQJWEqNGAAoJEHGHa2itSC0ylgEH9RBT6xh08BZz3sK55ETpALvN
+Sr5qReHHiGHFdgJop2gtbWVgYNdb+Z/ozPN+uwhL/Kaz5D+V/jr0rEK/cCDzNicS
+E0ITof1VVlfqnEjJj09R+vOMSEhzoyIV+t7RnaZn2qNyTo7TS2sxZc5zFoYFH4pq
+G+yujl0mH1ZwXdpsWrCpB1ARg8IbnMOH1topr24MVBEa+mbUorVN1NiaSHzNHvgy
+gA2HfPeS4v9XoF2FV3nqL9WsnozMCvzmEO6ZIe49zUZY+DybTMsXfJUTWy5F4dY4
+GlQkRqTWKa/UtbTdXdOZix/4OJ0dzkF9Js8uSYx76TETd+fSMOEOMk985sCMUA==
+=IEzk
 -----END PGP SIGNATURE-----
 
 ```
@@ -24,7 +24,7 @@ oRpENp3riwSINQHtOBadh0d5O7AKxSnhXRxVBNvpxLpsds2137G7LrMzvpa6tis=
 size    exec  file                            contents                                                        
               ./                                                                                              
 67              .gitignore                    5e89d4014d03a0f7f21f1429ab57b662f835214ac9bc4512285fed2982011191
-3053            CHANGELOG.md                  8fc299a7c43d45037fa26ca42ceb56dde53693955b92a4c021ae10b711bc711e
+3182            CHANGELOG.md                  3e4f315fb907781d2fa7cf54cf72ebf7a0078b8d5256dc55a606fc840a91c7c5
 1484            LICENSE                       20a8a5de57bfaf6870517c52265d4469770a23cbc1af85eb9973ce639b0abff2
 1353            Makefile                      d7f684e836240e402e48f131cf4a8fe5efb722156cb8587f5e25288cfb812f2d
 109             README.md                     f2dd5d8192cff83f9c44a3e56779977bfe82725df259970a5c2d5396e6f87e13
@@ -48,10 +48,10 @@ size    exec  file                            contents
 6356                leaf.js                   b22f0873a9f0e9adb00be96549f25a637af02dff88b34e8392d9d46f4835c0c3
 16991               pathcheck.js              781c7078bfa40c5196036c8a886e7ff217f6bb7111ff2c30df61e2184400af2b
                   sigchain/                                                                                   
-56345               sigchain.js               4ab6b2ae3540a009b5bd9649b0ef1b2438c8161118f70e93aeaa456afc1aee6b
+56729               sigchain.js               be9d400b161fa8867cfba8ef4c75b5f24d9992b8a39f81f5d6ddd3dcaab99687
                 notes/                                                                                        
 2129              tweetnacl.md                099fac68f7caebd05b6060781e7fcfb32726309bb4bd67aa35b10134a280e049
-1138            package.json                  1cfb56dc2cb017f69904894cc08255380c49b9349d71131a208e3a5af9b48139
+1138            package.json                  628e78f8ab54b765f36ec2334f5c37937489006ae3b35f65fd620587b05c6c06
                 src/                                                                                          
 4407              assertion.iced              fac9d95f8915318ec94dcd9f57f0f6a1b65b210429e6a5f6ac2ad8d33b97cd10
 634               assertion_parser.jison      65624a141081113074e6c778af7df8fad6769d3c5b2fb96e8edcd31444f8706f
@@ -63,7 +63,7 @@ size    exec  file                            contents
 3857                leaf.iced                 5de4556aff8642d7bdfc39cb0edff1acbeb693ce040faa272fb4cf8fe3b6092d
 4470                pathcheck.iced            23650aa2a4db7497e55b23c3f0ff0cdefeb60ff8f0363a6f4a1348405e9f5cc8
                   sigchain/                                                                                   
-29347               sigchain.iced             5b28e246739e581a418fb603874c7f705db5092a6c4b75eef232d8f689dc960f
+30446               sigchain.iced             111175e79cbc8870bb90798409df4b58dbd10fc1ca0fbd025f35570ff8d5b992
                 test/                                                                                         
                   browser/                                                                                    
 287                 index.html                e31387cfd94034901e89af59f0ad29a3e2f494eb7269f1806e757be21b3cf33e
