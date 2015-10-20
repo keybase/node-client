@@ -460,7 +460,12 @@ exports.User = User = class User
     if config().preserve
       log.warn "Not deleting key / preserving due to command-line flag"
     else
-      await @keybase { args : [ "revoke", "--force" ], quiet : true }, defer err
+      eng = @keybase_expect [ "revoke", "--force" ]
+      await eng.conversation [
+          { expect : new RegExp "passphrase" }
+          { sendline : @password }
+        ], defer err
+      await eng.wait defer err unless err?
       @_state.revoked = true unless err?
     cb err
 

@@ -58,11 +58,9 @@ exports.Command = class Command extends Base
 
   #----------
 
-  revoke_key : (cb) ->
-    args = 
-      revoke_primary  : 1
-      revocation_type : 0
-    await req.post { endpoint : "key/revoke", args }, defer err
+  revoke_key : ({pwh}, cb) ->
+    args = {pwh}
+    await req.post { endpoint : "nuke", args }, defer err
     cb err
 
   #----------
@@ -88,9 +86,13 @@ exports.Command = class Command extends Base
   run : (cb) ->
     esc = make_esc cb, "run"
     await session.login esc defer()
+    await session.get_email_or_username_i esc defer email_or_username
+    await session.get_passphrase {}, esc defer passphrase
+    await session.get_salt {email_or_username }, esc defer salt, login_session
+    await session.gen_pwh { passphrase, salt }, esc defer pwh_buffer
     await @show_key esc defer()
     await @get_the_go_ahead esc defer()
-    await @revoke_key esc defer()
+    await @revoke_key {pwh: pwh_buffer.toString('hex')}, esc defer()
     log.info "success!"
     cb null
 

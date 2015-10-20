@@ -1,7 +1,8 @@
-## 0.8.23 (2015-10-20)
+## 0.8.23 (2015-10-21)
 
 bugfix:
   - Import sigchain reset detection fixes from libkeybase.
+  - Update the "revoke" command to use a working endpoint.
 
 ## 0.8.22 (2015-10-05)
 
