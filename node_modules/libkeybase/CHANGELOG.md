@@ -1,3 +1,8 @@
+## 1.2.22 (2015-10-20)
+
+Bugfix:
+  - Fix bugs related to detecting sigchain resets.
+
 ## 1.2.21 (2015-10-05)
 
 Bugfix:

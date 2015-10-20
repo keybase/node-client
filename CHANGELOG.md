@@ -1,3 +1,8 @@
+## 0.8.23 (2015-10-20)
+
+bugfix:
+  - Import sigchain reset detection fixes from libkeybase.
+
 ## 0.8.22 (2015-10-05)
 
 bugfix:
