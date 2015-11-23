@@ -153,6 +153,7 @@ class MerkleClient
 
   find_and_verify : ( { uid, username }, cb) ->
     esc = make_esc cb, "MerkleClient::find_and_verify"
+    username = username.toLowerCase()
     log.debug "+ merkle find_and_verify: uid #{uid}, username #{username}"
     await @lookup_path { uid, username }, esc defer path_response
     await @get_merkle_key_manager {path_response}, esc defer km
