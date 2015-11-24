@@ -1,7 +1,8 @@
-## 0.8.24 (2015-11-21)
+## 0.8.24 (2015-11-24)
 
 bugfix:
   - more work arounds for usernames with upper-case characters
+  - emerg fix w/ coinbase scraper
 
 ## 0.8.23 (2015-10-21)
 

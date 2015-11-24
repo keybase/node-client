@@ -22,9 +22,9 @@ exports.CoinbaseScraper = class CoinbaseScraper extends BaseScraper
 
   # ---------------------------------------------------------------------------
 
-  get_tor_error : (args) -> [ 
+  get_tor_error : (args) -> [
     new Error("Can't (yet) check Coinbase over Tor due to CloudFlare")
-    v_codes.TOR_INCOMPATIBLE 
+    v_codes.TOR_INCOMPATIBLE
   ]
 
   # ---------------------------------------------------------------------------
@@ -57,7 +57,7 @@ exports.CoinbaseScraper = class CoinbaseScraper extends BaseScraper
 
     if (rc is v_codes.OK)
       $ = @libs.cheerio.load html
-      divs = $('div#public_key_content pre.statement')
+      divs = $('pre.statement')
       rc = if not divs.length then v_codes.FAILED_PARSE
       else if not (txt = divs.first()?.html())? then v_codes.CONTENT_MISSING
       else
