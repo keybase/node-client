@@ -1,3 +1,8 @@
+## 0.8.25 (2015-11-30)
+
+bugfix:
+  - allow invitation codes other than 24 characters in length
+
 ## 0.8.24 (2015-11-24)
 
 bugfix:
