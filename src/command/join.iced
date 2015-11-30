@@ -54,7 +54,6 @@ exports.Command = class Command extends Base
         checker : checkers.email
       invite:
         prompt : "Invitation code (leave blank if you don't have one)"
-        checker : checkers.invite_code
         thrower : (k,s) -> if (s.match /^\s*$/)? then (new E.CleanCancelError(k)) else null
       username :
         prompt : "Your desired username"
