@@ -42,7 +42,7 @@ exports.Command = class Command extends Base
     name = "encrypt"
     sub = scp.addParser name, opts
     add_option_dict sub, @OPTS
-    sub.addArgument [ "them" ], { nargs : 1 , help : "the username of the receiver" }
+    sub.addArgument [ "them" ], { nargs : 1 , help : "the username of the receiver (comma-sep for multiple)" }
     sub.addArgument [ "file" ], { nargs : '?', help : "the file to be encrypted" }
     return opts.aliases.concat [ name ]
 
@@ -53,10 +53,11 @@ exports.Command = class Command extends Base
       "--encrypt",
       "--trust-mode", "always"
     ]
-    for key in @them.gpg_keys
-      args = args.concat "-r", key.fingerprint().toString('hex')
+    for target in @targets
+      for key in target.user.gpg_keys
+        args = args.concat "-r", key.fingerprint().toString('hex')
     if @argv.sign
-      sign_key = if @is_self then @them else @tssc.me
+      sign_key = if @targets[0].is_self then @targets[0].user else @targets[0].tssc.me
       args.push( "--sign", "-u", (sign_key.fingerprint true) )
     gargs = { args }
     gargs.quiet = true
@@ -89,16 +90,22 @@ exports.Command = class Command extends Base
     # We tentatively resolve usernames of the form twitter://foo to
     # foo_keybase, but we still need to assert it's the right person
     # later on.
-    await User.resolve_user_name { username : @argv.them[0] }, esc defer them_un, assertions
+    target_unames = @argv.them[0].split ","
+    @targets = []
+    for uname, i in target_unames
+      target = @targets[i] = uname: uname
+      await User.resolve_user_name { username : uname }, esc defer them_un, assertions
 
-    if env().is_me them_un
-      @is_self = true
-      await User.load_me { secret : true }, esc defer @them
-    else
-      @is_self = false
-      @tssc = new TrackSubSubCommand { args : { them : them_un }, opts : @argv, batch, assertions }
-      await @tssc.pre_encrypt esc defer()
-      @them = @tssc.them
+      if env().is_me them_un
+        target.is_self = true
+        await User.load_me { secret : true }, esc defer user
+        target.user = user
+      else
+        target.is_self = false
+        target.tssc = new TrackSubSubCommand { args : { them : them_un }, opts : @argv, batch, assertions }
+        await target.tssc.pre_encrypt esc defer()
+        target.user = target.tssc.them
+
     await @do_encrypt esc defer()
     cb null
 
