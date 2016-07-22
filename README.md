@@ -1,7 +1,11 @@
 node-client
 ===========
 
-The terminal client for keybase written in/for Node.js. Code reviews appreciated.
+## END OF LIFE WARNING
+
+This Keybase app is no longer supported. Active development [continues](https://github.com/keybase/client) [elsewhere](https://github.com/keybase/kbfs).
+
+Upgrade to our new client via our [download page.](https://keybase.io/download)
 
 ### Issue tracking & reporting
 
