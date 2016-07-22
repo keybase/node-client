@@ -18,6 +18,7 @@ tor = require '../tor'
 colors = require '../colors'
 {check_node_async} = require 'badnode'
 ispawn = require 'iced-spawn'
+colors_base = require 'colors'
 
 ##=======================================================================
 
@@ -169,14 +170,29 @@ class Main
     if err?
       msg = if (err instanceof gpgw.E.GpgError) then "`gpg` exited with code #{err.rc}"
       else err.message
-      log.error msg
-      log.warn err.stderr.toString('utf8') if err.stderr?
+      # No need to print error, since it's end of life...
+      # log.error msg
+      # log.warn err.stderr.toString('utf8') if err.stderr?
     process.exit if err? then -2 else rc
+
+  #---------------------------------
+
+  end_of_life : (cb) ->
+    {bold, red} = colors_base
+    msg = (m) -> console.error bold red m
+    msg "The Keybase Node.js client is no longer supported."
+    msg "Please upgrade to our new and improved client via:"
+    msg ""
+    msg "    https://keybase.io/download"
+    msg ""
+    msg "Thank you!"
+    cb new Error "end of the line"
 
   #---------------------------------
 
   run : (cb) ->
     esc = make_esc cb, "run"
+    await @end_of_life esc defer()
     await @setup   esc defer()
     await @cmd.run esc defer rc
     cb null, rc

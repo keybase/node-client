@@ -1,3 +1,8 @@
+## 0.8.26 (2016-07-21)
+
+END OF LIFE
+ - Disable all access and redirect to: https://keybase.io/download
+
 ## 0.8.25 (2015-11-30)
 
 bugfix:
