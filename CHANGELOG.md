@@ -1,3 +1,7 @@
+## 0.8.27 (2016-09-15)
+
+- Uninstall instructions too
+
 ## 0.8.26 (2016-07-21)
 
 END OF LIFE
