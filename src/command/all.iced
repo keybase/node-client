@@ -185,6 +185,11 @@ class Main
     msg ""
     msg "    https://keybase.io/download"
     msg ""
+    msg "To uninstall this now-deprecated client:"
+    msg ""
+    msg "      npm uninstall -g keybase-installer"
+    msg "      npm uninstall -g keybase"
+    msg ""
     msg "Thank you!"
     cb new Error "end of the line"
 
