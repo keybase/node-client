@@ -24,10 +24,16 @@ exports.Command = class Command extends Base
     m:
       alias : "message"
       help : "provide the message on the command line"
+    "message6":
+      help : "provide the message on the command line, as base64"
     b :
       alias : 'binary'
       action: "storeTrue"
       help : "output in binary (rather than ASCII/armored)"
+    '6' :
+      alias : "base64"
+      action : "storeTrue"
+      help : "output result as base64-encoded binary data (rather than ASCII/armored)"
     o :
       alias : 'output'
       help : 'the output file to write the encryption to'
@@ -64,13 +70,17 @@ exports.Command = class Command extends Base
     args.push "-a"  unless @argv.binary
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message
+    else if @argv.message6
+      gargs.stdin = new BufferInStream(new Buffer(@argv.message6, "base64"))
     else if @argv.file?
       args.push @argv.file
     else
       gargs.stdin = process.stdin
     await master_ring().gpg gargs, defer err, out
     unless @argv.output?
-      if @argv.binary
+      if @argv.base64
+        await process.stdout.write out.toString("base64"), defer()
+      else if @argv.binary
         await process.stdout.write out, defer()
       else
         log.console.log out.toString('utf8')

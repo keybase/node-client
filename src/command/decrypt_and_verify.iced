@@ -42,6 +42,8 @@ exports.Command = class Command extends Base
     m:
       alias : "message"
       help : "provide the message on the command line"
+    "message6":
+      help : "provide the message on the command line, as base64"
   }
 
   #----------

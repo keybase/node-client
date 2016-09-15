@@ -181,6 +181,8 @@ exports.DecryptAndVerifyEngine = class DecryptAndVerifyEngine
     gargs.stderr = new BufferOutStream()
     if @argv.message
       gargs.stdin = new BufferInStream @argv.message
+    if @argv.message6
+      gargs.stdin = new BufferInStream(new Buffer(@argv.message6, "base64"))
     else if not @get_files(args)
       gargs.stdin = process.stdin
       @batch = true
