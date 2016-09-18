@@ -21,6 +21,9 @@ exports.Command = class Command extends Base
       alias : "sign"
       action : "storeTrue"
       help : "sign in addition to encrypting"
+    "encrypt-to-self" :
+      action : "storeTrue"
+      help : "encrypt so that you will be able to decrypt the message yourself"
     m:
       alias : "message"
       help : "provide the message on the command line"
@@ -58,6 +61,8 @@ exports.Command = class Command extends Base
     if @argv.sign
       sign_key = if @is_self then @them else @tssc.me
       args.push( "--sign", "-u", (sign_key.fingerprint true) )
+    if @argv.encrypt_to_self
+      args.push( "--encrypt-to", (@tssc.me.fingerprint true) )
     gargs = { args }
     gargs.quiet = true
     args.push("--output", o, "--yes") if (o = @argv.output)
