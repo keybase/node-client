@@ -49,7 +49,7 @@ exports.Command = class Command extends pg.Command
     err = ret = null
     if @argv.secret then ret = true
     else
-      await prompt_yn { prompt : "Push your encrypted private key to the server?", defval : true }, defer err, ret
+      await prompt_yn { prompt : "Push your encrypted private key to the server?", defval : false }, defer err, ret
     cb err, ret
 
   #----------
