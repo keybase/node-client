@@ -36,7 +36,7 @@ exports.Prompter = class Prompter
       obj.output = process.stderr if stderr?
       if passphrase
         obj.silent = true
-        obj.replace = "*"
+        obj.replace = ""
       if (d = @_data[k])? or (d = defval)?
         obj.default = d
         obj.edit = true
