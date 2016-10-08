@@ -94,9 +94,7 @@ exports.KeyPatcher = class KeyPatcher
     pgp.userids = [ uid ]
     pgp.subkeys = []
 
-    # Fix this, make it last only as long as the longest UID.
-    # See https://github.com/keybase/node-client/issues/121
-    pgp.primary.lifespan.expire_in = 0 # never expires
+    pgp.primary.lifespan.expire_in = 2y
 
     await @skm.sign {}, esc defer()
     cb null
